@@ -113,4 +113,10 @@ This action uses three secrets that must be configured in the repository:
 
 Note that this action logs in the remote machine and downloads the docker-compose file from the repository and launches it. Obviously, previous actions have been executed which have uploaded the docker images to the GitHub Packages repository.
 
-Prueba de PR - Pelayo
+### TEAM
+
+- **Daniel Alvarez Blanco**
+- **Pelayo Rojas Iñigo**
+- **Álvaro Arias Martínez De Vega**
+- **Ricardo Díaz Núñez**
+- **Roberto Peña Goy**
