@@ -1,4 +1,4 @@
-package com.uniovi.wiq_es04b;
+package com.uniovi;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
