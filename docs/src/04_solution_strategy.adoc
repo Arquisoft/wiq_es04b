@@ -30,3 +30,18 @@ Refer to details in the following sections.
 See https://docs.arc42.org/section-4/[Solution Strategy] in the arc42 documentation.
 
 ****
+
+=== Decisiones Tecnológicas
+Lenguaje de Programación: Se utilizará [lenguaje] para el desarrollo del sistema debido a [razones].
+Frontend Framework: Se adoptará [framework] para la creación del frontend debido a [razones].
+Base de Datos: Se seleccionó [base de datos] como motor de almacenamiento debido a [razones].
+
+=== Descomposición del Sistema
+Se seguirá el patrón de arquitectura [patrón] para la estructuración del sistema, dividiéndolo en módulos/clases responsables de [responsabilidades].
+
+=== Metas de Calidad
+Rendimiento: Se buscará una respuesta rápida del sistema, especialmente durante la generación de preguntas y el tiempo de juego.
+Seguridad: Se implementarán medidas de seguridad para proteger la información del usuario y garantizar la integridad de las preguntas generadas.
+
+=== Decisiones Organizativas
+Metodología de Desarrollo: Se adoptará [metodología] para la gestión del proyecto, facilitando la colaboración y la entrega iterativa.
