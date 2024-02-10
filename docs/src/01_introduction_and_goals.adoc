@@ -13,12 +13,12 @@ These include
 * quality goals for the architecture and
 * relevant stakeholders and their expectations
 ****
-    WIQ es un juego desarrollado por HappySw para:
+WIQ es un juego desarrollado por HappySw para:
 
-    * Desafiar a los fans de "Saber y ganar"
-    * Aprender a realizar trabajos en equipo
-    * Aprobar la asignatura de "Arquitectura del SW"
-    * Mejorar como ingenieros del software  
+* Desafiar a los fans de "Saber y ganar"
+* Aprender a realizar trabajos en equipo
+* Aprobar la asignatura de "Arquitectura del SW"
+* Mejorar como ingenieros del software  
 
 === Requirements Overview
 [role="arc42help"]
@@ -44,20 +44,20 @@ Keep these excerpts as short as possible. Balance readability of this document w
 See https://docs.arc42.org/section-1/[Introducdction and Goals] in the arc42 documentation.
 
 ****
-    Esta aplicacion web inspirada en el famoso programa español "Saber y ganar" consiste en un minijuego de preguntas y respuestas
-    en el cual se le pregunta al jugador una precunta y se la ofrecen 4 posibles respuestas de las cuales solo una es la correcta.
+Esta aplicacion web inspirada en el famoso programa español "Saber y ganar" consiste en un minijuego de preguntas y respuestas
+en el cual se le pregunta al jugador una precunta y se la ofrecen 4 posibles respuestas de las cuales solo una es la correcta.
 
-    * El jugador deberá registrarse con un nombre
-    * El jugador deberá responder a la pregunta en un tiempo límite
-    * Si no responde se le contara como respuesta erronea
-    * Cada respuesta correcta otorga puntos
-    * Opcional, se podra guardar la puntuación en un ranking
+* El jugador deberá registrarse con un nombre
+* El jugador deberá responder a la pregunta en un tiempo límite
+* Si no responde se le contara como respuesta erronea
+* Cada respuesta correcta otorga puntos
+* Opcional, se podra guardar la puntuación en un ranking
 
-    Para todos aquellos televidentes de "Saber y ganar" que querian participar en el programa, esta aplicacion es la idonea para 
-    probar su conocimiento.
+Para todos aquellos televidentes de "Saber y ganar" que querian participar en el programa, esta aplicacion es la idonea para 
+probar su conocimiento.
 
-    La aplicación genera las preguntas automáticamente con la ayuda de Wikidata (la página que da soporte a wikipedia y muchas otras wikias)
-    para así tener constantemente actualizadas las preguntas en lugar de almacenarlas en una base de datos.
+La aplicación genera las preguntas automáticamente con la ayuda de Wikidata (la página que da soporte a wikipedia y muchas otras wikias)
+para así tener constantemente actualizadas las preguntas en lugar de almacenarlas en una base de datos.
 
 === Quality Goals
 
@@ -111,11 +111,11 @@ These stakeholders determine the extent and the level of detail of your work and
 Table with role names, person names, and their expectations with respect to the architecture and its documentation.
 ****
 
-[options="header",cols="1,2,2"]
+[options="header",cols="1,2"]
 |===
-|Role/Name|Contact|Expectations
-| HappySw | www.HappySw.com | Empresa desarrolladora de la palicación que quiere ganar dinero con su desarrollo y reconocimiento a nivel español
-| RTVE | RTVE.es | Cadena de television española que contrató el desarrollo para promocionar su programa
-| Alumnos uniovi || Desarrolladores de la aplicacion que quieren aprobar la asignatura
-| Profesores de ArquiSoft || Evaluadores del desarrollo del programa y version final que quieren aprobar a sus alumnos
+|Role/Name|Expectations
+| HappySw | Empresa desarrolladora de la palicación que quiere ganar dinero con su desarrollo y reconocimiento a nivel español
+| RTVE | Cadena de television española que contrató el desarrollo para promocionar su programa
+| Alumnos uniovi | Desarrolladores de la aplicacion que quieren aprobar la asignatura
+| Profesores de ArquiSoft | Evaluadores del desarrollo del programa y version final que quieren aprobar a sus alumnos
 |===
