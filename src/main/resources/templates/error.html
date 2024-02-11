@@ -3,10 +3,12 @@
 <head th:replace="~{fragments/head}"></head>
 <body>
 <nav th:replace="~{fragments/nav}"></nav>
-<div class="container" style="text-align: center">
-    <h2>Error!</h2>
-    <p>Póngase en contacto con un administrador</p>
-</div>
+<h2>Error!</h2>
+<div>Estado: <span th:text="${status}"></span></div>
+<div>Error: <span th:text="${error}"></span></div>
+<div>Mensaje de error: <span th:text="${message}"></span></div>
+<div>Traza:</div>
+<pre th:text="${trace}"></pre>
 <footer th:replace="~{fragments/footer}"></footer>
 </body>
 </html>
