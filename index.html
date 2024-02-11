@@ -458,7 +458,14 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_technical_context">3.2. Technical Context</a></li>
 </ul>
 </li>
-<li><a href="#section-solution-strategy">4. Solution Strategy</a></li>
+<li><a href="#section-solution-strategy">4. Solution Strategy</a>
+<ul class="sectlevel2">
+<li><a href="#_decisiones_tecnológicas">4.1. Decisiones Tecnológicas</a></li>
+<li><a href="#_descomposición_del_sistema">4.2. Descomposición del Sistema</a></li>
+<li><a href="#_metas_de_calidad">4.3. Metas de Calidad</a></li>
+<li><a href="#_decisiones_organizativas">4.4. Decisiones Organizativas</a></li>
+</ul>
+</li>
 <li><a href="#section-building-block-view">5. Building Block View</a>
 <ul class="sectlevel2">
 <li><a href="#_whitebox_overall_system">5.1. Whitebox Overall System</a></li>
@@ -907,11 +914,17 @@ The title of the table is the name of your system, the three columns contain the
 </div>
 </div>
 </div>
-<div class="paragraph">
-<p><strong>&lt;Diagram or Table&gt;</strong></p>
+<div class="imageblock">
+<div class="content">
+<img src="./images/Deployment%20diagram.png" alt="Deployment diagram" width="1019" height="578">
+</div>
 </div>
 <div class="paragraph">
-<p><strong>&lt;optionally: Explanation of external domain interfaces&gt;</strong></p>
+<p><strong>Explanation:</strong>
+* <strong>User:</strong> Represents users who interact with the application to play games or view their history.
+* <strong>System (QuestionGame):</strong> The main system that hosts the game logic and manages user interactions.
+* <strong>WikiData:</strong> Component used to retrieve data from Wikidata and automatically generate questions.
+* <strong>Database:</strong> Stores system information, such as user data, generated questions, game history, etc.</p>
 </div>
 </div>
 <div class="sect2">
@@ -933,16 +946,78 @@ together with a mapping table showing the relationships between channels and inp
 </div>
 </div>
 </div>
-<div class="paragraph">
-<p><strong>&lt;Diagram or Table&gt;</strong></p>
+<div class="imageblock">
+<div class="content">
+<img src="./images/Technical%20Context%20Diagram.png" alt="Technical Context Diagram" width="1014" height="578">
 </div>
-<div class="paragraph">
-<p><strong>&lt;optionally: Explanation of technical interfaces&gt;</strong></p>
 </div>
-<div class="paragraph">
-<p><strong>&lt;Mapping Input/Output to Channels&gt;</strong></p>
+<div class="ulist">
+<ul>
+<li>
+<p>User Agent: Represents the web or mobile interface used by users.</p>
+</li>
+<li>
+<p>QuestionGame server: The server-side components, including the Frontend, QuestionGame logic, User&#8217;s API, and Question&#8217;s API.</p>
+</li>
+<li>
+<p>HTTPS: Represents the communication channels, with HTTPS being the protocol used for secure communication.</p>
+</li>
+<li>
+<p>Question Generation: Represents the means used for question and answers generation.</p>
+</li>
+<li>
+<p>Database: Represents whichever system used for data persistence.</p>
+</li>
+<li>
+<p>To be decided: Indicates that specific details about the channels and protocols are yet to be determined.</p>
+</li>
+</ul>
 </div>
+<div class="sect3">
+<h4 id="_inputoutput_mapping_table">3.2.1. Input/Output Mapping Table</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 40%;">
+<col style="width: 40%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Component</th>
+<th class="tableblock halign-left valign-top">Input/Output</th>
+<th class="tableblock halign-left valign-top">Channel/Protocol</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">User&#8217;s API</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">User registration, game history</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">HTTPS</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Question&#8217;s API</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Question data retrieval</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">HTTPS</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Frontend</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">User interactions, game display</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">HTTPS</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Database</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">User data, game history, questions</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Specific database driver</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">WikiData</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Data for question generation</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">HTTP</p></td>
+</tr>
+</tbody>
+</table>
 <div style="page-break-after: always;"></div>
+</div>
 </div>
 </div>
 </div>
@@ -990,7 +1065,34 @@ Refer to details in the following sections.</p>
 </div>
 </div>
 </div>
+<div class="sect2">
+<h3 id="_decisiones_tecnológicas">4.1. Decisiones Tecnológicas</h3>
+<div class="paragraph">
+<p>Lenguaje de Programación: Se utilizará [lenguaje] para el desarrollo del sistema debido a [razones].
+Frontend Framework: Se adoptará [framework] para la creación del frontend debido a [razones].
+Base de Datos: Se seleccionó [base de datos] como motor de almacenamiento debido a [razones].</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_descomposición_del_sistema">4.2. Descomposición del Sistema</h3>
+<div class="paragraph">
+<p>Se seguirá el patrón de arquitectura [patrón] para la estructuración del sistema, dividiéndolo en módulos/clases responsables de [responsabilidades].</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_metas_de_calidad">4.3. Metas de Calidad</h3>
+<div class="paragraph">
+<p>Rendimiento: Se buscará una respuesta rápida del sistema, especialmente durante la generación de preguntas y el tiempo de juego.
+Seguridad: Se implementarán medidas de seguridad para proteger la información del usuario y garantizar la integridad de las preguntas generadas.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_decisiones_organizativas">4.4. Decisiones Organizativas</h3>
+<div class="paragraph">
+<p>Metodología de Desarrollo: Se adoptará [metodología] para la gestión del proyecto, facilitando la colaboración y la entrega iterativa.</p>
+</div>
 <div style="page-break-after: always;"></div>
+</div>
 </div>
 </div>
 <div class="sect1">
