@@ -30,3 +30,18 @@ Refer to details in the following sections.
 See https://docs.arc42.org/section-4/[Solution Strategy] in the arc42 documentation.
 
 ****
+
+=== Technological Decisions
+Programming Language: [Language] will be used for system development due to [reasons].
+Frontend Framework: [Framework] will be adopted for frontend development due to [reasons].
+Database: [Database] was selected as the storage engine due to [reasons].
+
+=== System Decomposition
+The [pattern] architecture pattern will be followed for structuring the system, dividing it into modules/classes responsible for [responsibilities].
+
+=== Quality Goals
+Performance: A quick system response will be sought, especially during question generation and gameplay.
+Security: Security measures will be implemented to protect user information and ensure the integrity of generated questions.
+
+=== Organizational Decisions
+Development Methodology: [Methodology] will be adopted for project management, facilitating collaboration and iterative delivery.
