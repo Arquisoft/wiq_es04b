@@ -43,7 +43,7 @@ rectangle "Docker Container" {
 cloud "Wikidata API" as API
 
 App --> API : Fetch questions
-App ..> WebServer : Serve application
+App ..> WebServer : Server application
 ----
 
 
