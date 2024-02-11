@@ -578,6 +578,25 @@ These include</p>
 </div>
 </div>
 </div>
+<div class="paragraph">
+<p>WIQ es un juego desarrollado por HappySw para:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Desafiar a los fans de "Saber y ganar"</p>
+</li>
+<li>
+<p>Aprender a realizar trabajos en equipo</p>
+</li>
+<li>
+<p>Aprobar la asignatura de "Arquitectura del SW"</p>
+</li>
+<li>
+<p>Mejorar como ingenieros del software</p>
+</li>
+</ul>
+</div>
 <div class="sect2">
 <h3 id="_requirements_overview">1.1. Requirements Overview</h3>
 <div class="sidebarblock arc42help">
@@ -606,6 +625,37 @@ If requirements documents exist this overview should refer to these documents.</
 <p>See <a href="https://docs.arc42.org/section-1/">Introducdction and Goals</a> in the arc42 documentation.</p>
 </div>
 </div>
+</div>
+<div class="paragraph">
+<p>Esta aplicacion web inspirada en el famoso programa español "Saber y ganar" consiste en un minijuego de preguntas y respuestas
+en el cual se le pregunta al jugador una precunta y se la ofrecen 4 posibles respuestas de las cuales solo una es la correcta.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>El jugador deberá registrarse con un nombre</p>
+</li>
+<li>
+<p>El jugador deberá responder a la pregunta en un tiempo límite</p>
+</li>
+<li>
+<p>Si no responde se le contara como respuesta erronea</p>
+</li>
+<li>
+<p>Cada respuesta correcta otorga puntos</p>
+</li>
+<li>
+<p>Opcional, se podra guardar la puntuación en un ranking</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Para todos aquellos televidentes de "Saber y ganar" que querian participar en el programa, esta aplicacion es la idonea para
+probar su conocimiento.</p>
+</div>
+<div class="paragraph">
+<p>La aplicación genera las preguntas automáticamente con la ayuda de Wikidata (la página que da soporte a wikipedia y muchas otras wikias)
+para así tener constantemente actualizadas las preguntas en lugar de almacenarlas en una base de datos.</p>
 </div>
 </div>
 <div class="sect2">
@@ -638,6 +688,37 @@ If you as an architect do not know how the quality of your work will be judged&#
 </div>
 </div>
 </div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 40%;">
+<col style="width: 40%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Nº</th>
+<th class="tableblock halign-left valign-top">Atributo</th>
+<th class="tableblock halign-left valign-top">Motivacion</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Eficiencia</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">El acceso, creación de preguntas y desplazamiento entre ellas deberá ser rápido para garantizar satisfacción del usuario.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Usabilidad</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">La aplicación deberá ser atractiva para todo público fan del programa original además de aportar una gran variedad en las preguntas.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Mantenimiento</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">La aplicación deberá garantizar su fácil ampliación y modificación para otorgar nuevas características a los usuarios</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="sect2">
 <h3 id="_stakeholders">1.3. Stakeholders</h3>
@@ -680,27 +761,31 @@ These stakeholders determine the extent and the level of detail of your work and
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
-<col style="width: 20%;">
-<col style="width: 40%;">
-<col style="width: 40%;">
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
 </colgroup>
 <thead>
 <tr>
 <th class="tableblock halign-left valign-top">Role/Name</th>
-<th class="tableblock halign-left valign-top">Contact</th>
 <th class="tableblock halign-left valign-top">Expectations</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>&lt;Role-1&gt;</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>&lt;Contact-1&gt;</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>&lt;Expectation-1&gt;</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">HappySw</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Empresa desarrolladora de la palicación que quiere ganar dinero con su desarrollo y reconocimiento a nivel español</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>&lt;Role-2&gt;</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>&lt;Contact-2&gt;</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>&lt;Expectation-2&gt;</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">RTVE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Cadena de television española que contrató el desarrollo para promocionar su programa</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Alumnos uniovi</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Desarrolladores de la aplicacion que quieren aprobar la asignatura</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Profesores de ArquiSoft</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Evaluadores del desarrollo del programa y version final que quieren aprobar a sus alumnos</p></td>
 </tr>
 </tbody>
 </table>
@@ -1890,7 +1975,7 @@ more precisely down to a level of scenarios that can be discussed and evaluated.
 <div id="footer">
 <div id="footer-text">
 Version 8.2 EN<br>
-Last updated 2024-01-31 16:47:44 +0100
+Last updated 2024-02-06 13:14:57 +0100
 </div>
 </div>
 </body>
