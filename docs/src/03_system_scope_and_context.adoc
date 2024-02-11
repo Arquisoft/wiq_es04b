@@ -64,7 +64,6 @@ The title of the table is the name of your system, the three columns contain the
   System --> WikiData
 ----
 
-**Explanation:**
 * **User:** Represents users who interact with the application to play games or view their history.
 * **System (QuestionGame):** The main system that hosts the game logic and manages user interactions.
 * **WikiData:** Component used to retrieve data from Wikidata and automatically generate questions.
@@ -118,12 +117,13 @@ together with a mapping table showing the relationships between channels and inp
   developer --> (User's API) : HTTPS
   developer --> (Question's API) : HTTPS
 ----
-* User Agent: Represents the web or mobile interface used by users.
-* QuestionGame server: The server-side components, including the Frontend, QuestionGame logic, User's API, and Question's API.
-* HTTPS: Represents the communication channels, with HTTPS being the protocol used for secure communication.
-* Question Generation: Represents the means used for question and answers generation.
-* Database: Represents whichever system used for data persistence.
-* To be decided: Indicates that specific details about the channels and protocols are yet to be determined.
+
+* **User Agent:** Represents the web or mobile interface used by users.
+* **QuestionGame server:** The server-side components, including the Frontend, QuestionGame logic, User's API, and Question's API.
+* **HTTPS:** Represents the communication channels, with HTTPS being the protocol used for secure communication.
+* **Question Generation:** Represents the means used for question and answers generation.
+* **Database:** Represents whichever system used for data persistence.
+* **To be decided:** Indicates that specific details about the channels and protocols are yet to be determined.
 
 ==== Input/Output Mapping Table
 
