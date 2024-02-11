@@ -25,3 +25,19 @@ conventions (e.g. programming or versioning guidelines, documentation or naming 
 See https://docs.arc42.org/section-2/[Architecture Constraints] in the arc42 documentation.
 
 ****
+
+
+- *Programming Language Restriction:*
+  The system must be implemented using Java as the primary programming language.
+
+- *Mandatory Usage of WikiData API:*
+  The WikiData API must be utilized as an integral part of the system, and interactions with WikiData are obligatory for data retrieval and integration.
+
+- *Web Frontend Requirement:*
+  The system must include at least one web frontend, and it is mandatory for deployment.
+
+- *Freedom in Database Selection:*
+  There are no imposed restrictions on the choice of the database. Teams have the freedom to select a suitable database technology based on project requirements.
+
+- *No Company Policy Constraints:*
+  There are no specific constraints or restrictions related to company policies. Teams have the flexibility to make decisions aligned with project goals.
