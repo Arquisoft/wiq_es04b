@@ -44,8 +44,8 @@ cloud "Wikidata API" as API
 
 App --> API : Fetch questions
 App ..> WebServer : Server application
+@enduml
 ----
-
 
 .Explanation:_
 This diagram illustrates the internal structure of our Docker container. It shows the Java Spring Boot application, including the embedded web server, packaged as a `.jar` file. The application interacts with external APIs, like the Wikidata API, to retrieve data necessary for generating game questions. The containerized approach ensures that the application can be deployed consistently across any environment that supports Docker.
