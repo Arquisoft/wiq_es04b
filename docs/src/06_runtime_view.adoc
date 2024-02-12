@@ -37,29 +37,104 @@ See https://docs.arc42.org/section-6/[Runtime View] in the arc42 documentation.
 
 ****
 
-=== <Runtime Scenario 1>
-
-
-* _<insert runtime diagram or textual description of the scenario>_
-* _<insert description of the notable aspects of the interactions between the
-building block instances depicted in this diagram.>_
-
-It is possible to use a sequence diagram:
-
-[plantuml,"Sequence diagram",png]
+=== Autenticación del usuario
+[plantuml,"Sequence diagram 1",png]
 ----
-actor Alice
-actor Bob
-database Pod as "Bob's Pod"
-Alice -> Bob: Authentication Request
-Bob --> Alice: Authentication Response
-Alice  --> Pod: Store route
-Alice -> Bob: Another authentication Request
-Alice <-- Bob: another authentication Response
+actor Usuario
+participant "WIQ Frontend" as Frontend
+participant "WIQ Backend" as Backend
+database BaseDeDatos as Data
+
+Usuario -> Frontend: Iniciar sesión
+Frontend -> Backend: Petición de autenticación
+Backend -> Data: Consulta de datos de usuario
+Data --> Backend: Datos de usuario
+Backend --> Frontend: Respuesta de autenticación
+Frontend --> Usuario: Confirmación de inicio de sesión
 ----
 
-=== <Runtime Scenario 2>
+=== Generación de una pregunta
+[plantuml,"Sequence diagram 2",png]
+----
+actor Usuario
+participant "WIQ Frontend" as Frontend
+participant "WIQ Backend" as Backend
+database BaseDeDatos as DB
+database Wikidata as Data
 
-=== ...
+Usuario -> Frontend: Solicita generación de pregunta
+Frontend -> Backend: Petición de generación de pregunta
+Backend -> DB: Consulta de datos relevantes en BD
+DB --> Backend: Datos obtenidos de BD
+Backend -> Data: Consulta de datos relevantes en Wikidata
+Data --> Backend: Datos obtenidos de Wikidata
+Backend -> Backend: Generación de pregunta y respuestas
+Backend --> Frontend: Pregunta generada
+----
 
-=== <Runtime Scenario n>
+=== Usuario responde una pregunta
+[plantuml,"Sequence diagram 3",png]
+----
+actor Usuario
+participant "WIQ Frontend" as Frontend
+participant "WIQ Backend" as Backend
+database BaseDeDatos as Data
+
+Usuario -> Frontend: Responder pregunta
+Frontend -> Backend: Enviar respuesta
+Backend -> Data: Consulta de datos de la pregunta
+Data --> Backend: Datos de la pregunta
+Backend -> Backend: Evaluar respuesta
+Backend --> Frontend: Resultado de la respuesta
+----
+
+=== Usuario consulta su historial
+[plantuml,"Sequence diagram 4",png]
+----
+actor Usuario
+participant "WIQ Frontend" as Frontend
+participant "WIQ Backend" as Backend
+database BaseDeDatos as DB
+
+Usuario -> Frontend: Consultar historial
+Frontend -> Backend: Petición de historial
+Backend -> DB: Consulta de historial del usuario
+DB --> Backend: Datos del historial
+Backend --> Frontend: Historial del usuario
+----
+
+=== Acceso a la información de los usuarios a través de un API
+[plantuml,"Sequence diagram 5",png]
+----
+actor Usuario
+participant "WIQ Frontend" as Frontend
+participant "WIQ Backend" as Backend
+database BaseDeDatos as DB
+participant "API de Usuarios" as UserAPI
+
+Usuario -> Frontend: Acceder a información de usuario
+Frontend -> Backend: Petición de información de usuario
+Backend -> DB: Consulta de datos del usuario
+DB --> Backend: Datos del usuario
+Backend -> UserAPI: Consulta de información del usuario
+UserAPI --> Backend: Datos del usuario a través del API
+Backend --> Frontend: Datos del usuario
+----
+
+=== Acceso a la información de las preguntas generadas a través de un API
+[plantuml,"Sequence diagram 6",png]
+----
+actor Usuario
+participant "WIQ Frontend" as Frontend
+participant "WIQ Backend" as Backend
+database BaseDeDatos as DB
+participant "API de Preguntas" as QuestionAPI
+
+Usuario -> Frontend: Acceder a información de preguntas
+Frontend -> Backend: Petición de información de preguntas
+Backend -> DB: Consulta de datos de preguntas
+DB --> Backend: Datos de las preguntas
+Backend -> QuestionAPI: Consulta de información de preguntas
+QuestionAPI --> Backend: Datos de las preguntas a través del API
+Backend --> Frontend: Datos de las preguntas
+----
