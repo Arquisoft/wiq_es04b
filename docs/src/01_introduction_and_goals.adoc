@@ -13,12 +13,12 @@ These include
 * quality goals for the architecture and
 * relevant stakeholders and their expectations
 ****
-WIQ es un juego desarrollado por HappySw para:
+WIQ is a game developed by HappySw for:
 
-* Desafiar a los fans de "Saber y ganar"
-* Aprender a realizar trabajos en equipo
-* Aprobar la asignatura de "Arquitectura del SW"
-* Mejorar como ingenieros del software  
+* Challenging "Saber y ganar" fans
+* Learning to perform teamwork
+* Passing the "Software Architecture" subject
+* Improving as software engineers
 
 === Requirements Overview
 [role="arc42help"]
@@ -44,20 +44,20 @@ Keep these excerpts as short as possible. Balance readability of this document w
 See https://docs.arc42.org/section-1/[Introducdction and Goals] in the arc42 documentation.
 
 ****
-Esta aplicacion web inspirada en el famoso programa español "Saber y ganar" consiste en un minijuego de preguntas y respuestas
-en el cual se le pregunta al jugador una precunta y se la ofrecen 4 posibles respuestas de las cuales solo una es la correcta.
 
-* El jugador deberá registrarse con un nombre
-* El jugador deberá responder a la pregunta en un tiempo límite
-* Si no responde se le contara como respuesta erronea
-* Cada respuesta correcta otorga puntos
-* Opcional, se podra guardar la puntuación en un ranking
+This web application, inspired by the famous Spanish TV show "Saber y ganar," consists of a mini-game of questions and answers.
+In this game, the player is asked a question and presented with four possible answers, of which only one is correct.
 
-Para todos aquellos televidentes de "Saber y ganar" que querian participar en el programa, esta aplicacion es la idonea para 
-probar su conocimiento.
+* The player must register with a name.
+* The player must answer the question within a time limit.
+* If the player does not answer, it will be counted as an incorrect response.
+* Each correct answer earns points.
+* Optionally, the score can be saved in a ranking.
 
-La aplicación genera las preguntas automáticamente con la ayuda de Wikidata (la página que da soporte a wikipedia y muchas otras wikias)
-para así tener constantemente actualizadas las preguntas en lugar de almacenarlas en una base de datos.
+For all those "Saber y ganar" viewers who wanted to participate in the show, this application is ideal for testing their knowledge.
+
+The application automatically generates questions with the help of Wikidata (the page that supports Wikipedia and many other wikis) 
+to constantly update the questions instead of storing them in a database.
 
 === Quality Goals
 
