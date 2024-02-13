@@ -475,10 +475,12 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </li>
 <li><a href="#section-runtime-view">6. Runtime View</a>
 <ul class="sectlevel2">
-<li><a href="#_runtime_scenario_1">6.1. &lt;Runtime Scenario 1&gt;</a></li>
-<li><a href="#_runtime_scenario_2">6.2. &lt;Runtime Scenario 2&gt;</a></li>
-<li><a href="#">6.3. &#8230;&#8203;</a></li>
-<li><a href="#_runtime_scenario_n">6.4. &lt;Runtime Scenario n&gt;</a></li>
+<li><a href="#_autenticación_del_usuario">6.1. Autenticación del usuario</a></li>
+<li><a href="#_generación_de_una_pregunta">6.2. Generación de una pregunta</a></li>
+<li><a href="#_usuario_responde_una_pregunta">6.3. Usuario responde una pregunta</a></li>
+<li><a href="#_usuario_consulta_su_historial">6.4. Usuario consulta su historial</a></li>
+<li><a href="#_acceso_a_la_información_de_los_usuarios_a_través_de_un_api">6.5. Acceso a la información de los usuarios a través de un API</a></li>
+<li><a href="#_acceso_a_la_información_de_las_preguntas_generadas_a_través_de_un_api">6.6. Acceso a la información de las preguntas generadas a través de un API</a></li>
 </ul>
 </li>
 <li><a href="#section-deployment-view">7. Deployment View</a>
@@ -921,7 +923,7 @@ The title of the table is the name of your system, the three columns contain the
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="./images/Deployment%20diagram.png" alt="Deployment diagram" width="1008" height="578">
+<img src="./images/Deployment%20diagram.png" alt="Deployment diagram" width="1043" height="578">
 </div>
 </div>
 <div class="ulist">
@@ -962,7 +964,7 @@ together with a mapping table showing the relationships between channels and inp
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="./images/Technical%20Context%20Diagram.png" alt="Technical Context Diagram" width="1076" height="578">
+<img src="./images/Technical%20Context%20Diagram.png" alt="Technical Context Diagram" width="1031" height="578">
 </div>
 </div>
 <div class="ulist">
@@ -1197,22 +1199,55 @@ In the best case you will get away with examples or simple signatures.</p>
 </div>
 </div>
 </div>
-<div class="paragraph">
-<p><em><strong>&lt;Overview Diagram&gt;</strong></em></p>
+<div class="imageblock">
+<div class="content">
+<img src="./images/Whitebox%20Overall%20System.png" alt="Whitebox Overall System" width="1039" height="578">
+</div>
 </div>
 <div class="dlist">
 <dl>
 <dt class="hdlist1">Motivation</dt>
 <dd>
-<p><em>&lt;text explanation&gt;</em></p>
+<p>El propósito de esta whitebox es proporcionar una visión clara, sencilla y sin entrar en detalles de cómo el sistema WIQ interactúa con el servicio
+externo de Wikidata para obtener los datos necesarios para generar preguntas. Al presentar esta interacción de manera clara,
+los stakeholders pueden comprender fácilmente cómo se integra el sistema WIQ con fuentes externas de datos y cómo se utiliza esa
+información para cumplir con los requisitos del sistema relacionados con la generación automática de preguntas.</p>
 </dd>
 <dt class="hdlist1">Contained Building Blocks</dt>
-<dd>
-<p><em>&lt;Description of contained building block (black boxes)&gt;</em></p>
-</dd>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Nombre</th>
+<th class="tableblock halign-left valign-top">Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>User</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Representa al usuario que interactúa con la aplicación WIQ.</em></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>WIQ</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Representa la aplicación principal WIQ.</em></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Wikidata</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Servicio externo utilizado por WIQ para obtener datos y generar preguntas.</em></p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
 <dt class="hdlist1">Important Interfaces</dt>
 <dd>
-<p><em>&lt;Description of important interfaces&gt;</em></p>
+<p><em>&lt;Description of important interfaces&gt;</em>
+ToDo</p>
 </dd>
 </dl>
 </div>
@@ -1478,37 +1513,52 @@ You will mainly capture scenarios in your documentation to communicate your arch
 </div>
 </div>
 <div class="sect2">
-<h3 id="_runtime_scenario_1">6.1. &lt;Runtime Scenario 1&gt;</h3>
-<div class="ulist">
-<ul>
-<li>
-<p><em>&lt;insert runtime diagram or textual description of the scenario&gt;</em></p>
-</li>
-<li>
-<p><em>&lt;insert description of the notable aspects of the interactions between the
-building block instances depicted in this diagram.&gt;</em></p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>It is possible to use a sequence diagram:</p>
-</div>
+<h3 id="_autenticación_del_usuario">6.1. Autenticación del usuario</h3>
 <div class="imageblock">
 <div class="content">
-<img src="./images/Sequence%20diagram.png" alt="Sequence diagram" width="332" height="335">
+<img src="./images/Sequence%20diagram%201.png" alt="Sequence diagram 1" width="667" height="365">
 </div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_runtime_scenario_2">6.2. &lt;Runtime Scenario 2&gt;</h3>
-
+<h3 id="_generación_de_una_pregunta">6.2. Generación de una pregunta</h3>
+<div class="imageblock">
+<div class="content">
+<img src="./images/Sequence%20diagram%202.png" alt="Sequence diagram 2" width="817" height="439">
+</div>
+</div>
 </div>
 <div class="sect2">
-<h3 id="">6.3. &#8230;&#8203;</h3>
-
+<h3 id="_usuario_responde_una_pregunta">6.3. Usuario responde una pregunta</h3>
+<div class="imageblock">
+<div class="content">
+<img src="./images/Sequence%20diagram%203.png" alt="Sequence diagram 3" width="608" height="378">
+</div>
+</div>
 </div>
 <div class="sect2">
-<h3 id="_runtime_scenario_n">6.4. &lt;Runtime Scenario n&gt;</h3>
+<h3 id="_usuario_consulta_su_historial">6.4. Usuario consulta su historial</h3>
+<div class="imageblock">
+<div class="content">
+<img src="./images/Sequence%20diagram%204.png" alt="Sequence diagram 4" width="553" height="335">
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_acceso_a_la_información_de_los_usuarios_a_través_de_un_api">6.5. Acceso a la información de los usuarios a través de un API</h3>
+<div class="imageblock">
+<div class="content">
+<img src="./images/Sequence%20diagram%205.png" alt="Sequence diagram 5" width="843" height="396">
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_acceso_a_la_información_de_las_preguntas_generadas_a_través_de_un_api">6.6. Acceso a la información de las preguntas generadas a través de un API</h3>
+<div class="imageblock">
+<div class="content">
+<img src="./images/Sequence%20diagram%206.png" alt="Sequence diagram 6" width="895" height="396">
+</div>
+</div>
 <div style="page-break-after: always;"></div>
 </div>
 </div>
@@ -1565,7 +1615,7 @@ The infrastructure features a single Docker container that hosts the Java Spring
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="./images/Docker%20Container%20Setup.png" alt="Docker Container Setup" width="1019" height="578">
+<img src="./images/Docker%20Container%20Setup.png" alt="Docker Container Setup" width="1021" height="578">
 </div>
 <div class="title">Figure 1. Diagram: Docker Container Setup::</div>
 </div>
