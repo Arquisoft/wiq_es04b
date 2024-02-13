@@ -84,9 +84,9 @@ A table with quality goals and concrete scenarios, ordered by priorities
 [options="header",cols="1,2,2"]
 |===
 |Nº|Atributo|Motivacion
-| 1 | Eficiencia | El acceso, creación de preguntas y desplazamiento entre ellas deberá ser rápido para garantizar satisfacción del usuario.
-| 2 | Usabilidad | La aplicación deberá ser atractiva para todo público fan del programa original además de aportar una gran variedad en las preguntas.
-| 3 | Mantenimiento | La aplicación deberá garantizar su fácil ampliación y modificación para otorgar nuevas características a los usuarios
+| 1 | Efficiency | El acceso, creación de preguntas y desplazamiento entre ellas deberá ser rápido para garantizar satisfacción del usuario.
+| 2 | Usability | La aplicación deberá ser atractiva para todo público fan del programa original además de aportar una gran variedad en las preguntas.
+| 3 | Manteinence | La aplicación deberá garantizar su fácil ampliación y modificación para otorgar nuevas características a los usuarios
 |===
 
 === Stakeholders
