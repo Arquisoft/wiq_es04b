@@ -84,9 +84,9 @@ A table with quality goals and concrete scenarios, ordered by priorities
 [options="header",cols="1,2,2"]
 |===
 |Nº|Atributo|Motivacion
-| 1 | Efficiency | El acceso, creación de preguntas y desplazamiento entre ellas deberá ser rápido para garantizar satisfacción del usuario.
-| 2 | Usability | La aplicación deberá ser atractiva para todo público fan del programa original además de aportar una gran variedad en las preguntas.
-| 3 | Manteinence | La aplicación deberá garantizar su fácil ampliación y modificación para otorgar nuevas características a los usuarios
+| 1 | Efficiency | Access, creation of questions, and navigation between them should be fast to ensure user satisfaction.
+| 2 | Usability | The application should be appealing to all fans of the original program while also offering a wide variety of questions.
+| 3 | Manteinence | The application should ensure easy expansion and modification to provide users with new features.
 |===
 
 === Stakeholders
@@ -114,8 +114,8 @@ Table with role names, person names, and their expectations with respect to the 
 [options="header",cols="1,2"]
 |===
 |Role/Name|Expectations
-| HappySw | Empresa desarrolladora de la palicación que quiere ganar dinero con su desarrollo y reconocimiento a nivel español
-| RTVE | Cadena de television española que contrató el desarrollo para promocionar su programa
-| Alumnos uniovi | Desarrolladores de la aplicacion que quieren aprobar la asignatura
-| Profesores de ArquiSoft | Evaluadores del desarrollo del programa y version final que quieren aprobar a sus alumnos
+| HappySw | A company developing the application aiming to earn money through its development and recognition at the Spanish level.
+| RTVE | A Spanish television network that hired the development to promote its program.
+| Uniovi students | The application developers who want to pass the subject.
+| ArquiSoft  teachers | The evaluators of the program development and final version who want their students to pass.
 |===
