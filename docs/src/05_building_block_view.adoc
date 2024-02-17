@@ -63,18 +63,46 @@ In the best case you will get away with examples or simple signatures.
 
 ****
 
-_**<Overview Diagram>**_
+[plantuml,"Whitebox Overall System",png]
+----
+actor User as User
+rectangle "WIQ" {
+    User --> WIQ : Interacts with
+}
+
+rectangle "Wikidata" {
+    WIQ --> Wikidata : Requests data to generate questions
+}
+----
+
 
 Motivation::
 
-_<text explanation>_
+The purpose of this whitebox is to provide a clear, simple overview without delving into details of how the WIQ system interacts 
+with the external Wikidata service to obtain the necessary data for question generation. By presenting this interaction clearly, 
+stakeholders can easily understand how the WIQ system integrates with external data sources and how that information is used to 
+fulfill system requirements related to the automatic generation of questions.
 
 
 Contained Building Blocks::
-_<Description of contained building block (black boxes)>_
+[cols="e,2e" options="header"]
+|===
+| Name | Description
+
+| User
+| It represents the user interacting with the WIQ application.
+
+| WIQ
+| It represents the main WIQ application.
+
+| Wikidata
+| External service used by WIQ to obtain data and generate questions.
+|===
+
 
 Important Interfaces::
 _<Description of important interfaces>_
+ToDo
 
 [role="arc42help"]
 ****
