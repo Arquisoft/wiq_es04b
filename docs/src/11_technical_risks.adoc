@@ -29,9 +29,9 @@ See https://docs.arc42.org/section-11/[Risks and Technical Debt] in the arc42 do
 |===
 | Priority | Risk/Debt | Description
 
-| High | Migration to Java | migration from the current project language, JavaScript (JS), to Java
+| High | Migration to Java | Migration from the current project language, JavaScript (JS), to Java
 | Medium | IDE Configuration | Version compatibility, extensions and other preferences to work perfectly without conflicts
-| Medium | Database | discuss which database is best for the project
+| Medium | Database | Discuss which database is best for the project 
 | Low | Docker  | Know how docker works, what it is for, how it is used and what its alternatives could be.
 | Low | Microservices | Research about microservices and what they can contribute to the project
 
