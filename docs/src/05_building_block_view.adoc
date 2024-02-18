@@ -85,7 +85,7 @@ fulfill system requirements related to the automatic generation of questions.
 
 
 Contained Building Blocks::
-[cols="e,2e" options="header"]
+[cols="1,2" options="header"]
 |===
 | Name | Description
 
