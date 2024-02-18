@@ -78,25 +78,25 @@ rectangle "Wikidata" {
 
 Motivation::
 
-El propósito de esta whitebox es proporcionar una visión clara, sencilla y sin entrar en detalles de cómo el sistema WIQ interactúa con el servicio 
-externo de Wikidata para obtener los datos necesarios para generar preguntas. Al presentar esta interacción de manera clara, 
-los stakeholders pueden comprender fácilmente cómo se integra el sistema WIQ con fuentes externas de datos y cómo se utiliza esa 
-información para cumplir con los requisitos del sistema relacionados con la generación automática de preguntas.
+The purpose of this whitebox is to provide a clear, simple overview without delving into details of how the WIQ system interacts 
+with the external Wikidata service to obtain the necessary data for question generation. By presenting this interaction clearly, 
+stakeholders can easily understand how the WIQ system integrates with external data sources and how that information is used to 
+fulfill system requirements related to the automatic generation of questions.
 
 
 Contained Building Blocks::
 [cols="e,2e" options="header"]
 |===
-| Nombre | Descripción
+| Name | Description
 
 | User
-| Representa al usuario que interactúa con la aplicación WIQ.
+| It represents the user interacting with the WIQ application.
 
 | WIQ
-| Representa la aplicación principal WIQ.
+| It represents the main WIQ application.
 
 | Wikidata
-| Servicio externo utilizado por WIQ para obtener datos y generar preguntas.
+| External service used by WIQ to obtain data and generate questions.
 |===
 
 
