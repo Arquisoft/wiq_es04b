@@ -1,94 +1,51 @@
-ifndef::imagesdir[:imagesdir: ../images]
-
 [[section-deployment-view]]
-
 
 == Deployment View
 
-[role="arc42help"]
-****
-.Content
-The deployment view describes:
-
- 1. technical infrastructure used to execute your system, with infrastructure elements like geographical locations, environments, computers, processors, channels and net topologies as well as other infrastructure elements and
-
-2. mapping of (software) building blocks to that infrastructure elements.
-
-Often systems are executed in different environments, e.g. development environment, test environment, production environment. In such cases you should document all relevant environments.
-
-Especially document a deployment view if your software is executed as distributed system with more than one computer, processor, server or container or when you design and construct your own hardware processors and chips.
-
-From a software perspective it is sufficient to capture only those elements of an infrastructure that are needed to show a deployment of your building blocks. Hardware architects can go beyond that and describe an infrastructure to any level of detail they need to capture.
-
-.Motivation
-Software does not run without hardware.
-This underlying infrastructure can and will influence a system and/or some
-cross-cutting concepts. Therefore, there is a need to know the infrastructure.
-
-.Form
-
-Maybe a highest level deployment diagram is already contained in section 3.2. as
-technical context with your own infrastructure as ONE black box. In this section one can
-zoom into this black box using additional deployment diagrams:
-
-* UML offers deployment diagrams to express that view. Use it, probably with nested diagrams,
-when your infrastructure is more complex.
-* When your (hardware) stakeholders prefer other kinds of diagrams rather than a deployment diagram, let them use any kind that is able to show nodes and channels of the infrastructure.
-
-
-.Further Information
-
-See https://docs.arc42.org/section-7/[Deployment View] in the arc42 documentation.
-
-****
+The deployment strategy for our game, which leverages the Wikidata API to dynamically generate questions, is built around a Docker-based infrastructure. This approach allows for the encapsulation of our Java Spring Boot application within a Docker container, simplifying deployments across different environments (development, testing, and production) while ensuring consistency and isolation.
 
 === Infrastructure Level 1
 
-[role="arc42help"]
-****
-Describe (usually in a combination of diagrams, tables, and text):
+Our application is containerized using Docker, enabling us to deploy the entire stack as a single `.jar` file that includes the web server. This method ensures that our application can be easily moved across environments or scaled up as needed without significant changes to the infrastructure.
 
-* distribution of a system to multiple locations, environments, computers, processors, .., as well as physical connections between them
-* important justifications or motivations for this deployment structure
-* quality and/or performance features of this infrastructure
-* mapping of software artifacts to elements of this infrastructure
+_**Overview Diagram:**_
+The infrastructure features a single Docker container that hosts the Java Spring Boot application. This container communicates with external services, such as the Wikidata API, to fetch data in real-time and generate game questions.
 
-For multiple environments or alternative deployments please copy and adapt this section of arc42 for all relevant environments.
-****
+.Motivation::
+The primary motivation behind using Docker for deployment is to streamline the development and deployment processes. By containerizing the application, we reduce discrepancies between environments, making it easier to develop, test, and deploy with confidence.
 
-_**<Overview Diagram>**_
+.Quality and/or Performance Features::
+- **Portability:** Docker containers can run on any system that has Docker installed, reducing environment-specific bugs.
+- **Scalability:** While we start with a single container, the setup can be easily scaled using Docker Compose or Docker Swarm if the need arises.
+- **Efficiency:** Docker utilizes resources more efficiently than traditional VMs, allowing for faster startup times and lower overhead.
 
-Motivation::
-
-_<explanation in text form>_
-
-Quality and/or Performance Features::
-
-_<explanation in text form>_
-
-Mapping of Building Blocks to Infrastructure::
-_<description of the mapping>_
-
+.Mapping of Building Blocks to Infrastructure::
+- **Web Server/Application (.jar file):** Packaged within a Docker container, it includes all necessary dependencies to run independently across any Docker-supported platform.
+- **External APIs (e.g., Wikidata API):** Accessed over the network, these APIs provide dynamic content for the game.
 
 === Infrastructure Level 2
 
-[role="arc42help"]
-****
-Here you can include the internal structure of (some) infrastructure elements from level 1.
+At this level, we describe the Docker container configuration that encapsulates our application.
 
-Please copy the structure from level 1 for each selected element.
-****
+==== _Docker Container_
 
-==== _<Infrastructure Element 1>_
+Our Docker container is built from a Java base image, which is then layered with our application’s `.jar` file. This setup encapsulates the entire runtime environment required for our application.
 
-_<diagram + explanation>_
+.Diagram: Docker Container Setup::
+[plantuml,"Docker Container Setup",png]
+----
+@startuml
+rectangle "Docker Container" {
+    node "Java Spring Boot App (.jar)" as App
+    database "Web Server (Embedded)" as WebServer
+}
 
-==== _<Infrastructure Element 2>_
+cloud "Wikidata API" as API
 
-_<diagram + explanation>_
+App --> API : Fetch questions
+App ..> WebServer : Server application
+@enduml
+----
 
-...
-
-==== _<Infrastructure Element n>_
-
-_<diagram + explanation>_
+.Explanation:_
+This diagram illustrates the internal structure of our Docker container. It shows the Java Spring Boot application, including the embedded web server, packaged as a `.jar` file. The application interacts with external APIs, like the Wikidata API, to retrieve data necessary for generating game questions. The containerized approach ensures that the application can be deployed consistently across any environment that supports Docker.

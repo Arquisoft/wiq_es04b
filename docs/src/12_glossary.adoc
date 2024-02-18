@@ -32,9 +32,9 @@ See https://docs.arc42.org/section-12/[Glossary] in the arc42 documentation.
 
 [cols="e,2e" options="header"]
 |===
-|Term |Definition
+| Term |Definition
 
-|wikiData
+|WikiData
 |A collaborative platform that provides structured data for Wikimedia projects, including Wikipedia.
 
 |IDE (Integrated Development Environment)
