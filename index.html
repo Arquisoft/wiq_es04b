@@ -1764,15 +1764,15 @@ There you will find links and examples about ADR.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>El propósito de esta sección es crear una lista ordenada de decisiones arquitectónicas que iremos tomando a medida que desarrollamos el proyecto. Esta lista irá ordenada en función de la importancia que tenga la decisión.</p>
+<p>The purpose of this section is to create an ordered list of architectural decisions that we will make as we develop the project. This list will be ordered according to the importance of the decision.</p>
 </div>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p><strong>Protección de la rama master</strong>: Esta decisión fue tomada al comienzo de la primera reunión de equipo. Sin duda, esta es la decisión arquitectónica más importante, ya que significará no poder modificar la rama master sin que todos los miembros hayan revisado previamente las modificaciones, para que no se añada nada que pueda afectar el funcionamiento de la rama principal. Además de esto, también se creó la rama develop, que funcionará como una rama main2.0 para ir añadiendo los progresos que se vayan haciendo. Para añadir a esta rama también es necesaria la aprobación de algunos miembros del equipo.</p>
+<p>*Protection of the master branch: This decision was made at the beginning of the first team meeting. Without a doubt, this is the most important architectural decision, as it will mean not being able to modify the master branch without all members having previously reviewed the modifications, so that nothing is added that could affect the functioning of the main branch. In addition to this, a develop branch was also created, which will function as a main2.0 branch for adding progress as it is made. To add to this branch also requires the approval of some members of the team.</p>
 </li>
 <li>
-<p><strong>Cambio de JavaScript a Java con Spring</strong>: Esta es una decisión que tomamos el martes 6 de febrero, después de la segunda sesión. Por lo que llevamos de proyecto, es una de las decisiones más importantes hasta ahora, ya que significará no emplear el proyecto base y empezar otra aplicación en otro lenguaje de programación. Hemos llegado a tomar esta decisión ya que consideramos mucho más accesible emplear el lenguaje Java, al ser este enseñado desde el principio de la carrera. Además, con lo que aprendemos en la asignatura SDI (Sistemas Distribuidos e Internet) podemos aplicarlo todo al desarrollo web, empleando el framework Spring. También hemos encontrado una librería en Java con la que podremos utilizar Wikidata muy fácilmente. Fue una decisión unánime que nos facilitará la fluidez de trabajo a largo plazo.</p>
+<p>*Switch from JavaScript to Java with Spring: This is a decision we made on Tuesday, February 6th, after the second session. So far in the project, it is one of the most important decisions so far, as it will mean not using the base project and starting another application in another programming language. We have come to this decision because we consider it much more accessible to use the Java language, as it has been taught from the beginning of the course. Moreover, with what we learn in the subject SDI we can apply it all to web development, using the Spring framework. We have also found a</p>
 </li>
 </ol>
 </div>
@@ -1847,59 +1847,59 @@ concrete and measurable.</p>
 </colgroup>
 <thead>
 <tr>
-<th class="tableblock halign-left valign-top">Categoría de calidad</th>
-<th class="tableblock halign-left valign-top">Calidad</th>
-<th class="tableblock halign-left valign-top">Descripción</th>
-<th class="tableblock halign-left valign-top">Escenario</th>
+<th class="tableblock halign-left valign-top">Quality category</th>
+<th class="tableblock halign-left valign-top">Quality</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Scenario</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Usabilidad</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Facilidad de uso</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">La aplicación deberá ser fácil de usar por parte del usuario, con funcionalidad intuitiva.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Usability</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Ease of use</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The application shall be easy to use by the user, with intuitive functionality.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">SC1</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Familiaridad del entorno (2)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">La aplicación deberá ser atractiva para todo público fan del programa original además de aportar una gran variedad en las preguntas.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Familiarity of the environment (2)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The application should appeal to all fans of the original programme and provide a wide variety of questions.</p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Rendimiento</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Precisión</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Las preguntas de la aplicación deben de ser precisas, tanto la pregunta como la respuesta correcta.</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Eficiencia (1)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">El acceso, creación de preguntas y desplazamiento entre ellas deberá ser rápido para garantizar satisfacción del usuario.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Performance</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Accuracy</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The questions in the application must be accurate, both the question and the correct answer.</p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Robustez</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">El sistema debe funcionar de manera confiable en todos los entornos y condiciones de operación especificados.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Efficiency (1)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Accessing, creating questions and moving between questions should be fast to ensure user satisfaction.</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Robustness</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The system shall function reliably in all specified environments and operating conditions.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">SC2</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Seguridad</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Integridad</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">La aplicación deberá ser fácil de usar por parte del usuario, con funcionalidad intuitiva.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Safety</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Integrity</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The application shall be user-friendly, with intuitive functionality.</p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Mantenibilidad y soporte</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Mantenimiento (2)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">La aplicación deberá garantizar su fácil ampliación y modificación para otorgar nuevas características a los usuarios.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Maintainability and support</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Maintenance (2)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The application shall ensure that it can be easily extended and modified to provide new features to users.</p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Culturales y Regionales</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Multilingüe</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Los textos de la interfaz de usuario deben poder ser convertidos por un archivo de traducción a diferentes idiomas con un conjunto de caracteres ASCII.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Cultural and Regional</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Multilingual</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The user interface texts must be able to be converted by a translation file into different languages with an ASCII character set.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">SC3</p></td>
 </tr>
 </tbody>
@@ -1952,22 +1952,22 @@ more precisely down to a level of scenarios that can be discussed and evaluated.
 </colgroup>
 <thead>
 <tr>
-<th class="tableblock halign-left valign-top">Identificación</th>
-<th class="tableblock halign-left valign-top">Escenario</th>
+<th class="tableblock halign-left valign-top">Identification</th>
+<th class="tableblock halign-left valign-top">Scenario</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">SC1</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Un usuario que no conozca la aplicación, sabrá utilizarla al cabo de minutos siguiendo unas instrucciones.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A user who is not familiar with the application will know how to use it after a few minutes of instruction.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">SC2</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">La aplicación deberá de poder ser ejecutada desde cualquier dispositivo, desde un ordenador a un teléfono móvil, sin perder el formato.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The application should be able to be run from any device, from a computer to a mobile phone, without losing formatting.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">SC3</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Con los archivos de traducción apropiados reemplazando el idioma predeterminado (inglés), todos los textos mostrados e impresos ahora aparecen en este idioma.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CS3</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">With the appropriate translation files replacing the default language (English), all displayed and printed texts now appear in this language.</p></td>
 </tr>
 </tbody>
 </table>
@@ -2134,7 +2134,7 @@ more precisely down to a level of scenarios that can be discussed and evaluated.
 <div id="footer">
 <div id="footer-text">
 Version 8.2 EN<br>
-Last updated 2024-02-18 21:58:00 UTC
+Last updated 2024-02-18 22:00:37 UTC
 </div>
 </div>
 </body>
