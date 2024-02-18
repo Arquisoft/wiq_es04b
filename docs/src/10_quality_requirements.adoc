@@ -46,6 +46,53 @@ In any case the tree should include links to the scenarios of the following sect
 
 ****
 
+_Nota: Los puntos (1), (2), (3) de la siguiente tabla repiten los requisitos de calidad de nivel superior del capítulo 1.2._
+
+[cols="4", options="header"]
+|===
+|Categoría de calidad |Calidad |Descripción |Escenario
+
+|Usabilidad
+|Facilidad de uso
+|La aplicación deberá ser fácil de usar por parte del usuario, con funcionalidad intuitiva.
+|SC1
+
+|
+|Familiaridad del entorno (2)
+|La aplicación deberá ser atractiva para todo público fan del programa original además de aportar una gran variedad en las preguntas.
+|
+
+|Rendimiento
+|Precisión
+|Las preguntas de la aplicación deben de ser precisas, tanto la pregunta como la respuesta correcta.
+|
+
+|
+|Eficiencia (1)
+|El acceso, creación de preguntas y desplazamiento entre ellas deberá ser rápido para garantizar satisfacción del usuario.
+|
+
+|
+|Robustez
+|El sistema debe funcionar de manera confiable en todos los entornos y condiciones de operación especificados.
+|SC2
+
+|Seguridad
+|Integridad
+|La aplicación deberá ser fácil de usar por parte del usuario, con funcionalidad intuitiva.
+|
+
+|Mantenibilidad y soporte
+|Mantenimiento (2)
+|La aplicación deberá garantizar su fácil ampliación y modificación para otorgar nuevas características a los usuarios.
+|
+
+|Culturales y Regionales
+|Multilingüe
+|Los textos de la interfaz de usuario deben poder ser convertidos por un archivo de traducción a diferentes idiomas con un conjunto de caracteres ASCII.
+|SC3
+|===
+
 === Quality Scenarios
 
 [role="arc42help"]
@@ -71,3 +118,17 @@ more precisely down to a level of scenarios that can be discussed and evaluated.
 .Form
 Tabular or free form text.
 ****
+
+[cols="2", options="header"]
+|===
+|Identificación |Escenario
+
+|SC1
+|Un usuario que no conozca la aplicación, sabrá utilizarla al cabo de minutos siguiendo unas instrucciones.
+
+|SC2
+|La aplicación deberá de poder ser ejecutada desde cualquier dispositivo, desde un ordenador a un teléfono móvil, sin perder el formato.
+
+|SC3
+|Con los archivos de traducción apropiados reemplazando el idioma predeterminado (inglés), todos los textos mostrados e impresos ahora aparecen en este idioma.
+|===
