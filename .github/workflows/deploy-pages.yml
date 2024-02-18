@@ -26,6 +26,11 @@ jobs:
       with:
         node-version: '14.x'
 
+    - name: Configure Git
+    run: |
+      git config user.name "GitHub Action"
+      git config user.email "action@github.com"
+
     - name: Install npm dependencies in docs
       run: cd docs && npm install
 
