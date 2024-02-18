@@ -34,18 +34,18 @@ See https://docs.arc42.org/section-12/[Glossary] in the arc42 documentation.
 |===
 | Term |Definition
 
-|*WikiData*
+|WikiData
 |A collaborative platform that provides structured data for Wikimedia projects, including Wikipedia.
 
-|*IDE (Integrated Development Environment)*
+|IDE (Integrated Development Environment)
 |A software application that provides comprehensive facilities to programmers for software development.
 
-|*Docker*
+|Docker
 |An open-source platform designed to automate the deployment of applications inside lightweight, portable containers.
 
-|*Microservices*
+|Microservices
 |An architectural style that structures an application as a collection of small, independent services.
 
-|*API (Application Programming Interface)*
+|API (Application Programming Interface)
 |A set of protocols and tools for building software applications, allowing them to communicate with each other.
 |===
