@@ -458,14 +458,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_technical_context">3.2. Technical Context</a></li>
 </ul>
 </li>
-<li><a href="#section-solution-strategy">4. Solution Strategy</a>
-<ul class="sectlevel2">
-<li><a href="#_technological_decisions">4.1. Technological Decisions</a></li>
-<li><a href="#_system_decomposition">4.2. System Decomposition</a></li>
-<li><a href="#_quality_goals_2">4.3. Quality Goals</a></li>
-<li><a href="#_organizational_decisions">4.4. Organizational Decisions</a></li>
-</ul>
-</li>
+<li><a href="#section-solution-strategy">4. Solution Strategy</a></li>
 <li><a href="#section-building-block-view">5. Building Block View</a>
 <ul class="sectlevel2">
 <li><a href="#_whitebox_overall_system">5.1. Whitebox Overall System</a></li>
@@ -491,14 +484,9 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </li>
 <li><a href="#section-concepts">8. Cross-cutting Concepts</a>
 <ul class="sectlevel2">
-<li><a href="#_domain_model">8.1. Domain Model</a></li>
-<li><a href="#_hexagonal_architecture">8.2. Hexagonal Architecture</a></li>
-<li><a href="#_java_persistence_api_jpa_for_data_management">8.3. Java Persistence API (JPA) for Data Management</a></li>
-<li><a href="#_logging_with_log4j_and_system_out">8.4. Logging with Log4j and System.out</a></li>
-<li><a href="#_security">8.5. Security</a></li>
-<li><a href="#_performance_optimization">8.6. Performance Optimization</a></li>
-<li><a href="#_continuous_integration_and_continuous_deployment_cicd">8.7. Continuous Integration and Continuous Deployment (CI/CD)</a></li>
-<li><a href="#_scalability">8.8. Scalability</a></li>
+<li><a href="#_concept_1">8.1. <em>&lt;Concept 1&gt;</em></a></li>
+<li><a href="#_concept_2">8.2. <em>&lt;Concept 2&gt;</em></a></li>
+<li><a href="#_concept_n">8.3. <em>&lt;Concept n&gt;</em></a></li>
 </ul>
 </li>
 <li><a href="#section-design-decisions">9. Architecture Decisions</a></li>
@@ -592,25 +580,6 @@ These include</p>
 </div>
 </div>
 </div>
-<div class="paragraph">
-<p>WIQ is a game developed by HappySw for:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Challenging "Saber y ganar" fans</p>
-</li>
-<li>
-<p>Learning to perform teamwork</p>
-</li>
-<li>
-<p>Passing the "Software Architecture" subject</p>
-</li>
-<li>
-<p>Improving as software engineers</p>
-</li>
-</ul>
-</div>
 <div class="sect2">
 <h3 id="_requirements_overview">1.1. Requirements Overview</h3>
 <div class="sidebarblock arc42help">
@@ -636,39 +605,9 @@ If requirements documents exist this overview should refer to these documents.</
 </div>
 <div class="paragraph">
 <div class="title">Further Information</div>
-<p>See <a href="https://docs.arc42.org/section-1/">Introducdction and Goals</a> in the arc42 documentation.</p>
+<p>See <a href="https://docs.arc42.org/section-1/">Introduction and Goals</a> in the arc42 documentation.</p>
 </div>
 </div>
-</div>
-<div class="paragraph">
-<p>This web application, inspired by the famous Spanish TV show "Saber y ganar," consists of a mini-game of questions and answers.
-In this game, the player is asked a question and presented with four possible answers, of which only one is correct.</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>The player must register with a name.</p>
-</li>
-<li>
-<p>The player must answer the question within a time limit.</p>
-</li>
-<li>
-<p>If the player does not answer, it will be counted as an incorrect response.</p>
-</li>
-<li>
-<p>Each correct answer earns points.</p>
-</li>
-<li>
-<p>Optionally, the score can be saved in a ranking.</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>For all those "Saber y ganar" viewers who wanted to participate in the show, this application is ideal for testing their knowledge.</p>
-</div>
-<div class="paragraph">
-<p>The application automatically generates questions with the help of Wikidata (the page that supports Wikipedia and many other wikis)
-to constantly update the questions instead of storing them in a database.</p>
 </div>
 </div>
 <div class="sect2">
@@ -701,37 +640,6 @@ If you as an architect do not know how the quality of your work will be judged&#
 </div>
 </div>
 </div>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 20%;">
-<col style="width: 40%;">
-<col style="width: 40%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Nº</th>
-<th class="tableblock halign-left valign-top">Atributo</th>
-<th class="tableblock halign-left valign-top">Motivacion</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Efficiency</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Access, creation of questions, and navigation between them should be fast to ensure user satisfaction.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">2</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Usability</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The application should be appealing to all fans of the original program while also offering a wide variety of questions.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">3</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Manteinence</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The application should ensure easy expansion and modification to provide users with new features.</p></td>
-</tr>
-</tbody>
-</table>
 </div>
 <div class="sect2">
 <h3 id="_stakeholders">1.3. Stakeholders</h3>
@@ -774,31 +682,27 @@ These stakeholders determine the extent and the level of detail of your work and
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 66.6667%;">
+<col style="width: 20%;">
+<col style="width: 40%;">
+<col style="width: 40%;">
 </colgroup>
 <thead>
 <tr>
 <th class="tableblock halign-left valign-top">Role/Name</th>
+<th class="tableblock halign-left valign-top">Contact</th>
 <th class="tableblock halign-left valign-top">Expectations</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">HappySw</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">A company developing the application aiming to earn money through its development and recognition at the Spanish level.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>&lt;Role-1&gt;</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>&lt;Contact-1&gt;</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>&lt;Expectation-1&gt;</em></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">RTVE</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">A Spanish television network that hired the development to promote its program.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Uniovi students</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The application developers who want to pass the subject.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">ArquiSoft  teachers</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The evaluators of the program development and final version who want their students to pass.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>&lt;Role-2&gt;</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>&lt;Contact-2&gt;</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>&lt;Expectation-2&gt;</em></p></td>
 </tr>
 </tbody>
 </table>
@@ -832,30 +736,6 @@ conventions (e.g. programming or versioning guidelines, documentation or naming 
 <p>See <a href="https://docs.arc42.org/section-2/">Architecture Constraints</a> in the arc42 documentation.</p>
 </div>
 </div>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><strong>Programming Language Restriction:</strong>
-The system must be implemented using Java as the primary programming language.</p>
-</li>
-<li>
-<p><strong>Mandatory Usage of WikiData API:</strong>
-The WikiData API must be utilized as an integral part of the system, and interactions with WikiData are obligatory for data retrieval and integration.</p>
-</li>
-<li>
-<p><strong>Web Frontend Requirement:</strong>
-The system must include at least one web frontend, and it is mandatory for deployment.</p>
-</li>
-<li>
-<p><strong>Freedom in Database Selection:</strong>
-There are no imposed restrictions on the choice of the database. Teams have the freedom to select a suitable database technology based on project requirements.</p>
-</li>
-<li>
-<p><strong>No Company Policy Constraints:</strong>
-There are no specific constraints or restrictions related to company policies. Teams have the flexibility to make decisions aligned with project goals.</p>
-</li>
-</ul>
 </div>
 <div style="page-break-after: always;"></div>
 </div>
@@ -920,26 +800,11 @@ The title of the table is the name of your system, the three columns contain the
 </div>
 </div>
 </div>
-<div class="imageblock">
-<div class="content">
-<img src="./images/Deployment%20diagram.png" alt="Deployment diagram" width="243" height="326">
+<div class="paragraph">
+<p><strong>&lt;Diagram or Table&gt;</strong></p>
 </div>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><strong>User:</strong> Represents users who interact with the application to play games or view their history.</p>
-</li>
-<li>
-<p><strong>System (QuestionGame):</strong> The main system that hosts the game logic and manages user interactions.</p>
-</li>
-<li>
-<p><strong>WikiData:</strong> Component used to retrieve data from Wikidata and automatically generate questions.</p>
-</li>
-<li>
-<p><strong>Database:</strong> Stores system information, such as user data, generated questions, game history, etc.</p>
-</li>
-</ul>
+<div class="paragraph">
+<p><strong>&lt;optionally: Explanation of external domain interfaces&gt;</strong></p>
 </div>
 </div>
 <div class="sect2">
@@ -961,78 +826,16 @@ together with a mapping table showing the relationships between channels and inp
 </div>
 </div>
 </div>
-<div class="imageblock">
-<div class="content">
-<img src="./images/Technical%20Context%20Diagram.png" alt="Technical Context Diagram" width="788" height="699">
+<div class="paragraph">
+<p><strong>&lt;Diagram or Table&gt;</strong></p>
 </div>
+<div class="paragraph">
+<p><strong>&lt;optionally: Explanation of technical interfaces&gt;</strong></p>
 </div>
-<div class="ulist">
-<ul>
-<li>
-<p><strong>User Agent:</strong> Represents the web or mobile interface used by users.</p>
-</li>
-<li>
-<p><strong>QuestionGame server:</strong> The server-side components, including the Frontend, QuestionGame logic, User&#8217;s API, and Question&#8217;s API.</p>
-</li>
-<li>
-<p><strong>HTTPS:</strong> Represents the communication channels, with HTTPS being the protocol used for secure communication.</p>
-</li>
-<li>
-<p><strong>Question Generation:</strong> Represents the means used for question and answers generation.</p>
-</li>
-<li>
-<p><strong>Database:</strong> Represents whichever system used for data persistence.</p>
-</li>
-<li>
-<p><strong>To be decided:</strong> Indicates that specific details about the channels and protocols are yet to be determined.</p>
-</li>
-</ul>
+<div class="paragraph">
+<p><strong>&lt;Mapping Input/Output to Channels&gt;</strong></p>
 </div>
-<div class="sect3">
-<h4 id="_inputoutput_mapping_table">3.2.1. Input/Output Mapping Table</h4>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 20%;">
-<col style="width: 40%;">
-<col style="width: 40%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Component</th>
-<th class="tableblock halign-left valign-top">Input/Output</th>
-<th class="tableblock halign-left valign-top">Channel/Protocol</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">User&#8217;s API</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">User registration, game history</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">HTTPS</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Question&#8217;s API</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Question data retrieval</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">HTTPS</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Frontend</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">User interactions, game display</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">HTTPS</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Database</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">User data, game history, questions</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Specific database driver</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">WikiData</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Data for question generation</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">HTTP</p></td>
-</tr>
-</tbody>
-</table>
 <div style="page-break-after: always;"></div>
-</div>
 </div>
 </div>
 </div>
@@ -1080,34 +883,7 @@ Refer to details in the following sections.</p>
 </div>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_technological_decisions">4.1. Technological Decisions</h3>
-<div class="paragraph">
-<p>Programming Language: [Language] will be used for system development due to [reasons].
-Frontend Framework: [Framework] will be adopted for frontend development due to [reasons].
-Database: [Database] was selected as the storage engine due to [reasons].</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_system_decomposition">4.2. System Decomposition</h3>
-<div class="paragraph">
-<p>The [pattern] architecture pattern will be followed for structuring the system, dividing it into modules/classes responsible for [responsibilities].</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_quality_goals_2">4.3. Quality Goals</h3>
-<div class="paragraph">
-<p>Performance: A quick system response will be sought, especially during question generation and gameplay.
-Security: Security measures will be implemented to protect user information and ensure the integrity of generated questions.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_organizational_decisions">4.4. Organizational Decisions</h3>
-<div class="paragraph">
-<p>Development Methodology: [Methodology] will be adopted for project management, facilitating collaboration and iterative delivery.</p>
-</div>
 <div style="page-break-after: always;"></div>
-</div>
 </div>
 </div>
 <div class="sect1">
@@ -1200,7 +976,7 @@ In the best case you will get away with examples or simple signatures.</p>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="./images/Whitebox%20Overall%20System.png" alt="Whitebox Overall System" width="290" height="312">
+<img src="./images/Whitebox%20Overall%20System.png" alt="Whitebox Overall System" width="265" height="319">
 </div>
 </div>
 <div class="dlist">
@@ -1228,16 +1004,16 @@ fulfill system requirements related to the automatic generation of questions.</p
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">User</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">It represents the user interacting with the WIQ application.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>User</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>It represents the user interacting with the WIQ application.</em></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">WIQ</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">It represents the main WIQ application.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>WIQ</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>It represents the main WIQ application.</em></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Wikidata</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">External service used by WIQ to obtain data and generate questions.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Wikidata</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>External service used by WIQ to obtain data and generate questions.</em></p></td>
 </tr>
 </tbody>
 </table>
@@ -1515,7 +1291,7 @@ You will mainly capture scenarios in your documentation to communicate your arch
 <h3 id="_user_authentication">6.1. User Authentication</h3>
 <div class="imageblock">
 <div class="content">
-<img src="./images/Sequence%20diagram%201.png" alt="Sequence diagram 1" width="509" height="355">
+<img src="./images/Sequence%20diagram%201.png" alt="Sequence diagram 1" width="465" height="365">
 </div>
 </div>
 </div>
@@ -1523,7 +1299,7 @@ You will mainly capture scenarios in your documentation to communicate your arch
 <h3 id="_question_generation">6.2. Question Generation</h3>
 <div class="imageblock">
 <div class="content">
-<img src="./images/Sequence%20diagram%202.png" alt="Sequence diagram 2" width="778" height="427">
+<img src="./images/Sequence%20diagram%202.png" alt="Sequence diagram 2" width="713" height="439">
 </div>
 </div>
 </div>
@@ -1531,7 +1307,7 @@ You will mainly capture scenarios in your documentation to communicate your arch
 <h3 id="_user_responds_to_a_question">6.3. User Responds to a Question</h3>
 <div class="imageblock">
 <div class="content">
-<img src="./images/Sequence%20diagram%203.png" alt="Sequence diagram 3" width="460" height="368">
+<img src="./images/Sequence%20diagram%203.png" alt="Sequence diagram 3" width="429" height="378">
 </div>
 </div>
 </div>
@@ -1539,7 +1315,7 @@ You will mainly capture scenarios in your documentation to communicate your arch
 <h3 id="_user_checks_their_history">6.4. User Checks their History</h3>
 <div class="imageblock">
 <div class="content">
-<img src="./images/Sequence%20diagram%204.png" alt="Sequence diagram 4" width="433" height="326">
+<img src="./images/Sequence%20diagram%204.png" alt="Sequence diagram 4" width="402" height="335">
 </div>
 </div>
 </div>
@@ -1547,7 +1323,7 @@ You will mainly capture scenarios in your documentation to communicate your arch
 <h3 id="_access_to_user_information_via_an_api">6.5. Access to User Information via an API</h3>
 <div class="imageblock">
 <div class="content">
-<img src="./images/Sequence%20diagram%205.png" alt="Sequence diagram 5" width="635" height="385">
+<img src="./images/Sequence%20diagram%205.png" alt="Sequence diagram 5" width="584" height="396">
 </div>
 </div>
 </div>
@@ -1555,7 +1331,7 @@ You will mainly capture scenarios in your documentation to communicate your arch
 <h3 id="_access_to_generated_questions_information_via_an_api">6.6. Access to Generated Questions Information via an API</h3>
 <div class="imageblock">
 <div class="content">
-<img src="./images/Sequence%20diagram%206.png" alt="Sequence diagram 6" width="754" height="385">
+<img src="./images/Sequence%20diagram%206.png" alt="Sequence diagram 6" width="693" height="396">
 </div>
 </div>
 <div style="page-break-after: always;"></div>
@@ -1565,62 +1341,139 @@ You will mainly capture scenarios in your documentation to communicate your arch
 <div class="sect1">
 <h2 id="section-deployment-view">7. Deployment View</h2>
 <div class="sectionbody">
+<div class="sidebarblock arc42help">
+<div class="content">
 <div class="paragraph">
-<p>The deployment strategy for our game, which leverages the Wikidata API to dynamically generate questions, is built around a Docker-based infrastructure. This approach allows for the encapsulation of our Java Spring Boot application within a Docker container, simplifying deployments across different environments (development, testing, and production) while ensuring consistency and isolation.</p>
+<div class="title">Content</div>
+<p>The deployment view describes:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>technical infrastructure used to execute your system, with infrastructure elements like geographical locations, environments, computers, processors, channels and net topologies as well as other infrastructure elements and</p>
+</li>
+<li>
+<p>mapping of (software) building blocks to that infrastructure elements.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Often systems are executed in different environments, e.g. development environment, test environment, production environment. In such cases you should document all relevant environments.</p>
+</div>
+<div class="paragraph">
+<p>Especially document a deployment view if your software is executed as distributed system with more than one computer, processor, server or container or when you design and construct your own hardware processors and chips.</p>
+</div>
+<div class="paragraph">
+<p>From a software perspective it is sufficient to capture only those elements of an infrastructure that are needed to show a deployment of your building blocks. Hardware architects can go beyond that and describe an infrastructure to any level of detail they need to capture.</p>
+</div>
+<div class="paragraph">
+<div class="title">Motivation</div>
+<p>Software does not run without hardware.
+This underlying infrastructure can and will influence a system and/or some
+cross-cutting concepts. Therefore, there is a need to know the infrastructure.</p>
+</div>
+<div class="paragraph">
+<div class="title">Form</div>
+<p>Maybe a highest level deployment diagram is already contained in section 3.2. as
+technical context with your own infrastructure as ONE black box. In this section one can
+zoom into this black box using additional deployment diagrams:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>UML offers deployment diagrams to express that view. Use it, probably with nested diagrams,
+when your infrastructure is more complex.</p>
+</li>
+<li>
+<p>When your (hardware) stakeholders prefer other kinds of diagrams rather than a deployment diagram, let them use any kind that is able to show nodes and channels of the infrastructure.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<div class="title">Further Information</div>
+<p>See <a href="https://docs.arc42.org/section-7/">Deployment View</a> in the arc42 documentation.</p>
+</div>
+</div>
 </div>
 <div class="sect2">
 <h3 id="_infrastructure_level_1">7.1. Infrastructure Level 1</h3>
+<div class="sidebarblock arc42help">
+<div class="content">
 <div class="paragraph">
-<p>Our application is containerized using Docker, enabling us to deploy the entire stack as a single <code>.jar</code> file that includes the web server. This method ensures that our application can be easily moved across environments or scaled up as needed without significant changes to the infrastructure.</p>
-</div>
-<div class="paragraph">
-<p><em><strong>Overview Diagram:</strong></em>
-The infrastructure features a single Docker container that hosts the Java Spring Boot application. This container communicates with external services, such as the Wikidata API, to fetch data in real-time and generate game questions.</p>
-</div>
-<div class="paragraph">
-<div class="title">Motivation::</div>
-<p>The primary motivation behind using Docker for deployment is to streamline the development and deployment processes. By containerizing the application, we reduce discrepancies between environments, making it easier to develop, test, and deploy with confidence.</p>
+<p>Describe (usually in a combination of diagrams, tables, and text):</p>
 </div>
 <div class="ulist">
-<div class="title">Quality and/or Performance Features::</div>
 <ul>
 <li>
-<p><strong>Portability:</strong> Docker containers can run on any system that has Docker installed, reducing environment-specific bugs.</p>
+<p>distribution of a system to multiple locations, environments, computers, processors, .., as well as physical connections between them</p>
 </li>
 <li>
-<p><strong>Scalability:</strong> While we start with a single container, the setup can be easily scaled using Docker Compose or Docker Swarm if the need arises.</p>
+<p>important justifications or motivations for this deployment structure</p>
 </li>
 <li>
-<p><strong>Efficiency:</strong> Docker utilizes resources more efficiently than traditional VMs, allowing for faster startup times and lower overhead.</p>
+<p>quality and/or performance features of this infrastructure</p>
 </li>
 <li>
-<p><strong>Web Server/Application (.jar file):</strong> Packaged within a Docker container, it includes all necessary dependencies to run independently across any Docker-supported platform.</p>
-</li>
-<li>
-<p><strong>External APIs (e.g., Wikidata API):</strong> Accessed over the network, these APIs provide dynamic content for the game.</p>
+<p>mapping of software artifacts to elements of this infrastructure</p>
 </li>
 </ul>
+</div>
+<div class="paragraph">
+<p>For multiple environments or alternative deployments please copy and adapt this section of arc42 for all relevant environments.</p>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p><em><strong>&lt;Overview Diagram&gt;</strong></em></p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Motivation</dt>
+<dd>
+<p><em>&lt;explanation in text form&gt;</em></p>
+</dd>
+<dt class="hdlist1">Quality and/or Performance Features</dt>
+<dd>
+<p><em>&lt;explanation in text form&gt;</em></p>
+</dd>
+<dt class="hdlist1">Mapping of Building Blocks to Infrastructure</dt>
+<dd>
+<p><em>&lt;description of the mapping&gt;</em></p>
+</dd>
+</dl>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_infrastructure_level_2">7.2. Infrastructure Level 2</h3>
+<div class="sidebarblock arc42help">
+<div class="content">
 <div class="paragraph">
-<p>At this level, we describe the Docker container configuration that encapsulates our application.</p>
+<p>Here you can include the internal structure of (some) infrastructure elements from level 1.</p>
+</div>
+<div class="paragraph">
+<p>Please copy the structure from level 1 for each selected element.</p>
+</div>
+</div>
 </div>
 <div class="sect3">
-<h4 id="_docker_container">7.2.1. <em>Docker Container</em></h4>
+<h4 id="_infrastructure_element_1">7.2.1. <em>&lt;Infrastructure Element 1&gt;</em></h4>
 <div class="paragraph">
-<p>Our Docker container is built from a Java base image, which is then layered with our application’s <code>.jar</code> file. This setup encapsulates the entire runtime environment required for our application.</p>
+<p><em>&lt;diagram + explanation&gt;</em></p>
 </div>
-<div class="imageblock">
-<div class="content">
-<img src="./images/Docker%20Container%20Setup.png" alt="Docker Container Setup" width="394" height="231">
 </div>
-<div class="title">Figure 1. Diagram: Docker Container Setup::</div>
+<div class="sect3">
+<h4 id="_infrastructure_element_2">7.2.2. <em>&lt;Infrastructure Element 2&gt;</em></h4>
+<div class="paragraph">
+<p><em>&lt;diagram + explanation&gt;</em></p>
 </div>
 <div class="paragraph">
-<div class="title">Explanation:_</div>
-<p>This diagram illustrates the internal structure of our Docker container. It shows the Java Spring Boot application, including the embedded web server, packaged as a <code>.jar</code> file. The application interacts with external APIs, like the Wikidata API, to retrieve data necessary for generating game questions. The containerized approach ensures that the application can be deployed consistently across any environment that supports Docker.</p>
+<p>&#8230;&#8203;</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_infrastructure_element_n">7.2.3. <em>&lt;Infrastructure Element n&gt;</em></h4>
+<div class="paragraph">
+<p><em>&lt;diagram + explanation&gt;</em></p>
 </div>
 <div style="page-break-after: always;"></div>
 </div>
@@ -1630,87 +1483,124 @@ The infrastructure features a single Docker container that hosts the Java Spring
 <div class="sect1">
 <h2 id="section-concepts">8. Cross-cutting Concepts</h2>
 <div class="sectionbody">
+<div class="sidebarblock arc42help">
+<div class="content">
 <div class="paragraph">
-<p>The following concepts provide a foundation for the design and implementation of the trivia game project, which utilizes the Wikidata API for dynamic question generation and employs a hexagonal architecture for its Java Spring Boot application.</p>
+<div class="title">Content</div>
+<p>This section describes overall, principal regulations and solution ideas that are relevant in multiple parts (= cross-cutting) of your system.
+Such concepts are often related to multiple building blocks.
+They can include many different topics, such as</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>models, especially domain models</p>
+</li>
+<li>
+<p>architecture or design patterns</p>
+</li>
+<li>
+<p>rules for using specific technology</p>
+</li>
+<li>
+<p>principal, often technical decisions of an overarching (= cross-cutting) nature</p>
+</li>
+<li>
+<p>implementation rules</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<div class="title">Motivation</div>
+<p>Concepts form the basis for <em>conceptual integrity</em> (consistency, homogeneity) of the architecture.
+Thus, they are an important contribution to achieve inner qualities of your system.</p>
+</div>
+<div class="paragraph">
+<p>Some of these concepts cannot be assigned to individual building blocks, e.g. security or safety.</p>
+</div>
+<div class="paragraph">
+<div class="title">Form</div>
+<p>The form can be varied:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>concept papers with any kind of structure</p>
+</li>
+<li>
+<p>cross-cutting model excerpts or scenarios using notations of the architecture views</p>
+</li>
+<li>
+<p>sample implementations, especially for technical concepts</p>
+</li>
+<li>
+<p>reference to typical usage of standard frameworks (e.g. using Hibernate for object/relational mapping)</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<div class="title">Structure</div>
+<p>A potential (but not mandatory) structure for this section could be:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Domain concepts</p>
+</li>
+<li>
+<p>User Experience concepts (UX)</p>
+</li>
+<li>
+<p>Safety and security concepts</p>
+</li>
+<li>
+<p>Architecture and design patterns</p>
+</li>
+<li>
+<p>"Under-the-hood"</p>
+</li>
+<li>
+<p>development concepts</p>
+</li>
+<li>
+<p>operational concepts</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Note: it might be difficult to assign individual concepts to one specific topic
+on this list.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="./images/08-Crosscutting-Concepts-Structure-EN.png" alt="Possible topics for crosscutting concepts">
+</div>
+</div>
+<div class="paragraph">
+<div class="title">Further Information</div>
+<p>See <a href="https://docs.arc42.org/section-8/">Concepts</a> in the arc42 documentation.</p>
+</div>
+</div>
 </div>
 <div class="sect2">
-<h3 id="_domain_model">8.1. Domain Model</h3>
+<h3 id="_concept_1">8.1. <em>&lt;Concept 1&gt;</em></h3>
 <div class="paragraph">
-<p>The domain model for our game includes entities such as <code>Question</code>, <code>Category</code>, <code>Player</code>, and <code>GameSession</code>. These are crucial for representing the game&#8217;s data and logic. The model serves as the basis for interactions within the application and between the application and the database.</p>
-</div>
-<div class="paragraph">
-<div class="title">Explanation:</div>
-<p>The <code>Question</code> entity encapsulates details of the trivia questions. <code>Category</code> classifies these questions into various topics. <code>Player</code> represents users and their interactions with the game, while <code>GameSession</code> maintains the state of play, including scores and progress.</p>
+<p><em>&lt;explanation&gt;</em></p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_hexagonal_architecture">8.2. Hexagonal Architecture</h3>
+<h3 id="_concept_2">8.2. <em>&lt;Concept 2&gt;</em></h3>
 <div class="paragraph">
-<p>Our application is structured using hexagonal architecture principles, which prioritize the separation of core logic from peripheral concerns like user interface and external API interactions.</p>
+<p><em>&lt;explanation&gt;</em></p>
 </div>
 <div class="paragraph">
-<div class="title">Explanation:</div>
-<p>This architecture facilitates the creation of a flexible and maintainable codebase. It allows for easy adaptation to changes in external services or user interface technologies without impacting the application&#8217;s core logic.</p>
+<p>&#8230;&#8203;</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_java_persistence_api_jpa_for_data_management">8.3. Java Persistence API (JPA) for Data Management</h3>
+<h3 id="_concept_n">8.3. <em>&lt;Concept n&gt;</em></h3>
 <div class="paragraph">
-<p>We use JPA for data persistence to abstract and handle all database operations, allowing for a more streamlined and object-oriented approach to data handling.</p>
-</div>
-<div class="paragraph">
-<div class="title">Explanation:</div>
-<p>JPA enables us to map our domain objects to the database schema with ease, providing a clear layer of abstraction that simplifies data persistence and retrieval while ensuring our application remains agnostic of the underlying database technology.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_logging_with_log4j_and_system_out">8.4. Logging with Log4j and System.out</h3>
-<div class="paragraph">
-<p>For monitoring runtime behavior and troubleshooting, the project utilizes Log4j and System.out for logging. While Log4j offers more sophisticated logging capabilities, System.out is used for straightforward, immediate console output.</p>
-</div>
-<div class="paragraph">
-<div class="title">Explanation:</div>
-<p>Log4j is configured to capture various levels of output, which can be directed to multiple destinations such as console, files, or even remote logging servers. For simplicity and immediacy during development or less complex deployment scenarios, System.out is employed for logging output directly to the console.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_security">8.5. Security</h3>
-<div class="paragraph">
-<p>Security is a key concern, ensuring that user data and game integrity are protected. We implement standard security practices at various levels within the application.</p>
-</div>
-<div class="paragraph">
-<div class="title">Explanation:</div>
-<p>This includes securing the web layer with Spring Security, encrypting sensitive data, and protecting against common web vulnerabilities.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_performance_optimization">8.6. Performance Optimization</h3>
-<div class="paragraph">
-<p>Performance optimization is considered in all aspects of the application, from the efficient design of the domain model to the configuration of the persistence layer.</p>
-</div>
-<div class="paragraph">
-<div class="title">Explanation:</div>
-<p>We ensure that database interactions are efficient through JPA&#8217;s caching and lazy loading. Queries are optimized to fetch only the necessary data, minimizing response times and resource utilization.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_continuous_integration_and_continuous_deployment_cicd">8.7. Continuous Integration and Continuous Deployment (CI/CD)</h3>
-<div class="paragraph">
-<p>The project adheres to CI/CD practices, facilitating automated testing, building, and deployment processes which contribute to the robustness and reliability of the application.</p>
-</div>
-<div class="paragraph">
-<div class="title">Explanation:</div>
-<p>Our CI/CD pipeline automates the process of integrating code changes, building the application, running tests, and deploying the Dockerized application, ensuring consistent and reliable delivery of updates.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_scalability">8.8. Scalability</h3>
-<div class="paragraph">
-<p>Designing for scalability, the application can accommodate an increasing number of users and interactions without performance degradation.</p>
-</div>
-<div class="paragraph">
-<div class="title">Explanation:</div>
-<p>Scalable solutions such as Docker containers allow the application to be deployed in a distributed environment, where resources can be adjusted based on demand.</p>
+<p><em>&lt;explanation&gt;</em></p>
 </div>
 <div style="page-break-after: always;"></div>
 </div>
@@ -1762,19 +1652,6 @@ Refer to section 4, where you already captured the most important decisions of y
 There you will find links and examples about ADR.</p>
 </div>
 </div>
-</div>
-<div class="paragraph">
-<p>The purpose of this section is to create an ordered list of architectural decisions that we will make as we develop the project. This list will be ordered according to the importance of the decision.</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p><strong>Protection of the master branch</strong>: This decision was made at the beginning of the first team meeting. Without a doubt, this is the most important architectural decision, as it will mean not being able to modify the master branch without all members having previously reviewed the modifications, so that nothing is added that could affect the functioning of the main branch. In addition to this, a develop branch was also created, which will function as a main2.0 branch for adding progress as it is made. To add to this branch also requires the approval of some members of the team.</p>
-</li>
-<li>
-<p><strong>Switch from JavaScript to Java with Spring</strong>: This is a decision we took on Tuesday 6 February, after the second session. So far this project is one of the most important decisions so far, as it will mean not using the base project and starting another application in another programming language. We have come to this decision because we consider it much more accessible to use the Java language, as it has been taught from the beginning of the course. Moreover, with what we learn in the subject SDI (Distributed Systems and Internet) we can apply it all to web development, using the Spring framework. We have also found a Java library with which we can use Wikidata very easily. It was a unanimous decision that will make it easier for us to work smoothly in the long run.</p>
-</li>
-</ol>
 </div>
 <div style="page-break-after: always;"></div>
 </div>
@@ -1835,75 +1712,6 @@ concrete and measurable.</p>
 </div>
 </div>
 </div>
-<div class="paragraph">
-<p><em>Nota: Los puntos (1), (2), (3) de la siguiente tabla repiten los requisitos de calidad de nivel superior del capítulo 1.2.</em></p>
-</div>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 25%;">
-<col style="width: 25%;">
-<col style="width: 25%;">
-<col style="width: 25%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Quality category</th>
-<th class="tableblock halign-left valign-top">Quality</th>
-<th class="tableblock halign-left valign-top">Description</th>
-<th class="tableblock halign-left valign-top">Scenario</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Usability</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Ease of use</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The application shall be easy to use by the user, with intuitive functionality.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">SC1</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Familiarity of the environment (2)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The application should appeal to all fans of the original programme and provide a wide variety of questions.</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Performance</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Accuracy</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The questions in the application must be accurate, both the question and the correct answer.</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Efficiency (1)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Accessing, creating questions and moving between questions should be fast to ensure user satisfaction.</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Robustness</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The system shall function reliably in all specified environments and operating conditions.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">SC2</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Safety</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Integrity</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The application shall be user-friendly, with intuitive functionality.</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Maintainability and support</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Maintenance (2)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The application shall ensure that it can be easily extended and modified to provide new features to users.</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Cultural and Regional</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Multilingual</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The user interface texts must be able to be converted by a translation file into different languages with an ASCII character set.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">SC3</p></td>
-</tr>
-</tbody>
-</table>
 </div>
 <div class="sect2">
 <h3 id="_quality_scenarios">10.2. Quality Scenarios</h3>
@@ -1945,32 +1753,6 @@ more precisely down to a level of scenarios that can be discussed and evaluated.
 </div>
 </div>
 </div>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Identification</th>
-<th class="tableblock halign-left valign-top">Scenario</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">SC1</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">A user who is not familiar with the application will know how to use it after a few minutes of instruction.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">SC2</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The application should be able to be run from any device, from a computer to a mobile phone, without losing formatting.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">CS3</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">With the appropriate translation files replacing the default language (English), all displayed and printed texts now appear in this language.</p></td>
-</tr>
-</tbody>
-</table>
 <div style="page-break-after: always;"></div>
 </div>
 </div>
@@ -2001,57 +1783,6 @@ more precisely down to a level of scenarios that can be discussed and evaluated.
 </div>
 </div>
 </div>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 16.6666%;">
-<col style="width: 33.3333%;">
-<col style="width: 50.0001%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Priority</th>
-<th class="tableblock halign-left valign-top">Risk/Debt</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">High</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Migration to Java</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Migration from the current project language, JavaScript (JS), to Java</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Medium</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">IDE Configuration</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Version compatibility, extensions and other preferences to work perfectly without conflicts</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Medium</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Database</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Discuss which database is best for the project</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Low</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Docker</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Know how docker works, what it is for, how it is used and what its alternatives could be.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Low</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Microservices</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Research about microservices and what they can contribute to the project</p>
-</div></div></td>
-</tr>
-</tbody>
-</table>
 <div style="page-break-after: always;"></div>
 </div>
 </div>
@@ -2107,24 +1838,12 @@ more precisely down to a level of scenarios that can be discussed and evaluated.
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">WikiData</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">A collaborative platform that provides structured data for Wikimedia projects, including Wikipedia.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>&lt;Term-1&gt;</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>&lt;definition-1&gt;</em></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">IDE (Integrated Development Environment)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">A software application that provides comprehensive facilities to programmers for software development.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Docker</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">An open-source platform designed to automate the deployment of applications inside lightweight, portable containers.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Microservices</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">An architectural style that structures an application as a collection of small, independent services.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">API (Application Programming Interface)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">A set of protocols and tools for building software applications, allowing them to communicate with each other.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>&lt;Term-2&gt;</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>&lt;definition-2&gt;</em></p></td>
 </tr>
 </tbody>
 </table>
@@ -2134,7 +1853,7 @@ more precisely down to a level of scenarios that can be discussed and evaluated.
 <div id="footer">
 <div id="footer-text">
 Version 8.2 EN<br>
-Last updated 2024-02-18 22:07:55 UTC
+Last updated 2024-02-06 13:10:50 +0100
 </div>
 </div>
 </body>
