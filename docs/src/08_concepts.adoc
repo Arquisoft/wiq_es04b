@@ -3,71 +3,60 @@ ifndef::imagesdir[:imagesdir: ../images]
 [[section-concepts]]
 == Cross-cutting Concepts
 
+The following concepts provide a foundation for the design and implementation of the trivia game project, which utilizes the Wikidata API for dynamic question generation and employs a hexagonal architecture for its Java Spring Boot application.
 
-[role="arc42help"]
-****
-.Content
-This section describes overall, principal regulations and solution ideas that are relevant in multiple parts (= cross-cutting) of your system.
-Such concepts are often related to multiple building blocks.
-They can include many different topics, such as
+=== Domain Model
 
-* models, especially domain models
-* architecture or design patterns
-* rules for using specific technology
-* principal, often technical decisions of an overarching (= cross-cutting) nature
-* implementation rules
+The domain model for our game includes entities such as `Question`, `Category`, `Player`, and `GameSession`. These are crucial for representing the game's data and logic. The model serves as the basis for interactions within the application and between the application and the database.
 
+.Explanation:
+The `Question` entity encapsulates details of the trivia questions. `Category` classifies these questions into various topics. `Player` represents users and their interactions with the game, while `GameSession` maintains the state of play, including scores and progress.
 
-.Motivation
-Concepts form the basis for _conceptual integrity_ (consistency, homogeneity) of the architecture. 
-Thus, they are an important contribution to achieve inner qualities of your system.
+=== Hexagonal Architecture
 
-Some of these concepts cannot be assigned to individual building blocks, e.g. security or safety. 
+Our application is structured using hexagonal architecture principles, which prioritize the separation of core logic from peripheral concerns like user interface and external API interactions.
 
+.Explanation:
+This architecture facilitates the creation of a flexible and maintainable codebase. It allows for easy adaptation to changes in external services or user interface technologies without impacting the application's core logic.
 
-.Form
-The form can be varied:
+=== Java Persistence API (JPA) for Data Management
 
-* concept papers with any kind of structure
-* cross-cutting model excerpts or scenarios using notations of the architecture views
-* sample implementations, especially for technical concepts
-* reference to typical usage of standard frameworks (e.g. using Hibernate for object/relational mapping)
+We use JPA for data persistence to abstract and handle all database operations, allowing for a more streamlined and object-oriented approach to data handling.
 
-.Structure
-A potential (but not mandatory) structure for this section could be:
+.Explanation:
+JPA enables us to map our domain objects to the database schema with ease, providing a clear layer of abstraction that simplifies data persistence and retrieval while ensuring our application remains agnostic of the underlying database technology.
 
-* Domain concepts
-* User Experience concepts (UX)
-* Safety and security concepts
-* Architecture and design patterns
-* "Under-the-hood"
-* development concepts
-* operational concepts
+=== Logging with Log4j and System.out
 
-Note: it might be difficult to assign individual concepts to one specific topic
-on this list.
+For monitoring runtime behavior and troubleshooting, the project utilizes Log4j and System.out for logging. While Log4j offers more sophisticated logging capabilities, System.out is used for straightforward, immediate console output.
 
-image::08-Crosscutting-Concepts-Structure-EN.png["Possible topics for crosscutting concepts"]
+.Explanation:
+Log4j is configured to capture various levels of output, which can be directed to multiple destinations such as console, files, or even remote logging servers. For simplicity and immediacy during development or less complex deployment scenarios, System.out is employed for logging output directly to the console.
 
+=== Security
 
-.Further Information
+Security is a key concern, ensuring that user data and game integrity are protected. We implement standard security practices at various levels within the application.
 
-See https://docs.arc42.org/section-8/[Concepts] in the arc42 documentation.
-****
+.Explanation:
+This includes securing the web layer with Spring Security, encrypting sensitive data, and protecting against common web vulnerabilities.
 
+=== Performance Optimization
 
-=== _<Concept 1>_
+Performance optimization is considered in all aspects of the application, from the efficient design of the domain model to the configuration of the persistence layer.
 
-_<explanation>_
+.Explanation:
+We ensure that database interactions are efficient through JPA's caching and lazy loading. Queries are optimized to fetch only the necessary data, minimizing response times and resource utilization.
 
+=== Continuous Integration and Continuous Deployment (CI/CD)
 
+The project adheres to CI/CD practices, facilitating automated testing, building, and deployment processes which contribute to the robustness and reliability of the application.
 
-=== _<Concept 2>_
+.Explanation:
+Our CI/CD pipeline automates the process of integrating code changes, building the application, running tests, and deploying the Dockerized application, ensuring consistent and reliable delivery of updates.
 
-_<explanation>_
+=== Scalability
 
-...
+Designing for scalability, the application can accommodate an increasing number of users and interactions without performance degradation.
 
-=== _<Concept n>_
-
-_<explanation>_
+.Explanation:
+Scalable solutions such as Docker containers allow the application to be deployed in a distributed environment, where resources can be adjusted based on demand.
