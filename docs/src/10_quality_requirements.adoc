@@ -46,6 +46,53 @@ In any case the tree should include links to the scenarios of the following sect
 
 ****
 
+_Nota: Los puntos (1), (2), (3) de la siguiente tabla repiten los requisitos de calidad de nivel superior del capítulo 1.2._
+
+[cols="4", options="header"]
+|===
+|Quality category |Quality |Description |Scenario
+
+|Usability
+|Ease of use
+|The application shall be easy to use by the user, with intuitive functionality.
+|SC1
+
+|
+|Familiarity of the environment (2)
+|The application should appeal to all fans of the original programme and provide a wide variety of questions.
+|
+
+|Performance
+|Accuracy
+|The questions in the application must be accurate, both the question and the correct answer.
+|
+
+|
+|Efficiency (1)
+|Accessing, creating questions and moving between questions should be fast to ensure user satisfaction.
+|
+
+|
+|Robustness
+|The system shall function reliably in all specified environments and operating conditions.
+|SC2
+
+|Safety
+|Integrity
+|The application shall be user-friendly, with intuitive functionality.
+|
+
+|Maintainability and support
+|Maintenance (2)
+|The application shall ensure that it can be easily extended and modified to provide new features to users.
+|
+
+|Cultural and Regional
+|Multilingual
+|The user interface texts must be able to be converted by a translation file into different languages with an ASCII character set.
+|SC3
+|===
+
 === Quality Scenarios
 
 [role="arc42help"]
@@ -71,3 +118,17 @@ more precisely down to a level of scenarios that can be discussed and evaluated.
 .Form
 Tabular or free form text.
 ****
+
+[cols="2", options="header"]
+|===
+|Identification |Scenario
+
+|SC1
+|A user who is not familiar with the application will know how to use it after a few minutes of instruction.
+
+|SC2
+|The application should be able to be run from any device, from a computer to a mobile phone, without losing formatting.
+
+|CS3
+|With the appropriate translation files replacing the default language (English), all displayed and printed texts now appear in this language.
+|===
