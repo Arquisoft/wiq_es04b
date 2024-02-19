@@ -100,9 +100,13 @@ Contained Building Blocks::
 |===
 
 
+In progress...::
+We have yet to decide the precise composition of our system so we can´t fill the rest of this section yet.
+
+
 Important Interfaces::
 _<Description of important interfaces>_
-ToDo
+
 
 [role="arc42help"]
 ****
