@@ -2,6 +2,7 @@ package com.uniovi.controllers;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.boot.autoconfigure.web.ErrorProperties;
+import org.springframework.boot.autoconfigure.web.ServerProperties;
 import org.springframework.boot.autoconfigure.web.servlet.error.BasicErrorController;
 import org.springframework.boot.autoconfigure.web.servlet.error.ErrorViewResolver;
 import org.springframework.boot.web.error.ErrorAttributeOptions;
@@ -21,24 +22,14 @@ import java.util.Map;
 
 @Controller
 public class CustomErrorController extends BasicErrorController {
-
-    private static final String PATH = "/error";
-    private final ErrorProperties errorProperties;
-
     @Autowired
-    public CustomErrorController(ErrorAttributes errorAttributes, ErrorProperties errorProperties) {
-        this(errorAttributes, errorProperties, Collections.emptyList());
+    public CustomErrorController(ErrorAttributes errorAttributes, ServerProperties serverProperties, List<ErrorViewResolver> errorViewResolvers) {
+        super(errorAttributes, serverProperties.getError(), errorViewResolvers);
     }
 
-    public CustomErrorController(ErrorAttributes errorAttributes, ErrorProperties errorProperties, List<ErrorViewResolver> errorViewResolvers) {
-        super(errorAttributes, errorProperties);
-        Assert.notNull(errorProperties, "ErrorProperties must not be null");
-        this.errorProperties = errorProperties;
-    }
-
-    @RequestMapping(value = PATH)
+    @RequestMapping(value = "/error")
     public String error(Model model, HttpServletRequest webRequest) {
-        Map<String, Object> errorAttributes = null;
+        Map<String, Object> errorAttributes = this.getErrorAttributes(webRequest, ErrorAttributeOptions.defaults());
         model.addAttribute("error", errorAttributes.get("error"));
         model.addAttribute("message", errorAttributes.get("message"));
         model.addAttribute("status", errorAttributes.get("status"));

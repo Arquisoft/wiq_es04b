@@ -1,14 +1,30 @@
-<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{fragments/head}"></head>
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head"></head>
 <body>
-<nav th:replace="~{fragments/nav}"></nav>
-<h2>Error!</h2>
-<div>Estado: <span th:text="${status}"></span></div>
-<div>Error: <span th:text="${error}"></span></div>
-<div>Mensaje de error: <span th:text="${message}"></span></div>
-<div>Traza:</div>
-<pre th:text="${trace}"></pre>
-<footer th:replace="~{fragments/footer}"></footer>
+<nav th:replace="fragments/nav"></nav>
+
+<div class="container mt-5">
+    <h2 class="text-danger">Error!</h2>
+    <div class="alert alert-danger" role="alert">
+        Estado: <strong th:text="${status}"></strong>
+    </div>
+    <div class="alert alert-warning" role="alert">
+        Error: <strong th:text="${error}"></strong>
+    </div>
+    <div class="alert alert-info" role="alert">
+        Mensaje de error: <strong th:text="${message}"></strong>
+    </div>
+    <div>
+        <h4>Traza:</h4>
+        <pre th:text="${trace}"></pre>
+    </div>
+</div>
+
+<footer th:replace="fragments/footer"></footer>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js" integrity="sha384-ZzWtA4MvN5JBDq0U4JF4KzMPAhT9mIBK6C5nE4B4pFwWw8pemFx6GJWvgSzgRJdM" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8sh+0r8F2L7C33Vz2b4y4TNEbHj6EoA3OJl6j7" crossorigin="anonymous"></script>
 </body>
 </html>
