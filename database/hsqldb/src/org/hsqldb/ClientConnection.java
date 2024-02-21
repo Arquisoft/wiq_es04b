@@ -1,4 +1,4 @@
-/* Copyright (c) 2001-2023, The HSQL Development Group
+/* Copyright (c) 2001-2021, The HSQL Development Group
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -38,6 +38,7 @@ import java.net.Socket;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.Locale;
 import java.util.TimeZone;
 
 import org.hsqldb.error.Error;
@@ -56,6 +57,7 @@ import org.hsqldb.rowio.RowOutputInterface;
 import org.hsqldb.server.HsqlSocketFactory;
 import org.hsqldb.types.BlobDataID;
 import org.hsqldb.types.ClobDataID;
+import org.hsqldb.types.TimestampData;
 
 /**
  * Base remote session proxy implementation. Uses instances of Result to
@@ -63,7 +65,7 @@ import org.hsqldb.types.ClobDataID;
  * protocol.
  *
  * @author Fred Toussi (fredt@users dot sourceforge.net)
- * @version 2.7.1
+ * @version 2.5.1
  * @since 1.7.2
  */
 public class ClientConnection implements SessionInterface, Cloneable {
@@ -128,7 +130,7 @@ public class ClientConnection implements SessionInterface, Cloneable {
     public ClientConnection(String host, int port, String path,
                             String database, boolean isTLS,
                             boolean isTLSWrapper, String user,
-                            String password, TimeZone timeZone) {
+                            String password, int timeZoneSeconds) {
 
         this.host         = host;
         this.port         = port;
@@ -136,15 +138,14 @@ public class ClientConnection implements SessionInterface, Cloneable {
         this.database     = database;
         this.isTLS        = isTLS;
         this.isTLSWrapper = isTLSWrapper;
-        this.zoneSeconds = timeZone.getOffset(System.currentTimeMillis())
-                           / 1000;
-        this.zoneString = timeZone.getID();
+        this.zoneSeconds  = timeZoneSeconds;
+        this.zoneString   = TimeZone.getDefault().getID();
 
         initStructures();
         initConnection(host, port, isTLS);
 
         Result login = Result.newConnectionAttemptRequest(user, password,
-            database, zoneString, zoneSeconds);
+            database, zoneString, timeZoneSeconds);
         Result resultIn = execute(login);
 
         if (resultIn.isError()) {
@@ -249,7 +250,7 @@ public class ClientConnection implements SessionInterface, Cloneable {
 
             return read();
         } catch (Throwable e) {
-            throw Error.error(e, ErrorCode.X_08006, e.toString());
+            throw Error.error(ErrorCode.X_08006, e.toString());
         }
     }
 
@@ -266,7 +267,7 @@ public class ClientConnection implements SessionInterface, Cloneable {
 
             return (RowSetNavigatorClient) result.getNavigator();
         } catch (Throwable e) {
-            throw Error.error(e, ErrorCode.X_08006, e.toString());
+            throw Error.error(ErrorCode.X_08006, e.toString());
         }
     }
 
@@ -620,8 +621,7 @@ public class ClientConnection implements SessionInterface, Cloneable {
     public SimpleDateFormat getSimpleDateFormatGMT() {
 
         if (simpleDateFormatGMT == null) {
-            simpleDateFormatGMT = new SimpleDateFormat("MMMM",
-                    HsqlDateTime.defaultLocale);
+            simpleDateFormatGMT = new SimpleDateFormat("MMMM", Locale.ENGLISH);
 
             Calendar cal = new GregorianCalendar(TimeZone.getTimeZone("GMT"),
                                                  HsqlDateTime.defaultLocale);
@@ -631,6 +631,15 @@ public class ClientConnection implements SessionInterface, Cloneable {
         }
 
         return simpleDateFormatGMT;
+    }
+
+    public TimestampData getCurrentDate() {
+
+        long currentMillis = System.currentTimeMillis();
+
+        currentMillis = HsqlDateTime.getNormalisedDate(currentMillis);
+
+        return new TimestampData(currentMillis / 1000);
     }
 
     public int getZoneSeconds() {

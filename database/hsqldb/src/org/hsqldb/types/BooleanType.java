@@ -1,4 +1,4 @@
-/* Copyright (c) 2001-2022, The HSQL Development Group
+/* Copyright (c) 2001-2021, The HSQL Development Group
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -43,7 +43,7 @@ import org.hsqldb.map.BitMap;
  * Type implementation for BOOLEAN.<p>
  *
  * @author Fred Toussi (fredt@users dot sourceforge.net)
- * @version 2.7.0
+ * @version 2.5.1
  * @since 1.9.0
  */
 public final class BooleanType extends Type {
@@ -282,20 +282,6 @@ public final class BooleanType extends Type {
                                             : Tokens.T_FALSE;
     }
 
-    public void convertToJSON(Object a, StringBuilder sb) {
-
-        if (a == null) {
-            sb.append("null");
-
-            return;
-        }
-
-        String val = ((Boolean) a).toString();
-
-        sb.append(val);
-    }
-
-
     public boolean canConvertFrom(Type otherType) {
 
         return otherType.typeCode == Types.SQL_ALL_TYPES
@@ -305,8 +291,8 @@ public final class BooleanType extends Type {
     }
 
     public int canMoveFrom(Type otherType) {
-        return otherType.isBooleanType() ? ReType.keep
-                                         : ReType.change;
+        return otherType.isBooleanType() ? 0
+                                         : -1;
     }
 
     public static BooleanType getBooleanType() {

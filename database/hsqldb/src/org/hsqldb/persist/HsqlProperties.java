@@ -1,4 +1,4 @@
-/* Copyright (c) 2001-2022, The HSQL Development Group
+/* Copyright (c) 2001-2021, The HSQL Development Group
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -44,6 +44,7 @@ import org.hsqldb.error.ErrorCode;
 import org.hsqldb.lib.ArrayUtil;
 import org.hsqldb.lib.FileAccess;
 import org.hsqldb.lib.FileUtil;
+import org.hsqldb.lib.HashMap;
 import org.hsqldb.map.ValuePool;
 
 /**
@@ -51,7 +52,7 @@ import org.hsqldb.map.ValuePool;
  * allow saving and loading.<p>
  *
  * @author Fred Toussi (fredt@users dot sourceforge.net)
- * @version 2.7.0
+ * @version 2.5.1
  * @since 1.7.0
  */
 public class HsqlProperties {
@@ -65,6 +66,7 @@ public class HsqlProperties {
     protected int[]         errorCodes = ValuePool.emptyIntArray;
     protected String[]      errorKeys  = ValuePool.emptyStringArray;
     protected FileAccess    fa;
+    protected HashMap       metaData;
 
     public HsqlProperties() {
         stringProps = new Properties();
@@ -83,12 +85,14 @@ public class HsqlProperties {
         fa                 = FileUtil.getFileUtil();
     }
 
-    public HsqlProperties(String fileName, FileAccess accessor, boolean b) {
+    public HsqlProperties(HashMap meta, String fileName, FileAccess accessor,
+                          boolean b) {
 
         stringProps        = new Properties();
         this.fileName      = fileName;
         this.fileExtension = ".properties";
         fa                 = accessor;
+        metaData           = meta;
     }
 
     public HsqlProperties(Properties props) {
@@ -259,7 +263,7 @@ public class HsqlProperties {
         fa.createParentDirs(fileString);
         fa.removeElement(fileString);
 
-        OutputStream        fos = fa.openOutputStreamElement(fileString);
+        OutputStream fos = fa.openOutputStreamElement(fileString);
         FileAccess.FileSync outDescriptor = fa.getFileSync(fos);
         String name = HsqlDatabaseProperties.PRODUCT_NAME + " "
                       + HsqlDatabaseProperties.THIS_FULL_VERSION;
@@ -401,84 +405,93 @@ public class HsqlProperties {
 
     public void validate() {}
 
-    public static PropertyMeta newMeta(String name, int type,
-                                       long defaultVal) {
+    // column number mappings
+    public static final int indexName         = 0;
+    public static final int indexType         = 1;
+    public static final int indexClass        = 2;
+    public static final int indexIsRange      = 3;
+    public static final int indexDefaultValue = 4;
+    public static final int indexRangeLow     = 5;
+    public static final int indexRangeHigh    = 6;
+    public static final int indexValues       = 7;
+    public static final int indexLimit        = 9;
 
-        PropertyMeta meta = new PropertyMeta();
+    public static Object[] getMeta(String name, int type) {
 
-        meta.propName         = name;
-        meta.propType         = type;
-        meta.propClass        = "Long";
-        meta.propDefaultValue = Long.valueOf(defaultVal);
+        Object[] row = new Object[indexLimit];
 
-        return meta;
+        row[indexName]         = name;
+        row[indexType]         = ValuePool.getInt(type);
+        row[indexClass]        = "Long";
+        row[indexDefaultValue] = Long.valueOf(0);
+
+        return row;
     }
 
-    public static PropertyMeta newMeta(String name, int type,
-                                       String defaultValue) {
+    public static Object[] getMeta(String name, int type,
+                                   String defaultValue) {
 
-        PropertyMeta meta = new PropertyMeta();
+        Object[] row = new Object[indexLimit];
 
-        meta.propName         = name;
-        meta.propType         = type;
-        meta.propClass        = "String";
-        meta.propDefaultValue = defaultValue;
+        row[indexName]         = name;
+        row[indexType]         = ValuePool.getInt(type);
+        row[indexClass]        = "String";
+        row[indexDefaultValue] = defaultValue;
 
-        return meta;
+        return row;
     }
 
-    public static PropertyMeta newMeta(String name, int type,
-                                       boolean defaultValue) {
+    public static Object[] getMeta(String name, int type,
+                                   boolean defaultValue) {
 
-        PropertyMeta meta = new PropertyMeta();
+        Object[] row = new Object[indexLimit];
 
-        meta.propName         = name;
-        meta.propType         = type;
-        meta.propClass        = "Boolean";
-        meta.propDefaultValue = defaultValue ? Boolean.TRUE
-                                             : Boolean.FALSE;
+        row[indexName]         = name;
+        row[indexType]         = ValuePool.getInt(type);
+        row[indexClass]        = "Boolean";
+        row[indexDefaultValue] = defaultValue ? Boolean.TRUE
+                                              : Boolean.FALSE;
 
-        return meta;
+        return row;
     }
 
-    public static PropertyMeta newMeta(String name, int type,
-                                       int defaultValue, int[] values) {
+    public static Object[] getMeta(String name, int type, int defaultValue,
+                                   int[] values) {
 
-        PropertyMeta meta = new PropertyMeta();
+        Object[] row = new Object[indexLimit];
 
-        meta.propName         = name;
-        meta.propType         = type;
-        meta.propClass        = "Integer";
-        meta.propDefaultValue = ValuePool.getInt(defaultValue);
-        meta.propValues       = values;
+        row[indexName]         = name;
+        row[indexType]         = ValuePool.getInt(type);
+        row[indexClass]        = "Integer";
+        row[indexDefaultValue] = ValuePool.getInt(defaultValue);
+        row[indexValues]       = values;
 
-        return meta;
+        return row;
     }
 
-    public static PropertyMeta newMeta(String name, int type,
-                                       int defaultValue, int rangeLow,
-                                       int rangeHigh) {
+    public static Object[] getMeta(String name, int type, int defaultValue,
+                                   int rangeLow, int rangeHigh) {
 
-        PropertyMeta meta = new PropertyMeta();
+        Object[] row = new Object[indexLimit];
 
-        meta.propName         = name;
-        meta.propType         = type;
-        meta.propClass        = "Integer";
-        meta.propDefaultValue = ValuePool.getInt(defaultValue);
-        meta.propIsRange      = true;
-        meta.propRangeLow     = rangeLow;
-        meta.propRangeHigh    = rangeHigh;
+        row[indexName]         = name;
+        row[indexType]         = ValuePool.getInt(type);
+        row[indexClass]        = "Integer";
+        row[indexDefaultValue] = ValuePool.getInt(defaultValue);
+        row[indexIsRange]      = Boolean.TRUE;
+        row[indexRangeLow]     = ValuePool.getInt(rangeLow);
+        row[indexRangeHigh]    = ValuePool.getInt(rangeHigh);
 
-        return meta;
+        return row;
     }
 
     /**
      * Performs any range checking for property and return an error message
      */
     public static String validateProperty(String key, String value,
-                                          PropertyMeta meta) {
+                                          Object[] meta) {
 
-        if (meta.propClass.equals("Boolean")) {
+        if (meta[indexClass].equals("Boolean")) {
             value = value.toLowerCase();
 
             if (value.equals("true") || value.equals("false")) {
@@ -488,29 +501,29 @@ public class HsqlProperties {
             return "invalid boolean value for property: " + key;
         }
 
-        if (meta.propClass.equals("String")) {
+        if (meta[indexClass].equals("String")) {
             return null;
         }
 
-        if (meta.propClass.equals("Long")) {
+        if (meta[indexClass].equals("Long")) {
             return null;
         }
 
-        if (meta.propClass.equals("Integer")) {
+        if (meta[indexClass].equals("Integer")) {
             try {
                 int number = Integer.parseInt(value);
 
-                if (meta.propIsRange) {
-                    int low  = meta.propRangeLow;
-                    int high = meta.propRangeHigh;
+                if (Boolean.TRUE.equals(meta[indexIsRange])) {
+                    int low  = ((Integer) meta[indexRangeLow]).intValue();
+                    int high = ((Integer) meta[indexRangeHigh]).intValue();
 
                     if (number < low || high < number) {
                         return "value outside range for property: " + key;
                     }
                 }
 
-                if (meta.propValues != null) {
-                    int[] values = meta.propValues;
+                if (meta[indexValues] != null) {
+                    int[] values = (int[]) meta[indexValues];
 
                     if (ArrayUtil.find(values, number) == -1) {
                         return "value not supported for property: " + key;
@@ -524,6 +537,70 @@ public class HsqlProperties {
         }
 
         return null;
+    }
+
+    public int getPropertyWithinRange(String name, int number) {
+
+        Object[] meta = (Object[]) metaData.get(name);
+
+        if (meta == null) {
+            return number;
+        }
+
+        if (meta[indexClass].equals("Integer")) {
+            if (Boolean.TRUE.equals(meta[indexIsRange])) {
+                int low  = ((Integer) meta[indexRangeLow]).intValue();
+                int high = ((Integer) meta[indexRangeHigh]).intValue();
+
+                if (number < low) {
+                    return low;
+                } else if (high < number) {
+                    return high;
+                }
+            }
+
+            if (meta[indexValues] != null) {
+                int[] values = (int[]) meta[indexValues];
+
+                if (ArrayUtil.find(values, number) == -1) {
+                    return values[0];
+                }
+            }
+        }
+
+        return number;
+    }
+
+    public boolean validateProperty(String name, int number) {
+
+        Object[] meta = (Object[]) metaData.get(name);
+
+        if (meta == null) {
+            return false;
+        }
+
+        if (meta[indexClass].equals("Integer")) {
+            if (Boolean.TRUE.equals(meta[indexIsRange])) {
+                int low  = ((Integer) meta[indexRangeLow]).intValue();
+                int high = ((Integer) meta[indexRangeHigh]).intValue();
+
+                if (number < low || high < number) {
+                    return false;
+                }
+            }
+
+            if (meta[indexValues] != null) {
+                int[] values = (int[]) meta[indexValues];
+
+                if (ArrayUtil.find(values, number) == -1) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        return false;
     }
 
     public String toString() {
@@ -556,17 +633,5 @@ public class HsqlProperties {
         sb.append('}');
 
         return sb.toString();
-    }
-
-    public static class PropertyMeta {
-
-        public String  propName;
-        public int     propType;
-        public String  propClass;
-        public boolean propIsRange;
-        public Object  propDefaultValue;
-        public int     propRangeLow;
-        public int     propRangeHigh;
-        public int[]   propValues;
     }
 }

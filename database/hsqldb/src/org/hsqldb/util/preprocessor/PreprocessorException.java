@@ -31,7 +31,7 @@
 
 package org.hsqldb.util.preprocessor;
 
-/* $Id: PreprocessorException.java 6434 2022-03-06 09:02:19Z campbell-burnet $ */
+/* $Id: PreprocessorException.java 5793 2018-01-06 13:12:38Z fredt $ */
 
 /**
  * Thrown when preprocessing fails.
@@ -40,7 +40,6 @@ package org.hsqldb.util.preprocessor;
  * @version 1.8.1
  * @since 1.8.1
  */
-@SuppressWarnings("serial")
 public class PreprocessorException extends Exception {
     public PreprocessorException(String message) {
         super(message);

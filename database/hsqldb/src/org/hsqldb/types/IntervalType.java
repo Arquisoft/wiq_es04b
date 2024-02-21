@@ -1,4 +1,4 @@
-/* Copyright (c) 2001-2022, The HSQL Development Group
+/* Copyright (c) 2001-2021, The HSQL Development Group
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -51,7 +51,7 @@ import org.hsqldb.lib.ArrayUtil;
  * Type subclass for various types of INTERVAL.<p>
  *
  * @author Fred Toussi (fredt@users dot sourceforge.net)
- * @version 2.7.0
+ * @version 2.5.1
  * @since 1.9.0
  */
 public final class IntervalType extends DTIType {
@@ -764,19 +764,6 @@ public final class IntervalType extends DTIType {
         return sb.toString();
     }
 
-    public void convertToJSON(Object a, StringBuilder sb) {
-
-        if (a == null) {
-            sb.append("null");
-
-            return;
-        }
-
-        sb.append('"');
-        sb.append(convertToString(a));
-        sb.append('"');
-    }
-
     public boolean canConvertFrom(Type otherType) {
 
         if (otherType.typeCode == Types.SQL_ALL_TYPES) {
@@ -802,36 +789,36 @@ public final class IntervalType extends DTIType {
     public int canMoveFrom(Type otherType) {
 
         if (otherType == this) {
-            return ReType.keep;
+            return 0;
         }
 
         if (typeCode == otherType.typeCode) {
-            return scale >= otherType.scale ? ReType.keep
-                                            : ReType.change;
+            return scale >= otherType.scale ? 0
+                                            : -1;
         }
 
         if (!otherType.isIntervalType()) {
-            return ReType.change;
+            return -1;
         }
 
         if (isYearMonth == ((IntervalType) otherType).isYearMonth) {
             if (scale < otherType.scale) {
-                return ReType.change;
+                return -1;
             }
 
             if (endPartIndex >= ((IntervalType) otherType).endPartIndex) {
                 if (precision >= otherType.precision) {
                     if (startPartIndex
                             <= ((IntervalType) otherType).startPartIndex) {
-                        return ReType.keep;
+                        return 0;
                     }
                 }
 
-                return ReType.check;
+                return 1;
             }
         }
 
-        return ReType.change;
+        return -1;
     }
 
     public int compareToTypeRange(Object o) {

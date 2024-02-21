@@ -1,4 +1,4 @@
-/* Copyright (c) 2001-2022, The HSQL Development Group
+/* Copyright (c) 2001-2021, The HSQL Development Group
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -42,7 +42,7 @@ import java.util.ArrayList;
  *
  * @author Blaine Simpson (blaine dot simpson at admc dot com)
  * @since    HSQLDB 1.8.0
- * @version  $Revision: 6509 $, $Date: 2022-05-17 14:18:08 +0100 (Tue, 17 May 2022) $
+ * @version  $Revision: 6266 $, $Date: 2021-01-25 16:08:06 +0000 (Mon, 25 Jan 2021) $
  */
 public class MainInvoker {
 
@@ -124,13 +124,6 @@ public class MainInvoker {
 
     /**
      * Invokes the static main(String[]) method from each specified class.
-     *
-     * @param className String
-     * @param args String[]
-     * @throws ClassNotFoundException if not found
-     * @throws NoSuchMethodException if not found
-     * @throws IllegalAccessException on no access
-     * @throws InvocationTargetException on invocation failure
      */
     public static void invoke(String className,
                               String[] args)

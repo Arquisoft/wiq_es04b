@@ -1,4 +1,4 @@
-/* Copyright (c) 2001-2022, The HSQL Development Group
+/* Copyright (c) 2001-2021, The HSQL Development Group
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -39,11 +39,11 @@ import org.hsqldb.lib.HsqlArrayList;
 import org.hsqldb.types.Collation;
 import org.hsqldb.types.Type;
 
-/**
+/*
  * Implementation of ORDER BY and LIMIT properties of query expressions.
  *
  * @author Fred Toussi (fredt@users dot sourceforge.net)
- * @version 2.7.0
+ * @version 2.6.1
  * @since 1.9.0
  */
 public final class SortAndSlice {
@@ -305,10 +305,6 @@ public final class SortAndSlice {
 
         if (rangeIndex == primaryTableIndex) {
             if (descendingSort) {
-                if (select.isDistinctSelect) {
-                    return;
-                }
-
                 boolean reversed = select.rangeVariables[0].reverseOrder();
 
                 if (!reversed) {

@@ -1,4 +1,4 @@
-/* Copyright (c) 2001-2022, The HSQL Development Group
+/* Copyright (c) 2001-2021, The HSQL Development Group
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -37,14 +37,13 @@ import org.hsqldb.lib.LongKeyHashMap;
 import org.hsqldb.rights.User;
 
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.TimeZone;
 
 /**
  * Container that maintains a map of session id's to Session objects.
  * Responsible for managing opening and closing of sessions.
  *
  * @author Fred Toussi (fredt@users dot sourceforge.net)
- * @version 2.7.0
+ * @version 2.6.0
  * @since 1.7.2
  */
 public class SessionManager {
@@ -70,11 +69,9 @@ public class SessionManager {
         User sysUser = db.getUserManager().getSysUser();
 
         sysSession = new Session(db, sysUser, false, false,
-                                 sessionIdCount.getAndIncrement(),
-                                 TimeZone.getTimeZone("GMT"));
+                                 sessionIdCount.getAndIncrement(), null, 0);
         sysLobSession = new Session(db, sysUser, true, false,
-                                    sessionIdCount.getAndIncrement(),
-                                    TimeZone.getTimeZone("GMT"));
+                                    sessionIdCount.getAndIncrement(), null, 0);
     }
 
     /*
@@ -99,16 +96,18 @@ public class SessionManager {
      * @param db the database to which the new Session is initially connected
      * @param user the Session User
      * @param readonly the ReadOnly attribute for the new Session
-     * @param zone the session time zone
+     * @param timeZoneSeconds the session time zone second interval
      * @return Session
      */
     public synchronized Session newSession(Database db, User user,
                                            boolean readonly,
-                                           boolean autoCommit, TimeZone zone) {
+                                           boolean autoCommit,
+                                           String zoneString,
+                                           int timeZoneSeconds) {
 
         long sessionId = sessionIdCount.getAndIncrement();
         Session s = new Session(db, user, autoCommit, readonly, sessionId,
-                                zone);
+                                zoneString, timeZoneSeconds);
 
         sessionMap.put(sessionId, s);
 
@@ -119,7 +118,7 @@ public class SessionManager {
 
         long sessionId = sessionIdCount.getAndIncrement();
         Session s = new Session(db, db.getUserManager().getSysUser(), false,
-                                false, sessionId, TimeZone.getTimeZone("GMT"));
+                                false, sessionId, null, 0);
 
         s.isProcessingLog = true;
 
@@ -134,8 +133,7 @@ public class SessionManager {
     public Session getSysSessionForScript(Database db) {
 
         Session session = new Session(db, db.getUserManager().getSysUser(),
-                                      false, false, 0,
-                                      TimeZone.getTimeZone("GMT"));
+                                      false, false, 0, null, 0);
 
         // some old 1.8.0 do not have SET SCHEMA PUBLIC
         session.setCurrentSchemaHsqlName(
@@ -173,7 +171,7 @@ public class SessionManager {
         long sessionId = sessionIdCount.getAndIncrement();
         Session session = new Session(sysSession.database,
                                       sysSession.getUser(), false, false,
-                                      sessionId, TimeZone.getTimeZone("GMT"));
+                                      sessionId, null, 0);
 
         session.currentSchema =
             sysSession.database.schemaManager.getDefaultSchemaHsqlName();
@@ -187,7 +185,7 @@ public class SessionManager {
 
         long sessionId = sessionIdCount.getAndIncrement();
         Session session = new Session(sysSession.database, user, false, false,
-                                      sessionId, TimeZone.getTimeZone("GMT"));
+                                      sessionId, null, 0);
 
         session.currentSchema = schema;
 

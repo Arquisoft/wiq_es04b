@@ -1,4 +1,4 @@
-/* Copyright (c) 2001-2023, The HSQL Development Group
+/* Copyright (c) 2001-2021, The HSQL Development Group
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -54,8 +54,10 @@ import java.util.Calendar;
 import java.util.Locale;
 import java.util.Map;
 
+import org.hsqldb.HsqlDateTime;
 import org.hsqldb.HsqlException;
 import org.hsqldb.SchemaObject;
+import org.hsqldb.error.Error;
 import org.hsqldb.error.ErrorCode;
 import org.hsqldb.lib.IntValueHashMap;
 import org.hsqldb.result.ResultConstants;
@@ -75,12 +77,18 @@ import org.hsqldb.types.Types;
 import java.sql.JDBCType;
 import java.sql.SQLType;
 import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.OffsetDateTime;
+import java.time.OffsetTime;
 import java.time.Period;
+import java.time.ZoneOffset;
 
 //#endif JAVA8
 
 
-/* $Id: JDBCCallableStatement.java 6656 2023-05-29 15:55:53Z fredt $ */
+/* $Id: JDBCCallableStatement.java 6261 2021-01-03 21:59:13Z fredt $ */
 
 /* @todo fredt 1.9.0 - continuous review wrt multiple result sets, named parameters etc. */
 
@@ -103,7 +111,7 @@ import java.time.Period;
 // campbell-burnet@users 2004-04-xx - doc 1.7.2 - javadocs added/updated
 // campbell-burnet@users 2005-12-07 - patch 1.8.0.x - initial JDBC 4.0 support work
 // campbell-burnet@users 2006-05-22 - doc 1.9.0 - full synch up to Mustang Build 84
-// Revision 1.14  2006/07/12 11:58:49  campbell-burnet
+// Revision 1.14  2006/07/12 11:58:49  boucherb
 //  - full synch up to Mustang b90
 
 /**
@@ -206,7 +214,7 @@ import java.time.Period;
  *
  * @author Campbell Burnet (campbell-burnet@users dot sourceforge.net)
  * @author Fred Toussi (fredt@users dot sourceforge.net)
- * @version 2.7.0
+ * @version 2.5.1
  * @since 1.9.0
  * @see JDBCConnection#prepareCall
  * @see JDBCResultSet
@@ -1283,7 +1291,13 @@ public class JDBCCallableStatement extends JDBCPreparedStatement implements Call
             return null;
         }
 
-        return (Date) Type.SQL_DATE.convertSQLToJava(session, t, cal);
+        long millis = t.getSeconds() * 1000;
+
+        if (cal != null) {
+            millis = HsqlDateTime.convertMillisToCalendar(cal, millis);
+        }
+
+        return new Date(millis);
     }
 
     /**
@@ -1324,13 +1338,24 @@ public class JDBCCallableStatement extends JDBCPreparedStatement implements Call
     public synchronized Time getTime(int parameterIndex,
                                      Calendar cal) throws SQLException {
 
-        Object t = getColumnValue(parameterIndex);
+        TimeData t = (TimeData) getColumnInType(parameterIndex, Type.SQL_TIME);
 
         if (t == null) {
             return null;
         }
 
-        return (Time) Type.SQL_TIME.convertSQLToJava(session, t, cal);
+        long millis = DateTimeType.normaliseTime(t.getSeconds()) * 1000L;
+
+        if (!parameterMetaData.columnTypes[--parameterIndex]
+                .isDateTimeTypeWithZone()) {
+            Calendar calendar = cal == null ? session.getCalendar()
+                    : cal;
+
+            millis = HsqlDateTime.convertMillisToCalendar(calendar, millis);
+            millis = HsqlDateTime.getNormalisedTime(millis);
+        }
+
+        return new Time(millis);
     }
 
     /**
@@ -1371,14 +1396,31 @@ public class JDBCCallableStatement extends JDBCPreparedStatement implements Call
     public synchronized Timestamp getTimestamp(int parameterIndex,
             Calendar cal) throws SQLException {
 
-
-        Object t = getColumnValue(parameterIndex);
+        TimestampData t = (TimestampData) getColumnInType(parameterIndex,
+            Type.SQL_TIMESTAMP);
 
         if (t == null) {
             return null;
         }
 
-        return (Timestamp) Type.SQL_TIMESTAMP.convertSQLToJava(session, t, cal);
+        long millis = t.getSeconds() * 1000;
+
+        if (!parameterMetaData.columnTypes[--parameterIndex]
+                .isDateTimeTypeWithZone()) {
+            Calendar calendar = cal == null ? session.getCalendar()
+                    : cal;
+
+            if (cal != null) {
+                millis = HsqlDateTime.convertMillisToCalendar(calendar,
+                        millis);
+            }
+        }
+
+        Timestamp ts = new Timestamp(millis);
+
+        ts.setNanos(t.getNanos());
+
+        return ts;
     }
 
     /**
@@ -3570,7 +3612,7 @@ public class JDBCCallableStatement extends JDBCPreparedStatement implements Call
      * because it informs the driver that the parameter value should be sent to
      * the server as a <code>CLOB</code>.  When the <code>setCharacterStream</code> method is used, the
      * driver may have to do extra work to determine whether the parameter
-     * data should be sent to the server as a <code>LONGVARCHAR</code> or a <code>CLOB</code>
+     * data should be send to the server as a <code>LONGVARCHAR</code> or a <code>CLOB</code>
      * @param parameterName the name of the parameter to be set
      * @param reader An object that contains the data to set the parameter value to.
      * @param length the number of characters in the parameter data.
@@ -3628,7 +3670,7 @@ public class JDBCCallableStatement extends JDBCPreparedStatement implements Call
      * because it informs the driver that the parameter value should be sent to
      * the server as a <code>NCLOB</code>.  When the <code>setCharacterStream</code> method is used, the
      * driver may have to do extra work to determine whether the parameter
-     * data should be sent to the server as a <code>LONGNVARCHAR</code> or a <code>NCLOB</code>
+     * data should be send to the server as a <code>LONGNVARCHAR</code> or a <code>NCLOB</code>
      *
      * @param parameterName the name of the parameter to be set
      * @param reader An object that contains the data to set the parameter value to.
@@ -4315,7 +4357,7 @@ public class JDBCCallableStatement extends JDBCPreparedStatement implements Call
      * because it informs the driver that the parameter value should be sent to
      * the server as a <code>CLOB</code>.  When the <code>setCharacterStream</code> method is used, the
      * driver may have to do extra work to determine whether the parameter
-     * data should be sent to the server as a <code>LONGVARCHAR</code> or a <code>CLOB</code>
+     * data should be send to the server as a <code>LONGVARCHAR</code> or a <code>CLOB</code>
      *
      * <P><B>Note:</B> Consult your JDBC driver documentation to determine if
      * it might be more efficient to use a version of
@@ -4341,7 +4383,7 @@ public class JDBCCallableStatement extends JDBCPreparedStatement implements Call
      * method because it informs the driver that the parameter value should be
      * sent to the server as a <code>BLOB</code>.  When the <code>setBinaryStream</code> method is used,
      * the driver may have to do extra work to determine whether the parameter
-     * data should be sent to the server as a <code>LONGVARBINARY</code> or a <code>BLOB</code>
+     * data should be send to the server as a <code>LONGVARBINARY</code> or a <code>BLOB</code>
      *
      * <P><B>Note:</B> Consult your JDBC driver documentation to determine if
      * it might be more efficient to use a version of
@@ -4369,7 +4411,7 @@ public class JDBCCallableStatement extends JDBCPreparedStatement implements Call
      * because it informs the driver that the parameter value should be sent to
      * the server as a <code>NCLOB</code>.  When the <code>setCharacterStream</code> method is used, the
      * driver may have to do extra work to determine whether the parameter
-     * data should be sent to the server as a <code>LONGNVARCHAR</code> or a <code>NCLOB</code>
+     * data should be send to the server as a <code>LONGNVARCHAR</code> or a <code>NCLOB</code>
      * <P><B>Note:</B> Consult your JDBC driver documentation to determine if
      * it might be more efficient to use a version of
      * <code>setNClob</code> which takes a length parameter.
@@ -4424,7 +4466,13 @@ public class JDBCCallableStatement extends JDBCPreparedStatement implements Call
             throw JDBCUtil.nullArgument();
         }
 
-        final Object source = getColumnValue(parameterIndex);
+        Type hsqlType = Types.getParameterSQLType(type);
+
+        if(hsqlType == null) {
+            throw JDBCUtil.sqlException(ErrorCode.X_42561);
+        }
+
+        Object source;
 
         if (wasNullValue) {
             return null;
@@ -4490,70 +4538,42 @@ public class JDBCCallableStatement extends JDBCPreparedStatement implements Call
                 o = getTimestamp(parameterIndex);
                 break;
             }
-            case "java.util.UUID": {
-                Type columnType = parameterTypes[parameterIndex - 1];
-                if (columnType.isUUIDType()) {
-                    o = Type.SQL_GUID.convertSQLToJava(session, source);
-                } else {
-                    Object value = Type.SQL_GUID.convertToTypeJDBC(session,
-                            source, columnType);
-                    o = Type.SQL_GUID.convertSQLToJava(session, value);
-                }
+            case "java.util.UUID":
+                source = getColumnInType(parameterIndex, hsqlType);
+                o = Type.SQL_GUID.convertSQLToJava(session, source);
                 break;
-            }
-            case "java.time.Instant": {
-                Type columnType = parameterTypes[parameterIndex - 1];
-                if (columnType.isDateOrTimestampType()) {
-                    TimestampData v = (TimestampData) source;
-                    o = ((DateTimeType) columnType).toInstant(session, v);
-                }
-                break;
-            }
             case "java.time.LocalDate": {
-                Type columnType = parameterTypes[parameterIndex - 1];
-                if (columnType.isDateOrTimestampType()) {
-                    TimestampData v = (TimestampData) source;
-                    o = ((DateTimeType) columnType).toLocalDate(session, v);
-                }
+                source = getColumnInType(parameterIndex, hsqlType);
+                TimestampData v = (TimestampData) source;
+                long millis = v.getMillis();
+                Calendar cal = session.getCalendarGMT();
+                cal.setTimeInMillis(millis);
+                o = LocalDate.of(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH) + 1, cal.get(Calendar.DAY_OF_MONTH));
                 break;
             }
             case "java.time.LocalTime": {
-                Type columnType = parameterTypes[parameterIndex - 1];
-                if (columnType.isTimeType()) {
-                    TimeData v = (TimeData) source;
-                    o = ((DateTimeType) columnType).toLocalTime(session, v);
-                } else if (columnType.isTimestampType()) {
-                    TimestampData v = (TimestampData) source;
-                    o = ((DateTimeType) columnType).toLocalTime(session, v);
-                }
+                source = getColumnInType(parameterIndex, hsqlType);
+                TimeData v = (TimeData) source;
+                o = LocalTime.ofNanoOfDay(v.getSeconds() * 1_000_000_000L + v.getNanos());
                 break;
             }
             case "java.time.LocalDateTime": {
-                Type columnType = parameterTypes[parameterIndex - 1];
-                if (columnType.isDateOrTimestampType()) {
-                    TimestampData v = (TimestampData) source;
-                    o = ((DateTimeType) columnType).toLocalDateTime(session, v);
-                }
+                source = getColumnInType(parameterIndex, hsqlType);
+                TimestampData v = (TimestampData) source;
+
+                long millis = v.getMillis();
+                int nanos = v.getNanos();
+                Calendar cal = session.getCalendarGMT();
+                cal.setTimeInMillis(millis);
+                o = LocalDateTime.of(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH) + 1, cal.get(Calendar.DAY_OF_MONTH), cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), cal.get(Calendar.SECOND ), nanos);
                 break;
             }
             case "java.time.OffsetTime": {
-                Type columnType = parameterTypes[parameterIndex - 1];
-                if (columnType.isTimeType()) {
-                    TimeData v = (TimeData) source;
-                    o = ((DateTimeType) columnType).toOffsetTime(session, v);
-                } else if (columnType.isTimestampType()) {
-                    TimestampData v = (TimestampData) source;
-                    o = ((DateTimeType) columnType).toOffsetTime(session, v);
-                }
-
+                o = getTimeWithZone(parameterIndex);
                 break;
             }
             case "java.time.OffsetDateTime": {
-                Type columnType = parameterTypes[parameterIndex - 1];
-                if (columnType.isDateOrTimestampType()) {
-                    TimestampData v = (TimestampData) source;
-                    o = ((DateTimeType) columnType).toOffsetDateTime(session, v);
-                }
+                o = getTimestampWithZone(parameterIndex);
                 break;
             }
             case "java.time.Duration": {
@@ -4562,6 +4582,7 @@ public class JDBCCallableStatement extends JDBCPreparedStatement implements Call
                 if (!sourceType.isIntervalDaySecondType()) {
                     break;
                 }
+                source = getColumnInType(parameterIndex, hsqlType);
                 IntervalSecondData v = (IntervalSecondData) source;
                 o = Duration.ofSeconds(v.getSeconds(), v.getNanos());
                 break;
@@ -4572,6 +4593,7 @@ public class JDBCCallableStatement extends JDBCPreparedStatement implements Call
                 if (!sourceType.isIntervalYearMonthType()) {
                     break;
                 }
+                source = getColumnInType(parameterIndex, hsqlType);
                 IntervalMonthData v = (IntervalMonthData) source;
                 int months = v.getMonths();
 
@@ -4862,7 +4884,7 @@ public class JDBCCallableStatement extends JDBCPreparedStatement implements Call
      * If the JDBC type expected to be returned to this output parameter
      * is specific to this particular database, {@code sqlType}
      * should be {@code JDBCType.OTHER} or a {@code SQLType} that is supported
-     * by the JDBC driver.  The method
+     * by the JDBC driver..  The method
      * {@link #getObject} retrieves the value.
      *<P>
      * The default implementation will throw {@code SQLFeatureNotSupportedException}
@@ -4983,7 +5005,7 @@ public class JDBCCallableStatement extends JDBCPreparedStatement implements Call
 
 // --------------------------- Internal Implementation -------------------------
 
-    /** parameter name maps to parameter index */
+    /** parameter name => parameter index */
     private IntValueHashMap parameterNameMap;
     private boolean         wasNullValue;
 
@@ -5081,7 +5103,7 @@ public class JDBCCallableStatement extends JDBCPreparedStatement implements Call
 
     /**
      * Does the specialized work required to free this object's resources and
-     * that of its parent classes. <p>
+     * that of it's parent classes. <p>
      *
      * @throws SQLException if a database access error occurs
      */
@@ -5122,20 +5144,6 @@ public class JDBCCallableStatement extends JDBCPreparedStatement implements Call
         }
     }
 */
-
-    /**
-     * Internal get value.
-     */
-    protected Object getColumnValue(int columnIndex) throws SQLException {
-
-        checkGetParameterIndex(columnIndex);
-
-        Object value = parameterValues[columnIndex - 1];
-
-        trackNull(value);
-
-        return value;
-    }
 
     /**
      * Internal value converter. Similar to its counterpart in JDBCResultSet <p>
@@ -5190,25 +5198,52 @@ public class JDBCCallableStatement extends JDBCPreparedStatement implements Call
         return value;
     }
 
+//#ifdef JAVA8
     private Object getTimestampWithZone(int columnIndex) throws SQLException {
-        TimestampData v = (TimestampData) getColumnInType(columnIndex,
-                Type.SQL_TIMESTAMP_WITH_TIME_ZONE);
+        TimestampData v = (TimestampData) getColumnInType(columnIndex, Type.SQL_TIMESTAMP_WITH_TIME_ZONE);
 
         if (v == null) {
             return null;
         }
-        return Type.SQL_TIMESTAMP_WITH_TIME_ZONE.convertSQLToJava(session, v);
+
+        ZoneOffset z = ZoneOffset.ofTotalSeconds(v.getZone());
+        LocalDateTime ldt = LocalDateTime.ofEpochSecond(v.getSeconds(), v.getNanos(), z);
+        return OffsetDateTime.of(ldt, z);
     }
 
     private Object getTimeWithZone(int columnIndex) throws SQLException {
-        TimeData v = (TimeData) getColumnInType(columnIndex,
-                Type.SQL_TIME_WITH_TIME_ZONE);
+        TimeData v = (TimeData) getColumnInType(columnIndex, Type.SQL_TIME_WITH_TIME_ZONE);
 
         if (v == null) {
             return null;
         }
-        return Type.SQL_TIME_WITH_TIME_ZONE.convertSQLToJava(session, v);
+
+        ZoneOffset z = ZoneOffset.ofTotalSeconds(v.getZone());
+        LocalTime lt = LocalTime.ofNanoOfDay((v.getSeconds() + v.getZone()) * 1_000_000_000L + v.getNanos());
+        return OffsetTime.of(lt, z);
     }
+
+//#else
+/*
+    private Object getTimestampWithZone(int columnIndex) throws SQLException {
+        TimestampData v = (TimestampData) getColumnInType(columnIndex, Type.SQL_TIMESTAMP_WITH_TIME_ZONE);
+
+        if (v == null) {
+            return null;
+        }
+        return Type.SQL_TIMESTAMP.convertSQLToJava(session, v);
+    }
+
+    private Object getTimeWithZone(int columnIndex) throws SQLException {
+        TimeData v = (TimeData) getColumnInType(columnIndex, Type.SQL_TIME_WITH_TIME_ZONE);
+
+        if (v == null) {
+            return null;
+        }
+        return Type.SQL_TIME.convertSQLToJava(session, v);
+    }
+*/
+//#endif JAVA8
 
     private boolean trackNull(Object o) {
         return (wasNullValue = (o == null));

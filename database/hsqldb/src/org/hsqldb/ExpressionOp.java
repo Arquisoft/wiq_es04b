@@ -1,4 +1,4 @@
-/* Copyright (c) 2001-2023, The HSQL Development Group
+/* Copyright (c) 2001-2021, The HSQL Development Group
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -49,7 +49,7 @@ import org.hsqldb.types.Types;
  *
  * @author Campbell Burnet (campbell-burnet@users dot sourceforge.net)
  * @author Fred Toussi (fredt@users dot sourceforge.net)
- * @version 2.7.2
+ * @version 2.6.1
  * @since 1.9.0
  */
 public class ExpressionOp extends Expression {
@@ -140,30 +140,40 @@ public class ExpressionOp extends Expression {
      */
     ExpressionOp(Expression e) {
 
-        super(OpTypes.CAST);
-
-        nodes       = new Expression[UNARY];
-        nodes[LEFT] = e;
+        super(e.dataType.isDateTimeTypeWithZone() ? OpTypes.CAST
+                                                  : OpTypes.ZONE_MODIFIER);
 
         switch (e.dataType.typeCode) {
 
             case Types.SQL_TIME_WITH_TIME_ZONE :
+                nodes                = new Expression[UNARY];
+                nodes[LEFT] = new ExpressionOp(OpTypes.ZONE_MODIFIER, e, null);
+                nodes[LEFT].dataType = e.dataType;
                 dataType = DateTimeType.getDateTimeType(Types.SQL_TIME,
                         e.dataType.scale);
                 break;
 
             case Types.SQL_TIMESTAMP_WITH_TIME_ZONE :
+                nodes                = new Expression[UNARY];
+                nodes[LEFT] = new ExpressionOp(OpTypes.ZONE_MODIFIER, e, null);
+                nodes[LEFT].dataType = e.dataType;
                 dataType = DateTimeType.getDateTimeType(Types.SQL_TIMESTAMP,
                         e.dataType.scale);
                 break;
 
             case Types.SQL_TIME :
+                nodes                = new Expression[BINARY];
+                nodes[LEFT]          = e;
+                nodes[LEFT].dataType = e.dataType;
                 dataType =
                     DateTimeType.getDateTimeType(Types.SQL_TIME_WITH_TIME_ZONE,
                                                  e.dataType.scale);
                 break;
 
             case Types.SQL_TIMESTAMP :
+                nodes                = new Expression[BINARY];
+                nodes[LEFT]          = e;
+                nodes[LEFT].dataType = e.dataType;
                 dataType = DateTimeType.getDateTimeType(
                     Types.SQL_TIMESTAMP_WITH_TIME_ZONE, e.dataType.scale);
                 break;
@@ -461,15 +471,23 @@ public class ExpressionOp extends Expression {
                 }
 
                 if (nodes[RIGHT] != null) {
-                    Type rightDataType = nodes[RIGHT].dataType;
-
-                    if (rightDataType == null) {
+                    if (nodes[RIGHT].dataType == null) {
                         nodes[RIGHT].dataType =
                             Type.SQL_INTERVAL_HOUR_TO_MINUTE;
-                    } else if (!rightDataType.isCharacterType()
-                               && rightDataType.typeCode
-                                  != Types.SQL_INTERVAL_HOUR_TO_MINUTE) {
-                        throw Error.error(ErrorCode.X_42563);
+                    }
+
+                    if (nodes[RIGHT].dataType.typeCode
+                            != Types.SQL_INTERVAL_HOUR_TO_MINUTE) {
+                        if (nodes[RIGHT].opType == OpTypes.VALUE) {
+                            nodes[RIGHT].valueData =
+                                Type.SQL_INTERVAL_HOUR_TO_MINUTE.castToType(
+                                    session, nodes[RIGHT].valueData,
+                                    nodes[RIGHT].dataType);
+                            nodes[RIGHT].dataType =
+                                Type.SQL_INTERVAL_HOUR_TO_MINUTE;
+                        } else {
+                            throw Error.error(ErrorCode.X_42563);
+                        }
                     }
                 }
 
@@ -767,7 +785,7 @@ public class ExpressionOp extends Expression {
                             throw Error.error(ErrorCode.X_22019);
                         }
 
-                        escapeChar = right.charAt(0);
+                        escapeChar = right.getBytes()[0];
                     }
 
                     char[]  array       = left.toCharArray();
@@ -951,36 +969,18 @@ public class ExpressionOp extends Expression {
                     return null;
                 }
 
-                boolean atLocal = nodes[RIGHT] == null;
-
-                if (atLocal) {
-                    return ((DateTimeType) dataType).changeZone(session,
-                            leftValue, nodes[LEFT].dataType, 0, atLocal);
-                }
-
-                if (rightValue == null) {
+                if (nodes[RIGHT] != null && rightValue == null) {
                     return null;
                 }
 
-                if (nodes[RIGHT].dataType.isCharacterType()) {
-                    if (DateTimeType.zoneIDs.contains(rightValue)) {
-                        return ((DateTimeType) dataType).changeZone(session,
-                                leftValue, nodes[LEFT].dataType,
-                                (String) rightValue);
-                    } else {
-                        rightValue =
-                            Type.SQL_INTERVAL_HOUR_TO_MINUTE
-                                .convertToDefaultType(session, rightValue);
-                    }
-                }
-
-                long zoneSeconds =
-                    ((IntervalType) nodes[RIGHT].dataType).getSeconds(
-                        rightValue);
+                long zoneSeconds = nodes[RIGHT] == null
+                                   ? session.getZoneSeconds()
+                                   : ((IntervalType) nodes[RIGHT].dataType)
+                                       .getSeconds(rightValue);
 
                 return ((DateTimeType) dataType).changeZone(session,
                         leftValue, nodes[LEFT].dataType, (int) zoneSeconds,
-                        false);
+                        session.getZoneSeconds());
             }
             case OpTypes.LIMIT :
 

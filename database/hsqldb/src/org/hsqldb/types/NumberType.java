@@ -1,4 +1,4 @@
-/* Copyright (c) 2001-2022, The HSQL Development Group
+/* Copyright (c) 2001-2021, The HSQL Development Group
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -41,13 +41,14 @@ import org.hsqldb.SessionInterface;
 import org.hsqldb.Tokens;
 import org.hsqldb.error.Error;
 import org.hsqldb.error.ErrorCode;
+import org.hsqldb.lib.java.JavaSystem;
 import org.hsqldb.map.ValuePool;
 
 /**
  * Type subclass for all NUMBER types.<p>
  *
  * @author Fred Toussi (fredt@users dot sourceforge.net)
- * @version 2.7.0
+ * @version 2.6.1
  * @since 1.9.0
  */
 public final class NumberType extends Type {
@@ -64,7 +65,6 @@ public final class NumberType extends Type {
     static final int        decimalLiteralPrecision      = 24;
 
     //
-    public static final int BIT_WIDTH      = 1;
     public static final int TINYINT_WIDTH  = 8;
     public static final int SMALLINT_WIDTH = 16;
     public static final int INTEGER_WIDTH  = 32;
@@ -1285,28 +1285,28 @@ public final class NumberType extends Type {
     public int canMoveFrom(Type otherType) {
 
         if (otherType == this) {
-            return ReType.keep;
+            return 0;
         }
 
         switch (typeCode) {
 
             case Types.TINYINT :
                 if (otherType.typeCode == Types.SQL_SMALLINT) {
-                    return ReType.check;
+                    return 1;
                 }
                 break;
 
             case Types.SQL_SMALLINT :
                 if (otherType.typeCode == typeCode
                         || otherType.typeCode == Types.TINYINT) {
-                    return ReType.keep;
+                    return 0;
                 }
                 break;
 
             case Types.SQL_INTEGER :
             case Types.SQL_BIGINT :
                 if (otherType.typeCode == typeCode) {
-                    return ReType.keep;
+                    return 0;
                 }
                 break;
 
@@ -1316,9 +1316,9 @@ public final class NumberType extends Type {
                         || otherType.typeCode == Types.SQL_NUMERIC) {
                     if (scale == otherType.scale) {
                         if (precision >= otherType.precision) {
-                            return ReType.keep;
+                            return 0;
                         } else {
-                            return ReType.check;
+                            return 1;
                         }
                     }
                 }
@@ -1330,11 +1330,11 @@ public final class NumberType extends Type {
                 if (otherType.typeCode == Types.SQL_REAL
                         || otherType.typeCode == Types.SQL_FLOAT
                         || otherType.typeCode == Types.SQL_DOUBLE) {
-                    return ReType.keep;
+                    return 0;
                 }
         }
 
-        return ReType.change;
+        return -1;
     }
 
     public int compareToTypeRange(Object o) {

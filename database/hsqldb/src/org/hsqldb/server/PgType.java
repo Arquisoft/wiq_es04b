@@ -1,4 +1,4 @@
-/* Copyright (c) 2001-2022, The HSQL Development Group
+/* Copyright (c) 2001-2021, The HSQL Development Group
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,7 +30,7 @@
 
 
 /*
- * $Id: PgType.java 6509 2022-05-17 13:18:08Z fredt $
+ * $Id: PgType.java 6266 2021-01-25 16:08:06Z fredt $
  */
 
 package org.hsqldb.server;
@@ -275,10 +275,6 @@ public class PgType {
      * </P>
      *
      * @throws SQLException if either argument is not acceptable.
-     * @throws RecoverableOdbcFailure for some unsupported features
-     * @param inString String
-     * @param session Session
-     * @return Object
      */
     public Object getParameter(String inString, Session session)
     throws SQLException, RecoverableOdbcFailure {

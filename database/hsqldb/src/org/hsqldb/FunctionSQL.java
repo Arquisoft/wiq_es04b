@@ -1,4 +1,4 @@
-/* Copyright (c) 2001-2023, The HSQL Development Group
+/* Copyright (c) 2001-2021, The HSQL Development Group
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -52,7 +52,7 @@ import org.hsqldb.types.Types;
  * Implementation of SQL standard function calls
  *
  * @author Fred Toussi (fredt@users dot sourceforge.net)
- * @version 2.7.2
+ * @version 2.6.0
  * @since 1.9.0
  */
 public class FunctionSQL extends Expression {
@@ -545,15 +545,13 @@ public class FunctionSQL extends Expression {
     }
 
     /**
-     * Evaluates and returns this Function in the context of the session.
+     * Evaluates and returns this Function in the context of the session.<p>
      */
     public Object getValue(Session session) {
 
-        Object[] data;
+        Object[] data = ValuePool.emptyObjectArray;
 
-        if (nodes.length == 0) {
-            data = ValuePool.emptyObjectArray;
-        } else {
+        if (nodes.length > 0) {
             data = new Object[nodes.length];
 
             for (int i = 0; i < nodes.length; i++) {
@@ -907,15 +905,7 @@ public class FunctionSQL extends Expression {
                                     Type.SQL_INTEGER);
             }
             case FUNC_SUBSTRING_CHAR : {
-                long    length    = 0;
-                boolean hasLength = false;
-                boolean trailing  = false;
-
                 if (data[0] == null || data[1] == null) {
-                    return null;
-                }
-
-                if (nodes[2] != null && data[2] == null) {
                     return null;
                 }
 
@@ -924,10 +914,14 @@ public class FunctionSQL extends Expression {
                 value = Type.SQL_BIGINT.convertToType(session, data[1],
                                                       nodes[1].dataType);
 
-                long offset = ((Number) value).longValue();
+                long offset = ((Number) value).longValue() - 1;
+                long length = 0;
 
                 if (nodes[2] != null) {
-                    hasLength = true;
+                    if (data[2] == null) {
+                        return null;
+                    }
+
                     value = Type.SQL_BIGINT.convertToType(session, data[2],
                                                           nodes[2].dataType);
                     length = ((Number) value).longValue();
@@ -940,21 +934,8 @@ public class FunctionSQL extends Expression {
                     // not clear what the rules on USING OCTECTS are with UTF
                 }
 
-                if (session.database.sqlSyntaxOra) {
-                    if (name == Tokens.T_SUBSTR) {
-                        if (offset == 0) {
-                            offset = 1;
-                        } else if (offset < 0) {
-                            offset   = -offset + 1;
-                            trailing = true;
-                        }
-                    }
-                }
-
-                offset--;
-
                 return ((CharacterType) dataType).substring(session, data[0],
-                        offset, length, hasLength, trailing);
+                        offset, length, nodes[2] != null, false);
             }
             /*
             case FUNCTION_SUBSTRING_REG_EXPR :
@@ -1046,7 +1027,7 @@ public class FunctionSQL extends Expression {
                     length = ((Number) value).longValue();
                 }
 
-                return ((CharacterType) dataType).overlay(session, data[0],
+                return ((CharacterType) dataType).overlay(null, data[0],
                         data[1], offset, length, nodes[3] != null);
             }
             /*
@@ -1185,26 +1166,26 @@ public class FunctionSQL extends Expression {
             case FUNC_CURRENT_DATE :
                 if (session.database.sqlSyntaxOra) {
                     return dataType.convertToTypeLimits(
-                        session, session.getLocalTimestamp());
+                        session, session.getCurrentTimestamp(false));
                 }
 
                 return session.getCurrentDate();
 
             case FUNC_CURRENT_TIME :
                 return dataType.convertToTypeLimits(
-                    session, session.getCurrentTime());
+                    session, session.getCurrentTime(true));
 
             case FUNC_CURRENT_TIMESTAMP :
                 return dataType.convertToTypeLimits(
-                    session, session.getCurrentTimestamp());
+                    session, session.getCurrentTimestamp(true));
 
             case FUNC_LOCALTIME :
                 return dataType.convertToTypeLimits(
-                    session, session.getLocalTime());
+                    session, session.getCurrentTime(false));
 
             case FUNC_LOCALTIMESTAMP :
                 return dataType.convertToTypeLimits(
-                    session, session.getLocalTimestamp());
+                    session, session.getCurrentTimestamp(false));
 
             default :
                 throw Error.runtimeError(ErrorCode.U_S0500, "FunctionSQL");
@@ -2156,7 +2137,7 @@ public class FunctionSQL extends Expression {
     }
 
     /**
-     * Returns a String representation of this object.
+     * Returns a String representation of this object. <p>
      */
     public String describe(Session session, int blanks) {
 

@@ -1,4 +1,4 @@
-/* Copyright (c) 2001-2022, The HSQL Development Group
+/* Copyright (c) 2001-2021, The HSQL Development Group
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -49,7 +49,7 @@ import org.hsqldb.types.Types;
 
 /**
  * @author Fred Toussi (fredt@users dot sourceforge.net)
- * @version 2.7.0
+ * @version 2.6.1
  * @since 1.9.0
  */
 public class ParserBase {
@@ -61,6 +61,7 @@ public class ParserBase {
     protected int           partPosition;
     protected HsqlException lastError;
     protected HsqlName      lastSynonym;
+    protected boolean       isCheckOrTriggerCondition;
     protected boolean       isSchemaDefinition;
     protected boolean       isViewDefinition;
     protected boolean       isRecording;
@@ -105,12 +106,13 @@ public class ParserBase {
         scanner.reset(session, sql);
 
         //
-        partPosition       = 0;
-        lastError          = null;
-        lastSynonym        = null;
-        isSchemaDefinition = false;
-        isViewDefinition   = false;
-        isRecording        = false;
+        partPosition              = 0;
+        lastError                 = null;
+        lastSynonym               = null;
+        isCheckOrTriggerCondition = false;
+        isSchemaDefinition        = false;
+        isViewDefinition          = false;
+        isRecording               = false;
 
         recordedStatement.clear();
     }
@@ -399,38 +401,18 @@ public class ParserBase {
         }
     }
 
-    void checkIsIntegral() {
-
-        if (!isIntegral()) {
-            throw unexpectedTokenRequire("an integer");
-        }
-    }
-
     void checkIsQuotedString() {
 
-        if (!isQuotedString()) {
-            throw unexpectedTokenRequire("a quoted string");
+        if (token.tokenType != Tokens.X_VALUE
+                || !token.dataType.isCharacterType()) {
+            throw unexpectedToken();
         }
-    }
-
-    boolean isIntegral() {
-        return token.tokenType == Tokens.X_VALUE
-               && token.dataType.isIntegralType();
-    }
-
-    boolean isQuotedString() {
-        return token.tokenType == Tokens.X_VALUE
-               && token.dataType.isCharacterType();
     }
 
     void checkIsThis(int type) {
 
         if (token.tokenType != type) {
             String required = Tokens.getKeyword(type);
-
-            if (required == null) {
-                required = "";
-            }
 
             throw unexpectedTokenRequire(required);
         }
@@ -468,7 +450,11 @@ public class ParserBase {
 
     String readQuotedString() {
 
-        checkIsQuotedString();
+        checkIsValue();
+
+        if (!token.dataType.isCharacterType()) {
+            throw Error.error(ErrorCode.X_42563);
+        }
 
         String value = token.tokenString;
 
@@ -519,39 +505,6 @@ public class ParserBase {
         return false;
     }
 
-    void readAny(int id1, int id2, int id3, int id4) {
-        read();
-        checkIsAny(id1, id2, id3, id4);
-    }
-
-    void checkIsAny(int id1, int id2, int id3, int id4) {
-
-        if (token.tokenType == id1 || token.tokenType == id2
-                || token.tokenType == id3 || token.tokenType == id4) {
-            return;
-        }
-
-        String required = "";
-
-        if (id1 != 0) {
-            required += Tokens.getKeyword(id1);
-
-            if (id2 != 0) {
-                required += " or " + Tokens.getKeyword(id2);
-            }
-
-            if (id3 != 0) {
-                required += " or " + Tokens.getKeyword(id3);
-            }
-
-            if (id4 != 0) {
-                required += " or " + Tokens.getKeyword(id4);
-            }
-        }
-
-        throw unexpectedTokenRequire(required);
-    }
-
     Integer readIntegerObject() {
 
         int value = readInteger();
@@ -569,7 +522,7 @@ public class ParserBase {
             read();
         }
 
-        checkIsIntegral();
+        checkIsValue();
 
         if (minus && token.dataType.typeCode == Types.SQL_BIGINT
                 && ((Number) token.tokenValue).longValue()

@@ -1,8 +1,8 @@
-$Id: readme-docauthors.txt 6486 2022-04-18 20:21:19Z fredt $
+$Id: readme-docauthors.txt 6285 2021-02-02 13:08:51Z fredt $
 
 BUILDING
 
-You need JDK 11 and Ant 10.x or later.
+You need JDK 1.8 or later and Ant 9.x or later.
 
 Run "ant gen-docs" from the build subdirectory.
 Error messages should be self-explanatory.

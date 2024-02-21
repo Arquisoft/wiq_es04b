@@ -1,4 +1,4 @@
-/* Copyright (c) 2001-2023, The HSQL Development Group
+/* Copyright (c) 2001-2021, The HSQL Development Group
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -31,8 +31,6 @@
 
 package org.hsqldb;
 
-import java.util.TimeZone;
-
 import org.hsqldb.HsqlNameManager.HsqlName;
 import org.hsqldb.ParserDQL.CompileContext;
 import org.hsqldb.error.Error;
@@ -42,7 +40,6 @@ import org.hsqldb.lib.List;
 import org.hsqldb.result.Result;
 import org.hsqldb.rights.Grantee;
 import org.hsqldb.rights.User;
-import org.hsqldb.types.DateTimeType;
 import org.hsqldb.types.DTIType;
 import org.hsqldb.types.IntervalSecondData;
 import org.hsqldb.types.Type;
@@ -52,7 +49,7 @@ import org.hsqldb.types.Types;
  * Implementation of Statement for SQL session statements.<p>
  *
  * @author Fred Toussi (fredt@users dot sourceforge.net)
- * @version 2.7.2
+ * @version 2.4.0
  * @since 1.9.0
  */
 public class StatementSession extends Statement {
@@ -109,9 +106,12 @@ public class StatementSession extends Statement {
                     e.setDataType(session, Type.SQL_INTERVAL_HOUR_TO_MINUTE);
                 }
 
-                if (e.dataType.isCharacterType()) {}
-                else if (e.dataType.typeCode
-                         != Types.SQL_INTERVAL_HOUR_TO_MINUTE) {
+                if (e.dataType.isCharacterType()) {
+                    e = new ExpressionOp(e, Type.SQL_INTERVAL_HOUR_TO_MINUTE);
+                    expressions[0] = e;
+                }
+
+                if (e.dataType.typeCode != Types.SQL_INTERVAL_HOUR_TO_MINUTE) {
                     throw Error.error(ErrorCode.X_42563);
                 }
 
@@ -134,32 +134,29 @@ public class StatementSession extends Statement {
                                          "StatementSession");
         }
 
-        // e is null for SET ROLE NONE
-        if (e != null) {
-            e.resolveTypes(session, null);
+        e.resolveTypes(session, null);
 
-            switch (e.getType()) {
+        switch (e.getType()) {
 
-                case OpTypes.VALUE:
+            case OpTypes.VALUE :
+                break;
+
+            case OpTypes.DYNAMIC_PARAM :
+                e.setDataType(session, Type.SQL_VARCHAR_DEFAULT);
+                break;
+
+            case OpTypes.SQL_FUNCTION :
+                if (((FunctionSQL) e).isValueFunction()) {
                     break;
+                }
 
-                case OpTypes.DYNAMIC_PARAM:
-                    e.setDataType(session, Type.SQL_VARCHAR_DEFAULT);
-                    break;
-
-                case OpTypes.SQL_FUNCTION:
-                    if (((FunctionSQL) e).isValueFunction()) {
-                        break;
-                    }
-
-                    throw Error.error(ErrorCode.X_0P000);
-                default:
-                    throw Error.error(ErrorCode.X_0P000);
-            }
-
-            if (!e.getDataType().isCharacterType()) {
                 throw Error.error(ErrorCode.X_0P000);
-            }
+            default :
+                throw Error.error(ErrorCode.X_0P000);
+        }
+
+        if (!e.getDataType().isCharacterType()) {
+            throw Error.error(ErrorCode.X_0P000);
         }
 
         setDatabaseObjects(session, context);
@@ -446,7 +443,7 @@ public class StatementSession extends Statement {
                 if (expressions[0].getType() == OpTypes.VALUE
                         && expressions[0].getConstantValueNoCheck(session)
                            == null) {
-                    session.resetTimeZone();
+                    session.setZoneSeconds(session.sessionTimeZoneSeconds);
 
                     return Result.updateZeroResult;
                 }
@@ -488,40 +485,13 @@ public class StatementSession extends Statement {
                     }
                 }
 
-                if (value instanceof String) {
-                    String zoneString = (String) value;
+                long seconds = ((IntervalSecondData) value).getSeconds();
 
-                    if (DateTimeType.zoneIDs.contains(zoneString)) {
-                        TimeZone zone = TimeZone.getTimeZone(zoneString);
+                if (-DTIType.timezoneSecondsLimit <= seconds
+                        && seconds <= DTIType.timezoneSecondsLimit) {
+                    session.setZoneSeconds((int) seconds);
 
-                        session.setTimeZone(zone);
-
-                        return Result.updateZeroResult;
-                    } else {
-                        value =
-                            Type.SQL_INTERVAL_HOUR_TO_MINUTE
-                                .convertToDefaultType(session, value);
-                    }
-                }
-
-                if (value instanceof IntervalSecondData) {
-                    IntervalSecondData interval = (IntervalSecondData) value;
-                    long               seconds  = interval.getSeconds();
-
-                    if (-DTIType.timezoneSecondsLimit <= seconds
-                            && seconds <= DTIType.timezoneSecondsLimit) {
-                        String i =
-                            Type.SQL_INTERVAL_HOUR_TO_MINUTE.convertToString(
-                                interval);
-                        String   sign       = seconds < 0 ? ""
-                                                          : "+";
-                        String   zoneString = "GMT" + sign + i;
-                        TimeZone zone       = TimeZone.getTimeZone(zoneString);
-
-                        session.setTimeZone(zone);
-
-                        return Result.updateZeroResult;
-                    }
+                    return Result.updateZeroResult;
                 }
 
                 return Result.newErrorResult(Error.error(ErrorCode.X_22009),
@@ -538,15 +508,11 @@ public class StatementSession extends Statement {
                 Grantee role = null;
 
                 try {
-                    if (expressions[0] != null) {
-                        name = (String) expressions[0].getValue(session);
+                    name = (String) expressions[0].getValue(session);
 
-                        if (name == null) {
-                            return Result.newErrorResult(
-                                    Error.error(ErrorCode.X_0P000), sql);
-                        }
-
-                        name = (String) Type.SQL_VARCHAR.trim(session, name,                                                               ' ', true, true);
+                    if (name != null) {
+                        name = (String) Type.SQL_VARCHAR.trim(session, name,
+                                                              ' ', true, true);
                         role = session.database.granteeManager.getRole(name);
                     }
                 } catch (HsqlException e) {
@@ -559,7 +525,11 @@ public class StatementSession extends Statement {
                         Error.error(ErrorCode.X_25001), sql);
                 }
 
-                if (role == null || session.getGrantee().hasRole(role)) {
+                if (role == null) {
+                    session.setRole(null);
+                }
+
+                if (session.getGrantee().hasRole(role)) {
                     session.setRole(role);
 
                     return Result.updateZeroResult;
@@ -707,14 +677,9 @@ public class StatementSession extends Statement {
             //
             case StatementTypes.SET_SESSION_AUTOCOMMIT : {
                 boolean mode = ((Boolean) arguments[0]).booleanValue();
-                int     rows = ((Integer) arguments[1]).intValue();
 
                 try {
-                    if (rows < 0) {
-                        session.setAutoCommit(mode);
-                    } else {
-                        session.setAutoCommitRows(rows);
-                    }
+                    session.setAutoCommit(mode);
 
                     return Result.updateZeroResult;
                 } catch (HsqlException e) {

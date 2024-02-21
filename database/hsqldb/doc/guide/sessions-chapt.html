@@ -44,12 +44,12 @@
 </div>
 </div>
 <div>
-<p class="releaseinfo">$Revision: 6634 $</p>
+<p class="releaseinfo">$Revision: 6306 $</p>
 </div>
 <div>
 <div class="legalnotice">
-<a name="N13BF5"></a>
-<p>Copyright 2010-2022 Fred Toussi. Permission is granted to
+<a name="N13AE4"></a>
+<p>Copyright 2010-2021 Fred Toussi. Permission is granted to
       distribute this document without any alteration under the terms of the
       HSQLDB license. Additional permission is granted to the HSQL Development
       Group to distribute this document with or without alterations under the
@@ -57,7 +57,7 @@
 </div>
 </div>
 <div>
-<p class="pubdate">2023-05-29</p>
+<p class="pubdate">2021-10-21</p>
 </div>
 </div>
 </div>
@@ -208,12 +208,6 @@
       auto-commit or read-only modes can be read using other built-in
       functions. All these functions are listed in the <a class="link" href="builtinfunctions-chapt.html" title="Chapter&nbsp;4.&nbsp;Built In Functions">Built In Functions</a>
       chapter.</p>
-<p>Each session has a time zone, which is the time zone of the JVM in
-      which the connection is made and can be different from the time zone of
-      a server database. Different client / server sessions can therefore have
-      different time zones and display time-zone-sensitive information
-      differently. See the description of the SET TIME ZONE statement below
-      for more detail.</p>
 </div>
 <div class="section">
 <div class="titlepage">
@@ -232,7 +226,7 @@
       useful for development and debugging. See the example in the <a class="link" href="sqlroutines-chapt.html" title="Chapter&nbsp;9.&nbsp;SQL-Invoked Routines">SQL-Invoked Routines</a> chapter,
       under Formal Parameters.</p>
 <div class="example">
-<a name="N13C39"></a>
+<a name="N13B26"></a>
 <p class="title">
 <b>Example&nbsp;6.1.&nbsp;User-defined Session Variables</b>
 </p>
@@ -278,10 +272,10 @@
       takes precedence over a schema table of the same name. To distinguish a
       session table from schema tables, the pseudo schema name, SESSION can be
       used. The alternative name, MODULE is deprecated and does not work in
-      version 2.5.1 but can be used in version 2.6 and later for backward
-      compatibility. An example is given below:</p>
+      version 2.5.1 but can be used in version 2.6.0. An example is given
+      below:</p>
 <div class="example">
-<a name="N13C4E"></a>
+<a name="N13B3B"></a>
 <p class="title">
 <b>Example&nbsp;6.2.&nbsp;User-defined Temporary Session Tables</b>
 </p>
@@ -290,7 +284,7 @@
  INSERT INTO session.buffer SELECT id, firstname || ' ' || lastname FROM customers
  -- do some more work
  DROP TABLE session.buffer
- -- alternative schema name, MODULE can be used in version 2.7 but it is deprecated
+ -- alternative schema name, MODULE can be used in version 2.6.0 but it is deprecated
  DROP TABLE module.buffer
 </pre>
 </div>
@@ -673,7 +667,7 @@
 </div>
 </div>
 </div>
-<a name="N13CE1" class="indexterm"></a>
+<a name="N13BCE" class="indexterm"></a>
 <p>
 <span class="bold"><strong>ALTER SESSION</strong></span>
 </p>
@@ -710,7 +704,7 @@
     currently open result sets are closed and the resources are released. When
     TABLE DATA is specified, the data in all temporary tables is
     cleared.</p>
-<a name="N13D05" class="indexterm"></a>
+<a name="N13BF2" class="indexterm"></a>
 <p>
 <span class="bold"><strong>SET AUTOCOMMIT</strong></span>
 </p>
@@ -726,7 +720,7 @@
     performed automatically. This statement changes the mode. It is equivalent
     to using the <code class="methodname">setAutoCommit( boolean autoCommit)</code>
     method of the JDBC <code class="classname">Connection</code> object.</p>
-<a name="N13D1C" class="indexterm"></a>
+<a name="N13C09" class="indexterm"></a>
 <p>
 <span class="bold"><strong>START TRANSACTION</strong></span>
 </p>
@@ -741,7 +735,7 @@
     transactional SQL statements start a transaction automatically, therefore
     using this statement is not necessary. If the statement is called in the
     middle of a transaction, an exception is thrown.</p>
-<a name="N13D2D" class="indexterm"></a>
+<a name="N13C1A" class="indexterm"></a>
 <p>
 <span class="bold"><strong>SET TRANSACTION</strong></span>
 </p>
@@ -756,7 +750,7 @@
 <p>Set the characteristics of the next transaction in the current
     session. This statement has an effect only on the next transactions and
     has no effect on the future transactions after the next.</p>
-<a name="N13D3E" class="indexterm"></a>
+<a name="N13C2B" class="indexterm"></a>
 <p>
 <span class="bold"><strong>transaction
     characteristics</strong></span>
@@ -796,7 +790,7 @@
 </p>
 <p>Specify transaction characteristics.</p>
 <div class="example">
-<a name="N13D61"></a>
+<a name="N13C4E"></a>
 <p class="title">
 <b>Example&nbsp;6.3.&nbsp;Setting Transaction Characteristics</b>
 </p>
@@ -808,7 +802,7 @@
 </div>
 </div>
 <br class="example-break">
-<a name="N13D66" class="indexterm"></a>
+<a name="N13C53" class="indexterm"></a>
 <p>
 <span class="bold"><strong>SET CONSTRAINTS</strong></span>
 </p>
@@ -829,7 +823,7 @@
     the rest of the current transaction. If the statement is issued when a
     transaction is not active then it applies only to the next transaction in
     the current session. HyperSQL does not yet support this feature.</p>
-<a name="N13D7A" class="indexterm"></a>
+<a name="N13C67" class="indexterm"></a>
 <p>
 <span class="bold"><strong>LOCK TABLE</strong></span>
 </p>
@@ -861,7 +855,7 @@
 <p>Currently, this command does not have any effect when the
     database transaction control model is MVCC.</p>
 <div class="example">
-<a name="N13D8F"></a>
+<a name="N13C7C"></a>
 <p class="title">
 <b>Example&nbsp;6.4.&nbsp;Locking Tables</b>
 </p>
@@ -870,7 +864,7 @@
 </div>
 </div>
 <br class="example-break">
-<a name="N13D94" class="indexterm"></a>
+<a name="N13C81" class="indexterm"></a>
 <p>
 <span class="bold"><strong>SAVEPOINT</strong></span>
 </p>
@@ -889,7 +883,7 @@
     transaction. It establishes a milestone for the current transaction. The
     SAVEPOINT can be used at a later point in the transaction to rollback the
     transaction to the milestone.</p>
-<a name="N13DA8" class="indexterm"></a>
+<a name="N13C95" class="indexterm"></a>
 <p>
 <span class="bold"><strong>RELEASE SAVEPOINT</strong></span>
 </p>
@@ -903,7 +897,7 @@
 <p>Destroy a savepoint. This command is rarely used as it is not
     very useful. It removes a SAVEPOINT that has already been
     defined.</p>
-<a name="N13DB9" class="indexterm"></a>
+<a name="N13CA6" class="indexterm"></a>
 <p>
 <span class="bold"><strong>COMMIT</strong></span>
 </p>
@@ -916,7 +910,7 @@
 </p>
 <p>Terminate the current SQL-transaction with commit. This make all
     the changes to the database permanent.</p>
-<a name="N13DCA" class="indexterm"></a>
+<a name="N13CB7" class="indexterm"></a>
 <p>
 <span class="bold"><strong>ROLLBACK</strong></span>
 </p>
@@ -932,7 +926,7 @@
     NO CHAIN is specified, a new SQL transaction is started just after the
     rollback. The new transaction inherits the properties of the old
     transaction.</p>
-<a name="N13DDB" class="indexterm"></a>
+<a name="N13CC8" class="indexterm"></a>
 <p>
 <span class="bold"><strong>ROLLBACK TO SAVEPOINT</strong></span>
 </p>
@@ -949,7 +943,7 @@
     <code class="literal">rollback( Savepoint savepoint)</code> method of the JDBC
     <code class="classname">Connection</code> object.</p>
 <div class="example">
-<a name="N13DF2"></a>
+<a name="N13CDF"></a>
 <p class="title">
 <b>Example&nbsp;6.5.&nbsp;Rollback</b>
 </p>
@@ -963,7 +957,7 @@
 </div>
 </div>
 <br class="example-break">
-<a name="N13DF8" class="indexterm"></a>
+<a name="N13CE5" class="indexterm"></a>
 <p>
 <span class="bold"><strong>DISCONNECT</strong></span>
 </p>
@@ -976,7 +970,7 @@
 </p>
 <p>Terminate the current SQL session. Closing a JDBC connection has
     the same effect as this command.</p>
-<a name="N13E0A" class="indexterm"></a>
+<a name="N13CF7" class="indexterm"></a>
 <p>
 <span class="bold"><strong>SET SESSION
     CHARACTERISTICS</strong></span>
@@ -1010,7 +1004,7 @@
     command. The current read-only mode can be accessed with the ISREADONLY()
     function.</p>
 <div class="example">
-<a name="N13E24"></a>
+<a name="N13D11"></a>
 <p class="title">
 <b>Example&nbsp;6.6.&nbsp;Setting Session Characteristics</b>
 </p>
@@ -1022,7 +1016,7 @@
 </div>
 </div>
 <br class="example-break">
-<a name="N13E29" class="indexterm"></a>
+<a name="N13D16" class="indexterm"></a>
 <p>
 <span class="bold"><strong>SET SESSION
     AUTHORIZATION</strong></span>
@@ -1042,7 +1036,7 @@
     user. The current authorisation can be accessed with the CURRENT_USER and
     SESSION_USER functions.</p>
 <div class="example">
-<a name="N13E3A"></a>
+<a name="N13D27"></a>
 <p class="title">
 <b>Example&nbsp;6.7.&nbsp;Setting Session Authorization</b>
 </p>
@@ -1053,7 +1047,7 @@
 </div>
 </div>
 <br class="example-break">
-<a name="N13E3F" class="indexterm"></a>
+<a name="N13D2C" class="indexterm"></a>
 <p>
 <span class="bold"><strong>SET ROLE</strong></span>
 </p>
@@ -1073,7 +1067,7 @@
     the specified role. If NONE is specified, then the previous CURRENT_ROLE
     is eliminated. The effect of this lasts for the lifetime of the session.
     The current role can be accessed with the CURRENT_ROLE function.</p>
-<a name="N13E53" class="indexterm"></a>
+<a name="N13D40" class="indexterm"></a>
 <p>
 <span class="bold"><strong>SET TIME ZONE</strong></span>
 </p>
@@ -1086,39 +1080,27 @@
 </p>
 <p>
 <code class="literal">&lt;set time zone value&gt; ::= &lt;interval value
-    expression&gt; | &lt;string value expression&gt; |
-    LOCAL</code>
+    expression&gt; | LOCAL</code>
 </p>
 <p>Set the current default time zone displacement for the current
     SQL-session. When the session starts, the time zone displacement is set to
     the time zone of the client. This command changes the time zone
     displacement. The effect of this lasts for the lifetime of the session. If
     LOCAL is specified, the time zone displacement reverts to the local time
-    zone of the session that was in force prior to the use of the
-    command.</p>
-<p>From version 2.7.0, zone strings indicating geographical regions
-    can be used. These zone often support daylight saving time.</p>
-<p>This command works fine with in-process databases. When the
-    sessions is for a connection to a server, this command should not
-    generally be used as it only affects the server part of the session. With
-    client / server connections, the only way to specify a session time zone
-    that is different from the local time zone is by setting the client JVM 
-	time zone prior to connecting to the database.</p>
+    zone of the session.</p>
 <div class="example">
-<a name="N13E6B"></a>
+<a name="N13D54"></a>
 <p class="title">
 <b>Example&nbsp;6.8.&nbsp;Setting Session Time Zone</b>
 </p>
 <div class="example-contents">
 <pre class="screen"> SET TIME ZONE LOCAL
  SET TIME ZONE INTERVAL '+6:00' HOUR TO MINUTE
- SET TIME ZONE '-6:00'
- SET TIME ZONE 'America/Chicago'
 </pre>
 </div>
 </div>
 <br class="example-break">
-<a name="N13E70" class="indexterm"></a>
+<a name="N13D59" class="indexterm"></a>
 <p>
 <span class="bold"><strong>SET CATALOG</strong></span>
 </p>
@@ -1138,7 +1120,7 @@
     As there is only one catalog in the database, only the name of this
     catalog can be used. The current catalog can be accessed with the
     CURRENT_CATALOG function.</p>
-<a name="N13E84" class="indexterm"></a>
+<a name="N13D6D" class="indexterm"></a>
 <p>
 <span class="bold"><strong>SET SCHEMA</strong></span>
 </p>
@@ -1159,7 +1141,7 @@
     form requires the schema name as a single-quoted string. HyperSQL also
     allows the use of the identifier for the schema. The current schema can be
     accessed with the CURRENT_SCHEMA function.</p>
-<a name="N13E98" class="indexterm"></a>
+<a name="N13D81" class="indexterm"></a>
 <p>
 <span class="bold"><strong>SET PATH</strong></span>
 </p>
@@ -1178,7 +1160,7 @@
     invocations with unqualified routine names used in SQL statements that are
     prepared or executed directly in the current sessions. The effect of this
     lasts for the lifetime of the session.</p>
-<a name="N13EAC" class="indexterm"></a>
+<a name="N13D95" class="indexterm"></a>
 <p>
 <span class="bold"><strong>SET MAXROWS</strong></span>
 </p>
@@ -1206,7 +1188,7 @@
     &lt;n&gt;. Therefore, this command is not recommended for general use. The
     only legitimate use of this command is for checking and testing queries
     that may return very large numbers of rows.</p>
-<a name="N13ECF" class="indexterm"></a>
+<a name="N13DB8" class="indexterm"></a>
 <p>
 <span class="bold"><strong>SET SESSION RESULT MEMORY
     ROWS</strong></span>
@@ -1232,7 +1214,7 @@
 <code class="literal">SET DATABASE DEFAULT RESULT MEMORY ROWS &lt;unsigned
     integer literal&gt;</code>
 </p>
-<a name="N13EE5" class="indexterm"></a>
+<a name="N13DCE" class="indexterm"></a>
 <p>
 <span class="bold"><strong>SET IGNORECASE</strong></span>
 </p>
@@ -1258,7 +1240,7 @@
 </div>
 </div>
 <HR xmlns:xi="http://www.w3.org/2001/XInclude">
-<P xmlns:xi="http://www.w3.org/2001/XInclude" class="svnrev">$Revision: 6645 $</P>
+<P xmlns:xi="http://www.w3.org/2001/XInclude" class="svnrev">$Revision: 6369 $</P>
 <div class="navfooter">
 <hr>
 <table summary="Navigation footer" width="100%">

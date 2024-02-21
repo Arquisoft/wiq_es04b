@@ -1,4 +1,4 @@
-/* Copyright (c) 2001-2022, The HSQL Development Group
+/* Copyright (c) 2001-2021, The HSQL Development Group
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -51,7 +51,7 @@ import org.hsqldb.types.Type;
  * by the constraint.<p>
  *
  * @author Fred Toussi (fredt@users dot sourceforge.net)
- * @version 2.7.0
+ * @version 2.6.1
  * @since 1.6.0
  */
 public final class Constraint implements SchemaObject {
@@ -818,7 +818,7 @@ public final class Constraint implements SchemaObject {
                 } else {
                     if (oldData != null) {
                         int c = core.refIndex.compareRow(session, data,
-                                                         oldData);
+                                                          oldData);
 
                         if (c == 0) {
                             return;
@@ -1029,9 +1029,9 @@ public final class Constraint implements SchemaObject {
         parser.compileContext.setNextRangeVarIndex(0);
         parser.read();
 
-        Expression condition = parser.XreadBooleanValueExpression();
+        parser.isCheckOrTriggerCondition = true;
 
-        condition.setNoOptimisation();
+        Expression condition = parser.XreadBooleanValueExpression();
 
         return condition;
     }
@@ -1040,7 +1040,6 @@ public final class Constraint implements SchemaObject {
 
         // to ensure no subselects etc. are in condition
         check.checkValidCheckConstraint();
-        check.setNoOptimisation();
 
         QuerySpecification checkSelect = Expression.getCheckSelect(session,
             table, check);

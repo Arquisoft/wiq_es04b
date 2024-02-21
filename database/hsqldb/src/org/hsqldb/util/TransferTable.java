@@ -1,7 +1,7 @@
 /*
  * For work developed by the HSQL Development Group:
  *
- * Copyright (c) 2001-2022, The HSQL Development Group
+ * Copyright (c) 2001-2021, The HSQL Development Group
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -71,6 +71,7 @@
 package org.hsqldb.util;
 
 import java.io.Serializable;
+import java.sql.SQLException;
 import java.util.Hashtable;
 
 // fredt@users 20011220 - patch 481239 by xponsard@users - enhancements
@@ -146,7 +147,7 @@ class TransferTable implements Serializable {
             } catch (Exception e) {}
         }
 
-        if (!Stmts.bTransfer) {
+        if (Stmts.bTransfer == false) {
             tracer.trace("Table " + Stmts.sSourceTable + " not transfered");
 
             return;
@@ -361,7 +362,7 @@ class TransferTable implements Serializable {
             } catch (Exception e) {}
         }
 
-        if (!Stmts.bTransfer) {
+        if (Stmts.bTransfer == false) {
             tracer.trace("Table " + Stmts.sSourceTable + " not transfered");
 
             return;

@@ -1,4 +1,4 @@
-/* Copyright (c) 2001-2023, The HSQL Development Group
+/* Copyright (c) 2001-2021, The HSQL Development Group
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -39,9 +39,10 @@ import java.sql.Clob;
 import java.sql.SQLException;
 
 import org.hsqldb.error.ErrorCode;
+import org.hsqldb.lib.FrameworkLogger;
 import org.hsqldb.lib.java.JavaSystem;
 
-/* $Id: JDBCClob.java 6656 2023-05-29 15:55:53Z fredt $ */
+/* $Id: JDBCClob.java 6266 2021-01-25 16:08:06Z fredt $ */
 
 // campbell-burnet@users 2004-03/04-xx - doc 1.7.2 - javadocs updated; methods put in
 //                                            correct (historical, interface
@@ -122,6 +123,9 @@ import org.hsqldb.lib.java.JavaSystem;
  * @since JDK 1.2, HSQLDB 1.7.2
  */
 public class JDBCClob implements Clob {
+
+    private static final FrameworkLogger LOG =
+        FrameworkLogger.getLog(JDBCClob.class);
 
     /**
      * Retrieves the number of characters
@@ -360,7 +364,7 @@ public class JDBCClob implements Clob {
      * value will be increased to accommodate the extra characters.
      * <p>
      * <b>Note:</b> If the value specified for <code>pos</code>
-     * is greater than the length+1 of the <code>CLOB</code> value then the
+     * is greater then the length+1 of the <code>CLOB</code> value then the
      * behavior is undefined. Some JDBC drivers may throw a
      * <code>SQLException</code> while other drivers may support this
      * operation.
@@ -431,7 +435,7 @@ public class JDBCClob implements Clob {
      * value will be increased to accommodate the extra characters.
      * <p>
      * <b>Note:</b> If the value specified for <code>pos</code>
-     * is greater than the length+1 of the <code>CLOB</code> value then the
+     * is greater then the length+1 of the <code>CLOB</code> value then the
      * behavior is undefined. Some JDBC drivers may throw a
      * <code>SQLException</code> while other drivers may support this
      * operation.
@@ -681,7 +685,7 @@ public class JDBCClob implements Clob {
      * value will be increased to accommodate the extra characters.
      * <p>
      * <b>Note:</b> If the value specified for <code>pos</code>
-     * is greater than the length+1 of the <code>CLOB</code> value then the
+     * is greater then the length+1 of the <code>CLOB</code> value then the
      * behavior is undefined. Some JDBC drivers may throw a
      * <code>SQLException</code> while other drivers may support this
      * operation.
@@ -840,7 +844,7 @@ public class JDBCClob implements Clob {
     //------------------------- JDBC 4.0 -----------------------------------
 
     /**
-     * This method frees the <code>Clob</code> object and releases the resources
+     * This method frees the <code>Clob</code> object and releases the resources the resources
      * that it holds.  The object is invalid once the <code>free</code> method
      * is called.
      * <p>

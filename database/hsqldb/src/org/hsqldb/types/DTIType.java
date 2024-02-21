@@ -1,4 +1,4 @@
-/* Copyright (c) 2001-2022, The HSQL Development Group
+/* Copyright (c) 2001-2021, The HSQL Development Group
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -43,15 +43,10 @@ import org.hsqldb.lib.IntKeyIntValueHashMap;
  * Common elements for Type instances for DATETIME and INTERVAL.<p>
  *
  * @author Fred Toussi (fredt@users dot sourceforge.net)
- * @version 2.7.0
+ * @version 2.6.0
  * @since 1.9.0
  */
 public abstract class DTIType extends Type {
-
-    public static final int secondsInDay = 60 * 60 * 24;
-    public static final long millisInSecond = 1000L;
-    public static final long nanosInMilli = 1000000L;
-    public static final long nanosInSecond = 1000000000L;
 
     public static final byte[] yearToSecondSeparators       = {
         '-', '-', ' ', ':', ':', '.'
@@ -76,7 +71,7 @@ public abstract class DTIType extends Type {
         1000000000, 100000000, 10000000, 1000000, 100000, 10000, 1000, 100, 10,
         1
     };
-    public static final int timezoneSecondsLimit = 18 * 60 * 60;
+    public static final int timezoneSecondsLimit = 14 * 60 * 60;
     static final int[]      intervalParts        = {
         Types.SQL_INTERVAL_YEAR, Types.SQL_INTERVAL_MONTH,
         Types.SQL_INTERVAL_DAY, Types.SQL_INTERVAL_HOUR,

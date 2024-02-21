@@ -1,7 +1,7 @@
 /*
  * For work developed by the HSQL Development Group:
  *
- * Copyright (c) 2001-2022, The HSQL Development Group
+ * Copyright (c) 2001-2021, The HSQL Development Group
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -98,7 +98,6 @@ import org.hsqldb.result.ResultProperties;
 import org.hsqldb.rowio.RowInputBinary;
 import org.hsqldb.rowio.RowOutputBinary;
 import org.hsqldb.rowio.RowOutputInterface;
-import org.hsqldb.types.DateTimeType;
 import org.hsqldb.types.Type;
 
 // fredt@users 20020215 - patch 461556 by paul-h@users - server factory
@@ -123,7 +122,7 @@ import org.hsqldb.types.Type;
  *
  * @author Blaine Simpson (unsaved@users dot sourceforge.net
  * @author Fred Toussi (fredt@users dot sourceforge.net)
- * @version 2.7.0
+ * @version 2.6.0
  * @since 1.6.2
  */
 class ServerConnection implements Runnable {
@@ -1560,7 +1559,8 @@ class ServerConnection implements Runnable {
 
             session = DatabaseManager.newSession(dbID, user,
                                                  resultIn.getSubString(),
-                                                 resultIn.getZoneString());
+                                                 resultIn.getZoneString(),
+                                                 resultIn.getUpdateCount());
 
             if (!server.isSilent()) {
                 server.printWithThread(mThread + ":Connected user '" + user
@@ -1852,8 +1852,8 @@ class ServerConnection implements Runnable {
             }
 
             try {
-                session = DatabaseManager.newSession(
-                    dbID, user, password, DateTimeType.systemTimeZone.getID());
+                session = DatabaseManager.newSession(dbID, user, password,
+                                                     null, 0);
 
                 // TODO:  Find out what updateCount, the last para, is for:
                 //                                   resultIn.getUpdateCount());

@@ -1,4 +1,4 @@
-/* Copyright (c) 2001-2022, The HSQL Development Group
+/* Copyright (c) 2001-2021, The HSQL Development Group
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -53,7 +53,7 @@ import org.hsqldb.persist.PersistentStore;
  * processing and which indexes are used for table access.
  *
  * @author Fred Toussi (fredt@users dot sourceforge.net)
- * @version 2.7.0
+ * @version 2.6.1
  * @since 1.9.0
  */
 public class RangeVariableResolver {
@@ -741,7 +741,7 @@ public class RangeVariableResolver {
                 continue;
             }
 
-            for (int i = 0; i < newRanges.length; i++) {
+            for (int i = 0; i < starts.size(); i++) {
                 Table table = newRanges[i].rangeTable;
 
                 collectIndexableColumns(newRanges[i], starts);

@@ -1,4 +1,4 @@
-/* Copyright (c) 2001-2022, The HSQL Development Group
+/* Copyright (c) 2001-2021, The HSQL Development Group
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -91,10 +91,8 @@ public final class ServerConfiguration implements ServerConstants {
      * Retrieves a new HsqlProperties object, if possible, loaded from the
      * specified file.
      *
-     * @param protocol int
-     * @param path the file's path, without the .properties extension (which is
-     *   added automatically)
-     * @param extension String
+     * @param path the file's path, without the .properties extension
+     *      (which is added automatically)
      * @return a new properties object loaded from the specified file
      */
     public static ServerProperties getPropertiesFromFile(int protocol,
@@ -190,11 +188,10 @@ public final class ServerConfiguration implements ServerConstants {
     }
 
     /**
-     * Retrieves a new default properties object for a server of the specified
-     * protocol
+     * Retrieves a new default properties object for a server of the
+     * specified protocol
      *
      * @return a new default properties object
-     * @param protocol int
      */
     public static ServerProperties newDefaultProperties(int protocol) {
 

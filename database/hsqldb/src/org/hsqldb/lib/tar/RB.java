@@ -34,7 +34,7 @@ package org.hsqldb.lib.tar;
 import org.hsqldb.lib.ValidatingResourceBundle;
 import org.hsqldb.lib.RefCapableRBInterface;
 
-/* $Id: RB.java 6527 2022-05-23 12:29:48Z fredt $ */
+/* $Id: RB.java 6266 2021-01-25 16:08:06Z fredt $ */
 
 /**
  * Resource Bundle for Tar classes
@@ -117,7 +117,7 @@ public enum RB implements RefCapableRBInterface {
     listing_format,
     ;
 
-    private static final ValidatingResourceBundle vrb =
+    private static ValidatingResourceBundle vrb =
             new ValidatingResourceBundle(
                     RB.class.getPackage().getName() + ".rb", RB.class);
     static {

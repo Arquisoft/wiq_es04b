@@ -1,7 +1,7 @@
 /*
  * For work developed by the HSQL Development Group:
  *
- * Copyright (c) 2001-2022, The HSQL Development Group
+ * Copyright (c) 2001-2021, The HSQL Development Group
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -341,7 +341,7 @@ public class CodeSwitcher {
                 if (line.startsWith("//#")) {
                     if (line.startsWith("//#ifdef ")) {
                         if (state != 0) {
-                            printError("'#ifdef' not allowed inside '#ifdef' at line " + i);
+                            printError("'#ifdef' not allowed inside '#ifdef'");
 
                             return false;
                         }
@@ -350,10 +350,10 @@ public class CodeSwitcher {
 
                         String s = line.substring(9);
 
-                        if (vSwitchOn.contains(s)) {
+                        if (vSwitchOn.indexOf(s) != -1) {
                             working   = true;
                             switchoff = false;
-                        } else if (vSwitchOff.contains(s)) {
+                        } else if (vSwitchOff.indexOf(s) != -1) {
                             working = true;
 
                             v.add(++i, "/*");
@@ -361,7 +361,7 @@ public class CodeSwitcher {
                             switchoff = true;
                         }
 
-                        if (!vSwitches.contains(s)) {
+                        if (vSwitches.indexOf(s) == -1) {
                             vSwitches.add(s);
                         }
                     } else if (line.startsWith("//#ifndef ")) {
@@ -376,10 +376,10 @@ public class CodeSwitcher {
 
                         String s = line.substring(10);
 
-                        if (vSwitchOff.contains(s)) {
+                        if (vSwitchOff.indexOf(s) != -1) {
                             working   = true;
                             switchoff = false;
-                        } else if (vSwitchOn.contains(s)) {
+                        } else if (vSwitchOn.indexOf(s) != -1) {
                             working = true;
 
                             v.add(++i, "/*");
@@ -387,7 +387,7 @@ public class CodeSwitcher {
                             switchoff = true;
                         }
 
-                        if (!vSwitches.contains(s)) {
+                        if (vSwitches.indexOf(s) == -1) {
                             vSwitches.add(s);
                         }
                     } else if (line.startsWith("//#else")) {

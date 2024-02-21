@@ -1,4 +1,4 @@
-/* Copyright (c) 2001-2022, The HSQL Development Group
+/* Copyright (c) 2001-2021, The HSQL Development Group
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -40,7 +40,7 @@ import org.hsqldb.result.ResultMetaData;
 import org.hsqldb.types.IntervalType;
 import org.hsqldb.types.Type;
 
-/* $Id: JDBCParameterMetaData.java 6509 2022-05-17 13:18:08Z fredt $ */
+/* $Id: JDBCParameterMetaData.java 6271 2021-01-29 14:39:07Z fredt $ */
 
 /* @todo 1.9.0 - implement internal support for INOUT, OUT return parameter */
 
@@ -65,7 +65,7 @@ import org.hsqldb.types.Type;
  * object.
  *
  * @author Campbell Burnet (campbell-burnet@users dot sourceforge.net)
- * @version 2.7.0
+ * @version 2.6.0
  * @since JDK 1.4, HSQLDB 1.7.2
  */
 public class JDBCParameterMetaData implements ParameterMetaData,
@@ -258,7 +258,7 @@ public class JDBCParameterMetaData implements ParameterMetaData,
      * If the receiver implements the interface then the result is the receiver
      * or a proxy for the receiver. If the receiver is a wrapper
      * and the wrapped object implements the interface then the result is the
-     * wrapped object or a proxy for the wrapped object. Otherwise return
+     * wrapped object or a proxy for the wrapped object. Otherwise return the
      * the result of calling <code>unwrap</code> recursively on the wrapped object
      * or a proxy for that result. If the receiver is not a
      * wrapper and does not implement the interface, then an <code>SQLException</code> is thrown.
@@ -311,9 +311,10 @@ public class JDBCParameterMetaData implements ParameterMetaData,
      * Creates a new instance of JDBCParameterMetaData. <p>
      *
      * @param metaData A ResultMetaData object describing the statement parameters
+     * @throws SQLException never - reserved for future use
      */
     JDBCParameterMetaData(JDBCConnection conn,
-                          ResultMetaData metaData) {
+                          ResultMetaData metaData) throws SQLException {
 
         rmd              = metaData;
         parameterCount   = rmd.getColumnCount();

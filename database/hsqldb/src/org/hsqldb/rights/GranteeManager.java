@@ -1,4 +1,4 @@
-/* Copyright (c) 2001-2022, The HSQL Development Group
+/* Copyright (c) 2001-2021, The HSQL Development Group
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -65,7 +65,7 @@ import org.hsqldb.lib.java.JavaSystem;
  * @author Fred Toussi (fredt@users dot sourceforge.net)
  * @author Blaine Simpson (blaine dot simpson at admc dot com)
  *
- * @version 2.7.0
+ * @version 2.6.0
  * @since 1.8.0
  * @see Grantee
  */
@@ -88,7 +88,6 @@ public class GranteeManager {
             SqlInvariants.SYSTEM_SCHEMA_HSQLNAME);
 
         SqlInvariants.INFORMATION_SCHEMA_HSQLNAME.owner = systemAuthorisation;
-        SqlInvariants.SESSION_SCHEMA_HSQLNAME.owner     = systemAuthorisation;
         SqlInvariants.SYSTEM_SCHEMA_HSQLNAME.owner      = systemAuthorisation;
         SqlInvariants.LOBS_SCHEMA_HSQLNAME.owner        = systemAuthorisation;
         SqlInvariants.SQLJ_SCHEMA_HSQLNAME.owner        = systemAuthorisation;
@@ -233,7 +232,7 @@ public class GranteeManager {
      *  rights checks and tests will fail, since the HsqlName
      *  class implements its {@link HsqlName#hashCode() hashCode} and
      *  {@link HsqlName#equals equals} methods based on pure object
-     *  identity, rather than on attribute values.
+     *  identity, rather than on attribute values. <p>
      */
     public void grant(Session session, OrderedHashSet granteeList,
                       SchemaObject dbObject, Right right, Grantee grantor,
@@ -451,7 +450,7 @@ public class GranteeManager {
      * Revokes the rights represented by the rights argument on
      * the database object identified by the dbobject argument
      * from the User object identified by the name
-     * argument.
+     * argument.<p>
      * @see #grant
      */
     public void revoke(OrderedHashSet granteeList, SchemaObject dbObject,
@@ -520,7 +519,7 @@ public class GranteeManager {
 
     /**
      * Updates all the talbe level rights on a table after the addition of a
-     * column.
+     * column.<p>
      */
     public void updateAddColumn(HsqlName table, HsqlName column) {
 
@@ -660,7 +659,7 @@ public class GranteeManager {
     /**
      * Creates a new Role object under management of this object. <p>
      *
-     *  A set of constraints regarding user creation is imposed:
+     *  A set of constraints regarding user creation is imposed: <p>
      *
      *  <OL>
      *    <LI>Can't create a role with name same as any right.
@@ -788,13 +787,13 @@ public class GranteeManager {
      * Attempts to drop a Role with the specified name
      *  from this object's set. <p>
      *
-     *  A successful drop action consists of:
+     *  A successful drop action consists of: <p>
      *
      *  <UL>
      *
      *    <LI>removing the Grantee object with the specified name
      *        from the set.
-     *  </UL>
+     *  </UL> <p>
      *
      */
     public void dropRole(String name) {

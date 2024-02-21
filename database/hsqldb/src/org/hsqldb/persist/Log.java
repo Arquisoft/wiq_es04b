@@ -1,4 +1,4 @@
-/* Copyright (c) 2001-2022, The HSQL Development Group
+/* Copyright (c) 2001-2021, The HSQL Development Group
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -69,7 +69,7 @@ import org.hsqldb.scriptio.ScriptWriterText;
  *
  * @author Fred Toussi (fredt@users dot sourceforge.net)
  * @author Bob Preston (sqlbob@users dot sourceforge.net) - text table support
- * @version 2.7.0
+ * @version 2.5.1
  * @since 1.8.0
  */
 public class Log {
@@ -112,7 +112,7 @@ public class Log {
      * When opening a database, the hsqldb.compatible_version property is
      * used to determine if this version of the engine is equal to or greater
      * than the earliest version of the engine capable of opening that
-     * database.
+     * database.<p>
      */
     void open() {
 
@@ -186,7 +186,7 @@ public class Log {
     void close(boolean script) {
 
         database.logger.setFilesTimestamp(
-            database.txManager.getSystemChangeNumber());
+            database.txManager.getGlobalChangeTimestamp());
         closeLog();
         deleteOldFiles();
         deleteOldTempFiles();
@@ -244,7 +244,7 @@ public class Log {
 
         database.logger.textTableManager.closeAllTextCaches(false);
         database.logger.setFilesTimestamp(
-            database.txManager.getSystemChangeNumber());
+            database.txManager.getGlobalChangeTimestamp());
         closeLog();
     }
 
@@ -315,7 +315,7 @@ public class Log {
         }
 
         database.logger.setFilesTimestamp(
-            database.txManager.getSystemChangeNumber());
+            database.txManager.getGlobalChangeTimestamp());
         database.logger.logInfoEvent("checkpointClose start");
         synchLog();
         database.lobManager.synch();
@@ -338,6 +338,7 @@ public class Log {
             if (cache != null) {
                 deleteBackupFile();
             }
+
         } catch (Throwable t) {
 
             // backup failed perhaps due to lack of disk space
@@ -400,7 +401,7 @@ public class Log {
             }
 
             database.logger.setFilesTimestamp(
-                database.txManager.getSystemChangeNumber());
+                database.txManager.getGlobalChangeTimestamp());
             database.logger.logInfoEvent("checkpointClose start");
             synchLog();
             database.lobManager.synch();
@@ -616,7 +617,7 @@ public class Log {
             dbLogWriter.setWriteDelay(writeDelay);
             dbLogWriter.start();
         } catch (Throwable e) {
-            throw Error.error(e, ErrorCode.FILE_IO_ERROR, getLogFileName());
+            throw Error.error(ErrorCode.FILE_IO_ERROR, getLogFileName());
         }
     }
 
@@ -693,7 +694,7 @@ public class Log {
             } else if (e instanceof IOException) {
                 throw Error.error(ErrorCode.FILE_IO_ERROR, e);
             } else if (e instanceof OutOfMemoryError) {
-                throw Error.error(ErrorCode.OUT_OF_MEMORY, e);
+                throw Error.error(ErrorCode.OUT_OF_MEMORY);
             } else {
                 throw Error.error(ErrorCode.GENERAL_ERROR, e);
             }
@@ -733,15 +734,14 @@ public class Log {
         }
     }
 
-    boolean renameNewFile(FileAccess fileAccess, String baseFileName) {
+    static boolean renameNewFile(FileAccess fileAccess, String baseFileName) {
 
         if (fileAccess.isStreamElement(baseFileName
                                        + Logger.newFileExtension)) {
             deleteFile(fileAccess, baseFileName);
 
             return fileAccess.renameElementOrCopy(
-                baseFileName + Logger.newFileExtension, baseFileName,
-                database.logger);
+                baseFileName + Logger.newFileExtension, baseFileName);
         }
 
         return true;

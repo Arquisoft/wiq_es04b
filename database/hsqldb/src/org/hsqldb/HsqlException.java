@@ -1,4 +1,4 @@
-/* Copyright (c) 2001-2022, The HSQL Development Group
+/* Copyright (c) 2001-2021, The HSQL Development Group
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -41,7 +41,7 @@ import org.hsqldb.result.Result;
  * to JDBC callers.
  *
  * @author Fred Toussi (fredt@users dot sourceforge.net)
- * @version 2.7.1
+ * @version 1.9.0
  * @since 1.7.2
  */
 public class HsqlException extends RuntimeException {
@@ -58,7 +58,6 @@ public class HsqlException extends RuntimeException {
     private int    level;
     private int    statementGroup;
     private int    statementCode;
-    private String token;
     public  Object info;
     /**
      * @param message String
@@ -133,14 +132,6 @@ public class HsqlException extends RuntimeException {
     public void setStatementType(int group, int code) {
         statementGroup = group;
         statementCode  = code;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
-    }
-
-    public String getToken() {
-        return token;
     }
 
     public int hashCode() {

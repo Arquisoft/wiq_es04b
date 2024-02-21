@@ -677,27 +677,26 @@ abstract class ParsedSection {
          * (note that UPPERCASE codes, while valid are only processed if the
          * system property IgnoreCodeCase has been set to true)
          *
-         * ' ' - not a test
-         * 'd' - display this line verbatim
-         * 'o' - dump result set
+         * 'u' - update
+         * 'c' - count
          * 'e' - exception
-         * 's' - silent
-         * 'c' - count number of lines in result set
-         * 'r' - result set
-         * 'u' - update count
+         * 'r' - results
          * 'w' - wait
          * 'p' - proceed
+         * 's' - silent
+         * 'd' - display   (No reason to use upper-case).
+         * ' ' - not a test
          */
         switch (aCode) {
 
             case ' ' :
-            case 'd' :
+            case 'r' :
             case 'o' :
             case 'e' :
-            case 's' :
             case 'c' :
-            case 'r' :
             case 'u' :
+            case 's' :
+            case 'd' :
             case 'w' :
             case 'p' :
                 return true;
@@ -907,7 +906,7 @@ class ResultSetParsedSection extends ParsedSection {
                                 String actualS = actual;
 
                                 if (results.getMetaData().getColumnClassName(
-                                        j).equals("java.lang.String")) {
+                                        i).equals("java.lang.String")) {
                                     actualS =
                                         StringConverter.toQuotedString(actualS,
                                                                        '\'',

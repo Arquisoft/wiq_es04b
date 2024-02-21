@@ -1,4 +1,4 @@
-/* Copyright (c) 2001-2022, The HSQL Development Group
+/* Copyright (c) 2001-2007, The HSQL Development Group
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -34,104 +34,47 @@ package org.hsqldb.util.preprocessor;
 import java.io.File;
 import java.io.IOException;
 
-/*
- * $Id: BasicResolver.java 6480 2022-04-12 09:46:56Z fredt $
- */
+/* $Id: BasicResolver.java 5793 2018-01-06 13:12:38Z fredt $ */
+
 /**
  * Resolves paths using a parent directory; does not resolve properties.
  *
  * @author Campbell Burnet (campbell-burnet@users dot sourceforge.net)
- * @version 2.7.0
+ * @version 1.8.1
  * @since 1.8.1
  */
-@SuppressWarnings("ClassWithoutLogger")
-public class BasicResolver implements IResolver {
+class BasicResolver implements IResolver {
+    File parentDir;
 
-    /**
-     * creates a new resolver rooted at the given path or its parent.
-     *
-     * @param path for resolving other abstract paths.
-     * @return a new instance.
-     * @throws IllegalArgumentException if the path is not a directory, cannot
-     *                                  be created as a directory, does not have
-     *                                  a parent and a parent cannot be created
-     *                                  as a directory, of if the file exist and
-     *                                  is not a file or a directory.
-     *
-     */
-    public static IResolver forPath(final String path) {
-        if (path == null) {
-            return new BasicResolver(null);
-        } else if (path.isEmpty()) {
-            return new BasicResolver(new File(""));
-        }
-        final File file = new File(path);
-        if (!file.exists()) {
-            if (file.mkdirs()) {
-                return new BasicResolver(file);
-            } else {
-                throw new IllegalArgumentException("could not makedirs for: "
-                        + file.getAbsolutePath());
-            }
-        } else if (file.isDirectory()) {
-            return new BasicResolver(file);
-        } else if (file.isFile()) {
-            final File parentFile = file.getParentFile();
-            if (parentFile == null) {
-                throw new IllegalArgumentException("path is not a directory"
-                        + " and has no parent: " + file.getAbsolutePath());
-            } else if (parentFile.isFile()) {
-                throw new IllegalArgumentException("parent path is a file: "
-                        + parentFile.getAbsolutePath());
-            } else if (parentFile.isDirectory()) {
-                return new BasicResolver(file);
-            } else if (parentFile.exists()) {
-                throw new IllegalArgumentException("parent path exists but"
-                        + " is not a file or directory: "
-                        + file.getAbsolutePath());
-            } else if (parentFile.mkdirs()) {
-                return new BasicResolver(parentFile);
-            } else {
-                throw new IllegalArgumentException("could not makedirs for: "
-                        + parentFile.getAbsolutePath());
-            }
-        } else {
-            throw new IllegalArgumentException("path exists but is not a file"
-                    + " or a directory: " + file.getAbsolutePath());
-        }
-    }
-
-    private final File parentDir;
-
-    public BasicResolver() {
-        this(null);
-    }
-
-    public BasicResolver(final File parentDir) {
+    public BasicResolver(File parentDir) {
         this.parentDir = parentDir;
     }
 
-    @Override
-    public String resolveProperties(final String expression) {
+    public String resolveProperties(String expression) {
         return expression;
     }
+    public File resolveFile(String path) {
+        File file = new File(path);
 
-    @Override
-    public File resolveFile(final String path) {
-        final File dir = this.parentDir;
-        final String actualPath = path == null || path.isEmpty() ? "" : path;
-        File file = new File(actualPath);
-        if (dir != null && !file.isAbsolute()) {
+        if (parentDir != null && !file.isAbsolute()) {
             try {
-                file = new File(dir.getCanonicalFile(), file.getPath());
+                path = this.parentDir.getCanonicalPath()
+                       + File.separatorChar
+                       + path;
+
+                file = new File(path);
             } catch (IOException ex) {
-                file = new File(dir.getAbsoluteFile(), file.getPath());
+                path = this.parentDir.getAbsolutePath()
+                       + File.separatorChar
+                       + path;
+
+                file = new File(path);
             }
         }
 
         try {
             return file.getCanonicalFile();
-        } catch (IOException e) {
+        } catch (Exception e) {
             return file.getAbsoluteFile();
         }
     }

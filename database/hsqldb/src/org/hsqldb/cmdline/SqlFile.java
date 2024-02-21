@@ -1,4 +1,4 @@
-/* Copyright (c) 2001-2022, The HSQL Development Group
+/* Copyright (c) 2001-2021, The HSQL Development Group
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -86,11 +86,11 @@ import org.hsqldb.cmdline.libclone.AppendableException;
 import org.hsqldb.cmdline.libclone.FrameworkLogger;
 import org.hsqldb.cmdline.utilclone.RCData;
 
-/* $Id: SqlFile.java 6559 2022-06-12 15:53:31Z fredt $ */
+/* $Id: SqlFile.java 6266 2021-01-25 16:08:06Z fredt $ */
 
 /**
- * Encapsulation of SQL text and the environment under which it will be
- * executed with a JDBC Connection.
+ * Encapsulation of SQL text and the environment under which it will executed
+ * with a JDBC Connection.
  * 'SqlInputStream' would be a more precise name, but the content we are
  * talking about here is what is colloqially known as the contents of
  * "SQL file"s.
@@ -149,7 +149,8 @@ import org.hsqldb.cmdline.utilclone.RCData;
  * @see <a href="../../../../util-guide/sqltool-chapt.html" target="guide">
  *     The SqlTool chapter of the
  *     HyperSQL Utilities Guide</a>
- * @version $Revision: 6559 $, $Date: 2022-06-12 16:53:31 +0100 (Sun, 12 Jun 2022) $
+ * @see org.hsqldb.sample.SqlFileEmbedder
+ * @version $Revision: 6266 $, $Date: 2021-01-25 16:08:06 +0000 (Mon, 25 Jan 2021) $
  * @author Blaine Simpson (blaine dot simpson at admc dot com)
  */
 
@@ -159,16 +160,16 @@ public class SqlFile {
     private static final int TIMESTAMP_WITH_TIMEZONE = 2014;
 
     private enum Recursion { FILE, IF, WHILE, FOREACH, FOR, FORROWS }
-    private static final FrameworkLogger logger =
+    private static FrameworkLogger logger =
             FrameworkLogger.getLog(SqlFile.class);
     private static final int DEFAULT_HISTORY_SIZE = 40;
     private boolean          executing;
     private boolean          permitEmptySqlStatements;
     private boolean          interactive;
-    private final String           primaryPrompt    = "sql> ";
-    private static final String    rawPrompt;
+    private String           primaryPrompt    = "sql> ";
+    private static String    rawPrompt;
     private static Method    createArrayOfMethod;
-    private static final String           contPrompt       = "  +> ";
+    private String           contPrompt       = "  +> ";
     private boolean          htmlMode;
     private TokenList        history;
     /** Platform-specific line separator */
@@ -180,19 +181,19 @@ public class SqlFile {
     private Reader           reader;
     // Reader serves the auxiliary purpose of null meaning execute()
     // has finished.
-    private final String           inputStreamLabel;
-    private final URL        atBase;
+    private String           inputStreamLabel;
+    private URL              atBase;
     private boolean          dsvTrimAll;
     private boolean          ignoreBangStatus;
     private boolean          allQuoted;
     private boolean          doPrepare;
-    private static final String    DSV_X_SYNTAX_MSG;
-    private static final String    DSV_M_SYNTAX_MSG;
-    private static final String    nobufferYetString;
+    private static String    DSV_X_SYNTAX_MSG;
+    private static String    DSV_M_SYNTAX_MSG;
+    private static String    nobufferYetString;
     private String           prepareVar;
     private int              dsvRecordsPerCommit = 0;
 
-    static final String            DEFAULT_FILE_ENCODING =
+    static String            DEFAULT_FILE_ENCODING =
                              System.getProperty("file.encoding");
 
     // These settings are never null
@@ -220,66 +221,66 @@ public class SqlFile {
      * unpredictable wrt whether you get a null capture group vs. no capture.
      * Must always check count!
      */
-    private static final Pattern   varPattern = Pattern.compile("\\*?[a-zA-Z]\\w*");
-    private static final Pattern   wordAndDotPattern = Pattern.compile("[\\w.]+");
-    private static final Pattern   specialPattern =
+    private static Pattern   varPattern = Pattern.compile("\\*?[a-zA-Z]\\w*");
+    private static Pattern   wordAndDotPattern = Pattern.compile("[\\w.]+");
+    private static Pattern   specialPattern =
             Pattern.compile("(\\S+)(?:\\s(.*))?");
-    private static final Pattern  plPattern = Pattern.compile("(.*\\S)?\\s*");
-    private static final Pattern  mathAsgnPattern = Pattern.compile(
+    private static Pattern  plPattern = Pattern.compile("(.*\\S)?\\s*");
+    private static Pattern  mathAsgnPattern = Pattern.compile(
         "\\(\\(\\s*([a-zA-Z]\\w*)\\s*([-+*/%][-+=])\\s*(.+?)?\\s*\\)\\)\\s*");
-    private static final Pattern  mathPattern = Pattern.compile(
+    private static Pattern  mathPattern = Pattern.compile(
             "\\(\\(\\s*([a-zA-Z]\\w*)\\s*=\\s*(.+?)?\\s*\\)\\)\\s*");
-    private static final Pattern   foreachPattern =
+    private static Pattern   foreachPattern =
             Pattern.compile("foreach\\s+(\\S+)\\s*\\(([^)]+)\\)\\s*");
-    private static final Pattern   forrowsPattern =
+    private static Pattern   forrowsPattern =
             Pattern.compile("forrows((?:\\s+[a-zA-Z]\\w*)*)\\s*");
-    private static final Pattern   forPattern = Pattern.compile(
+    private static Pattern   forPattern = Pattern.compile(
         "for\\s+(\\(\\(.+\\)\\))?\\s*(\\([^)]+\\))\\s*(\\(\\(.+\\)\\))\\s*");
-    private static final Pattern   ifwhilePattern =
+    private static Pattern   ifwhilePattern =
             Pattern.compile("\\S+\\s*\\(([^)]*)\\)\\s*");
-    private static final Pattern   inlineifPattern =
+    private static Pattern   inlineifPattern =
             Pattern.compile("(if\\s*\\([^)]*\\))(.*\\S.*)");
-    private static final Pattern   varsetPattern =
+    private static Pattern   varsetPattern =
             Pattern.compile("(\\S+)\\s*([=_~:])(.*)?");
-    private static final Pattern   substitutionPattern =
+    private static Pattern   substitutionPattern =
             Pattern.compile("(\\S)(.+?)\\1(.*?)\\1(.+?)?\\s*");
             // Note that this pattern does not include the leading ":s".
-    private static final Pattern   slashHistoryPattern =
+    private static Pattern   slashHistoryPattern =
             Pattern.compile("\\s*/([^/]+)/\\s*(\\S.*)?");
-    private static final Pattern   historyPattern =
+    private static Pattern   historyPattern =
             Pattern.compile("\\s*(-?\\d+)?\\s*(\\S.*)?");
             // Note that this pattern does not include the leading ":".
     private static Pattern wincmdPattern;
-    private static final Pattern useMacroPattern =
+    private static Pattern useMacroPattern =
             Pattern.compile("(\\w+)(\\s.*[^;])?(;?)");
-    private static final Pattern useFnPattern =
+    private static Pattern useFnPattern =
             Pattern.compile("(\\w+\\()\\s*([^;)]*?)\\s*\\)(.*)");
-    private static final Pattern legacyEditMacroPattern =
+    private static Pattern legacyEditMacroPattern =
             Pattern.compile("(\\w+(?:\\(\\))?)\\s*:(.*)");
-    private static final Pattern editMacroPattern =
+    private static Pattern editMacroPattern =
             Pattern.compile(":\\s(\\w+(?:\\(\\))?)(?:\\s(.*))?");
-    private static final Pattern spMacroPattern =
+    private static Pattern spMacroPattern =
             Pattern.compile("(\\w+(?:\\(\\))?)\\s+([*\\\\])(.*\\S)");
-    private static final Pattern sqlMacroPattern =
+    private static Pattern sqlMacroPattern =
             Pattern.compile("(\\w+(?:\\(\\))?)\\s+(.*\\S)");
-    private static final Pattern integerPattern = Pattern.compile("\\d+");
-    private static final Pattern nameValPairPattern =
+    private static Pattern integerPattern = Pattern.compile("\\d+");
+    private static Pattern nameValPairPattern =
             Pattern.compile("\\s*(\\w+)\\s*=(.*)");
             // Specifically permits 0-length values, but not names.
-    private static final Pattern dotPattern = Pattern.compile("(\\w*)\\.(\\w*)");
-    private static final Pattern commitOccursPattern =
-            Pattern.compile("(?is)set\\s+autocommit.*|commit\\s*");
-    private static final Pattern logPattern =
+    private static Pattern dotPattern = Pattern.compile("(\\w*)\\.(\\w*)");
+    private static Pattern commitOccursPattern =
+            Pattern.compile("(?is)(?:set\\s+autocommit.*)|(commit\\s*)");
+    private static Pattern logPattern =
         Pattern.compile("(?i)(FINER|WARNING|SEVERE|INFO|FINEST)\\s+(.*\\S)");
-    private static final Pattern   arrayPattern =
-            Pattern.compile("ARRAY\\s*\\[\\s*(.*\\S)?\\s*]");
-    private static final Pattern fnParamPat = Pattern.compile("\\*\\{(:)?(\\d+)}");
+    private static Pattern   arrayPattern =
+            Pattern.compile("ARRAY\\s*\\[\\s*(.*\\S)?\\s*\\]");
+    private static Pattern fnParamPat = Pattern.compile("\\*\\{(:)?(\\d+)\\}");
     static final Pattern URL_WITH_PROTO_RE = Pattern.compile("[a-z]{2,}:.+");
 
-    private static final Map<String, Pattern> nestingPLCommands =
-            new HashMap<>();
-    private static final Map<String, Pattern> inlineNestPLCommands =
-            new HashMap<>();
+    private static Map<String, Pattern> nestingPLCommands =
+            new HashMap<String, Pattern>();
+    private static Map<String, Pattern> inlineNestPLCommands =
+            new HashMap<String, Pattern>();
     static {
         nestingPLCommands.put("if", ifwhilePattern);
         nestingPLCommands.put("while", ifwhilePattern);
@@ -310,7 +311,7 @@ public class SqlFile {
 
     private boolean removeEmptyVars() {
         String sysP = System.getProperty("sqltool.REMOVE_EMPTY_VARS");
-        return Boolean.parseBoolean(sysP);
+        return sysP != null && Boolean.parseBoolean(sysP);
     }
 
     /**
@@ -432,12 +433,12 @@ public class SqlFile {
         Connection jdbcConn;
 
         // Since we enforce non-null mapping values, userVars.get(key) of null
-        // always means that the map does not contain the specified key.
-        final Map<String, String> userVars = new HashMap<>();
+        // always means that that the map does not contain the specified key.
+        Map<String, String> userVars = new HashMap<String, String>();
 
-        final Map<String, Token> macros = new HashMap<>();
+        Map<String, Token> macros = new HashMap<String, Token>();
 
-        final PrintStream psStd;
+        PrintStream psStd;
 
         SharedFields(PrintStream psStd) {
             this.psStd = psStd;
@@ -452,17 +453,16 @@ public class SqlFile {
         "-----------------------------------------------------------------"
         + "-----------------------------------------------------------------";
     // Needs to be at least as wide as the widest field or header displayed.
-    private static final String revString = "$Revision: 6559 $";
+    private static final String revString = "$Revision: 6266 $";
     private static final int revStringLength = revString.length();
-    @SuppressWarnings("ConstantConditions")
     private static final String  revnum =
             (revStringLength - " $".length() > "$Revision: ".length())
             ?  revString.substring("$Revision: ".length(),
                     revStringLength - " $".length())
             : "<UNTRACKED>";
 
-    private static final String DSV_OPTIONS_TEXT;
-    private static final String D_OPTIONS_TEXT;
+    private static String DSV_OPTIONS_TEXT;
+    private static String D_OPTIONS_TEXT;
 
     /**
      * Convenience wrapper for the SqlFile(File, String) constructor
@@ -550,7 +550,7 @@ public class SqlFile {
     final boolean interactive, final File atBaseFile)
     throws IOException {
         this(reader, inputStreamLabel, psStd, encoding, interactive,
-          atBaseFile == null ? null :
+          atBaseFile == null ? ((URL) null) :
           new URL("file", null, atBaseFile.getPath()));
     }
 
@@ -616,9 +616,12 @@ public class SqlFile {
             }
             // Updates local vars basd on * shared.userVars
             // even when (like now) these are all defaults.
-        } catch (IOException | RuntimeException iore) {
+        } catch (IOException ioe) {
             closeReader();
-            throw iore;
+            throw ioe;
+        } catch (RuntimeException re) {
+            closeReader();
+            throw re;
         }
     }
 
@@ -717,7 +720,7 @@ public class SqlFile {
                         "Null mapping values not allowed");
         }
         shared.userVars.putAll(newUserVars);
-        List<String> strangeVars = new ArrayList<>();
+        List<String> strangeVars = new ArrayList<String>();
         for (String name : newUserVars.keySet())
             if (!name.equals("?") && !name.equals("#")
                     && !varPattern.matcher(name).matches())
@@ -807,7 +810,7 @@ public class SqlFile {
      * @throws SQLException thrown by JDBC driver.
      *                       Only possible if in "\c false" mode.
      * @throws SqlToolError  all other errors.
-     *               This includes QuitNow, BreakException,
+     *               This includes including QuitNow, BreakException,
      *               ContinueException for recursive calls only.
      */
     synchronized public void execute() throws SqlToolError, SQLException {
@@ -836,7 +839,7 @@ public class SqlFile {
                 closeQueryOutputStream();
                 if (autoClose) closeReader();
             } finally {
-                reader = null; // encourage GC of buffers
+                reader = null; // Encourage GC of buffers
             }
         }
     }
@@ -870,7 +873,7 @@ public class SqlFile {
      *
      * @return Matcher which has already successfully .matched() or null
      */
-    private Matcher inlineNestMatcher(Token token) {
+    private Matcher inlineNestMatcher(Token token) throws BadSpecial {
         if (token.type != Token.PL_TYPE) return null;
         // The scanner assures that val is non-null for PL_TYPEs.
         String commandWord = token.val.replaceFirst("\\s.*", "");
@@ -1003,7 +1006,7 @@ public class SqlFile {
                         }
                         if (receivedType == Token.RAWEXEC_TYPE) {
                             historize();
-                            ResultSet rs;
+                            ResultSet rs = null;
                             Statement statement = processSQL();
                             if (statement != null) {
                                 try {
@@ -1011,12 +1014,13 @@ public class SqlFile {
                                     displaySqlResults(
                                             statement, rs, null, null, true);
                                 } finally {
+                                    assert statement != null;
                                     try {
                                         statement.close();
                                     } catch (SQLException nse) {
                                         // Purposefully doing nothing
                                     } finally {
-                                        statement = null; // encourage GC
+                                        statement = null;
                                     }
                                 }
                             }
@@ -1053,7 +1057,7 @@ public class SqlFile {
                         if (token.val == null) token.val = "";
                         setBuf(token);
                         historize();
-                        ResultSet rs;
+                        ResultSet rs = null;
                         Statement statement = processSQL();
                         if (statement != null) {
                             try {
@@ -1061,12 +1065,13 @@ public class SqlFile {
                                 displaySqlResults(
                                         statement, rs, null, null, true);
                             } finally {
+                                assert statement != null;
                                 try {
                                     statement.close();
                                 } catch (SQLException nse) {
                                     // Purposefully doing nothing
                                 } finally {
-                                    statement = null;  // encourage dealloc.
+                                    statement = null;
                                 }
                             }
                         }
@@ -1078,6 +1083,7 @@ public class SqlFile {
                 }
             } catch (BadSpecial bs) {
                 // BadSpecials ALWAYS have non-null getMessage().
+                assert token != null;
                 errprintln(SqltoolRB.errorat.getString(
                         inputStreamLabel,
                         Integer.toString(token.line),
@@ -1090,6 +1096,7 @@ public class SqlFile {
                 if (!continueOnError) throw new SqlToolError(bs);
             } catch (SQLException se) {
                 //se.printStackTrace();
+                assert token != null;
                 errprintln("SQL " + SqltoolRB.errorat.getString(
                         inputStreamLabel, Integer.toString(token.line),
                         lastSqlStatement,
@@ -1128,7 +1135,8 @@ public class SqlFile {
             } catch (QuitNow qn) {
                 throw qn;
             } catch (SqlToolError ste) {
-                String str0 = SqltoolRB.errorat.getString(
+                assert token != null;
+                StringBuffer sb = new StringBuffer(SqltoolRB.errorat.getString(
                     /* WARNING:  I have removed an extra LS appended to
                      * non-null ste.getMessages() below because I believe that
                      * it is unnecessary (and causes inconsistent blank lines
@@ -1136,13 +1144,15 @@ public class SqlFile {
                      * If I am wrong and this is needed for Scanner display or
                      * something, restore it.
                      */
-                    inputStreamLabel, Integer.toString(token.line),
-                    ((token.val == null) ? "" : token.reconstitute()),
-                    ((ste.getMessage() == null)
-                            ? "" : ste.getMessage())
-                );
+                    (new String[] {
+                        inputStreamLabel, Integer.toString(token.line),
+                        ((token.val == null) ? "" : token.reconstitute()),
+                        ((ste.getMessage() == null)
+                                ? "" : ste.getMessage())
+                     })
+                ));
                 Throwable cause = ste.getCause();
-                errprintln((cause == null) ? str0
+                errprintln((cause == null) ? sb.toString()
                         : SqltoolRB.causereport.getString(cause));
                 if (!continueOnError) throw ste;
             }
@@ -1163,6 +1173,8 @@ public class SqlFile {
                 errprintln(SqltoolRB.aborting.getString(qn.getMessage()));
                 throw new SqlToolError(qn.getMessage());
             }
+
+            return;
         } finally {
             if (fetchingVar != null) {
                 errprintln(SqltoolRB.plvar_set_incomplete.getString(
@@ -1187,7 +1199,7 @@ public class SqlFile {
      *
      * Do not instantiate with null message.
      */
-    public static class BadSpecial extends AppendableException {
+    private static class BadSpecial extends AppendableException {
         static final long serialVersionUID = 7162440064026570590L;
 
         BadSpecial(final String s) {
@@ -1298,11 +1310,12 @@ public class SqlFile {
      * we do for other kinds of commands.
      *
      * @param token Complete command, less the leading ':' character.
+     * @throws SQLException  thrown by JDBC driver.
      * @throws BadSpecial    special-command-specific errors.
      * @throws SqlToolError  all other errors.
      */
     private void processBuffHist(final Token token)
-    throws BadSpecial, SqlToolError {
+    throws BadSpecial, SQLException, SqlToolError {
         if (token.val.length() < 1)
             throw new BadSpecial(SqltoolRB.bufhist_unspecified.getString());
 
@@ -1340,7 +1353,7 @@ public class SqlFile {
                 return;
         }
 
-        Integer histNum;
+        Integer histNum = null;
         Matcher hm = slashHistoryPattern.matcher(token.val);
         if (hm.matches()) {
             histNum = historySearch(hm.group(1));
@@ -1366,7 +1379,7 @@ public class SqlFile {
         other = ((commandChar == '\0') ? null : hm.group(2).substring(1));
         if (other != null && other.trim().length() < 1) other = null;
         Token targetCommand = ((histNum == null)
-                ? null : commandFromHistory(histNum));
+                ? null : commandFromHistory(histNum.intValue()));
         // Every command below depends upon buffer content.
 
         switch (commandChar) {
@@ -1562,9 +1575,8 @@ public class SqlFile {
      * @throws SqlToolError all other errors, plus QuitNow,
      *                      BreakException, ContinueException.
      */
-    @SuppressWarnings("SameParameterValue")
     private void processSpecial(final String inString)
-    throws BadSpecial, SQLException, SqlToolError {
+    throws BadSpecial, QuitNow, SQLException, SqlToolError {
         String string = (inString == null) ? buffer.val : inString;
         if (string.length() < 1)
             throw new BadSpecial(SqltoolRB.special_unspecified.getString());
@@ -1668,7 +1680,7 @@ public class SqlFile {
                                 SqltoolRB.dsv_targetfile_demand.getString());
                     ResultSet rs = null;
                     Statement st = null;
-                    File dsvFile;
+                    File dsvFile = null;
                     csvStyleQuoting = arg1.equals("xq");
                     try {
                         dsvFile = dsvTargetFile == null
@@ -1683,10 +1695,10 @@ public class SqlFile {
 
                         st = shared.jdbcConn.createStatement();
                         rs = st.executeQuery(query.toString());
-                        List<Integer> colList = new ArrayList<>();
+                        List<Integer> colList = new ArrayList<Integer>();
                         int[] incCols = null;
                         if (dsvSkipCols != null) {
-                            Set<String> skipCols = new HashSet<>();
+                            Set<String> skipCols = new HashSet<String>();
                             for (String s : dsvSkipCols.split(
                                     "\\Q" + dsvColDelim, -1)) {
                             // Don't know if better to use dsvColDelim or
@@ -1699,7 +1711,7 @@ public class SqlFile {
                             for (int i = 1; i <= rsmd.getColumnCount(); i++) {
                                 if (!skipCols.remove(rsmd.getColumnName(i)
                                         .toLowerCase()))
-                                    colList.add(i);
+                                    colList.add(Integer.valueOf(i));
                             }
                             if (colList.size() < 1)
                                 throw new BadSpecial(
@@ -1711,7 +1723,7 @@ public class SqlFile {
                                         skipCols.toString()));
                             incCols = new int[colList.size()];
                             for (int i = 0; i < incCols.length; i++)
-                                incCols[i] = colList.get(i);
+                                incCols[i] = colList.get(i).intValue();
                         }
                         displaySqlResults(st, rs, incCols, null, true);
                     } finally {
@@ -1721,21 +1733,24 @@ public class SqlFile {
                         } catch (SQLException se) {
                             // Purposefully empty
                         } finally {
-                            rs = null;  // encourage deallocation
+                            rs = null;
                         }
                         if (st != null) try {
                             st.close();
                         } catch (SQLException se) {
                             // Purposefully empty
                         } finally {
-                            st = null;  // encourage deallocation
+                            st = null;
                         }
                     }
                     pwDsv.flush();
                     stdprintln(SqltoolRB.file_wrotechars.getString(
                             Long.toString(dsvFile.length()),
                             dsvFile.toString()));
-                } catch (FileNotFoundException | UnsupportedEncodingException e) {
+                } catch (FileNotFoundException e) {
+                    throw new BadSpecial(SqltoolRB.file_writefail.getString(
+                            other), e);
+                } catch (UnsupportedEncodingException e) {
                     throw new BadSpecial(SqltoolRB.file_writefail.getString(
                             other), e);
                 } finally {
@@ -1836,13 +1851,15 @@ public class SqlFile {
                 sqlExpandMode = null;
                 try {
                     new SqlFile(this, dereferenceAtToUrl(other)).execute();
-                } catch (ContinueException | QuitNow ceqn) {
-                    throw ceqn;
+                } catch (ContinueException ce) {
+                    throw ce;
                 } catch (BreakException be) {
                     String beMessage = be.getMessage();
 
                     // Handle "file" and plain breaks (by doing nothing)
                     if (beMessage != null && !beMessage.equals("file")) throw be;
+                } catch (QuitNow qn) {
+                    throw qn;
                 } catch (Exception e) {
                     throw new BadSpecial(
                             SqltoolRB.sqlfile_execute_fail.getString(other), e);
@@ -1974,7 +1991,7 @@ public class SqlFile {
                     if (urlid != null) {
                         shared.jdbcConn = new RCData(new File(
                             SqlTool.DEFAULT_RCFILE), urlid).getConnection();
-                    } else if (acct != null) { // keep condition for clarity
+                    } else if (acct != null) {
                         shared.jdbcConn =
                                 DriverManager.getConnection(url, acct, pwd);
                     }
@@ -1996,7 +2013,6 @@ public class SqlFile {
                 if (other != null) {
                     other = other.trim();
                     if (integerPattern.matcher(other).matches()) {
-                        //noinspection MagicConstant
                         shared.jdbcConn.setTransactionIsolation(
                                 Integer.parseInt(other));
                     } else {
@@ -2053,6 +2069,8 @@ public class SqlFile {
                         stdprintln(SqltoolRB.binary_loadedbytesinto.getString(
                                 binBuffer.length));
                     }
+                } catch (BadSpecial bs) {
+                    throw bs;
                 } catch (IOException ioe) {
                     throw new BadSpecial(SqltoolRB.binary_filefail.getString(
                             other), ioe);
@@ -2115,7 +2133,7 @@ public class SqlFile {
                 try {
                     Runtime runtime = Runtime.getRuntime();
                     proc = ((wincmdPattern == null)
-                            ? runtime.exec(extCommand.split("\\s+"))
+                            ? runtime.exec(extCommand)
                             : runtime.exec(genWinArgs(extCommand))
                     );
 
@@ -2178,7 +2196,6 @@ public class SqlFile {
      * @param startIndex Index within inString where the variable name begins
      * @return Index within inString, 1 past end of the variable name
      */
-    @SuppressWarnings("SameParameterValue")
     static int pastName(final String inString, final int startIndex) {
         String workString = inString.substring(startIndex);
         int    e          = inString.length();  // Index 1 past end of var name.
@@ -2204,7 +2221,7 @@ public class SqlFile {
 
         /* TODO:  Rewrite using java.util.regex. */
         String       varName, varValue;
-        StringBuilder expandBuffer = new StringBuilder(inString);
+        StringBuffer expandBuffer = new StringBuffer(inString);
         int          b, e;    // begin and end of name.  end really 1 PAST name
         int iterations;
 
@@ -2296,28 +2313,23 @@ public class SqlFile {
 
             varValue = shared.userVars.get(varName);
             if (varValue == null) {  // Key not in map, since never null vals.
-                switch (varName) {
-                    case "*TIMESTAMP":
-                        if (timestampFormat == null)
-                            throw new SqlToolError(
-                                    SqltoolRB.no_timestamp_format.getString());
-                        varValue = timestampFormat.format(new java.util.Date());
-                        break;
-                    case "*SCRIPT":
-                        varValue = inputStreamLabel;
-                        break;
-                    case "*SCRIPT_FILE":
-                        varValue = inputStreamLabel.replaceFirst("^.*[/\\\\]", "");
-                        break;
-                    case "*SCRIPT_BASE":
-                        varValue = inputStreamLabel.replaceFirst("^.*[/\\\\]", "")
-                          .replaceFirst("[.][^.]*$", "");
-                        break;
-                    default:
-                        if (!permitUnset)
-                            throw new SqlToolError(
-                                    SqltoolRB.plvar_undefined.getString(varName));
-                        varValue = "";
+                if (varName.equals("*TIMESTAMP")) {
+                    if (timestampFormat == null)
+                        throw new SqlToolError(
+                                SqltoolRB.no_timestamp_format.getString());
+                    varValue = timestampFormat.format(new java.util.Date());
+                } else if (varName.equals("*SCRIPT")) {
+                    varValue = inputStreamLabel;
+                } else if (varName.equals("*SCRIPT_FILE")) {
+                    varValue = inputStreamLabel.replaceFirst("^.*[/\\\\]", "");
+                } else if (varName.equals("*SCRIPT_BASE")) {
+                    varValue = inputStreamLabel.replaceFirst("^.*[/\\\\]", "")
+                      .replaceFirst("[.][^.]*$", "");
+                } else {
+                    if (!permitUnset)
+                        throw new SqlToolError(
+                                SqltoolRB.plvar_undefined.getString(varName));
+                    varValue = "";
                 }
             }
 
@@ -2487,19 +2499,19 @@ public class SqlFile {
                 throw new BadSpecial("*forrows command not followed "
                         + "immediately by an SQL statement");
             setBuf(queryToken);
-            List<String[]> rowData = new ArrayList<>();
+            List<String[]> rowData = new ArrayList<String[]>();
             ResultSet rs = null;
-            int colCount;
+            int colCount = 0;
             Statement statement = processSQL();
             if (statement == null)
                 // TODO: Define message
                 throw new BadSpecial("Failed to prepare SQL for loop");
             shared.userVars.put("#", "0");
             shared.userVars.remove("*ROWS");
-            List<String> dsvRows = new ArrayList<>();
+            List<String> dsvRows = new ArrayList<String>();
             try {
                 rs = statement.getResultSet();
-                shared.userVars.put("#", "0");
+                shared.userVars.put("#", Integer.toString(rowData.size()));
                 ResultSetMetaData rsmd = rs.getMetaData();
                 colCount = rsmd.getColumnCount();
                 if (vars != null && vars.length > colCount)
@@ -2522,14 +2534,14 @@ public class SqlFile {
                 } catch (SQLException nse) {
                     // Purposefully doing nothing
                 } finally {
-                    rs = null;  // encourage deallocation
+                    rs = null;
                 }
                 try {
                     statement.close();
                 } catch (SQLException nse) {
                     // Purposefully doing nothing
                 } finally {
-                    statement = null;  // encourage deallocation
+                    statement = null;
                 }
             }
             lastSqlStatement = null;
@@ -2605,15 +2617,12 @@ public class SqlFile {
             } finally {
                 shared.userVars.remove("*ROW");
                 if (origVals != null) for (int i = 1; i < origVals.length; i++)
-                    if (vars != null) {
-                        if (origVals[i] == null)
-                            shared.userVars.remove(vars[i]);
-                        else
-                            shared.userVars.put(vars[i], origVals[i]);
-                    }
+                    if (origVals[i] == null)
+                        shared.userVars.remove(vars[i]);
+                    else
+                        shared.userVars.put(vars[i], origVals[i]);
                 // Simply want to do String.join(delim, strings), but that's
                 // not in Java until v8.
-                // TODO:  We're requiring v8 now, so update this.
                 StringBuilder sb = new StringBuilder();
                 for (String dsvRow : dsvRows) {
                     if (sb.length() > 0) sb.append(dsvRowDelim);
@@ -2633,6 +2642,7 @@ public class SqlFile {
             if (!foreachM.matches())
                 throw new BadSpecial(
                         SqltoolRB.pl_malformat_specific.getString("foreach"));
+            if (foreachM.groupCount() != 2)
             assert foreachM.groupCount() == 2:
                 "Internal assertion failed.  "
                 + "foreach pattern matched, but captured "
@@ -2730,8 +2740,10 @@ public class SqlFile {
 
                     // Handle "if" and plain breaks (by doing nothing)
                     if (beMessage == null || !beMessage.equals("if")) throw be;
-                } catch (ContinueException | QuitNow ceqn) {
-                    throw ceqn;
+                } catch (ContinueException ce) {
+                    throw ce;
+                } catch (QuitNow qn) {
+                    throw qn;
                 } catch (BadSpecial bs) {
                     bs.appendMessage(
                             SqltoolRB.pl_malformat_specific.getString("if"));
@@ -2838,7 +2850,7 @@ public class SqlFile {
 
         if (tokens[0].charAt(0) == '?') {
             String remainder = tokens[0].substring(1);
-            String msg;
+            String msg = null;
             if (remainder.startsWith("assign") ||
                     (tokens.length > 1 && tokens[1].startsWith("assign")))
                 msg = SqltoolRB.pl_assign.getString();
@@ -3075,8 +3087,6 @@ public class SqlFile {
                     // Special case so we can proactively prohibit encodings
                     // which will not work, so we'll always be confident
                     // that 'encoding' value is always good.
-                    if (varVal == null)
-                        throw new UnsupportedEncodingException("null");
                     setEncoding(varVal.trim());
                     return;
                 } catch (UnsupportedEncodingException use) {
@@ -3127,7 +3137,6 @@ public class SqlFile {
      *
      * Conditionally HTML-ifies output.
      */
-    @SuppressWarnings("SameParameterValue")
     private void stdprintln(final boolean queryOutput) {
         if (shared.psStd != null) {
             if (htmlMode) {
@@ -3263,8 +3272,7 @@ public class SqlFile {
         "SYS", "SYSTEM", "OUTLN", "DBSNMP", "OUTLN", "MDSYS", "ORDSYS",
         "ORDPLUGINS", "CTXSYS", "DSSYS", "PERFSTAT", "WKPROXY", "WKSYS",
         "WMSYS", "XDB", "ANONYMOUS", "ODM", "ODM_MTR", "OLAPSYS", "TRACESVR",
-        "REPADMIN", "APPQOSSYS", "AUDSYS", "DBSFWUSER", "GSMADMIN_INTERNAL",
-        "RDSADMIN"
+        "REPADMIN"
     };
 
     public String getCurrentSchema() throws BadSpecial, SqlToolError {
@@ -3289,14 +3297,14 @@ public class SqlFile {
             } catch (SQLException se) {
                 // Purposefully doing nothing
             } finally {
-                rs = null;  // encourage deallocation
+                rs = null;
             }
             if (st != null) try {
-                st.close();  // encourage deallocation
+                st.close();
             } catch (SQLException se) {
                 // Purposefully doing nothing
             } finally {
-                st = null;  // encourage deallocation
+                st = null;
             }
         }
     }
@@ -3324,11 +3332,11 @@ public class SqlFile {
     private void listTables(final char c, final String inFilter)
     throws BadSpecial, SqlToolError {
         requireConnection();
-        String   schema = null;
+        String   schema  = null;
         int[]    listSet = null;
-        String[] types;
+        String[] types   = null;
 
-        /* For workaround for \dt for Oracle */
+        /* For workaround for \T for Oracle */
         String[] additionalSchemas = null;
 
         /* This is for specific non-getTable() queries */
@@ -3350,13 +3358,13 @@ public class SqlFile {
 
             // We only use majorVersion and minorVersion for HyperSQL so far
             // The calls avoided here avoid problems with non-confirmant drivers
-            if (dbProductName.contains("HSQL")) try {
+            if (dbProductName.indexOf("HSQL") > -1) try {
                 majorVersion  = md.getDatabaseMajorVersion();
                 minorVersion  = md.getDatabaseMinorVersion();
             } catch (UnsupportedOperationException uoe) {
                 // It seems that Sun's JDBC/ODBC bridge throws here
                 majorVersion = 2;
-                //minorVersion = 0;  this is default value
+                minorVersion = 0;
             }
 
             //System.err.println("DB NAME = (" + dbProductName + ')');
@@ -3373,44 +3381,23 @@ public class SqlFile {
             switch (c) {
                 case '*' :
                     types = null;
-                    // Filtering not working on this for MySQL
                     break;
 
                 case 'S' :
-                    if (dbProductName.contains("Oracle")) {
+                    if (dbProductName.indexOf("Oracle") > -1) {
                         if (interactive)
                             errprintln(SqltoolRB.vendor_oracle_dS.getString());
 
                         types[0]          = "TABLE";
                         schema            = "SYS";
                         additionalSchemas = oracleSysSchemas;
-                    } else if (dbProductName.contains("MySQL")
-                    || dbProductName.contains("MariaDB")) {
-                        statement = shared.jdbcConn.createStatement();
-                        statement.execute(
-                          "SELECT table_schema, table_name\n"
-                          + "FROM information_schema.tables\n"
-                          + "WHERE table_schema IN ('information_schema', "
-                          + "'mysql', 'performance_schema', 'sys')\n"
-                          + "ORDER BY table_schema, table_name");
-                    } else if (dbProductName.contains("SQL Server")) {
-                        // for \dS we SHOULD query x.sys.tables for x in
-                        // master, msdb, rdsadmin, tempdb, but I'm not up
-                        // for assembling 4 queries now.
-                        // Until fixed, this is precisely same as \dt.
-                        statement = shared.jdbcConn.createStatement();
-                        statement.execute("SELECT schemas.name AS 'SCHEMA', "
-                          + "tables.name AS 'TABLE'\n"
-                          + "FROM sys.tables, sys.schemas\n"
-                          + "WHERE tables.schema_id = schemas.schema_id\n"
-                          + "ORDER BY schemas.name, tables.name");
                     } else {
                         types[0] = "SYSTEM TABLE";
                     }
                     break;
 
                 case 's' :
-                    if (dbProductName.contains("HSQL")) {
+                    if (dbProductName.indexOf("HSQL") > -1) {
                         //  HSQLDB does not consider Sequences as "tables",
                         //  hence we do not list them in
                         //  DatabaseMetaData.getTables().
@@ -3433,33 +3420,13 @@ public class SqlFile {
                             + "information_schema."
                             + ((minorVersion> 8 || majorVersion > 1)
                             ? "sequences" : "system_sequences") + narrower);
-                    } else if (dbProductName.contains("Oracle")) {
-                        statement = shared.jdbcConn.createStatement();
-                        statement.execute(
-                          "SELECT sequence_name, sequence_owner FROM\n"
-                          + "sys.all_sequences ORDER BY sequence_name");
-                    } else if (dbProductName.contains("MySQL")
-                    || dbProductName.contains("MariaDB")) {
-                        statement = shared.jdbcConn.createStatement();
-                        statement.execute(
-                          "SELECT table_schema, table_name, column_name FROM\n"
-                          + "information_schema.columns\n"
-                          + "WHERE extra like '%auto_increment%'\n"
-                          + "ORDER BY table_schema, table_name, column_name");
-                    } else if (dbProductName.contains("SQL Server")) {
-                        statement = shared.jdbcConn.createStatement();
-                        statement.execute("SELECT schemas.name AS 'SCHEMA', "
-                          + "sequences.name AS SEQUENCE\n"
-                          + "FROM sys.sequences, sys.schemas\n"
-                          + "WHERE sequences.schema_id = schemas.schema_id\n"
-                          + "ORDER BY schemas.name, sequences.name");
                     } else {
                         types[0] = "SEQUENCE";
                     }
                     break;
 
                 case 'r' :
-                    if (dbProductName.contains("HSQL")) {
+                    if (dbProductName.indexOf("HSQL") > -1) {
                         statement = shared.jdbcConn.createStatement();
 
                         statement.execute(
@@ -3468,22 +3435,8 @@ public class SqlFile {
                             ? "authorizations" : "system_authorizations")
                             + "\nWHERE authorization_type = 'ROLE'\n"
                             + "ORDER BY authorization_name");
-                    } else if (dbProductName.contains("PostgreSQL")) {
-                        statement = shared.jdbcConn.createStatement();
-
-                        statement.execute(
-                            "SELECT rolname FROM pg_catalog.pg_roles\n"
-                            + "ORDER BY rolname");
-                    } else if (dbProductName.contains("Redshift")) {
-                        // Difficult call here.
-                        // Redshift pg_role table is not readable admins, so
-                        // useless.  Report groups instead, because it's useful.
-                        statement = shared.jdbcConn.createStatement();
-                        statement.execute(
-                            "SELECT groname FROM pg_catalog.pg_group\n"
-                            + "ORDER BY groname");
-                    } else if (dbProductName.contains(
-                            "Adaptive Server Enterprise")) {
+                    } else if (dbProductName.indexOf(
+                            "Adaptive Server Enterprise") > -1) {
                         // This is the basic Sybase server.  Sybase also has
                         // their "Anywhere", ASA (for embedded), and replication
                         // databases, but I don't know the Metadata strings for
@@ -3492,17 +3445,8 @@ public class SqlFile {
 
                         statement.execute(
                             "SELECT name FROM syssrvroles ORDER BY name");
-                    } else if (dbProductName.contains("Oracle")) {
-                        statement = shared.jdbcConn.createStatement();
-
-                        try {
-                            statement.execute(
-                                "SELECT role FROM sys.dba_roles ORDER BY role");
-                        } catch (SQLException se) {
-                            throw new BadSpecial(
-                              "You do not database privileges to list roles");
-                        }
-                    } else if (dbProductName.contains("Apache Derby")) {
+                    } else if (dbProductName.indexOf(
+                            "Apache Derby") > -1) {
                         throw new BadSpecial(
                             SqltoolRB.vendor_derby_dr.getString());
                     } else {
@@ -3512,7 +3456,7 @@ public class SqlFile {
                     break;
 
                 case 'u' :
-                    if (dbProductName.contains("HSQL")) {
+                    if (dbProductName.indexOf("HSQL") > -1) {
                         statement = shared.jdbcConn.createStatement();
 
                         statement.execute("SELECT "
@@ -3520,26 +3464,20 @@ public class SqlFile {
                             ? "user_name" : "user") + ", admin FROM "
                             + "information_schema.system_users\n"
                             + "ORDER BY user_name");
-                    } else if (dbProductName.contains("Oracle")) {
+                    } else if (dbProductName.indexOf("Oracle") > -1) {
                         statement = shared.jdbcConn.createStatement();
+
                         statement.execute(
                             "SELECT username, created FROM all_users "
                             + "ORDER BY username");
-                    } else if (dbProductName.contains("MySQL")
-                    || dbProductName.contains("MariaDB")) {
-                        statement = shared.jdbcConn.createStatement();
-                        statement.execute(
-                            "SELECT host, user FROM mysql.user\n"
-                            + "ORDER BY user,host");
-                    } else if (dbProductName.contains("PostgreSQL")
-                    || dbProductName.contains("Redshift")) {
+                    } else if (dbProductName.indexOf("PostgreSQL") > -1) {
                         statement = shared.jdbcConn.createStatement();
 
                         statement.execute(
                             "SELECT usename, usesuper FROM pg_catalog.pg_user "
                             + "ORDER BY usename");
-                    } else if (dbProductName.contains(
-                            "Adaptive Server Enterprise")) {
+                    } else if (dbProductName.indexOf(
+                            "Adaptive Server Enterprise") > -1) {
                         // This is the basic Sybase server.  Sybase also has
                         // their "Anywhere", ASA (for embedded), and replication
                         // databases, but I don't know the Metadata strings for
@@ -3549,7 +3487,8 @@ public class SqlFile {
                         statement.execute(
                             "SELECT name, accdate, fullname FROM syslogins "
                             + "ORDER BY name");
-                    } else if (dbProductName.contains("Apache Derby")) {
+                    } else if (dbProductName.indexOf(
+                            "Apache Derby") > -1) {
                         throw new BadSpecial(
                             SqltoolRB.vendor_derby_du.getString());
                     } else {
@@ -3559,7 +3498,7 @@ public class SqlFile {
                     break;
 
                 case 'a' :
-                    if (dbProductName.contains("HSQL")
+                    if (dbProductName.indexOf("HSQL") > -1
                         && (minorVersion < 9 && majorVersion < 2)) {
                         // HSQLDB after 1.8 doesn't support any type of aliases
                         //  Earlier HSQLDB Aliases are not the same things as
@@ -3587,56 +3526,13 @@ public class SqlFile {
                     break;
 
                 case 't' :
-                    if (dbProductName.contains("MySQL")
-                    || dbProductName.contains("MariaDB")) {
-                        /*
-                        statement = shared.jdbcConn.createStatement();
-                        statement.execute("show tables");
-                        */
-                        statement = shared.jdbcConn.createStatement();
-                        statement.execute(
-                          "SELECT table_schema AS DATABASE_NAME, table_name\n"
-                          + "FROM information_schema.tables\n"
-                          + "WHERE table_schema NOT IN ('information_schema', "
-                          + "'mysql', 'performance_schema', 'sys')\n"
-                          + "ORDER BY table_schema, table_name");
-                    } else if (dbProductName.contains("SQL Server")) {
-                        // Best we can do is list all tables in current db
-                        statement = shared.jdbcConn.createStatement();
-                        statement.execute("SELECT schemas.name AS 'SCHEMA', "
-                          + "tables.name AS 'TABLE'\n"
-                          + "FROM sys.tables, sys.schemas\n"
-                          + "WHERE tables.schema_id = schemas.schema_id\n"
-                          + "ORDER BY schemas.name, tables.name");
-                    } else {
-                        excludeSysSchemas = dbProductName.contains("Oracle");
-                        types[0] = "TABLE";
-                    }
+                    excludeSysSchemas = (dbProductName.indexOf("Oracle")
+                                         > -1);
+                    types[0] = "TABLE";
                     break;
 
                 case 'v' :
-                    if (dbProductName.contains("MySQL")
-                    || dbProductName.contains("MariaDB")) {
-                        statement = shared.jdbcConn.createStatement();
-                        statement.execute(
-                          "SELECT table_schema AS DATABASE_NAME, "
-                          + "table_name AS VIEW_NAME\n"
-                          + "FROM information_schema.views\n"
-                          + "WHERE table_schema NOT IN ('information_schema', "
-                          + "'mysql', 'performance_schema', 'sys')\n"
-                          + "ORDER BY table_schema, table_name");
-                    } else if (dbProductName.contains("SQL Server")) {
-                        // Best we can do is list all views in current db
-                        statement = shared.jdbcConn.createStatement();
-                        statement.execute("SELECT schemas.name AS 'SCHEMA', "
-                          + "views.name AS 'VIEW'\n"
-                          + "FROM sys.views, sys.schemas\n"
-                          + "WHERE views.schema_id = schemas.schema_id\n"
-                          + "ORDER BY schemas.name, views.name");
-                    } else {
-                        excludeSysSchemas = dbProductName.contains("Oracle");
-                        types[0] = "VIEW";
-                    }
+                    types[0] = "VIEW";
                     break;
 
                 case 'c' :
@@ -3663,21 +3559,26 @@ public class SqlFile {
 
                 case 'i' :
 
-                    // Most databases require to specify table, some don't.
+                    // Some databases require to specify table, some don't.
+                    /*
                     if (filter == null) {
                         throw new BadSpecial("You must specify the index's "
                                 + "table as argument to \\di");
                     }
-                    String table;
+                     */
+                    String table = null;
 
-                    Matcher matcher = dotPattern.matcher(filter);
-                    if (matcher.matches()) {
-                        table = (matcher.group(2).length() > 0)
-                                ? matcher.group(2) : null;
-                        schema = (matcher.group(1).length() > 0)
-                                ? matcher.group(1) : getCurrentSchema();
-                    } else {
-                        table = filter;
+                    if (filter != null) {
+                        Matcher matcher = dotPattern.matcher(filter);
+                        if (matcher.matches()) {
+                            table = (matcher.group(2).length() > 0)
+                                    ? matcher.group(2) : null;
+                            schema = (matcher.group(1).length() > 0)
+                                    ? matcher.group(1) : getCurrentSchema();
+                        } else {
+                            table = filter;
+                        }
+                        filter = null;
                     }
 
                     // N.b. Oracle incorrectly reports the INDEX SCHEMA as
@@ -3700,9 +3601,9 @@ public class SqlFile {
             }
 
             if (statement == null) {
-                if (dbProductName.contains("HSQL")) {
+                if (dbProductName.indexOf("HSQL") > -1) {
                     listSet = listMDTableCols[HSQLDB_ELEMENT];
-                } else if (dbProductName.contains("Oracle")) {
+                } else if (dbProductName.indexOf("Oracle") > -1) {
                     listSet = listMDTableCols[ORACLE_ELEMENT];
                 } else {
                     listSet = listMDTableCols[DEFAULT_ELEMENT];
@@ -3750,9 +3651,11 @@ public class SqlFile {
                         listSet, filter, false);
                 }
             }
-        } catch (SQLException | NullPointerException senpe) {
+        } catch (SQLException se) {
+            throw new BadSpecial(SqltoolRB.metadata_fetch_fail.getString(), se);
+        } catch (NullPointerException npe) {
             throw new BadSpecial(SqltoolRB.metadata_fetch_fail.getString(),
-              senpe);
+                    npe);
         } finally {
             excludeSysSchemas = false;
 
@@ -3763,7 +3666,7 @@ public class SqlFile {
                     // We already got what we want from it, or have/are
                     // processing a more specific error.
                 } finally {
-                    rs = null;  // encourage deallocation
+                    rs = null;
                 }
             }
 
@@ -3772,7 +3675,7 @@ public class SqlFile {
             } catch (SQLException se) {
                 // Purposefully doing nothing
             } finally {
-                statement = null;  // encourage deallocation
+                statement = null;
             }
         }
     }
@@ -3798,7 +3701,7 @@ public class SqlFile {
         // No reason to check autoCommit constantly.  If we need to roll
         // back, we will check the autocommit state at that time.
         if (sqlExpandMode == null) setSqlExpandMode();
-        lastSqlStatement = sqlExpandMode
+        lastSqlStatement = sqlExpandMode.booleanValue()
                            ? dereference(buffer.val, true) : buffer.val;
         // Above is the only case where we deference conditionally.
         // For :, \, * commands we either always do or always don't.
@@ -3861,15 +3764,24 @@ public class SqlFile {
         // If we return resources, we obviously do not close them.
         // User already being notified about the problem so don't clutter
         // with details about close failures.
-        } catch (SQLException | SqlToolError seste) {
+        } catch (SQLException se) {
             if (statement != null) try {
                 statement.close();
             } catch (SQLException sen) {
                 // Intentionally empty.  See preceding comment
             } finally {
-                statement = null;  // encourage deallocation
+                statement = null;
             }
-            throw seste; // rethrow
+            throw se; // rethrow
+        } catch (SqlToolError ste) {
+            if (statement != null) try {
+                statement.close();
+            } catch (SQLException sen) {
+                // Intentionally empty.  See preceding comment
+            } finally {
+                statement = null;
+            }
+            throw ste; // rethrow
         } finally {
             if (reportTimes) {
                 long elapsed = (new java.util.Date().getTime()) - startTime;
@@ -3954,7 +3866,6 @@ public class SqlFile {
         if (excludeSysSchemas && interactive)
             stdprintln(SqltoolRB.vendor_nosup_sysschemas.getString());
 
-        //noinspection SwitchStatementWithTooFewBranches
         switch (updateCount) {
             case -1 :
                 if (r == null) {
@@ -3971,8 +3882,8 @@ public class SqlFile {
                                                                : incCols
                                                                    .length;
                 String            val;
-                List<String[]>    rows        = new ArrayList<>();
-                String[]          headerArray;
+                List<String[]>    rows        = new ArrayList<String[]>();
+                String[]          headerArray = null;
                 String[]          fieldArray;
                 int[]             maxWidth = new int[incCount];
                 int               insi;
@@ -3980,6 +3891,9 @@ public class SqlFile {
                 boolean           isValNull;
 
                 // STEP 1: GATHER DATA
+                if (!htmlMode) for (int i = 0; i < maxWidth.length; i++)
+                    maxWidth[i] = 0;
+
                 boolean[] rightJust = new boolean[incCount];
                 int[]     dataType  = new int[incCount];
                 boolean[] autonulls = new boolean[incCount];
@@ -3991,11 +3905,8 @@ public class SqlFile {
                     if (incCols != null) {
                         skip = true;
 
-                        for (int incolEntry : incCols)
-                            if (i == incolEntry) {
-                                skip = false;
-                                break;
-                            }
+                        for (int j = 0; j < incCols.length; j++)
+                            if (i == incCols[j]) skip = false;
 
                         if (skip) continue;
                     }
@@ -4055,10 +3966,7 @@ public class SqlFile {
                             skip = true;
 
                             for (int incCol : incCols)
-                                if (i == incCol) {
-                                    skip = false;
-                                    break;
-                                }
+                                if (i == incCol) skip = false;
 
                             if (skip) continue;
                         }
@@ -4146,7 +4054,7 @@ public class SqlFile {
                             try {
                                 binBuffer =
                                     SqlFile.streamToBytes(r.getBinaryStream(i));
-                                //isValNull = r.wasNull();  unused
+                                isValNull = r.wasNull();
                             } catch (IOException ioe) {
                                 throw new SqlToolError(
                                     SqltoolRB.streamread_failure.getString(),
@@ -4176,6 +4084,7 @@ public class SqlFile {
                             for (String oracleSysSchema : oracleSysSchemas)
                                 if (val.equals(oracleSysSchema)) {
                                     filteredOut = true;
+
                                     break;
                                 }
 
@@ -4251,14 +4160,13 @@ public class SqlFile {
 
                         for (int i = 0; i < headerArray.length; i++) {
                             condlPrint("<TH>"
-                                    + (headerArray[i]==null ? "&nbsp;" : SqlFile.escapeHtml(headerArray[i]))
+                                    + SqlFile.escapeHtml(headerArray[i])
                                     + "</TH>", true);
                             condlPrint(((i > 0) ? "  " : "")
                                     + ((i < headerArray.length - 1
                                         || rightJust[i])
                                        ? toPaddedString(
-                           (headerArray[i] == null ? "" : headerArray[i]),
-                                          maxWidth[i],
+                                         headerArray[i], maxWidth[i],
                                          ' ', !rightJust[i])
                                        : headerArray[i])
                                     , false);
@@ -4330,11 +4238,12 @@ public class SqlFile {
                 }
 
                 if (csvStyleQuoting) {
+                    Pattern delimPat = Pattern.compile(dsvColDelim);
                     for (String[] fArray : rows)
                         for (int j = 0; j < fArray.length; j++)
                             if (fArray[j] != null && (allQuoted
                                     || fArray[j].indexOf('"') > -1
-                                    || fArray[j].contains(dsvColDelim)))
+                                    || fArray[j].indexOf(dsvColDelim) > -1))
                                 fArray[j] = '"'
                                         + fArray[j].replace("\"", "\"\"") + '"';
                 }
@@ -4380,14 +4289,14 @@ public class SqlFile {
             } catch (SQLException se) {
                 logger.warning("Failed to close SQL result set: " + se);
             } finally {
-                r = null;  // encourage deallocation
+                r = null;
             }
             if (statement != null) try {
                 statement.close();
             } catch (SQLException se) {
                 logger.warning("Failed to close SQL statement: " + se);
             } finally {
-                statement = null;  // encourage deallocation
+                statement = null;
             }
         }
     }
@@ -4493,7 +4402,7 @@ public class SqlFile {
     private Integer historySearch(final String findRegex) throws BadSpecial {
         if (history == null)
             throw new BadSpecial(SqltoolRB.history_unavailable.getString());
-        Pattern pattern;
+        Pattern pattern = null;
         try {
             pattern = Pattern.compile("(?ims)" + findRegex);
         } catch (PatternSyntaxException pse) {
@@ -4503,7 +4412,7 @@ public class SqlFile {
         // by using "(?-OPTIONS)" or (?OPTIONS) in their regexes.
         for (int index = history.size() - 1; index >= 0; index--)
             if (pattern.matcher((history.get(index)).val).find())
-                return index + oldestHist;
+                return Integer.valueOf(index + oldestHist);
         return null;
     }
 
@@ -4534,7 +4443,6 @@ public class SqlFile {
     /**
      * Add a command onto the history list.
      */
-    @SuppressWarnings("UnusedReturnValue")
     private boolean historize() {
         if (history == null || buffer == null) return false;
         if (history.size() > 0 &&
@@ -4566,7 +4474,7 @@ public class SqlFile {
          */
         Pattern   filter = null;
         boolean   filterMatchesAll = false;  // match filter against all cols.
-        List<String[]> rows = new ArrayList<>();
+        List<String[]> rows = new ArrayList<String[]>();
         String[]  headerArray = {
             SqltoolRB.describe_table_name.getString(),
             SqltoolRB.describe_table_datatype.getString(),
@@ -4697,14 +4605,14 @@ public class SqlFile {
             } catch (SQLException nse) {
                 // intentionally empty;
             } finally {
-                r = null;  // encourage deallocation
+                r = null;
             }
             if (statement != null) try {
                 statement.close();
             } catch (SQLException nse) {
                 // intentionally empty;
             } finally {
-                statement = null;  // encourage deallocation
+                statement = null;
             }
         }
     }
@@ -4859,7 +4767,7 @@ public class SqlFile {
                 : new TreeMap<Object, Object>(map).entrySet()) {
             s = (String) entry.getValue();
 
-            SqlFile.appendLine(sb, "    " + entry.getKey()
+            SqlFile.appendLine(sb, "    " + (String) entry.getKey()
                     + ": " + (withValues ? ("(" + s + ')')
                     : Integer.toString( s.length())));
         }
@@ -4920,7 +4828,7 @@ public class SqlFile {
         if (binBuffer == null)
             throw new BadSpecial(SqltoolRB.binbuffer_empty.getString());
 
-        int len;
+        int len = 0;
         FileOutputStream fos = new FileOutputStream(dumpFile);
 
         try {
@@ -4956,7 +4864,7 @@ public class SqlFile {
      */
     public String streamToString(InputStream is, final String cs)
     throws IOException {
-        byte[] ba;
+        byte[] ba = null;
         int bytesread = 0;
         int retval;
         try {
@@ -5019,7 +4927,7 @@ public class SqlFile {
     public static byte[] streamToBytes(final InputStream is)
     throws IOException {
         byte[]                xferBuffer = new byte[10240];
-        byte[]                outBytes;
+        byte[]                outBytes = null;
         int                   i;
         ByteArrayOutputStream baos       = new ByteArrayOutputStream();
 
@@ -5033,8 +4941,8 @@ public class SqlFile {
     }
 
     /**
-     * Legacy function.
-     * See following function for documentation.
+     * Legacy function..
+     * See following function for documentatin.
      */
     public static byte[] loadBinary(final File binFile) throws IOException {
         return loadBinary(new URL("file", null, binFile.getPath()));
@@ -5049,7 +4957,7 @@ public class SqlFile {
      */
     public static byte[] loadBinary(final URL binUrl) throws IOException {
         byte[]                xferBuffer = new byte[10240];
-        byte[]                outBytes;
+        byte[]                outBytes = null;
         ByteArrayOutputStream baos;
         int                   i;
         InputStream           fis        = binUrl.openStream();
@@ -5087,13 +4995,13 @@ public class SqlFile {
      *
      * @param i JDBC type number
      * @return boolean
-     * @see <a href="http://java.sun.com/docs/books/tutorial/jdbc/basics/retrieving.html">http://java.sun.com/docs/books/tutorial/jdbc/basics/retrieving.html</a>
+     * @see <A href="http://java.sun.com/docs/books/tutorial/jdbc/basics/retrieving.html">http://java.sun.com/docs/books/tutorial/jdbc/basics/retrieving.html
      *      The table on this page lists the most common SqlTypes, all of which
-     *      must implement toString()
+     *      must implement toString()</A>
      * @see java.sql.Types
      */
     public static boolean canDisplayType(final int i) {
-        /* I don't know about some of the more obscure types, like REF and
+        /* I don't now about some of the more obscure types, like REF and
          * DATALINK */
         switch (i) {
             //case java.sql.Types.BINARY :
@@ -5254,7 +5162,7 @@ public class SqlFile {
     }
 
     /**
-     * Translates user-supplied escapes into the traditionaly
+     * Translates user-supplied escapes into the traditionaly corresponding
      * corresponding binary characters.
      *
      * Allowed sequences:
@@ -5310,9 +5218,9 @@ public class SqlFile {
      */
     private static String convertNumericEscape(
     final String string, final int offset) {
-        int post;
-        int firstDigit;
-        int radix;
+        int post = -1;
+        int firstDigit = -1;
+        int radix = -1;
         if (Character.toUpperCase(string.charAt(offset + 1)) == 'X') {
             firstDigit = offset + 2;
             radix = 16;
@@ -5443,7 +5351,7 @@ public class SqlFile {
             // specify values as spaces, empty string, null.
             // We do not support CVS-quoted style constColMap String.
             // Must be specified in DSV style.
-            constColMap = new TreeMap<>();
+            constColMap = new TreeMap<String, String>();
             for (String constPair : dsvConstCols.split(dsvColSplitter, -1)) {
                 matcher = nameValPairPattern.matcher(constPair);
                 if (!matcher.matches())
@@ -5458,12 +5366,12 @@ public class SqlFile {
         if (dsvSkipCols != null) {
             // We do not support CVS-quoted style skipCols String.
             // Must be specified in DSV style.
-            skipCols = new HashSet<>();
+            skipCols = new HashSet<String>();
             for (String skipCol : dsvSkipCols.split(dsvColSplitter, -1))
                 skipCols.add(skipCol.trim().toLowerCase());
         }
 
-        FileRecordReader dsvReader;
+        FileRecordReader dsvReader = null;
         try {
             dsvReader = new FileRecordReader(fileUrl, dsvRowSplitter,
                     (shared.encoding == null)
@@ -5483,15 +5391,15 @@ public class SqlFile {
 
         String dateString;
 
-        List<String> headerList = new ArrayList<>();
+        List<String> headerList = new ArrayList<String>();
         String    tableName = dsvTargetTable;
 
         // First read one until we get one header line
         int lineCount = 0;
-        String trimmedLine;
+        String trimmedLine = null;
         boolean switching = false;
         int headerOffset = 0;  //  Used to offset read-start of header record
-        String curLine; // Val will be replaced 4 lines down
+        String curLine = null; // Val will be replaced 4 lines down
                                   // This is just to quiet compiler warning
 
         try {
@@ -5547,7 +5455,7 @@ public class SqlFile {
         String colName;
         String[] cols = headerLine.split(
                 (csvStyleQuoting ? "\u0002" : dsvColSplitter), -1);
-        Set<String> usedCols = new HashSet<>();  // Checks for dup cols
+        Set<String> usedCols = new HashSet<String>();  // Checks for dup cols
 
         for (String col : cols) {
             if (col.length() < 1)
@@ -5577,7 +5485,7 @@ public class SqlFile {
             oneCol = true;
             break;
         }
-        if (!oneCol)
+        if (oneCol == false)
             // Difficult call, but I think in any real-world situation, the
             // user will want to know if they are inserting records with no
             // data from their input file.
@@ -5600,8 +5508,8 @@ public class SqlFile {
             if (i > 0) tableName = tableName.substring(0, i);
         }
 
-        StringBuilder tmpSb = new StringBuilder();
-        List<String> tmpList = new ArrayList<>();
+        StringBuffer tmpSb = new StringBuffer();
+        List<String> tmpList = new ArrayList<String>();
 
         int skippers = 0;
         for (String header : headers) {
@@ -5623,9 +5531,9 @@ public class SqlFile {
         // even skipped columns.
         // The autonulls array only has columns that we will insert into.
 
-        StringBuilder sb = new StringBuilder("INSERT INTO " + tableName + " ("
+        StringBuffer sb = new StringBuffer("INSERT INTO " + tableName + " ("
                                            + tmpSb + ") VALUES (");
-        StringBuilder typeQuerySb = new StringBuilder("SELECT " + tmpSb
+        StringBuffer typeQuerySb = new StringBuffer("SELECT " + tmpSb
             + " FROM " + tableName + " WHERE 1 = 2");
 
         try {
@@ -5643,7 +5551,7 @@ public class SqlFile {
                 // If so, it's probably a SqlTool problem, not a user or
                 // data problem.
                 // Should be researched and either return a user-friendly
-                // message or a RuntimeException.
+                // message or a RuntimeExceptin.
 
             for (int i = 0; i < autonulls.length; i++) {
                 autonulls[i] = true;
@@ -5713,9 +5621,12 @@ public class SqlFile {
                     (shared.encoding == null)
                     ? DEFAULT_FILE_ENCODING : shared.encoding));
             rejectWriter.print(headerLine + dsvRowDelim);
-        } catch (BadSpecial | IOException bsioe) {
+        } catch (BadSpecial bs) {
             throw new SqlToolError(SqltoolRB.dsv_rejectfile_setupfail.getString(
-                    dsvRejectFile), bsioe);
+                    dsvRejectFile), bs);
+        } catch (IOException ioe) {
+            throw new SqlToolError(SqltoolRB.dsv_rejectfile_setupfail.getString(
+                    dsvRejectFile), ioe);
         }
         if (dsvRejectReport != null) try {
             rejectReportFile = dereferenceAtToFile(dsvRejectReport);
@@ -5738,17 +5649,21 @@ public class SqlFile {
                     ((rejectFile == null) ? SqltoolRB.none.getString()
                                     : rejectFile.getPath()),
                     ((rejectFile == null) ? null : rejectFile.getPath())));
-        } catch (BadSpecial | IOException bsioe) {
+        } catch (BadSpecial bs) {
             throw new SqlToolError(
                     SqltoolRB.dsv_rejectreport_setupfail.getString(
-                    dsvRejectReport), bsioe);
+                    dsvRejectReport), bs);
+        } catch (IOException ioe) {
+            throw new SqlToolError(
+                    SqltoolRB.dsv_rejectreport_setupfail.getString(
+                    dsvRejectReport), ioe);
         }
 
         int recCount = 0;
         int skipCount = 0;
         PreparedStatement ps = null;
         boolean importAborted = false;
-        boolean doResetAutocommit;
+        boolean doResetAutocommit = false;
         try {
             doResetAutocommit = dsvRecordsPerCommit > 0
                 && shared.jdbcConn.getAutoCommit();
@@ -5972,8 +5887,10 @@ public class SqlFile {
                 } else {
                     shared.possiblyUncommitteds = true;
                 }
-            } catch (NumberFormatException | SQLException nfese) {
-                throw new RowError(null, nfese);
+            } catch (NumberFormatException nfe) {
+                throw new RowError(null, nfe);
+            } catch (SQLException se) {
+                throw new RowError(null, se);
             } } catch (RowError re) {
                 rejectCount++;
                 if (rejectWriter != null || rejectReportWriter != null) {
@@ -6015,9 +5932,8 @@ public class SqlFile {
                 }
                 if (doResetAutocommit) shared.jdbcConn.setAutoCommit(true);
             } catch (SQLException se) {
-                //noinspection ThrowFromFinallyBlock
                 throw new SqlToolError(
-                  SqltoolRB.rpc_commit_failure.getString(), se);
+                        SqltoolRB.rpc_commit_failure.getString(), se);
             }
             String summaryString = null;
             if (recCount > 0) {
@@ -6083,7 +5999,7 @@ public class SqlFile {
     }
 
     protected static void appendLine(final StringBuffer sb, final String s) {
-        sb.append(s).append(LS);
+        sb.append(s + LS);
     }
 
     /**
@@ -6094,7 +6010,7 @@ public class SqlFile {
      * @return String[]
      */
     private static String[] genWinArgs(final String monolithic) {
-        List<String> list = new ArrayList<>();
+        List<String> list = new ArrayList<String>();
         list.add("cmd.exe");
         list.add("/y");
         list.add("/c");
@@ -6214,7 +6130,7 @@ public class SqlFile {
 
         if (defToken.val.length() < 1)
             throw new BadSpecial(SqltoolRB.macro_tip.getString());
-        int newType;
+        int newType = -1;
         StringBuffer newVal = new StringBuffer();
         switch (defToken.val.charAt(0)) {
             case '?':
@@ -6232,6 +6148,7 @@ public class SqlFile {
                 if (matcher.groupCount() > 1 && matcher.group(2) != null
                         && matcher.group(2).length() > 0)
                     newVal.append(matcher.group(2));
+                newType = buffer.type;
                 if (newVal.length() < 1)
                     throw new BadSpecial(SqltoolRB.macrodef_empty.getString());
                 if (newVal.charAt(newVal.length() - 1) == ';')
@@ -6291,7 +6208,7 @@ public class SqlFile {
                         throw new BadSpecial(
                                 SqltoolRB.macro_undefined.getString(
                                 matcher.group(1) + "...)"));
-                    String[] splitVars;
+                    String[] splitVars = null;
                     if (matcher.groupCount() > 1 && matcher.group(2) != null
                             && matcher.group(2).length() > 0) {
                         //buffer.val += matcher.group(2);
@@ -6477,7 +6394,7 @@ public class SqlFile {
         if (s.indexOf('@') != 0) return new File(s);
         if (atBase == null)
             throw new BadSpecial(SqltoolRB.illegal_at.getString());
-        if (!atBase.getProtocol().equals("file"))
+        if (atBase.getProtocol() != "file")
             throw new BadSpecial(SqltoolRB.desturl_nowrite.getString(
               atBase.toString()));
         try {
@@ -6493,7 +6410,7 @@ public class SqlFile {
 
     /**
      * Escaping rules taken from 'Reserved Characters in HTML table at
-     * <a href="http://www.w3schools.com/tags/ref_entities.asp">http://www.w3schools.com/tags/ref_entities.asp</a>
+     * http://www.w3schools.com/tags/ref_entities.asp
      *
      * @param s String
      * @return String
@@ -6546,12 +6463,12 @@ public class SqlFile {
             if (is == null)
                 throw new IOException("Missing resource: "
                     + ((topHtmlFile == null)
-                    ? "sqltool/top-boilerplate"
-                    : topHtmlFile));
+                    ? topHtmlFile
+                    : "sqltool/top-boilerplate"));
             isr = new InputStreamReader(is);
             while ((i = isr.read(readBfr)) > -1)
                 sWriter.write(readBfr, 0, i);
-            readBfr = null;  // encourage GC
+            readBfr = null;
             str = sWriter.toString();
             sWriter.close();
         } catch (Exception e) {
@@ -6587,11 +6504,11 @@ public class SqlFile {
             if (is == null)
                 throw new IOException("Missing resource: "
                     + ((bottomHtmlFile == null)
-                    ? "sqltool/bottom-boilerplate"
-                    : bottomHtmlFile));
+                    ? bottomHtmlFile
+                    : "sqltool/bottom-boilerplate"));
             isr = new InputStreamReader(is);
             while ((i = isr.read(readBfr)) > -1) sWriter.write(readBfr, 0, i);
-            readBfr = null;  // encourage GC
+            readBfr = null;
             str = sWriter.toString();
             sWriter.close();
         } catch (Exception e) {

@@ -44,12 +44,12 @@
 </div>
 </div>
 <div>
-<p class="releaseinfo">$Revision: 6645 $</p>
+<p class="releaseinfo">$Revision: 6279 $</p>
 </div>
 <div>
 <div class="legalnotice">
-<a name="N15B64"></a>
-<p>Copyright 2002-2022 Fred Toussi. Permission is granted to
+<a name="N159AE"></a>
+<p>Copyright 2002-2021 Fred Toussi. Permission is granted to
       distribute this document without any alteration under the terms of the
       HSQLDB license. Additional permission is granted to the HSQL Development
       Group to distribute this document with or without alterations under the
@@ -57,7 +57,7 @@
 </div>
 </div>
 <div>
-<p class="pubdate">2023-05-29</p>
+<p class="pubdate">2021-10-21</p>
 </div>
 </div>
 </div>
@@ -165,7 +165,7 @@
 </div>
 </div>
 </div>
-<a name="N15B6B" class="indexterm"></a>
+<a name="N159B5" class="indexterm"></a>
 <p>Memory used by the program can be thought of as two distinct pools:
     memory used for table data which is not released unless the data is
     deleted and memory that can be released or is released automatically,
@@ -342,7 +342,7 @@
       change the lob schema storage to CACHED tables with the following
       statements:</p>
 <div class="example">
-<a name="N15BDB"></a>
+<a name="N15A25"></a>
 <p class="title">
 <b>Example&nbsp;12.1.&nbsp;Using CACHED tables for the LOB schema</b>
 </p>
@@ -717,7 +717,7 @@
       arguments (if any), then an empty string to separate it from the next
       main class.</p>
 <div class="example">
-<a name="N15CED"></a>
+<a name="N15B37"></a>
 <p class="title">
 <b>Example&nbsp;12.2.&nbsp;MainInvoker Example</b>
 </p>
@@ -769,15 +769,17 @@
 </div>
 </div>
 </div>
-<a name="N15D15" class="indexterm"></a>
-<p>HSQLDB can open databases created with version 2.0 and above. It is
-    a good idea to perform SHUTDOWN COMPACT to complete the upgrade.</p>
-<p>Downgrading is also possible. A database created with the current
-    version can be closed with SHUTDOWN SCRIPT before you open it with
-    previous 2.x.x versions of HyperSQL.</p>
+<a name="N15B5F" class="indexterm"></a>
+<p>HSQLDB version 2.6.0 and later can open databases created with
+    version 2.0 and above. It will not open databases created with older
+    versions. It is a good idea to perform SHUTDOWN COMPACT after the
+    upgrade.</p>
+<p>Downgrading is also possible. Once a database is upgraded to 2.6.0,
+    you need to perform SHUTDOWN SCRIPT before you open it with previous 2.x.x
+    versions of HyperSQL.</p>
 <p>To upgrade an old database created with version 1.8.x, you can use
-    HSQLDB version 2.3.x to 2.5 to open the database and perform SHUTDOWN
-    SCRIPT. You can then open the database with version 2.6 or later.</p>
+    HSQLDB version 2.3.x to 2.5.0 to open the database and perform SHUTDOWN
+    SCRIPT. You can then open the database with version 2.6.0 or later.</p>
 <p>If the 1.8.x database script format is set to BINARY or COMPRESSED
     (ZIPPED), you must open the database with version 1.8.x and issue the SET
     SCRIPTFORMAT TEXT and SHUTDOWN SCRIPT commands with the old version, prior
@@ -928,7 +930,7 @@
 </div>
 </div>
 </div>
-<p>HyperSQL 2.7 conforms to the SQL Standard better than previous
+<p>HyperSQL 2 conforms to the SQL Standard better than previous
     versions and has many more features. For these reasons, there may be some
     compatibility issues when converting old database, or using applications
     that were written for version 1.8.x or earlier. Some of the potential
@@ -937,17 +939,16 @@
 <div class="itemizedlist">
 <ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem">
-<p>By default, when comparing strings, the shorter string is padded
-        with spaces. This has an effect on comparing <code class="literal">'test'</code>
-        and <code class="literal">'test '</code> which are now considered equal, despite
-        the length difference. This behaviour is controlled by the default PAD
-        SPACE property of collations, which can be changed to NO PAD. See the
-        statement <code class="literal">SET DATABASE COLLATION &lt;name&gt; [ PAD SPACE |
-        NO PAD ]</code>.</p>
+<p>By default, when comparison strings, the shorter string is
+        padded with spaces. This has an effect on comparing
+        <code class="literal">'test'</code> and <code class="literal">'test '</code> which are now
+        considered equal, despite the length difference. This behaviour is
+        controlled by the default PAD SPACE property of collations, which can
+        be changed to NO PAD. See the statement <code class="literal">SET DATABASE
+        COLLATION &lt;name&gt; [ PAD SPACE | NO PAD ]</code>.</p>
 </li>
 <li class="listitem">
-<p>User names and passwords are case-sensitive. The only exception
-        is the username 'SA' which is always converted to uppercase. Check the
+<p>User names and passwords are case-sensitive. Check the
         <code class="literal">.script</code> file of a database for the correct case of
         user name and password and use this form in the connection properties
         or on connection URL.</p>
@@ -1011,8 +1012,8 @@
         T (ID IDENTITY, DAT VARCHAR(20))</code> is translated into
         <code class="literal">CREATE TABLE T(ID INTEGER GENERATED BY DEFAULT AS IDENTITY
         PRIMARY KEY, DAT VARCHAR(20))</code>. This last form is the correct
-        way of defining both auto-increment and primary key in versions 1.8
-        and 2.x.</p>
+        way of defining both autoincrement and primary key in versions 1.8 and
+        2.x.</p>
 </li>
 <li class="listitem">
 <p>CREATE ALIAS is now obsolete. Use the new function definition
@@ -1056,21 +1057,11 @@
 <a name="dec_dependency_applications"></a>HyperSQL Dependency Settings for Applications</h2>
 </div>
 <div>
-<h3 class="subtitle">Java Module Dependency and Dependency settings using Gradle,
-    Ivy, Maven, Groovy</h3>
+<h3 class="subtitle">Dependency settings using Gradle, Ivy, Maven, Groovy</h3>
 </div>
 </div>
 </div>
-<p>HyperSQL and SqlTool version 2.7.2 jars are Java Module jars
-    compiled with JDK 11. The module name for HyperSQL is
-    <code class="literal">org.hsqldb</code> and for SqlTool,
-    <code class="literal">org.hsqldb.sqltool</code>. In a modular application, these
-    names are referenced in the <code class="literal">module-info.java</code> file for
-    the user application that accesses these jars.</p>
-<p>For non-modular applications, the jars are simply included the
-    the classpath. Jars compiled with JDK8 are also provided and can be used
-    for applications that must run on a JVM older than 11,</p>
-<p>This section is about building applications that have
+<p>This section is about building applications that have build-time
     dependencies upon HyperSQL, and for executions that use a dependency
     library system. Examples of the second type are unit test runs, job runs
     triggered by a build system, or systems like Grape that pull libraries
@@ -1112,7 +1103,7 @@
       the suggestions in the appropriate sections below. If you need to
       specify a specific version, follow the instructions in the
       range-versioning section but change the version range specifications to
-      literal versions like <code class="literal">2.7.2</code>.</p>
+      literal versions like <code class="literal">2.6.0</code>.</p>
 </div>
 <div class="section">
 <div class="titlepage">
@@ -1170,7 +1161,7 @@
 </table>
 </div>
 <div class="example">
-<a name="N15E5E"></a>
+<a name="N15C9B"></a>
 <p class="title">
 <b>Example&nbsp;12.3.&nbsp;Sample Range Ivy Dependency</b>
 </p>
@@ -1182,15 +1173,15 @@
           because I have so far failed to get that to succeed. Classifiers in
           in <code class="filename">ivy.xml</code> are supported if using Gradle, as
           covered below.</p>
-<p>At the time that I'm writing this, our builds are providing
-          two classifiers (besides the default no-classifier, of course) named
-          "debug" and "jdk8". In all examples for using a classifier I am
-          using classifier name "debug".</p>
+<p>At the time that I'm writing this, our builds are only
+          providing one classifier (besides the default no-classifier, of
+          course) and its name is "debug". Therefore in all examples for using
+          a classifier I am using classifier name "debug".</p>
 </div>
 </div>
 <br class="example-break">
 <div class="example">
-<a name="N15E70"></a>
+<a name="N15CAD"></a>
 <p class="title">
 <b>Example&nbsp;12.4.&nbsp;Sample Range Maven Dependency</b>
 </p>
@@ -1212,7 +1203,7 @@
 </div>
 <br class="example-break">
 <div class="example">
-<a name="N15E7B"></a>
+<a name="N15CB8"></a>
 <p class="title">
 <b>Example&nbsp;12.5.&nbsp;Sample Range Gradle Dependency</b>
 </p>
@@ -1233,7 +1224,7 @@
         <code class="literal">ivyxml</code>. See the <a class="link" href="https://github.com/unsaved/gradle-ivyxml-plugin/raw/master/README.txt" target="_top">
         Ivyxml documentation</a> to see exactly how. </p>
 <div class="example">
-<a name="N15E93"></a>
+<a name="N15CD0"></a>
 <p class="title">
 <b>Example&nbsp;12.6.&nbsp;Sample Range ivy.xml loaded by Ivyxml plugin</b>
 </p>
@@ -1248,7 +1239,7 @@
 <br class="example-break">
 </p>
 <div class="example">
-<a name="N15E98"></a>
+<a name="N15CD5"></a>
 <p class="title">
 <b>Example&nbsp;12.7.&nbsp;Sample Range Groovy Dependency, using Grape</b>
 </p>
@@ -1263,7 +1254,7 @@
 </div>
 </div>
 <HR xmlns:xi="http://www.w3.org/2001/XInclude">
-<P xmlns:xi="http://www.w3.org/2001/XInclude" class="svnrev">$Revision: 6645 $</P>
+<P xmlns:xi="http://www.w3.org/2001/XInclude" class="svnrev">$Revision: 6369 $</P>
 <div class="navfooter">
 <hr>
 <table summary="Navigation footer" width="100%">

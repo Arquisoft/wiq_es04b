@@ -1,4 +1,4 @@
-/* Copyright (c) 2001-2022, The HSQL Development Group
+/* Copyright (c) 2001-2021, The HSQL Development Group
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -59,7 +59,7 @@ import org.hsqldb.types.Types;
  * timezone.
  *
  * @author Fred Toussi (fredt@users dot sourceforge.net)
- * @version 2.7.1
+ * @version 2.6.0
  * @since 1.7.0
  */
 public class HsqlDateTime {
@@ -70,13 +70,16 @@ public class HsqlDateTime {
         new GregorianCalendar(TimeZone.getTimeZone("GMT"), defaultLocale);
     private static final String sdfdPattern = "yyyy-MM-dd";
     private static final SimpleDateFormat sdfd =
-        new SimpleDateFormat(sdfdPattern, defaultLocale);
+        new SimpleDateFormat(sdfdPattern);
+    private static final String sdftPattern = "HH:mm:ss";
+    private static final SimpleDateFormat sdft =
+        new SimpleDateFormat(sdftPattern);
     private static final String sdftsPattern = "yyyy-MM-dd HH:mm:ss";
     private static final SimpleDateFormat sdfts =
-        new SimpleDateFormat(sdftsPattern, defaultLocale);
+        new SimpleDateFormat(sdftsPattern);
     private static final String sdftsSysPattern = "yyyy-MM-dd HH:mm:ss.SSS";
     private static final SimpleDateFormat sdftsSys =
-        new SimpleDateFormat(sdftsSysPattern, defaultLocale);
+        new SimpleDateFormat(sdftsSysPattern);
     private static final Date sysDate = new java.util.Date();
 
     static {
@@ -85,6 +88,9 @@ public class HsqlDateTime {
         sdfd.setCalendar(new GregorianCalendar(TimeZone.getTimeZone("GMT"),
                                                defaultLocale));
         sdfd.setLenient(false);
+        sdft.setCalendar(new GregorianCalendar(TimeZone.getTimeZone("GMT"),
+                                               defaultLocale));
+        sdft.setLenient(false);
         sdfts.setCalendar(new GregorianCalendar(TimeZone.getTimeZone("GMT"),
                 defaultLocale));
         sdfts.setLenient(false);
@@ -99,7 +105,7 @@ public class HsqlDateTime {
                 return d.getTime() / 1000;
             }
         } catch (Exception e) {
-            throw Error.error(ErrorCode.X_22007, e);
+            throw Error.error(ErrorCode.X_22007);
         }
     }
 
@@ -121,16 +127,15 @@ public class HsqlDateTime {
                 return d.getTime() / 1000;
             }
         } catch (Exception e) {
-            throw Error.error(ErrorCode.X_22007, e);
+            throw Error.error(ErrorCode.X_22007);
         }
     }
 
-    public static String getTimestampString(long seconds, int nanos,
-            int scale) {
+    public static String getTimestampString(long seconds,
+                                          int nanos, int scale) {
 
         synchronized (sdfts) {
             sysDate.setTime(seconds * 1000);
-
             String ts = sdfts.format(sysDate);
 
             if (scale > 0) {
@@ -185,40 +190,26 @@ public class HsqlDateTime {
         }
     }
 
-    public static long convertMillisFromCalendar(Calendar sourceCalendar,
-            Calendar targetClendar, long millis) {
-
-        synchronized (targetClendar) {
-            synchronized (sourceCalendar) {
-                targetClendar.clear();
-                sourceCalendar.setTimeInMillis(millis);
-                targetClendar.set(sourceCalendar.get(Calendar.YEAR),
-                                  sourceCalendar.get(Calendar.MONTH),
-                                  sourceCalendar.get(Calendar.DAY_OF_MONTH),
-                                  sourceCalendar.get(Calendar.HOUR_OF_DAY),
-                                  sourceCalendar.get(Calendar.MINUTE),
-                                  sourceCalendar.get(Calendar.SECOND));
-
-                return targetClendar.getTimeInMillis();
-            }
-        }
+    public static long convertMillisFromCalendar(Calendar calendar,
+            long millis) {
+        return convertMillisFromCalendar(tempCalGMT, calendar, millis);
     }
 
-    public static long convertSecondsFromCalendar(Calendar sourceCalendar,
-            Calendar targetClendar, long seconds) {
+    public static long convertMillisFromCalendar(Calendar clendarGMT,
+            Calendar calendar, long millis) {
 
-        synchronized (targetClendar) {
-            synchronized (sourceCalendar) {
-                targetClendar.clear();
-                sourceCalendar.setTimeInMillis(seconds * 1000);
-                targetClendar.set(sourceCalendar.get(Calendar.YEAR),
-                                  sourceCalendar.get(Calendar.MONTH),
-                                  sourceCalendar.get(Calendar.DAY_OF_MONTH),
-                                  sourceCalendar.get(Calendar.HOUR_OF_DAY),
-                                  sourceCalendar.get(Calendar.MINUTE),
-                                  sourceCalendar.get(Calendar.SECOND));
+        synchronized (clendarGMT) {
+            synchronized (calendar) {
+                clendarGMT.clear();
+                calendar.setTimeInMillis(millis);
+                clendarGMT.set(calendar.get(Calendar.YEAR),
+                               calendar.get(Calendar.MONTH),
+                               calendar.get(Calendar.DAY_OF_MONTH),
+                               calendar.get(Calendar.HOUR_OF_DAY),
+                               calendar.get(Calendar.MINUTE),
+                               calendar.get(Calendar.SECOND));
 
-                return targetClendar.getTimeInMillis() / 1000;
+                return clendarGMT.getTimeInMillis();
             }
         }
     }
@@ -292,6 +283,21 @@ public class HsqlDateTime {
     }
 
     /**
+     * Returns the indicated part of the given millisecond date object.
+     * @param m the millisecond time value from which to extract the indicated part
+     * @param part an integer code corresponding to the desired date part
+     * @return the indicated part of the given <code>java.util.Date</code> object
+     */
+    public static int getDateTimePart(Calendar calendar, long m, int part) {
+
+        synchronized (calendar) {
+            calendar.setTimeInMillis(m);
+
+            return calendar.get(part);
+        }
+    }
+
+    /**
      * truncates millisecond date object
      */
     public static long getTruncatedPart(Calendar calendar, long m, int part) {
@@ -307,7 +313,6 @@ public class HsqlDateTime {
                     if (dayWeek == 1) {
                         dayWeek = 8;
                     }
-
                     calendar.add(Calendar.DAY_OF_YEAR, 2 - dayWeek);
                     resetToDate(calendar);
 
@@ -415,7 +420,7 @@ public class HsqlDateTime {
         }
     }
 
-    public static void zeroFromPart(Calendar cal, int part) {
+    static void zeroFromPart(Calendar cal, int part) {
 
         switch (part) {
 
@@ -528,7 +533,7 @@ public class HsqlDateTime {
 
             millis = format.parse(string).getTime();
         } catch (Exception e) {
-            throw Error.error(e, ErrorCode.X_22007, e.toString());
+            throw Error.error(ErrorCode.X_22007, e.toString());
         }
 
         if (matchIndex >= 0 && fraction) {
@@ -550,7 +555,7 @@ public class HsqlDateTime {
 
                 nanos *= (1000000 / factor);
             } catch (Exception e) {
-                throw Error.error(e, ErrorCode.X_22007, e.toString());
+                throw Error.error(ErrorCode.X_22007, e.toString());
             }
         }
 
@@ -565,7 +570,7 @@ public class HsqlDateTime {
         try {
             format.applyPattern(javaPattern);
         } catch (Exception e) {
-            throw Error.error(ErrorCode.X_22511, e);
+            throw Error.error(ErrorCode.X_22511);
         }
 
         String result     = format.format(date);
@@ -697,7 +702,7 @@ public class HsqlDateTime {
                     String s     = javaDateTokens[index];
 
                     // consecutive quoted tokens
-                    if (s.startsWith("'") && s.endsWith("'")) {
+                    if (s.startsWith("\'") && s.endsWith("\'")) {
                         if (limitQuotedToken == sb.length()) {
                             sb.setLength(sb.length() - 1);
 

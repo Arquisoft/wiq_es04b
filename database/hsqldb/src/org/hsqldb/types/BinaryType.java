@@ -1,4 +1,4 @@
-/* Copyright (c) 2001-2022, The HSQL Development Group
+/* Copyright (c) 2001-2021, The HSQL Development Group
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -46,16 +46,17 @@ import org.hsqldb.lib.StringConverter;
  * SQL:2008 Standard  specifies silent truncation of zero bytes at the end of the
  * binary strings used for assignment and concatenation.<p>
  *
- * A binary string of type BINARY VARYING and BLOB when assigned to a column
+ * * A binary string of type BINARY VARYING and BLOB when assigned to a column
  * of similar type but shorter maximum length.<p>
  *
- * The Second operand of a concatenation when the length of the result exceeds
+ * * The Second operand of a concatenation when the length of the result exceeds
  * the maximum implementation-dependent length of BINARY VARYING and BLOB
  * binary strings.<p>
  *
  * The behaviour is similar to trimming of space characters from strings of
  * CHARACTER VARYING and CLOB types.<p>
  *
+ * <p>
  * In most real-world use-cases, all the bytes of variable-length binary values
  * stored in a database are significant and should not be discarded.<p>
  *
@@ -71,11 +72,11 @@ import org.hsqldb.lib.StringConverter;
  *
  * As an extension to the Standard, HSQLDB supports cast from CHARACTER types
  * to BINARY. The length of the string must be even and all character
- * must be hexadecimal characters.
+ * must be hexadecimal characters.<p>
  *
  *
  * @author Fred Toussi (fredt@users dot sourceforge.net)
- * @version 2.7.0
+ * @version 2.5.1
  * @since 1.9.0
  */
 public class BinaryType extends Type {
@@ -338,14 +339,15 @@ public class BinaryType extends Type {
                             return 1;
                         }
                     }
+
                 } else {
                     for (int i = data1.length; i < data2.length; i++) {
                         if (data2[i] != 0) {
                             return -1;
                         }
                     }
-                }
 
+                }
                 return 0;
             }
 
@@ -451,20 +453,13 @@ public class BinaryType extends Type {
             b = new BinaryData(bytes, false);
         }
 
-        if (b.length(session) > precision) {
-            if (!cast && session instanceof Session) {
-                if (!((Session) session).database.sqlTruncateTrailing) {
-                    throw Error.error(ErrorCode.X_22001);
-                }
+        if (b.length(session) > precision
+                && b.nonZeroLength(session) > precision) {
+            if (!cast) {
+                throw Error.error(ErrorCode.X_22001);
             }
 
-            if (b.nonZeroLength(session) > precision) {
-                if (!cast) {
-                    throw Error.error(ErrorCode.X_22001);
-                }
-
-                session.addWarning(Error.error(ErrorCode.W_01004));
-            }
+            session.addWarning(Error.error(ErrorCode.W_01004));
         }
 
         switch (typeCode) {
@@ -534,19 +529,6 @@ public class BinaryType extends Type {
             ((BinaryData) a).getBytes());
     }
 
-    public void convertToJSON(Object a, StringBuilder sb) {
-
-        if (a == null) {
-            sb.append("null");
-
-            return;
-        }
-
-        sb.append('"');
-        sb.append(convertToString(a));
-        sb.append('"');
-    }
-
     public boolean canConvertFrom(Type otherType) {
 
         return otherType.typeCode == Types.SQL_ALL_TYPES
@@ -557,46 +539,46 @@ public class BinaryType extends Type {
     public int canMoveFrom(Type otherType) {
 
         if (otherType.isBitType() || otherType.isCharacterType()) {
-            return ReType.change;
+            return -1;
         }
 
         switch (typeCode) {
 
             case Types.SQL_VARBINARY : {
                 if (otherType.typeCode == typeCode) {
-                    return precision >= otherType.precision ? ReType.keep
-                                                            : ReType.check;
+                    return precision >= otherType.precision ? 0
+                                                            : 1;
                 }
 
                 if (otherType.typeCode == Types.SQL_BINARY) {
-                    return precision >= otherType.precision ? ReType.keep
-                                                            : ReType.change;
+                    return precision >= otherType.precision ? 0
+                                                            : -1;
                 }
 
                 if (otherType.typeCode == Types.SQL_GUID) {
-                    return precision >= otherType.precision ? ReType.keep
-                                                            : ReType.change;
+                    return precision >= otherType.precision ? 0
+                                                            : -1;
                 }
 
                 break;
             }
             case Types.SQL_BINARY : {
                 if (otherType.typeCode == typeCode) {
-                    return precision == otherType.precision ? ReType.keep
-                                                            : ReType.change;
+                    return precision == otherType.precision ? 0
+                                                            : -1;
                 }
 
                 if (otherType.typeCode == Types.SQL_GUID) {
-                    return precision == otherType.precision ? ReType.keep
-                                                            : ReType.change;
+                    return precision == otherType.precision ? 0
+                                                            : -1;
                 }
 
                 break;
             }
             case Types.SQL_BLOB : {
                 if (otherType.typeCode == typeCode) {
-                    return precision >= otherType.precision ? ReType.keep
-                                                            : ReType.change;
+                    return precision >= otherType.precision ? 0
+                                                            : -1;
                 }
 
                 break;
@@ -604,7 +586,7 @@ public class BinaryType extends Type {
             default :
         }
 
-        return ReType.change;
+        return -1;
     }
 
     public long position(SessionInterface session, BlobData data,
@@ -626,28 +608,41 @@ public class BinaryType extends Type {
     public BlobData substring(SessionInterface session, BlobData data,
                               long offset, long length, boolean hasLength) {
 
-        if (length < 0) {
+        long end;
+        long dataLength = data.length(session);
+
+        if (hasLength) {
+            end = offset + length;
+        } else {
+            end = dataLength > offset ? dataLength
+                                      : offset;
+        }
+
+        if (offset > end) {
             throw Error.error(ErrorCode.X_22011);
         }
 
-        long dataLength = data.length(session);
-        LongPair segment = CharacterType.substringParams(dataLength, offset,
-            length, hasLength);
+        if (end < 0) {
 
-        offset = segment.a;
-        length = segment.b;
-
-        if (data instanceof BinaryData) {
-            byte[] bytes = data.getBytes(session, offset, (int) length);
-
-            return new BinaryData(bytes, false);
-        } else if (data instanceof BlobData) {
-            BlobData blob = ((BlobData) data).getBlob(session, offset, length);
-
-            return blob;
-        } else {
-            throw Error.runtimeError(ErrorCode.U_S0500, "CharacterType");
+            // return zero length data
+            offset = 0;
+            end    = 0;
         }
+
+        if (offset < 0) {
+            offset = 0;
+        }
+
+        if (end > dataLength) {
+            end = dataLength;
+        }
+
+        length = end - offset;
+
+        // change method signature to take long
+        byte[] bytes = data.getBytes(session, offset, (int) length);
+
+        return new BinaryData(bytes, false);
     }
 
     int getRightTrimSize(BlobData data) {

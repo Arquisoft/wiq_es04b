@@ -1,4 +1,4 @@
-/* Copyright (c) 2001-2022, The HSQL Development Group
+/* Copyright (c) 2001-2021, The HSQL Development Group
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -31,6 +31,7 @@
 
 package org.hsqldb.util;
 
+import java.applet.Applet;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -42,7 +43,6 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-
 import java.awt.BorderLayout;
 import java.awt.Button;
 import java.awt.Color;
@@ -122,13 +122,13 @@ implements ActionListener, WindowListener, KeyListener {
         "See the forums, mailing lists, and HSQLDB User Guide\n"
         + "at http://hsqldb.org.\n\n"
         + "Please paste the following version identifier with any\n"
-        + "problem reports or help requests:  $Revision: 6494 $"
+        + "problem reports or help requests:  $Revision: 6351 $"
         + (TT_AVAILABLE ? ""
                         : ("\n\nTransferTool classes are not in CLASSPATH.\n"
                            + "To enable the Tools menu, add 'transfer.jar' to your class path."));
-
+    ;
     private static final String ABOUT_TEXT =
-        "$Revision: 6494 $ of DatabaseManager\n\n"
+        "$Revision: 6351 $ of DatabaseManager\n\n"
         + "Copyright (c) 1995-2000, The Hypersonic SQL Group.\n"
         + "Copyright (c) 2001-2021, The HSQL Development Group.\n"
         + "http://hsqldb.org  (User Guide available at this site).\n\n\n"

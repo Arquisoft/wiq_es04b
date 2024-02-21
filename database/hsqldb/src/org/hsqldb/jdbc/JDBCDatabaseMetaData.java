@@ -1,4 +1,4 @@
-/* Copyright (c) 2001-2023, The HSQL Development Group
+/* Copyright (c) 2001-2021, The HSQL Development Group
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -40,10 +40,9 @@ import java.sql.SQLException;
 import org.hsqldb.lib.StringConverter;
 import org.hsqldb.lib.StringUtil;
 import org.hsqldb.persist.HsqlDatabaseProperties;
-import org.hsqldb.types.BlobType;
 import org.hsqldb.types.Type;
 
-/* $Id: JDBCDatabaseMetaData.java 6550 2022-06-08 11:09:08Z fredt $ */
+/* $Id: JDBCDatabaseMetaData.java 6311 2021-02-28 18:46:14Z fredt $ */
 
 // fredt@users 20020320 - patch 1.7.0 - JDBC 2 support and error trapping
 // JDBC 2 methods can now be called from jdk 1.1.x - see javadoc comments
@@ -174,11 +173,20 @@ import org.hsqldb.types.Type;
  * standard-defined full-name INFORMATION_SCHEMA views. <p>
  *
  * However, just as CATALOG semantics and handling are still considered to be
- * implementation defined by the most recent SQL standard (SQL:2011), so is the
+ * implementation defined by the most recent SQL standard (SQL:2008), so is the
  * HSQLDB CATALOG concept still in the process of being defined and refined in
  * HSQLDB 2.x. and beyond.<p>
  *
- * Similarly, starting with HSQLDB 2.x, from the perspective
+ * Previous to HSQLDB 2.x, there were, at various points in time, experimental
+ * features provided to turn on pseudo catalog (and before that, pseudo-schema)
+ * reporting in the system tables, using the database properties
+ * 'hsqldb.catalogs' and 'hsqldb.schemas', respectively.<p>
+ *
+ * However, once the engine fully supported the SQL SCHEMA concept, the
+ * experimental 'hsqldb.schemas' * database property was retired. <p>
+ *
+ * Similarly, starting with HSQLDB 2.x, the 'hsqldb.catalogs' database property
+ * has been retired and replaced with the convention that, from the perspective
  * of SQL identification, an HSQLDB JDBC URL connects to a single HSQLDB
  * database instance which consists of a single, default CATALOG
  * named PUBLIC in which each SCHEMA instance of the database resides. The name of
@@ -216,7 +224,7 @@ import org.hsqldb.types.Type;
  *
  * @author Campbell Burnet (campbell-burnet@users dot sourceforge.net)
  * @author Fred Toussi (fredt@users dot sourceforge.net)
- * @version 2.7.2
+ * @version 2.6.0
  * @since HSQLDB 1.9.0
  * @see org.hsqldb.dbinfo.DatabaseInformation
  */
@@ -485,7 +493,7 @@ public class JDBCDatabaseMetaData implements DatabaseMetaData,
      */
     public String getDatabaseProductVersion() throws SQLException {
 
-        ResultSet rs = execute("CALL DATABASE_VERSION()");
+        ResultSet rs = execute("call database_version()");
 
         rs.next();
 
@@ -889,7 +897,7 @@ public class JDBCDatabaseMetaData implements DatabaseMetaData,
      * <div class="ReleaseSpecificDocumentation">
      * <h1>HSQLDB-Specific Information:</h1> <p>
      *
-     * HSQLDB supports this type of
+     * From 1.7.0, HSQLDB supports this type of
      * <code>ALTER TABLE</code> statement; this method always
      * returns <code>true</code>.
      * </div>
@@ -909,7 +917,7 @@ public class JDBCDatabaseMetaData implements DatabaseMetaData,
      * <div class="ReleaseSpecificDocumentation">
      * <h1>HSQLDB-Specific Information:</h1> <p>
      *
-     * HSQLDB supports this type of
+     * From 1.7.0, HSQLDB supports this type of
      * <code>ALTER TABLE</code> statement; this method always
      * returns <code>true</code>.
      * </div>
@@ -2830,7 +2838,8 @@ public class JDBCDatabaseMetaData implements DatabaseMetaData,
                     schemaPattern)).append(and("PROCEDURE_NAME", "LIKE",
                         procedureNamePattern));
 
-        select.append(" ORDER BY PROCEDURE_CAT, PROCEDURE_SCHEM, PROCEDURE_NAME, SPECIFIC_NAME");
+        // By default, query already returns the result ordered by
+        // PROCEDURE_SCHEM, PROCEDURE_NAME...
         return execute(select.toString());
     }
 
@@ -2962,7 +2971,12 @@ public class JDBCDatabaseMetaData implements DatabaseMetaData,
      * case-sensitive comparison between name (pattern) arguments and the
      * corresponding identifier values as they are stored in the database.
      * Therefore, care must be taken to specify name arguments precisely
-     * (including case) as they are stored in the database.
+     * (including case) as they are stored in the database. <p>
+     *
+     * Since 1.7.2, this feature is supported by default. If the jar is
+     * compiled without org.hsqldb.dbinfo.DatabaseInformationMain, the feature is
+     * not supported. The default implementation is the
+     * org.hsqldb.dbinfo.DatabaseInformationFull class.
      * </div>
      * <!-- end release-specific documentation -->
      *
@@ -3000,7 +3014,8 @@ public class JDBCDatabaseMetaData implements DatabaseMetaData,
             and("PROCEDURE_NAME", "LIKE", procedureNamePattern)).append(
             and("COLUMN_NAME", "LIKE", columnNamePattern));
 
-        select.append(" ORDER BY PROCEDURE_CAT, PROCEDURE_SCHEM, PROCEDURE_NAME, SPECIFIC_NAME");
+        // By default, query already returns result ordered by
+        // PROCEDURE_SCHEM and PROCEDURE_NAME...
         return execute(select.toString());
     }
 
@@ -3133,7 +3148,8 @@ public class JDBCDatabaseMetaData implements DatabaseMetaData,
                 StringUtil.getList(types, ",", "'")).append(')');
         }
 
-        select.append(" ORDER BY TABLE_TYPE, TABLE_CAT, TABLE_SCHEM, TABLE_NAME");
+        // By default, query already returns result ordered by
+        // TABLE_TYPE, TABLE_SCHEM and TABLE_NAME...
         return execute(select.toString());
     }
 
@@ -3367,7 +3383,8 @@ public class JDBCDatabaseMetaData implements DatabaseMetaData,
             and("TABLE_NAME", "LIKE", tableNamePattern)).append(
             and("COLUMN_NAME", "LIKE", columnNamePattern));
 
-        select.append(" ORDER BY TABLE_SCHEM, TABLE_NAME, ORDINAL_POSITION");
+        // by default, query already returns the result ordered
+        // by TABLE_SCHEM, TABLE_NAME and ORDINAL_POSITION
         return execute(select.toString());
     }
 
@@ -3446,9 +3463,10 @@ public class JDBCDatabaseMetaData implements DatabaseMetaData,
             + and("TABLE_CATALOG", "=", catalog)
             + and("TABLE_SCHEMA", "=", schema) + and("TABLE_NAME", "=", table)
             + and("COLUMN_NAME", "LIKE", columnNamePattern)
-            + " ORDER BY COLUMN_NAME, PRIVILEGE"
         ;
 
+        // By default, the query already returns the result
+        // ordered by column name, privilege...
         return execute(sql);
     }
 
@@ -3489,7 +3507,12 @@ public class JDBCDatabaseMetaData implements DatabaseMetaData,
      * case-sensitive comparison between name (pattern) arguments and the
      * corresponding identifier values as they are stored in the database.
      * Therefore, care must be taken to specify name arguments precisely
-     * (including case) as they are stored in the database.
+     * (including case) as they are stored in the database. <p>
+     *
+     * Since 1.7.2, this feature is supported by default. If the jar is
+     * compiled without org.hsqldb.dbinfo.DatabaseInformationMain, the feature is
+     * not supported. The default implementation is
+     * the org.hsqldb.dbinfo.DatabaseInformationMain class.
      * </div>
      * <!-- end release-specific documentation -->
      *
@@ -3520,8 +3543,7 @@ public class JDBCDatabaseMetaData implements DatabaseMetaData,
             + "FROM INFORMATION_SCHEMA.TABLE_PRIVILEGES WHERE TRUE "
             + and("TABLE_CATALOG", "=", catalog)
             + and("TABLE_SCHEMA", "LIKE", schemaPattern)
-            + and("TABLE_NAME", "LIKE", tableNamePattern)
-            + " ORDER BY TABLE_SCHEM, TABLE_NAME, PRIVILEGE";
+            + and("TABLE_NAME", "LIKE", tableNamePattern);
 
 /*
         if (wantsIsNull(tableNamePattern)) {
@@ -3529,6 +3551,8 @@ public class JDBCDatabaseMetaData implements DatabaseMetaData,
         }
 */
 
+        // By default, the query already returns a result ordered by
+        // TABLE_SCHEM, TABLE_NAME, and PRIVILEGE...
         return execute(sql);
     }
 
@@ -3585,7 +3609,12 @@ public class JDBCDatabaseMetaData implements DatabaseMetaData,
      * If the name of a column is defined in the database without double
      * quotes, an all-uppercase name must be specified when calling this
      * method. Otherwise, the name must be specified in the exact case of
-     * the column definition in the database.
+     * the column definition in the database. <p>
+     *
+     * Since 1.7.2, this feature is supported by default. If the jar is
+     * compiled without org.hsqldb.dbinfo.DatabaseInformationMain, the feature is
+     * not supported. The default implementation is
+     * the org.hsqldb.dbinfo.DatabaseInformationMain class.
      * </div>
      * <!-- end release-specific documentation -->
      *
@@ -3649,7 +3678,6 @@ public class JDBCDatabaseMetaData implements DatabaseMetaData,
         // will want only one table and the system table producer (for
         // now) guarantees that a maximum of one BRI scope column set is
         // produced for each table
-        select.append(" ORDER BY SCOPE");
         return execute(select.toString());
     }
 
@@ -3757,7 +3785,12 @@ public class JDBCDatabaseMetaData implements DatabaseMetaData,
      * case-sensitive comparison between name (pattern) arguments and the
      * corresponding identifier values as they are stored in the database.
      * Therefore, care must be taken to specify name arguments precisely
-     * (including case) as they are stored in the database.
+     * (including case) as they are stored in the database. <p>
+     *
+     * Since 1.7.2, this feature is supported by default. If the jar is
+     * compiled without org.hsqldb.dbinfo.DatabaseInformationMain, the feature is
+     * not supported. The default implementation is
+     * the org.hsqldb.dbinfo.DatabaseInformationMain class.
      * </div>
      * <!-- end release-specific documentation -->
      *
@@ -3791,8 +3824,7 @@ public class JDBCDatabaseMetaData implements DatabaseMetaData,
                                      schema)).append(and("TABLE_NAME", "=",
                                          table));
 
-        select.append(" ORDER BY COLUMN_NAME");
-
+        // By default, query already returns result in contract order
         return execute(select.toString());
     }
 
@@ -3868,7 +3900,12 @@ public class JDBCDatabaseMetaData implements DatabaseMetaData,
      * case-sensitive comparison between name (pattern) arguments and the
      * corresponding identifier values as they are stored in the database.
      * Therefore, care must be taken to specify name arguments precisely
-     * (including case) as they are stored in the database.
+     * (including case) as they are stored in the database. <p>
+     *
+     * Since 1.7.2, this feature is supported by default. If the jar is
+     * compiled without org.hsqldb.dbinfo.DatabaseInformationMain, the feature is
+     * not supported. The default implementation is
+     * the org.hsqldb.dbinfo.DatabaseInformationMain class.
      * </div>
      * <!-- end release-specific documentation -->
      *
@@ -3978,7 +4015,12 @@ public class JDBCDatabaseMetaData implements DatabaseMetaData,
      * case-sensitive comparison between name (pattern) arguments and the
      * corresponding identifier values as they are stored in the database.
      * Therefore, care must be taken to specify name arguments precisely
-     * (including case) as they are stored in the database.
+     * (including case) as they are stored in the database. <p>
+     *
+     * Since 1.7.2, this feature is supported by default. If the jar is
+     * compiled without org.hsqldb.dbinfo.DatabaseInformationMain, the feature is
+     * not supported. The default implementation is
+     * the org.hsqldb.dbinfo.DatabaseInformationMain class.
      * </div>
      * <!-- end release-specific documentation -->
      *
@@ -4013,7 +4055,8 @@ public class JDBCDatabaseMetaData implements DatabaseMetaData,
                 "=", catalog)).append(and("PKTABLE_SCHEM", "=",
                     schema)).append(and("PKTABLE_NAME", "=", table));
 
-        select.append(" ORDER BY FKTABLE_CAT, FKTABLE_SCHEM, FKTABLE_NAME, KEY_SEQ");
+        // By default, query already returns the table ordered by
+        // FKTABLE_CAT, FKTABLE_SCHEM, FKTABLE_NAME, and KEY_SEQ.
         return execute(select.toString());
     }
 
@@ -4092,7 +4135,12 @@ public class JDBCDatabaseMetaData implements DatabaseMetaData,
      * case-sensitive comparison between name (pattern) arguments and the
      * corresponding identifier values as they are stored in the database.
      * Therefore, care must be taken to specify name arguments precisely
-     * (including case) as they are stored in the database.
+     * (including case) as they are stored in the database. <p>
+     *
+     * Since 1.7.2, this feature is supported by default. If the jar is
+     * compiled without org.hsqldb.dbinfo.DatabaseInformationMain, the feature is
+     * not supported. The default implementation is
+     * the org.hsqldb.dbinfo.DatabaseInformationMain class.
      * </div>
      * <!-- end release-specific documentation -->
      *
@@ -4144,7 +4192,8 @@ public class JDBCDatabaseMetaData implements DatabaseMetaData,
                                 foreignSchema)).append(and("FKTABLE_NAME",
                                     "=", foreignTable));
 
-        select.append(" ORDER BY FKTABLE_CAT, FKTABLE_SCHEM, FKTABLE_NAME, KEY_SEQ");
+        // by default, query already returns the table ordered by
+        // FKTABLE_CAT, FKTABLE_SCHEM, FKTABLE_NAME, and KEY_SEQ.
         return execute(select.toString());
     }
 
@@ -4212,7 +4261,10 @@ public class JDBCDatabaseMetaData implements DatabaseMetaData,
      * <div class="ReleaseSpecificDocumentation">
      * <h1>HSQLDB-Specific Information:</h1> <p>
      *
-     * This feature is supported.
+     * Since 1.7.2, this feature is supported by default. If the jar is
+     * compiled without org.hsqldb.dbinfo.DatabaseInformationMain, the feature is
+     * not supported. The default implementation is
+     * the org.hsqldb.dbinfo.DatabaseInformationMain class.
      * </div>
      * <!-- end release-specific documentation -->
      *
@@ -4277,7 +4329,12 @@ public class JDBCDatabaseMetaData implements DatabaseMetaData,
      * case-sensitive comparison between name (pattern) arguments and the
      * corresponding identifier values as they are stored in the database.
      * Therefore, care must be taken to specify name arguments precisely
-     * (including case) as they are stored in the database.
+     * (including case) as they are stored in the database. <p>
+     *
+     * Since 1.7.2, this feature is supported by default. If the jar is
+     * compiled without org.hsqldb.dbinfo.DatabaseInformationMain, the feature is
+     * not supported. The default implementation is
+     * the org.hsqldb.dbinfo.DatabaseInformationMain class.
      * </div>
      * <!-- end release-specific documentation -->
      *
@@ -4320,7 +4377,8 @@ public class JDBCDatabaseMetaData implements DatabaseMetaData,
                                          table)).append(and("NON_UNIQUE", "=",
                                              nu));
 
-        select.append(" ORDER BY NON_UNIQUE, TYPE, INDEX_NAME, ORDINAL_POSITION");
+        // By default, this query already returns the table ordered by
+        // NON_UNIQUE, TYPE, INDEX_NAME, and ORDINAL_POSITION...
         return execute(select.toString());
     }
 
@@ -4697,7 +4755,8 @@ public class JDBCDatabaseMetaData implements DatabaseMetaData,
                 StringUtil.getList(types, ",", "")).append(')');
         }
 
-        select.append(" ORDER BY DATA_TYPE, TYPE_CAT, TYPE_SCHEM, TYPE_NAME");
+        // By default, the query already returns a result ordered by
+        // DATA_TYPE, TYPE_SCHEM, and TYPE_NAME...
         return execute(select.toString());
     }
 
@@ -4721,7 +4780,8 @@ public class JDBCDatabaseMetaData implements DatabaseMetaData,
      * <div class="ReleaseSpecificDocumentation">
      * <h1>HSQLDB-Specific Information:</h1> <p>
      *
-     * This SQL feature is supported through JDBC as well as SQL.
+     * Beginning with 1.7.2, this SQL feature is supported
+     * through JDBC as well as SQL. <p>
      *
      * </div>
      * <!-- end release-specific documentation -->
@@ -4742,8 +4802,8 @@ public class JDBCDatabaseMetaData implements DatabaseMetaData,
      * <div class="ReleaseSpecificDocumentation">
      * <h1>HSQLDB-Specific Information:</h1> <p>
      *
-     * HSQLDB supports JDBC named parameters to
-     * callable statements; this method returns true.
+     * Starting with 1.7.2, HSQLDB supports JDBC named parameters to
+     * callable statements; this method returns true. <p>
      *
      * </div>
      * <!-- end release-specific documentation -->
@@ -5043,19 +5103,19 @@ public class JDBCDatabaseMetaData implements DatabaseMetaData,
             String catalog, String schemaPattern, String typeNamePattern,
             String attributeNamePattern) throws SQLException {
 
-        if (wantsIsNull(typeNamePattern)
-                || wantsIsNull(attributeNamePattern)) {
-            return executeSelect("SYSTEM_UDTATTRIBUTES", "0=1");
-        }
-        schemaPattern = translateSchema(schemaPattern);
+        StringBuilder select = toQueryPrefixNoSelect(
+            "SELECT TABLE_NAME AS TYPE_CAT, TABLE_NAME AS TYPE_SCHME, TABLE_NAME AS TYPE_NAME, "
+            + "TABLE_NAME AS ATTR_NAME, CAST(0 AS INTEGER) AS DATA_TYPE, TABLE_NAME AS ATTR_TYPE_NAME, "
+            + "CAST(0 AS INTEGER) AS ATTR_SIZE, CAST(0 AS INTEGER) AS DECIMAL_DIGITS, "
+            + "CAST(0 AS INTEGER) AS NUM_PREC_RADIX, CAST(0 AS INTEGER) AS NULLABLE, "
+            + "'' AS REMARK, '' AS ATTR_DEF, CAST(0 AS INTEGER) AS SQL_DATA_TYPE, "
+            + "CAST(0 AS INTEGER) AS SQL_DATETIME_SUB, CAST(0 AS INTEGER) AS CHAR_OCTECT_LENGTH, "
+            + "CAST(0 AS INTEGER) AS ORDINAL_POSITION, '' AS NULLABLE, "
+            + "'' AS SCOPE_CATALOG, '' AS SCOPE_SCHEMA, '' AS SCOPE_TABLE, "
+            + "CAST(0 AS SMALLINT) AS SCOPE_DATA_TYPE "
+            + "FROM INFORMATION_SCHEMA.TABLES ").append(
+                and("TABLE_NAME", "=", ""));
 
-        StringBuilder select = toQueryPrefix("SYSTEM_UDTATTRIBUTES").append(
-            and("TYPE_CAT", "=", catalog)).append(
-            and("TYPE_SCHEM", "LIKE", schemaPattern)).append(
-            and("TYPE_NAME", "LIKE", typeNamePattern)).append(
-            and("ATTR_NAME", "LIKE", attributeNamePattern));
-
-        select.append(" ORDER BY TYPE_CAT, TYPE_SCHEM, TYPE_NAME, ORDINAL_POSITION");
         return execute(select.toString());
     }
 
@@ -5330,7 +5390,7 @@ public class JDBCDatabaseMetaData implements DatabaseMetaData,
             toQueryPrefix("SYSTEM_SCHEMAS").append(and("TABLE_CATALOG", "=",
                 catalog)).append(and("TABLE_SCHEM", "LIKE", schemaPattern));
 
-        select.append(" ORDER BY TABLE_CATALOG, TABLE_SCHEM");
+        // By default, query already returns result in contract order
         return execute(select.toString());
     }
 
@@ -5402,7 +5462,7 @@ public class JDBCDatabaseMetaData implements DatabaseMetaData,
      * <code>FUNCTION_NAME</code> and
      * <code>SPECIFIC_ NAME</code>.
      *
-     * <P>Each function description has the following columns:
+     * <P>Each function description has the the following columns:
      *  <OL>
      *  <LI><B>FUNCTION_CAT</B> String {@code =>} function catalog (may be <code>null</code>)
      *  <LI><B>FUNCTION_SCHEM</B> String {@code =>} function schema (may be <code>null</code>)
@@ -5753,9 +5813,12 @@ public class JDBCDatabaseMetaData implements DatabaseMetaData,
      * @exception SQLException if a database access error occurs
      * @since 1.8
      */
+//#ifdef JAVA8
     public long getMaxLogicalLobSize() throws SQLException {
-        return BlobType.maxBlobPrecision;
+        return Type.SQL_BLOB.maxBlobPrecision;
     }
+
+//#endif JAVA8
 
     /**
      * Retrieves whether this database supports REF CURSOR.
@@ -5765,9 +5828,12 @@ public class JDBCDatabaseMetaData implements DatabaseMetaData,
      * @exception SQLException if a database access error occurs
      * @since 1.8
      */
+//#ifdef JAVA8
     public boolean supportsRefCursors() throws SQLException {
         return false;
     }
+
+//#endif JAVA8
 
     //----------------------- Internal Implementation --------------------------
 
@@ -5800,6 +5866,7 @@ public class JDBCDatabaseMetaData implements DatabaseMetaData,
      * A CSV list representing the SQL IN list to use when generating
      * queries for <code>getBestRowIdentifier</code> when the
      * <code>scope</code> argument is <code>bestRowSession</code>.
+     * @since HSQLDB 1.7.2
      */
     private static final String BRI_SESSION_SCOPE_IN_LIST = "("
         + bestRowSession + ")";
@@ -5808,6 +5875,7 @@ public class JDBCDatabaseMetaData implements DatabaseMetaData,
      * A CSV list representing the SQL IN list to use when generating
      * queries for <code>getBestRowIdentifier</code> when the
      * <code>scope</code> argument is <code>bestRowTemporary</code>.
+     * @since HSQLDB 1.7.2
      */
     private static final String BRI_TEMPORARY_SCOPE_IN_LIST = "("
         + bestRowTemporary + "," + bestRowTransaction + "," + bestRowSession
@@ -5817,6 +5885,7 @@ public class JDBCDatabaseMetaData implements DatabaseMetaData,
      * A CSV list representing the SQL IN list to use when generating
      * queries for <code>getBestRowIdentifier</code> when the
      * <code>scope</code> argument is <code>bestRowTransaction</code>.
+     * @since HSQLDB 1.7.2
      */
     private static final String BRI_TRANSACTION_SCOPE_IN_LIST = "("
         + bestRowTransaction + "," + bestRowSession + ")";
@@ -5825,7 +5894,9 @@ public class JDBCDatabaseMetaData implements DatabaseMetaData,
      * "SELECT * FROM ". <p>
      *
      * This attribute is in support of methods that use SQL SELECT statements to
-     * generate returned <code>ResultSet</code> objects.
+     * generate returned <code>ResultSet</code> objects. <p>
+     *
+     * @since HSQLDB 1.7.2
      */
     private static final String selstar = "SELECT * FROM INFORMATION_SCHEMA.";
 
@@ -5835,11 +5906,12 @@ public class JDBCDatabaseMetaData implements DatabaseMetaData,
      * This attribute is in support of methods that use SQL SELECT statements to
      * generate returned <code>ResultSet</code> objects. <p>
      *
-     * The optimizer will simply drop this when parsing a condition
+     * A good optimizer will simply drop this when parsing a condition
      * expression. And it makes our code much easier to write, since we don't
      * have to check our "WHERE" clause productions as strictly for proper
      * conjunction:  we just stick additional conjunctive predicates on the
-     * end of this and Presto! Everything works :-)
+     * end of this and Presto! Everything works :-) <p>
+     * @since HSQLDB 1.7.2
      */
     private static final String whereTrue = " WHERE TRUE";
 
@@ -5871,7 +5943,9 @@ public class JDBCDatabaseMetaData implements DatabaseMetaData,
         // PRE: is non-null and not closed
         connection       = c;
         useSchemaDefault = c.isInternal ? false
-                                        : c.isDefaultSchema;
+                                        : c.connProperties
+                                        .isPropertyTrue(HsqlDatabaseProperties
+                                            .url_default_schema);
     }
 
     /**
@@ -5892,14 +5966,14 @@ public class JDBCDatabaseMetaData implements DatabaseMetaData,
      *
      * @param val an object representing the value to use in some conditional
      *      operation, op, between the column identified by the id argument
-     *      and this argument.
+     *      and this argument. <p>
      *
      *      <UL>
-     *          <LI>null causes the empty string to be returned.
+     *          <LI>null causes the empty string to be returned. <p>
      *
      *          <LI>toString().length() == 0 causes the returned expression
      *              to be built so that the IS NULL operation will occur
-     *              against the specified column.
+     *              against the specified column. <p>
      *
      *          <LI>instanceof String causes the returned expression to be
      *              built so that the specified operation will occur between
@@ -5908,7 +5982,7 @@ public class JDBCDatabaseMetaData implements DatabaseMetaData,
      *              escaped by doubling). If <code>op</code> is "LIKE" and
      *              <code>val</code> does not contain any "%" or "_" wild
      *              card characters, then <code>op</code> is silently
-     *              converted to "=".
+     *              converted to "=". <p>
      *
      *          <LI>!instanceof String causes an expression to built so that
      *              the specified operation will occur between the specified
@@ -6074,7 +6148,7 @@ public class JDBCDatabaseMetaData implements DatabaseMetaData,
 
     /**
      * Retrieves whether the JDBC <code>DatabaseMetaData</code> contract
-     * specifies that the argument <code>s</code> is filter parameter
+     * specifies that the argument <code>s</code>code> is filter parameter
      * value that requires a corresponding IS NULL predicate. <p>
      *
      * @param s the filter parameter to test
@@ -6109,29 +6183,6 @@ public class JDBCDatabaseMetaData implements DatabaseMetaData,
 
         rs.close();
     }
-
-    /**
-     * Returns the name of the default collation for database.
-     * @return name of collation
-     */
-    public String getDatabaseDefaultCollation() {
-
-        String value = null;
-        try {
-            ResultSet rs = executeSelect("SYSTEM_PROPERTIES",
-                "PROPERTY_NAME = 'sql.default_collation'");
-
-            if (rs.next()) {
-                value = rs.getString(4);
-            }
-
-            rs.close();
-        } catch (Exception e) {
-        }
-
-        return value;
-    }
-
     /**
      * Returns the name of the default schema for database.
      */

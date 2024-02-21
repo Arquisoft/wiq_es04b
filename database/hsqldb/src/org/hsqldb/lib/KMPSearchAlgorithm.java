@@ -59,9 +59,9 @@ import java.io.Reader;
  * <ul>
  * <li>a very simple, highly predictable behavior
  * <li>an O(n) complexity once the a search pattern is preprocessed
- * <li>an O(m) complexity for pre-processing search patterns
+ * <li>an O(m) complexity for preprocessing search patterns
  * <li>a worst case performance characteristic of only 2n
- * <li>an average case performance characteristic that is deemed to be
+ * <li>a typical performance characteristic that is deemed to be
  *     2-3 times better than the naive search algorithm employed by
  *     {@link String#indexOf(java.lang.String,int)}.
  * </ul>
@@ -72,197 +72,50 @@ import java.io.Reader;
  * requires more space and that is somewhat more complex to implement
  * efficiently for searching forward-only access streams. <p>
  *
- * In particular, its higher average performance is biased toward larger
+ * In  particular, its higher average performance is biased toward larger
  * search patterns, due to its ability to skip ahead further and with fewer
- * tests under reverse pattern scan. But when searching forward-only access
+ * tests under reverse pattern scan.  But when searching forward-only access
  * streams, overall performance considerations require the use a circular buffer
  * of the same size as the search pattern to hold data from the searched stream
- * as it is being compared in reverse order to the search pattern. Hence,
- * Boyer-Moore requires at minimum twice the memory required by 
- * Knuth-Morris-Pratt to search for the same pattern and that factor has the 
- * greatest impact precisely on the same class of patterns (larger) for which it
- * is most outperforms Knuth-Morris-Pratt.
+ * as it is being compared in reverse order to the search pattern.  Hence,
+ * Boyer-Moore requires at minimum twice the memory required by Knuth-Morris-Pratt
+ * to search for the same pattern and that factor has the greatest impact
+ * precisely on the same class of patterns (larger) for which it is most
+ * outperforms Knuth-Morris-Pratt.
  *
  * @author Campbell Burnet (campbell-burnet@users dot sourceforge.net)
- * @version 2.7.x 
+ * @version 2.1
  * @since 2.1
- * @see
- * <a href="http://en.wikipedia.org/wiki/Knuth%E2%80%93Morris%E2%80%93Pratt_algorithm">
- * Knuth-Morris-Pratt algorithm</a>
+ * @see <a href="http://en.wikipedia.org/wiki/Knuth%E2%80%93Morris%E2%80%93Pratt_algorithm">Knuth-Morris-Pratt algorithm</a>
  */
 public class KMPSearchAlgorithm {
-
-    // @todo 2.7.x - performance optimizations for backend use
-    
-    /**
-     * computes the table used to optimize octet pattern search
-     *
-     * @param pattern for which to compute the table.
-     * @return the table computed from the octet pattern.
-     * @throws IllegalArgumentException if {@code pattern == null
-     *                                               || pattern.length < 2}.
-     */
-    public static int[] computeTable(final byte[] pattern) {
-
-        if (pattern == null) {
-            throw new IllegalArgumentException("pattern must not be null.");
-        } else if (pattern.length < 2) {
-            throw new IllegalArgumentException("pattern.length must be > 1.");
-        }
-
-        //
-        final int[] table = new int[pattern.length];
-        int i = 2;
-        int j = 0;
-
-        //
-        table[0] = -1;
-        table[1] = 0;
-
-        //
-        while (i < pattern.length) {
-            if (pattern[i - 1] == pattern[j]) {
-                table[i] = j + 1;
-
-                j++;
-                i++;
-            } else if (j > 0) {
-                j = table[j];
-            } else {
-                table[i] = 0;
-
-                i++;
-
-                j = 0;
-            }
-        }
-
-        //
-        return table;
-    }
-
-     /**
-     * computes the table used to optimize octet pattern search
-     *
-     * @param pattern for which to compute the table.
-     * @return the table computed from the character pattern.
-     * @throws IllegalArgumentException if {@code pattern == null
-     *                                               || pattern.length < 2}.
-     */
-    public static int[] computeTable(final char[] pattern) {
-
-        if (pattern == null) {
-            throw new IllegalArgumentException("pattern must  not be null.");
-        } else if (pattern.length < 2) {
-            throw new IllegalArgumentException("pattern.length must be > 1.");
-        }
-
-        int[] table = new int[pattern.length];
-        int i = 2;
-        int j = 0;
-
-        table[0] = -1;
-        table[1] = 0;
-
-        while (i < pattern.length) {
-            if (pattern[i - 1] == pattern[j]) {
-                table[i] = j + 1;
-
-                j++;
-                i++;
-            } else if (j > 0) {
-                j = table[j];
-            } else {
-                table[i] = 0;
-
-                i++;
-
-                j = 0;
-            }
-        }
-
-        return table;
-    }
-
-     /**
-     * computes the table used to optimize octet pattern search
-     *
-     * @param pattern for which to compute the table.
-     * @return the table computed from the String pattern.
-     * @throws IllegalArgumentException if {@code pattern == null
-     *                                               || pattern.length < 2}. 
-     */
-    public static int[] computeTable(final String pattern) {
-
-        if (pattern == null) {
-            throw new IllegalArgumentException("Pattern must  not be null.");
-        } else if (pattern.length() < 2) {
-            throw new IllegalArgumentException("Pattern length must be > 1.");
-        }
-
-        final int patternLength = pattern.length();
-
-        //
-        int[] table = new int[patternLength];
-        int i = 2;
-        int j = 0;
-
-        table[0] = -1;
-        table[1] = 0;
-
-        while (i < patternLength) {
-            if (pattern.charAt(i - 1) == pattern.charAt(j)) {
-                table[i] = j + 1;
-
-                j++;
-                i++;
-            } else if (j > 0) {
-                j = table[j];
-            } else {
-                table[i] = 0;
-
-                i++;
-
-                j = 0;
-            }
-        }
-
-        return table;
-    }
 
     /**
      * Searches the given octet stream for the given octet pattern
      * returning the zero-based offset from the initial stream position
-     * at which the first match is detected.
-     * <p>
+     * at which the first match is detected. <p>
      *
      * Note that the signature includes a slot for the table so that
      * searches for a pattern can be performed multiple times without
      * incurring the overhead of computing the table each time.
      *
      * @param inputStream in which to search
-     * @param pattern     for which to search
-     * @param table       computed from the pattern that optimizes the search.
-     *                    If null, automatically computed.
-   * @return zero-based offset of first match; -1 if {@code inputStream == null 
-     *          || pattern == null} or no match found, ; zero (0) if
-     *         {@code pattern.length == 0}.
+     * @param pattern for which to search
+     * @param table computed from the pattern that optimizes the search.
+     *        If null, automatically computed.
+     * @return zero-based offset of first match; -1 if no match found.
      * @throws IOException when an error occurs accessing the input stream.
      */
     public static long search(final InputStream inputStream,
                               final byte[] pattern,
                               int[] table) throws IOException {
 
-        if (inputStream == null || pattern == null) {
+        if (inputStream == null || pattern == null || pattern.length == 0) {
             return -1;
         }
 
         //
         final int patternLength = pattern.length;
-        // as per SQL LOCATE, INSTR, POSITION( IN )
-        if (patternLength == 0) {
-            return 0;
-        }
 
         //
         long streamIndex = -1;
@@ -270,34 +123,31 @@ public class KMPSearchAlgorithm {
 
         if (patternLength == 1) {
             final int byteToFind = pattern[0];
-            
-            currentByte = inputStream.read();
 
-            while (-1 != currentByte) {
+            while (-1 != (currentByte = inputStream.read())) {
                 streamIndex++;
 
                 if (currentByte == byteToFind) {
                     return streamIndex;
                 }
-                
-                currentByte = inputStream.read();
             }
 
             return -1;
         }
 
-        int         patternIndex = 0;
-        final int[] localTable   = table == null ? computeTable(pattern)
-                                                 : table;
-        currentByte = inputStream.read();
-        
-        while (-1 != currentByte) {
+        int patternIndex = 0;
+
+        if (table == null) {
+            table = computeTable(pattern);
+        }
+
+        while (-1 != (currentByte = inputStream.read())) {
             streamIndex++;
 
             if (currentByte == pattern[patternIndex]) {
                 patternIndex++;
             } else if (patternIndex > 0) {
-                patternIndex = localTable[patternIndex];
+                patternIndex = table[patternIndex];
 
                 patternIndex++;
             }
@@ -305,8 +155,6 @@ public class KMPSearchAlgorithm {
             if (patternIndex == patternLength) {
                 return streamIndex - (patternLength - 1);
             }
-            
-             currentByte = inputStream.read();
         }
 
         return -1;
@@ -323,27 +171,20 @@ public class KMPSearchAlgorithm {
      *
      * @param reader in which to search
      * @param pattern for which to search
-     * @param table   computed from the pattern that optimizes the search
-     *                If null, automatically computed.
-    * @return zero-based offset of first match; -1 if {@code reader == null 
-     *          || pattern == null} or no match found, ; zero (0) if
-     *         {@code pattern.length == 0}.
+     * @param table computed from the pattern that optimizes the search
+     *        If null, automatically computed.
+     * @return zero-based offset of first match; -1 if no match found.
      * @throws IOException when an error occurs accessing the input stream.
      */
-    @SuppressWarnings({"NestedAssignment", "AssignmentToMethodParameter"})
     public static long search(final Reader reader, final char[] pattern,
                               int[] table) throws IOException {
 
-        if (reader == null || pattern == null) {
+        if (reader == null || pattern == null || pattern.length == 0) {
             return -1;
         }
 
         //
         final int patternLength = pattern.length;
-        // as per SQL LOCATE, INSTR, POSITION( IN )
-        if (patternLength == 0) {
-            return 0;
-        }
 
         //
         long streamIndex = -1;
@@ -351,36 +192,31 @@ public class KMPSearchAlgorithm {
 
         if (patternLength == 1) {
             final int characterToFind = pattern[0];
-            
-            currentCharacter = reader.read();
 
-            while (-1 != currentCharacter) {
+            while (-1 != (currentCharacter = reader.read())) {
                 streamIndex++;
 
                 if (currentCharacter == characterToFind) {
                     return streamIndex;
                 }
-                
-                currentCharacter = reader.read();
             }
 
             return -1;
         }
 
-       
-        final int[] localTable   = table == null ? computeTable(pattern)
-                                                 : table;
-        //
         int patternIndex = 0;
-        currentCharacter = reader.read();
-        
-        while (-1 != currentCharacter) {
+
+        if (table == null) {
+            table = computeTable(pattern);
+        }
+
+        while (-1 != (currentCharacter = reader.read())) {
             streamIndex++;
 
             if (currentCharacter == pattern[patternIndex]) {
                 patternIndex++;
             } else if (patternIndex > 0) {
-                patternIndex = localTable[patternIndex];
+                patternIndex = table[patternIndex];
 
                 patternIndex++;
             }
@@ -388,90 +224,6 @@ public class KMPSearchAlgorithm {
             if (patternIndex == patternLength) {
                 return streamIndex - (patternLength - 1);
             }
-            
-            currentCharacter = reader.read();
-        }
-
-        return -1;
-    }
-
-    /**
-     * Searches the given character stream for the given character pattern
-     * returning the zero-based offset from the initial stream position
-     * at which the first match is detected.
-     * <p>
-     *
-     * Note that the signature includes a slot for the table so that
-     * searches for a pattern can be performed multiple times without
-     * incurring the overhead of computing the table each time.
-     *
-     * @param reader  in which to search
-     * @param pattern for which to search
-     * @param table   computed from the pattern that optimizes the search
-     *                If null, automatically computed.
-     * @return zero-based offset of first match; -1 if {@code reader == null 
-     *          || pattern == null} or no match found, ; zero (0) if
-     *         {@code pattern.length() == 0}.
-     * @throws IOException when an error occurs accessing the input stream.
-     */
-    @SuppressWarnings({"NestedAssignment", "AssignmentToMethodParameter"})
-    public static long search(final Reader reader, final String pattern,
-            int[] table) throws IOException {
-
-        if (reader == null || pattern == null) {
-            return -1;
-        }
-        //
-        final int patternLength = pattern.length();
-        // as per SQL LOCATE, INSTR, POSITION( IN )
-        if (patternLength == 0) {
-            return 0;
-        }
-        //
-        long streamIndex = -1;
-        int  currentCharacter;
-
-        if (patternLength == 1) {
-            final int characterToFind = pattern.charAt(0);
-            
-            currentCharacter = reader.read();
-
-            while (-1 != currentCharacter) {
-                streamIndex++;
-
-                if (currentCharacter == characterToFind) {
-                    return streamIndex;
-                }
-                
-                currentCharacter = reader.read();
-            }
-
-            return -1;
-        }
-
-        
-        final int[] localTable   = table == null ? computeTable(pattern)
-                                                 : table;
-        //
-        int patternIndex = 0;
-        currentCharacter = reader.read();
-        
-        while (-1 != currentCharacter) {
-            streamIndex++;
-
-            if (currentCharacter == pattern.charAt(patternIndex)) {
-                patternIndex++;
-            } else if (patternIndex > 0) {
-                patternIndex = localTable[patternIndex];
-
-                patternIndex++;
-            }
-
-            if (patternIndex == patternLength) {
-                return streamIndex - (patternLength - 1);
-            }
-            
-            currentCharacter = reader.read();
         }
 
         return -1;
@@ -488,27 +240,22 @@ public class KMPSearchAlgorithm {
      *
      * @param source array in which to search
      * @param pattern to be matched
-     * @param table   computed from the pattern that optimizes the search
-     *                If null, automatically computed.
-     * @param start   position in source at which to start the search
-     * @return zero-based offset of first match; -1 if {@code source == null 
-     *          || pattern == null} or no match found, ; start if
-     *         {@code pattern.length == 0 and start <= source.length}.
+     * @param table computed from the pattern that optimizes the search
+     *        If null, automatically computed.
+     * @param start position in source at which to start the search
+     * @return zero-based offset of first match; -1 if no match found.
      */
     public static int search(final byte[] source, final byte[] pattern,
                              int[] table, final int start) {
 
-        if (source == null || pattern == null) {
+        if (source == null || pattern == null || pattern.length == 0) {
             return -1;
         }
 
         //
         final int sourceLength  = source.length;
         final int patternLength = pattern.length;
-        // as per SQL LOCATE, INSTR, POSITION( IN )
-        if (patternLength == 0) {
-            return start > sourceLength ? -1 : start;
-        }
+
         //
         int sourceIndex = start;
 
@@ -529,15 +276,17 @@ public class KMPSearchAlgorithm {
         int patternIndex = 0;
 
         //
-        final int[] localTable   = table == null ? computeTable(pattern)
-                                                 : table;
+        if (table == null) {
+            table = computeTable(pattern);
+        }
+
         //
         while ((sourceIndex < sourceLength)
                 && (patternIndex < patternLength)) {
             if (source[sourceIndex] == pattern[patternIndex]) {
                 patternIndex++;
             } else {
-                final int tableValue = localTable[patternIndex];
+                final int tableValue = table[patternIndex];
 
                 matchStart += (patternIndex - tableValue);
 
@@ -565,29 +314,22 @@ public class KMPSearchAlgorithm {
      *
      * @param source array in which to search
      * @param pattern to be matched
-     * @param table   computed from the pattern that optimizes the search
-     *                If null, automatically computed.
-     * @param start   position in source at which to start the search
-     * @return zero-based offset of first match; -1 if {@code source == null 
-     *          || pattern == null} or no match found, ; start if
-     *         {@code pattern.length == 0 and start <= source.length}.
+     * @param table computed from the pattern that optimizes the search
+     *        If null, automatically computed.
+     * @param start position in source at which to start the search
+     * @return zero-based offset of first match; -1 if no match found.
      */
     public static int search(final char[] source, final char[] pattern,
                              int[] table, final int start) {
 
-        if (source == null || pattern == null) {
+        if (source == null || pattern == null || pattern.length == 0) {
             return -1;
         }
 
         final int sourceLength  = source.length;
         final int patternLength = pattern.length;
-        
-        // as per SQL LOCATE, INSTR, POSITION( IN )
-        if (patternLength == 0) {
-            return start > sourceLength ? -1 : start;
-        }
-        
-        int sourceIndex  = start;
+        int       sourceIndex   = start;
+
         if (patternLength == 1) {
             final int characterToFind = pattern[0];
 
@@ -605,8 +347,9 @@ public class KMPSearchAlgorithm {
         int patternIndex = 0;
 
         //
-        final int[] localTable   = table == null ? computeTable(pattern)
-                                                 : table;
+        if (table == null) {
+            table = computeTable(pattern);
+        }
 
         //
         while ((sourceIndex < sourceLength)
@@ -614,7 +357,7 @@ public class KMPSearchAlgorithm {
             if (source[sourceIndex] == pattern[patternIndex]) {
                 patternIndex++;
             } else {
-                final int tableValue = localTable[patternIndex];
+                final int tableValue = table[patternIndex];
 
                 matchStart += (patternIndex - tableValue);
 
@@ -642,29 +385,26 @@ public class KMPSearchAlgorithm {
      *
      * @param source array to be searched
      * @param pattern to be matched
-     * @param table   computed from the pattern that optimizes the search
-     * @param start   position in source at which to start the search
-     * @return zero-based offset of first match; -1 if {@code source == null 
-     *          || pattern == null} or no match found, ; start if
-     *         {@code pattern.length == 0 and start <= source.length}.
+     * @param table computed from the pattern that optimizes the search
+     * @param start position in source at which to start the search
+     * @return zero-based offset of first match; -1 if no match found.
      */
     public static int search(final String source, final String pattern,
                              int[] table, final int start) {
 
-        if (source == null || pattern == null) {
+        if (source == null || pattern == null || pattern.isEmpty()) {
             return -1;
         }
 
         final int patternLength = pattern.length();
-        final int sourceLength  = source.length();
-        
-        // as per SQL LOCATE, INSTR, POSITION( IN )
-        if (patternLength == 0) {
-            return start > sourceLength ? -1 : start;
-        }
+
+        //
         if (patternLength == 1) {
             return source.indexOf(pattern, start);
         }
+
+        //
+        final int sourceLength = source.length();
 
         //
         int matchStart   = start;
@@ -672,8 +412,9 @@ public class KMPSearchAlgorithm {
         int patternIndex = 0;
 
         //
-        final int[] localTable = table == null ? computeTable(pattern)
-                                               : table;
+        if (table == null) {
+            table = computeTable(pattern);
+        }
 
         //
         while ((sourceIndex < sourceLength)
@@ -681,7 +422,7 @@ public class KMPSearchAlgorithm {
             if (source.charAt(sourceIndex) == pattern.charAt(patternIndex)) {
                 patternIndex++;
             } else {
-                final int tableValue = localTable[patternIndex];
+                final int tableValue = table[patternIndex];
 
                 matchStart += (patternIndex - tableValue);
 
@@ -702,8 +443,121 @@ public class KMPSearchAlgorithm {
         }
     }
 
-    private KMPSearchAlgorithm() {
-        assert false : "Pure Utility Class";
+    /**
+     * computes the table used to optimize octet pattern search
+     *
+     * @param pattern for which to compute the table.
+     * @return the table computed from the octet pattern.
+     */
+    public static int[] computeTable(final byte[] pattern) {
+
+        if (pattern == null) {
+            throw new IllegalArgumentException("Pattern must  not be null.");
+        } else if (pattern.length < 2) {
+            throw new IllegalArgumentException("Pattern length must be > 1.");
+        }
+
+        //
+        final int[] table = new int[pattern.length];
+        int         i     = 2;
+        int         j     = 0;
+
+        //
+        table[0] = -1;
+        table[1] = 0;
+
+        //
+        while (i < pattern.length) {
+            if (pattern[i - 1] == pattern[j]) {
+                table[i] = j + 1;
+
+                j++;
+                i++;
+            } else if (j > 0) {
+                j = table[j];
+            } else {
+                table[i] = 0;
+
+                i++;
+
+                j = 0;
+            }
+        }
+
+        //
+        return table;
     }
 
+    public static int[] computeTable(final char[] pattern) {
+
+        if (pattern == null) {
+            throw new IllegalArgumentException("Pattern must  not be null.");
+        } else if (pattern.length < 2) {
+            throw new IllegalArgumentException("Pattern length must be > 1.");
+        }
+
+        int[] table = new int[pattern.length];
+        int   i     = 2;
+        int   j     = 0;
+
+        table[0] = -1;
+        table[1] = 0;
+
+        while (i < pattern.length) {
+            if (pattern[i - 1] == pattern[j]) {
+                table[i] = j + 1;
+
+                j++;
+                i++;
+            } else if (j > 0) {
+                j = table[j];
+            } else {
+                table[i] = 0;
+
+                i++;
+
+                j = 0;
+            }
+        }
+
+        return table;
+    }
+
+    public static int[] computeTable(final String pattern) {
+
+        if (pattern == null) {
+            throw new IllegalArgumentException("Pattern must  not be null.");
+        } else if (pattern.length() < 2) {
+            throw new IllegalArgumentException("Pattern length must be > 1.");
+        }
+
+        final int patternLength = pattern.length();
+
+        //
+        int[] table = new int[patternLength];
+        int   i     = 2;
+        int   j     = 0;
+
+        table[0] = -1;
+        table[1] = 0;
+
+        while (i < patternLength) {
+            if (pattern.charAt(i - 1) == pattern.charAt(j)) {
+                table[i] = j + 1;
+
+                j++;
+                i++;
+            } else if (j > 0) {
+                j = table[j];
+            } else {
+                table[i] = 0;
+
+                i++;
+
+                j = 0;
+            }
+        }
+
+        return table;
+    }
 }

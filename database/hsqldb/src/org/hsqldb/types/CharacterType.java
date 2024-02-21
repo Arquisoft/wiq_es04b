@@ -1,4 +1,4 @@
-/* Copyright (c) 2001-2023, The HSQL Development Group
+/* Copyright (c) 2001-2021, The HSQL Development Group
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -47,7 +47,7 @@ import org.hsqldb.lib.StringUtil;
  * Type subclass for CHARACTER, VARCHAR, etc.<p>
  *
  * @author Fred Toussi (fredt@users dot sourceforge.net)
- * @version 2.7.2
+ * @version 2.5.0
  * @since 1.9.0
  */
 public class CharacterType extends Type {
@@ -281,6 +281,7 @@ public class CharacterType extends Type {
             case Types.OTHER :
                 throw Error.error(ErrorCode.X_42562);
             default :
+
                 /*
                  * @todo - this seems to be allowed in SQL-92 (is in NIST)
                  * but is disallowed in SQL:2003
@@ -416,31 +417,19 @@ public class CharacterType extends Type {
 
         switch (typeCode) {
 
-            case Types.SQL_CHAR :
-            case Types.SQL_VARCHAR : {
+            case Types.SQL_CHAR : {
                 int slen = ((String) a).length();
 
-                if (slen > precision) {
-                    if (session instanceof Session) {
-                        if (!((Session) session).database
-                                .sqlTruncateTrailing) {
-                            throw Error.error(ErrorCode.X_22001);
-                        }
-                    }
+                if (slen == precision) {
+                    return a;
+                }
 
+                if (slen > precision) {
                     if (getRightTrimSize((String) a, ' ') <= precision) {
                         return ((String) a).substring(0, (int) precision);
                     } else {
                         throw Error.error(ErrorCode.X_22001);
                     }
-                }
-
-                if (typeCode == Types.SQL_VARCHAR) {
-                    return a;
-                }
-
-                if (slen == precision) {
-                    return a;
                 }
 
                 char[] b = new char[(int) precision];
@@ -452,6 +441,19 @@ public class CharacterType extends Type {
                 }
 
                 return new String(b);
+            }
+            case Types.SQL_VARCHAR : {
+                int slen = ((String) a).length();
+
+                if (slen > precision) {
+                    if (getRightTrimSize((String) a, ' ') <= precision) {
+                        return ((String) a).substring(0, (int) precision);
+                    } else {
+                        throw Error.error(ErrorCode.X_22001);
+                    }
+                }
+
+                return a;
             }
             case Types.SQL_CLOB : {
                 ClobData clob = (ClobData) a;
@@ -650,7 +652,7 @@ public class CharacterType extends Type {
         } else if (a instanceof java.util.UUID) {
             s = a.toString();
         } else {
-            s = DateTimeType.convertJavaDateTimeObjectToString(a);
+            s = convertJavaTimeObject(session, a);
 
             if (s == null) {
                 throw Error.error(ErrorCode.X_42561);
@@ -660,6 +662,30 @@ public class CharacterType extends Type {
         return s;
     }
 
+//#ifdef JAVA8
+    String convertJavaTimeObject(SessionInterface session, Object a) {
+
+        switch(a.getClass().getName()){
+            case "java.time.LocalDate":
+            case "java.time.LocalTime":
+                return a.toString();
+            case "java.time.LocalDateTime":
+            case "java.time.OffsetDateTime":
+            case "java.time.OffsetTime":
+                return a.toString().replace('T', ' ');
+        }
+
+        return null;
+    }
+
+//#else
+/*
+    String convertJavaTimeObject(SessionInterface session, Object a) {
+        return null;
+    }
+*/
+
+//#endif JAVA8
     public Object convertJavaToSQL(SessionInterface session, Object a) {
         return convertToDefaultType(session, a);
     }
@@ -708,17 +734,6 @@ public class CharacterType extends Type {
         return StringConverter.toQuotedString(s, '\'', true);
     }
 
-    public void convertToJSON(Object a, StringBuilder sb) {
-
-        if (a == null) {
-            sb.append("null");
-
-            return;
-        }
-
-        StringConverter.toJSONString((String) a, sb);
-    }
-
     public boolean canConvertFrom(Type otherType) {
         return !otherType.isObjectType();
     }
@@ -733,32 +748,32 @@ public class CharacterType extends Type {
 
             case Types.SQL_VARCHAR : {
                 if (otherType.typeCode == typeCode) {
-                    return precision >= otherType.precision ? ReType.keep
-                                                            : ReType.check;
+                    return precision >= otherType.precision ? 0
+                                                            : 1;
                 }
 
                 if (otherType.typeCode == Types.SQL_CHAR) {
-                    return precision >= otherType.precision ? ReType.keep
-                                                            : ReType.change;
+                    return precision >= otherType.precision ? 0
+                                                            : -1;
                 }
 
                 return -1;
             }
             case Types.SQL_CLOB : {
                 if (otherType.typeCode == Types.SQL_CLOB) {
-                    return precision >= otherType.precision ? ReType.keep
-                                                            : ReType.check;
+                    return precision >= otherType.precision ? 0
+                                                            : 1;
                 }
 
                 return -1;
             }
             case Types.SQL_CHAR : {
                 return otherType.typeCode == Types.SQL_CHAR
-                       && precision == otherType.precision ? ReType.keep
-                                                           : ReType.change;
+                       && precision == otherType.precision ? 0
+                                                           : -1;
             }
             default :
-                return ReType.change;
+                return -1;
         }
     }
 
@@ -823,59 +838,56 @@ public class CharacterType extends Type {
         }
     }
 
-    /**
-     * length must not be negative
-     */
-    public static LongPair substringParams(long dataLength, long start,
-                                           long length, boolean hasLength) {
-
-        long end;
-
-        if (hasLength) {
-            end = start + length;
-        } else {
-            end = Math.max(dataLength, start);
-        }
-
-        // trim
-        if (start >= dataLength || end < 0) {
-            start  = 0;
-            length = 0;
-        } else {
-            start  = Math.max(start, 0);
-            end    = Math.min(end, dataLength);
-            length = end - start;
-        }
-
-        return new LongPair(start, length);
-    }
-
     public Object substring(SessionInterface session, Object data,
                             long offset, long length, boolean hasLength,
                             boolean trailing) {
 
-        if (length < 0) {
-            throw Error.error(ErrorCode.X_22011);
-        }
-
+        long end;
         long dataLength = typeCode == Types.SQL_CLOB
                           ? ((ClobData) data).length(session)
                           : ((String) data).length();
 
         if (trailing) {
-            offset = dataLength - offset;
+            end = dataLength;
+
+            if (length > dataLength) {
+                offset = 0;
+            } else {
+                offset = dataLength - length;
+            }
+        } else if (hasLength) {
+            end = offset + length;
+        } else {
+            end = dataLength > offset ? dataLength
+                                      : offset;
         }
 
-        LongPair segment = substringParams(dataLength, offset, length,
-                                           hasLength);
+        if (end < offset) {
+            throw Error.error(ErrorCode.X_22011);
+        }
 
-        offset = segment.a;
-        length = segment.b;
+        if (end < 0) {
+
+            // return zero length data
+            offset = 0;
+            end    = 0;
+        }
+
+        if (offset < 0) {
+            offset = 0;
+        }
+
+        if (end > dataLength) {
+            end = dataLength;
+        }
+
+        length = end - offset;
 
         if (data instanceof String) {
             return ((String) data).substring((int) offset,
                                              (int) (offset + length));
         } else if (data instanceof ClobData) {
+            ClobData clob = session.createClob(length);
 
             if (length > Integer.MAX_VALUE) {
                 throw Error.error(ErrorCode.X_22001);
@@ -883,9 +895,7 @@ public class CharacterType extends Type {
 
             /* @todo - change to support long strings */
             String result = ((ClobData) data).getSubString(session, offset,
-                                                           (int) length);
-
-            ClobData clob = session.createClob(length);
+                (int) length);
 
             clob.setString(session, 0, result);
 

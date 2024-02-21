@@ -1,4 +1,4 @@
-/* Copyright (c) 2001-2023, The HSQL Development Group
+/* Copyright (c) 2001-2021, The HSQL Development Group
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -48,17 +48,10 @@ import org.hsqldb.rights.Grantee;
  * Base class for type objects.<p>
  *
  * @author Fred Toussi (fredt@users dot sourceforge.net)
- * @version 2.7.2
+ * @version 2.6.0
  * @since 1.9.0
  */
 public abstract class Type implements SchemaObject, Cloneable {
-
-    public interface ReType {
-
-        int keep   = 0;     // only metadata change is required
-        int check  = 1;     // range check is also required
-        int change = -1;    // data conversion is required
-    }
 
     public static final Type[] emptyArray = new Type[]{};
 
@@ -341,19 +334,6 @@ public abstract class Type implements SchemaObject, Cloneable {
 
     public abstract String convertToSQLString(Object a);
 
-    public void convertToJSON(Object a, StringBuilder sb) {
-
-        if (a == null) {
-            sb.append("null");
-
-            return;
-        }
-
-        String val = convertToString(a);
-
-        sb.append(val);
-    }
-
     public abstract boolean canConvertFrom(Type otherType);
 
     /**
@@ -363,10 +343,10 @@ public abstract class Type implements SchemaObject, Cloneable {
     public int canMoveFrom(Type otherType) {
 
         if (otherType == this) {
-            return ReType.keep;
+            return 0;
         }
 
-        return ReType.change;
+        return -1;
     }
 
     public boolean canBeAssignedFrom(Type otherType) {
@@ -651,8 +631,6 @@ public abstract class Type implements SchemaObject, Cloneable {
     public static final CharacterType SQL_VARCHAR_DEFAULT =
         new CharacterType(Types.SQL_VARCHAR,
                           CharacterType.defaultVarcharPrecision);
-    public static final CharacterType SQL_VARCHAR_LONG =
-        new CharacterType(Types.SQL_VARCHAR, ClobType.defaultShortClobSize);
     public static final ClobType SQL_CLOB =
         new ClobType(ClobType.defaultClobSize);
 
@@ -722,9 +700,6 @@ public abstract class Type implements SchemaObject, Cloneable {
     public static final DateTimeType SQL_TIME_WITH_TIME_ZONE =
         new DateTimeType(Types.SQL_TIME, Types.SQL_TIME_WITH_TIME_ZONE,
                          DTIType.defaultTimeFractionPrecision);
-    public static final DateTimeType SQL_TIME_WITH_TIME_ZONE_MAX =
-            new DateTimeType(Types.SQL_TIME, Types.SQL_TIME_WITH_TIME_ZONE,
-                             DTIType.maxFractionPrecision);
     public static final DateTimeType SQL_TIMESTAMP =
         new DateTimeType(Types.SQL_TIMESTAMP, Types.SQL_TIMESTAMP,
                          DTIType.defaultTimestampFractionPrecision);
@@ -995,12 +970,6 @@ public abstract class Type implements SchemaObject, Cloneable {
             case Types.ARRAY :
                 return Types.SQL_ARRAY;
 
-            case Types.TIME_WITH_TIMEZONE :
-                return Types.SQL_TIME_WITH_TIME_ZONE;
-
-            case Types.TIMESTAMP_WITH_TIMEZONE :
-                return Types.SQL_TIMESTAMP_WITH_TIME_ZONE;
-
             default :
                 return jdbcTypeNumber;
         }
@@ -1038,12 +1007,6 @@ public abstract class Type implements SchemaObject, Cloneable {
 
             case Types.SQL_ARRAY :
                 return Types.ARRAY;
-
-            case Types.SQL_TIME_WITH_TIME_ZONE :
-                return Types.TIME_WITH_TIMEZONE;
-
-            case Types.SQL_TIMESTAMP_WITH_TIME_ZONE :
-                return Types.TIMESTAMP_WITH_TIMEZONE;
 
             default :
                 return type;
@@ -1174,7 +1137,7 @@ public abstract class Type implements SchemaObject, Cloneable {
     public static final IntKeyHashMap   jdbcConvertTypes;
 
     static {
-        typeNames = new IntValueHashMap();
+        typeNames = new IntValueHashMap(37);
 
         typeNames.put(Tokens.T_CHARACTER, Types.SQL_CHAR);
         typeNames.put(Tokens.T_VARCHAR, Types.SQL_VARCHAR);
@@ -1201,8 +1164,6 @@ public abstract class Type implements SchemaObject, Cloneable {
         typeNames.put(Tokens.T_BIT, Types.SQL_BIT);
         typeNames.put(Tokens.T_OTHER, Types.OTHER);
         typeNames.put(Tokens.T_UUID, Types.SQL_GUID);
-        typeNames.put("TIME WITH TIME ZONE", Types.SQL_TIME_WITH_TIME_ZONE);
-        typeNames.put("TIMESTAMP WITH TIME ZONE", Types.SQL_TIMESTAMP_WITH_TIME_ZONE);
 
         //
         typeAliases = new IntValueHashMap(64);

@@ -1,4 +1,4 @@
-/* Copyright (c) 2001-2022, The HSQL Development Group
+/* Copyright (c) 2001-2021, The HSQL Development Group
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -50,7 +50,7 @@ import org.hsqldb.lib.StringConverter;
 
 /**
  * Base cooperative file locking implementation and {@code LockFile}
- * factory.
+ * factory. <p>
  *
  * <hr>
  *
@@ -65,43 +65,43 @@ import org.hsqldb.lib.StringConverter;
  * the contexts do not share a common parent class loader or do not implement
  * normal parent class loader delegation semantics. <p>
  *
- * <a><sup>*</sup></a>
+ * <a name="note1"><sup>*</sup></a>
  * The only purely in-process global discovery alternative known to the author
  * is to reflect upon objects found while traversing up the Java runtime thread
  * hierarchy.  However, this method is often subject to Java security
  * restrictions whose collective purpose is essentially dissimilar to that of
  * restrictions in effect relative to cooperative file locking requirements,
- * making it a generally unacceptable option in this context.
+ * making it a generally unacceptable option in this context. <p>
  *
  * <hr>
  *
- * Here is the way this class presently operates:
+ * Here is the way this class presently operates: <p>
  *
  * <ol style="list-style-type: upper-latin">
  *    <li>A file with a commonly agreed-upon path is used to implement
  *        cooperative locking semantics regarding another set of files with
- *        commonly agreed-upon paths.
+ *        commonly agreed-upon paths.<p>
  *
  *    <li>In particular, a background thread periodically writes a timestamp
  *        value, which acts as a heartbeat that indicates to others whether a
- *        cooperative lock condition is currently held.
+ *        cooperative lock condition is currently held.<p>
  *
  *    <li>In addition, a magic value is written so that it is possible to
  *        distinguish with a reasonably high degree of accuracy between the
- *        existence of a lock file and some other type of file.
+ *        existence of a lock file and some other type of file.<p>
  *
  *    <li>The generic rules used to acquire a cooperative lock condition are
- *        as follows:
+ *        as follows:<p>
  *
  *    <ol>
  *        <li>If a lock condition is already held by this object, do nothing and
- *            signify that the lock attempt was successful, else...
+ *            signify that the lock attempt was successful, else...<p>
  *
  *        <li>Poll the underlying file, using a configured maximum number of
  *            retries and a configured interval between the end of a failed
- *            poll and the beginning of the next.
+ *            poll and the beginning of the next.<p>
  *
- *        <li>For each poll:
+ *        <li>For each poll:<p>
  *
  *        <ol style="list-style-type: lower-roman">
  *
@@ -109,11 +109,11 @@ import org.hsqldb.lib.StringConverter;
  *                if it does not yet exist, exit the polling loop immediately
  *                indicating success if the attempt succeeds, else fast fail
  *                the current poll if a security exception is thrown in response
- *                to the attempt, else...
+ *                to the attempt, else...<p>
  *
  *            <li>Test if the underlying file exists, fast failing the current
  *                poll if it is impossible to determine (i.e. if a security
- *                exception is thrown).
+ *                exception is thrown).<p>
  *
  *            <li>If the file does not exist, exit the polling loop immediately
  *                indicating success.<p>
@@ -136,28 +136,28 @@ import org.hsqldb.lib.StringConverter;
  *                non-{@code LockFile} entity deleted the file, then there are
  *                much worse things to worry about, in particular that the files
  *                this object is supposed to protect are in reality subject to
- *                arbitrary external modification and deletion.
+ *                arbitrary external modification and deletion.<p>
  *
  *            <li>Test the file's length, fast failing the current poll if the
  *                length cannot be determined or it is not the expected
- *                value.
+ *                value.<p>
  *
  *            <li>Open a stream to read the file's {@code MAGIC} and heartbeat
  *                timestamp values, fast failing the current poll if the stream
- *                cannot be opened.
+ *                cannot be opened.<p>
  *
  *            <li>Test the file's {@code MAGIC} value, failing the current poll
  *                if the value cannot be read or it is not the expected
- *                value.
+ *                value.<p>
  *
  *            <li>Test the file's heartbeat timestamp value, fast failing the
  *                current poll if it cannot be read or it is less than a
  *                commonly agreed-upon value into the past (or future, to
- *                overcome a caveat observed by a patch contributor).
+ *                overcome a caveat observed by a patch contributor).<p>
  *        </ol>
  *        <li>If the polling phase exits with a failure indication, then one or
  *            more of the following cases must have been true at every poll
- *            iteration:
+ *            iteration: <p>
  *
  *            <ul>
  *               <li>The file had the wrong length or {@code MAGIC} value (was
@@ -182,16 +182,16 @@ import org.hsqldb.lib.StringConverter;
  *            </ul> <p>
  *
  *            In this case, signify failure indicating the last encountered
- *            reason, else...
+ *            reason, else...<p>
  *
  *        <li>Open the file for reading and writing, write the magic value and
  *            an initial heartbeat timestamp, schedule a periodic heartbeat
- *            timestamp writer task and signify success.
+ *            timestamp writer task and signify success.<p>
  *    </ol>
- *    <li>The generic rules used to release a cooperative lock condition are:
+ *    <li>The generic rules used to release a cooperative lock condition are:<p>
  *    <ol>
  *        <li>If a lock condition is not currently held, do nothing and signify
- *            success, else...
+ *            success, else...<p>
  *
  *        <li>A lock condition is currently held by this object, so try to
  *            release it. <p>
@@ -201,9 +201,9 @@ import org.hsqldb.lib.StringConverter;
  *            lock file, cancelling the periodic heartbeat timestamp writer
  *            task and deleting the lock file. If the release occurs without
  *            raising an exception, signify success, else signify that the
- *            release attempt <em>might</em> have failed.
+ *            release attempt <em>might</em> have failed. <p>
  *    </ol>
- * </ol>
+ * </ol> <p>
  *
  * <hr>
  *
@@ -314,7 +314,7 @@ import org.hsqldb.lib.StringConverter;
  * external security or operating constraints that may need to be imposed.<p>
  *
  * Alternate approaches that have been considered and rejected for now
- * include:
+ * include: <p>
  *
  * <ul>
  *    <li>Socket-based locks (with/without broadcast protocol)
@@ -638,7 +638,7 @@ public class LockFile {
         try {
             lockFile = LockFile.newLockFile(path + ".lck");
         } catch (LockFile.BaseException e) {
-            throw Error.error(e, ErrorCode.LOCK_FILE_ACQUISITION_FAILURE,
+            throw Error.error(ErrorCode.LOCK_FILE_ACQUISITION_FAILURE,
                               e.getMessage());
         }
 
@@ -647,7 +647,7 @@ public class LockFile {
         try {
             locked = lockFile.tryLock();
         } catch (LockFile.BaseException e) {
-            throw Error.error(e, ErrorCode.LOCK_FILE_ACQUISITION_FAILURE,
+            throw Error.error(ErrorCode.LOCK_FILE_ACQUISITION_FAILURE,
                               e.getMessage());
         }
 
@@ -668,7 +668,7 @@ public class LockFile {
      * whether its heartbeat timestamp is live (is, as far as can be known,
      * presumably in use by another {@code LockFile} instance) or stale. <p>
      *
-     * The check conforms to the following rules:
+     * The check conforms to the following rules: <p>
      *
      * <ol>
      * <li>If the parameter {@code withCreateNewFile} is true, {@link
@@ -676,7 +676,7 @@ public class LockFile {
      *     upon this object's {@code file} object indicates the underlying
      *     file was atomically created if and only if it did not yet exist,
      *     then return immediately (we have won the <em>race</em> to establish
-     *     a lock file).
+     *     a lock file). <p>
      *
      * <li>Test again if the file exists, returning immediately if it does not
      *     (there's no file and hence no heartbeat to check). <p>
@@ -699,7 +699,7 @@ public class LockFile {
      *     there are much worse things to worry about, in particular that the
      *     files this object is supposed to protect are in reality subject to
      *     arbitrary external modification and deletion by some uncooperative
-     *     process.
+     *     process.<p>
      *
      * <li>If a Java security exception is thrown while testing for existence,
      *     it is rethrown as a {@code FileSecurityException}.
@@ -907,7 +907,7 @@ public class LockFile {
      * and only if {@code tryLock()} successfully invokes
      * {@code pollHeartbeat()} and {@code openRAF()} first. <p>
      *
-     * From this, it can be inferred that upon entry:
+     * From this, it can be inferred that upon entry: <p>
      *
      * <ol>
      * <li>{@code locked == false}.
@@ -989,7 +989,7 @@ public class LockFile {
      * Initializes this object with a {@code File} object whose path has the
      * canonical form of the given {@code path} argument. <p>
      *
-     *  <b>PRE</b>:
+     *  <b>PRE</b>:<p>
      *
      * <ol>
      *    <li>This method is called once and <em>only</em> once per
@@ -1294,7 +1294,7 @@ public class LockFile {
      * only if it is not null, it is an instance of {@code LockFile} and
      * either it is the identical instance or it has the same lock file.  More
      * formally, is is considered equal if and only if it is not null, it is an
-     * instance of {@code LockFile}, and the expression:
+     * instance of {@code LockFile}, and the expression: <p>
      *
      * <pre>
      * this == other ||
@@ -1414,10 +1414,10 @@ public class LockFile {
      * Retrieves whether this object holds a valid lock condition on its
      * lock file. <p>
      *
-     * More formally, this method retrieves true if and only if:
+     * More formally, this method retrieves true if and only if: <p>
      *
      * <pre>
-     * {@code isLocked() && file != null && file.exists() && raf != null}
+     * isLocked() && file != null && file.exists() && raf != null
      * </pre>
      *
      * @return {@code true} if this object holds a valid lock condition on its
@@ -1433,7 +1433,7 @@ public class LockFile {
     /**
      * Retrieves a String representation of this object. <p>
      *
-     * The String is of the form:
+     * The String is of the form: <p>
      *
      * <pre>
      * super.toString() +
@@ -1480,7 +1480,7 @@ public class LockFile {
      * Retrieves the number of times {@code checkHeartbeat} may fail before
      * {@code pollHeartbeat} fails as a consequence. <p>
      *
-     * The value is obtained in the following manner:
+     * The value is obtained in the following manner: <p>
      *
      * <ol>
      * <li>retries is assigned {@code POLL_RETRIES_DEFAULT}.
@@ -1516,7 +1516,7 @@ public class LockFile {
      * Retrieves the interval, in milliseconds, that {@code pollHeartbeat}
      * waits between failed invocations of {@code checkHeartbeat}.
      *
-     * The value is obtained in the following manner:
+     * The value is obtained in the following manner: <p>
      *
      * <ol>
      * <li>interval is assigned {@code 10 + (HEARTBEAT_INTERVAL_PADDED
@@ -1895,7 +1895,7 @@ public class LockFile {
      * For internal use only. <p>
      *
      * This Runnable class provides the implementation for the timed task
-     * that periodically writes out a heartbeat timestamp to the lock file.
+     * that periodically writes out a heartbeat timestamp to the lock file.<p>
      */
     private final class HeartbeatRunner implements Runnable {
 
@@ -1910,7 +1910,7 @@ public class LockFile {
     }
 
     /**
-     * Base exception class for lock condition specific exceptions.
+     * Base exception class for lock condition specific exceptions. <p>
      *
      */
     public abstract static class BaseException extends Exception {
@@ -2033,7 +2033,7 @@ public class LockFile {
      * parent directories; or if its <code>{@link
      * java.lang.SecurityManager#checkWrite(java.lang.String)}</code>
      * method does not permit all necessary parent directories to be
-     * created.
+     * created. <p>
      *
      */
     public static final class FileSecurityException extends BaseException {
@@ -2083,7 +2083,7 @@ public class LockFile {
      *
      * Specifically, this exception is thrown when polling fails because the
      * lock file's heartbeat timestamp value indicates that another LockFile
-     * object still holds the lock condition.
+     * object still holds the lock condition. <p>
      *
      */
     public static final class LockHeldExternallyException

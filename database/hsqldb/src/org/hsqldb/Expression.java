@@ -1,4 +1,4 @@
-/* Copyright (c) 2001-2022, The HSQL Development Group
+/* Copyright (c) 2001-2021, The HSQL Development Group
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -62,7 +62,7 @@ import org.hsqldb.types.Types;
  *
  * @author Campbell Burnet (campbell-burnet@users dot sourceforge.net)
  * @author Fred Toussi (fredt@users dot sourceforge.net)
- * @version 2.7.0
+ * @version 2.6.1
  * @since 1.9.0
  */
 public class Expression implements Cloneable {
@@ -105,9 +105,6 @@ public class Expression implements Cloneable {
 
     // for query and value lists, etc
     boolean isCorrelated;
-
-    // for CHECK and GENERATED expressions
-    boolean noOptimisation;
 
     // for COLUMN
     int columnIndex = -1;
@@ -1292,19 +1289,15 @@ public class Expression implements Cloneable {
             }
 
             for (int i = 0; i < nodes.length; i++) {
-                Expression node = nodes[i];
-
-                if (node.nodes[j].isUnresolvedParam()) {
-                    node.nodes[j].dataType = nodeDataTypes[j];
-                    node.nodeDataTypes[j]  = node.nodes[j].dataType;
+                if (nodes[i].nodes[j].isUnresolvedParam()) {
+                    nodes[i].nodes[j].dataType = nodeDataTypes[j];
 
                     continue;
                 }
 
-                if (node.nodes[j].opType == OpTypes.VALUE) {
-                    if (node.nodes[j].valueData == null) {
-                        node.nodes[j].dataType = nodeDataTypes[j];
-                        node.nodeDataTypes[j]  = node.nodes[j].dataType;
+                if (nodes[i].nodes[j].opType == OpTypes.VALUE) {
+                    if (nodes[i].nodes[j].valueData == null) {
+                        nodes[i].nodes[j].dataType = nodeDataTypes[j];
                     }
                 }
             }
@@ -1933,17 +1926,6 @@ public class Expression implements Cloneable {
         }
 
         return set;
-    }
-
-    public void setNoOptimisation() {
-
-        noOptimisation = true;
-
-        for (int i = 0; i < nodes.length; i++) {
-            if (nodes[i] != null) {
-                nodes[i].setNoOptimisation();
-            }
-        }
     }
 
     public OrderedHashSet getSubqueries() {

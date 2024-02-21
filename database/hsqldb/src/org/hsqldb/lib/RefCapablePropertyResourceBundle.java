@@ -1,4 +1,4 @@
-/* Copyright (c) 2001-2022, The HSQL Development Group
+/* Copyright (c) 2001-2021, The HSQL Development Group
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -34,6 +34,8 @@ package org.hsqldb.lib;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Locale;
@@ -44,7 +46,7 @@ import java.util.ResourceBundle;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/* $Id: RefCapablePropertyResourceBundle.java 6513 2022-05-18 03:25:20Z unsaved $ */
+/* $Id: RefCapablePropertyResourceBundle.java 6266 2021-01-25 16:08:06Z fredt $ */
 
 /**
  * Just like PropertyResourceBundle, except keys mapped to nothing in the
@@ -190,12 +192,8 @@ public class RefCapablePropertyResourceBundle {
     }
 
     /**
-     * Same as getString(), but expands System Variables specified in property
-     * values like ${sysvarname}.
-     *
-     * @param key String
-     * @param behavior int
-     * @return String
+     * Same as getString(), but expands System Variables specified in
+     * property values like ${sysvarname}.
      */
     public String getExpandedString(String key, int behavior) {
         String s = getString(key);
@@ -241,13 +239,8 @@ public class RefCapablePropertyResourceBundle {
 
     /**
      * Replaces positional substitution patterns of the form %{\d} with
-     * corresponding element of the given subs array. Note that %{\d} numbers
-     * are 1-based, so we lok for subs[x-1].
-     *
-     * @param s String
-     * @param subs String[]
-     * @param behavior int
-     * @return String
+     * corresponding element of the given subs array.
+     * Note that %{\d} numbers are 1-based, so we lok for subs[x-1].
      */
     public String posSubst(String s, String[] subs, int behavior) {
         Matcher matcher  = posPattern.matcher(s);
@@ -303,8 +296,6 @@ public class RefCapablePropertyResourceBundle {
 
     /**
      * Just identifies this RefCapablePropertyResourceBundle instance.
-     *
-     * @return String
      */
     public String toString() {
         return baseName + " for " + language + " / " + country + " / "
@@ -313,13 +304,11 @@ public class RefCapablePropertyResourceBundle {
 
     /**
      * Returns value defined in this RefCapablePropertyResourceBundle's
-     * .properties file, unless that value is empty. If the value in the
-     * .properties file is empty, then this returns the entire contents of the
-     * referenced text file.
+     * .properties file, unless that value is empty.
+     * If the value in the .properties file is empty, then this returns
+     * the entire contents of the referenced text file.
      *
      * @see ResourceBundle#getString(String)
-     * @param key String
-     * @return String
      */
     public String getString(String key) {
         String value = wrappedBundle.getString(key);
@@ -355,27 +344,16 @@ public class RefCapablePropertyResourceBundle {
      * Java).
      *
      * @see ResourceBundle#getBundle(String)
-     * @param baseName String
-     * @param loader ClassLoader
-     * @param loaderClass Class
-     * @return RefCapablePropertyResourceBundle
      */
     public static RefCapablePropertyResourceBundle getBundle(String baseName,
             ClassLoader loader, Class<? extends Enum<?>> loaderClass) {
         return getRef(baseName, ResourceBundle.getBundle(baseName,
                 Locale.getDefault(), loader), loaderClass);
     }
-
     /**
-     * Use exactly like java.util.ResourceBundle.get(String, Locale,
-     * ClassLoader).
+     * Use exactly like java.util.ResourceBundle.get(String, Locale, ClassLoader).
      *
      * @see ResourceBundle#getBundle(String, Locale, ClassLoader)
-     * @param baseName String
-     * @param locale Locale
-     * @param loader ClassLoader
-     * @param loaderClass Class
-     * @return RefCapablePropertyResourceBundle
      */
     public static RefCapablePropertyResourceBundle
             getBundle(String baseName, Locale locale, ClassLoader loader,
@@ -385,13 +363,8 @@ public class RefCapablePropertyResourceBundle {
     }
 
     /**
-     * Return a ref to a new or existing RefCapablePropertyResourceBundle, or
-     * throw a MissingResourceException.
-     *
-     * @param baseName String
-     * @param rb ResourceBundle
-     * @param loaderClass Class
-     * @return RefCapablePropertyResourceBundle
+     * Return a ref to a new or existing RefCapablePropertyResourceBundle,
+     * or throw a MissingResourceException.
      */
     static private RefCapablePropertyResourceBundle getRef(String baseName,
             ResourceBundle rb, Class<? extends Enum<?>> loaderClass) {
@@ -426,7 +399,13 @@ public class RefCapablePropertyResourceBundle {
                 + ((v == null) ? "" : ("_" + v))
                 + ".text";
         //System.err.println("Seeking " + filePath + " FOR " + baseName);
-        InputStream is = loaderClass.getResourceAsStream(filePath);
+        InputStream is = (InputStream) AccessController.doPrivileged(
+            new PrivilegedAction<InputStream>() {
+
+            public InputStream run() {
+                return loaderClass.getResourceAsStream(filePath);
+            }
+        });
         // N.b.  If were using Class.getRes... instead of ClassLoader.getRes...
         // we would need to prefix the path with "/".
         return (is == null && l != null)

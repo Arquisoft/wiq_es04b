@@ -1,4 +1,4 @@
-/* Copyright (c) 2001-2023, The HSQL Development Group
+/* Copyright (c) 2001-2021, The HSQL Development Group
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -57,6 +57,7 @@ import java.util.Calendar;
 import java.util.Map;
 
 import org.hsqldb.ColumnBase;
+import org.hsqldb.HsqlDateTime;
 import org.hsqldb.HsqlException;
 import org.hsqldb.SessionInterface;
 import org.hsqldb.error.ErrorCode;
@@ -64,6 +65,7 @@ import org.hsqldb.lib.IntValueHashMap;
 import org.hsqldb.lib.StringInputStream;
 import org.hsqldb.lib.java.JavaSystem;
 import org.hsqldb.navigator.RowSetNavigator;
+import org.hsqldb.persist.HsqlDatabaseProperties;
 import org.hsqldb.result.Result;
 import org.hsqldb.result.ResultConstants;
 import org.hsqldb.result.ResultMetaData;
@@ -87,11 +89,17 @@ import org.hsqldb.types.Types;
 import java.sql.JDBCType;
 import java.sql.SQLType;
 import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.OffsetDateTime;
+import java.time.OffsetTime;
 import java.time.Period;
+import java.time.ZoneOffset;
 //#endif JAVA8
 
 
-/* $Id: JDBCResultSet.java 6656 2023-05-29 15:55:53Z fredt $ */
+/* $Id: JDBCResultSet.java 6349 2021-06-10 10:54:35Z fredt $ */
 
 //campbell-burnet@users 20051207 - patch 1.9.0 - initial JDBC 4.0 support work
 //fredt@users    20060431 - patch 1.9.0 rewrite with RowSetNavigator
@@ -238,14 +246,11 @@ import java.time.Period;
  * String ninthRowValue = rs.<b>getString</b>(<span class="JavaNumericLiteral">1</span>);
  * </pre>
  *
- * Note: An HSQLDB <code>ResultSet</code> object stays open if it is not
- * explicitly closed, even after its
+ * Note: An HSQLDB <code>ResultSet</code> object persists, even after its
  * connection is closed.  This is regardless of the operational mode of
  * the {@link org.hsqldb.Database Database} from which it came.  That is, they
  * persist whether originating from a <code>Server</code>,
- * <code>WebServer</code> or in-process mode <code>Database</code>. A connection
- * opened with the property setting <code>close_result=true </code> closes
- * any remaining open results when the connection is closed.
+ * <code>WebServer</code> or in-process mode <code>Database.</code>
  * <p>
  *
  * From HSQLDB 2.0, there is full support for updatable result sets.
@@ -289,7 +294,7 @@ import java.time.Period;
  *
  * @author Campbell Burnet (campbell-burnet@users dot sourceforge.net)
  * @author Fred Toussi (fredt@users dot sourceforge.net)
- * @version 2.7.0
+ * @version 2.6.0
  * @since 1.9.0
  */
 public class JDBCResultSet implements ResultSet {
@@ -904,21 +909,11 @@ public class JDBCResultSet implements ResultSet {
     public java.io.InputStream getAsciiStream(
             int columnIndex) throws SQLException {
 
-        Object o = getColumnValue(columnIndex);
+        String s = getString(columnIndex);
 
-        if (o == null) {
+        if (s == null) {
             return null;
         }
-
-        if (o instanceof ClobDataID) {
-            JDBCClobClient clob = new JDBCClobClient(session, (ClobDataID) o);
-
-            return clob.getAsciiStream();
-        } else if (o instanceof Clob) {
-            return ((Clob) o).getAsciiStream();
-        }
-
-        String s = getString(columnIndex);
 
         try {
             return new ByteArrayInputStream(s.getBytes(JavaSystem.CS_US_ASCII));
@@ -930,7 +925,7 @@ public class JDBCResultSet implements ResultSet {
     /**
      * <!-- start generic documentation -->
      * Retrieves the value of the designated column in the current row
-     * of this <code>ResultSet</code> object
+     * of this <code>ResultSet</code> object as
      * as a stream of two-byte Unicode characters. The first byte is
      * the high byte; the second byte is the low byte.
      *
@@ -1021,7 +1016,10 @@ public class JDBCResultSet implements ResultSet {
     public java.io.InputStream getBinaryStream(
             int columnIndex) throws SQLException {
 
-        Object o = getColumnValue(columnIndex);
+        checkColumn(columnIndex);
+
+        Type   sourceType = resultMetaData.columnTypes[columnIndex - 1];
+        Object o          = getColumnInType(columnIndex, sourceType);
 
         if (o == null) {
             return null;
@@ -1479,7 +1477,7 @@ public class JDBCResultSet implements ResultSet {
      * <P>In SQL, a result table is retrieved through a cursor that is
      * named. The current row of a result set can be updated or deleted
      * using a positioned update/delete statement that references the
-     * cursor name. To ensure that the cursor has the proper isolation
+     * cursor name. To insure that the cursor has the proper isolation
      * level to support update, the cursor's <code>SELECT</code> statement
      * should be of the form <code>SELECT FOR UPDATE</code>. If
      * <code>FOR UPDATE</code> is omitted, the positioned updates may fail.
@@ -2356,7 +2354,7 @@ public class JDBCResultSet implements ResultSet {
      * <!-- start generic documentation -->
      * Moves the cursor a relative number of rows, either positive or negative.
      * Attempting to move beyond the first/last row in the
-     * result set positions the cursor before/after
+     * result set positions the cursor before/after the
      * the first/last row. Calling <code>relative(0)</code> is valid, but does
      * not change the cursor position.
      *
@@ -4168,7 +4166,7 @@ public class JDBCResultSet implements ResultSet {
      *
      * Only the updater, getter,
      * and <code>insertRow</code> methods may be
-     * called when the cursor is on the insert row. All of the columns in
+     * called when the cursor is on the insert row.  All of the columns in
      * a result set must be given a value each time this method is
      * called before calling <code>insertRow</code>.
      * An updater method must be called before a
@@ -4355,8 +4353,9 @@ public class JDBCResultSet implements ResultSet {
 
                 byte[] bytes = ((BlobDataID) o).getBytes(session, 0,
                                    (int) length);
+                JDBCBlob b = new JDBCBlob(bytes);
 
-                return new JDBCBlob(bytes);
+                return b;
             }
 
             JDBCBlobClient blob = new JDBCBlobClient(session, (BlobDataID) o);
@@ -4430,8 +4429,9 @@ public class JDBCResultSet implements ResultSet {
 
                 String s = ((ClobDataID) o).getSubString(session, 0,
                                (int) length);
+                JDBCClob c = new JDBCClob(s);
 
-                return new JDBCClob(s);
+                return c;
             }
 
             JDBCClobClient clob = new JDBCClobClient(session, (ClobDataID) o);
@@ -4683,7 +4683,13 @@ public class JDBCResultSet implements ResultSet {
             return null;
         }
 
-        return (Date) Type.SQL_DATE.convertSQLToJava(session, t, cal);
+        long millis = t.getSeconds() * 1000;
+
+        if (cal != null) {
+            millis = HsqlDateTime.convertMillisToCalendar(cal, millis);
+        }
+
+        return new Date(millis);
     }
 
     /**
@@ -4733,8 +4739,8 @@ public class JDBCResultSet implements ResultSet {
      * of the returned java.sql.Time object is the UTC of the SQL value without
      * modification. In other words, the Calendar object is not used.</li>
      * <li>If the SQL type of the column is WITHOUT TIME ZONE, then the UTC
-     * value of the returned java.sql.Time is correct for the given Calendar's
-     * time zone.</li>
+     * value of the returned java.sql.Time is correct for the given Calendar
+     * object.</li>
      * <li>If the cal argument is null, it it ignored and the method returns
      * the same Object as the method without the Calendar parameter.</li>
      * </ol>
@@ -4758,7 +4764,18 @@ public class JDBCResultSet implements ResultSet {
             return null;
         }
 
-        return (Time) Type.SQL_TIME.convertSQLToJava(session, t, cal);
+        long millis = DateTimeType.normaliseTime(t.getSeconds()) * 1000L;
+
+        if (!resultMetaData.columnTypes[--columnIndex]
+                .isDateTimeTypeWithZone()) {
+            Calendar calendar = cal == null ? session.getCalendar()
+                    : cal;
+
+            millis = HsqlDateTime.convertMillisToCalendar(calendar, millis);
+            millis = HsqlDateTime.getNormalisedTime(millis);
+        }
+
+        return new Time(millis);
     }
 
     /**
@@ -4781,10 +4798,9 @@ public class JDBCResultSet implements ResultSet {
      * <li>If the SQL type of the column is WITH TIME ZONE, then the UTC value
      * of the returned java.sql.Time object is the UTC of the SQL value without
      * modification. In other words, the Calendar object is not used.</li>
-     * <li>If the SQL type of the column is WITHOUT TIME ZONE, then the
-     * UTC value of the returned java.sql.Time will represent the correct
-     * time for the time zone (including daylight saving time) of the given
-     * Calendar. </li>
+     * <li>If the SQL type of the column is WITHOUT TIME ZONE, then the UTC
+     * value of the returned java.sql.Time is correct for the given Calendar
+     * object.</li>
      * <li>If the cal argument is null, it it ignored and the method returns
      * the same Object as the method without the Calendar parameter.</li>
      * </ol>
@@ -4849,6 +4865,11 @@ public class JDBCResultSet implements ResultSet {
      */
     public Timestamp getTimestamp(int columnIndex,
                                   Calendar cal) throws SQLException {
+
+        if (cal == null) {
+            return getTimestamp(columnIndex);
+        }
+
         TimestampData t = (TimestampData) getColumnInType(columnIndex,
             Type.SQL_TIMESTAMP);
 
@@ -4856,7 +4877,19 @@ public class JDBCResultSet implements ResultSet {
             return null;
         }
 
-        return (Timestamp) Type.SQL_TIMESTAMP.convertSQLToJava(session, t, cal);
+        long millis = t.getSeconds() * 1000;
+
+        if (!resultMetaData.columnTypes[columnIndex - 1]
+                .isDateTimeTypeWithZone()) {
+                millis = HsqlDateTime.convertMillisToCalendar(cal,
+                        millis);
+        }
+
+        Timestamp ts = new Timestamp(millis);
+
+        ts.setNanos(t.getNanos());
+
+        return ts;
     }
 
     /**
@@ -5969,7 +6002,7 @@ public class JDBCResultSet implements ResultSet {
 
     /**
      * Updates the designated column with an ascii stream value, which will have
-     * the specified number of bytes.
+     * the specified number of bytes..
      * The updater methods are used to update column values in the
      * current row or the insert row.  The updater methods do not
      * update the underlying database; instead the <code>updateRow</code> or
@@ -6827,7 +6860,13 @@ public class JDBCResultSet implements ResultSet {
             throw JDBCUtil.nullArgument();
         }
 
-        final Object source = getColumnValue(columnIndex);
+        Type hsqlType = Types.getParameterSQLType(type);
+
+        if(hsqlType == null) {
+            throw JDBCUtil.sqlException(ErrorCode.X_42561);
+        }
+
+        Object source = getColumnValue(columnIndex);
 
         if (wasNullValue) {
             return null;
@@ -6894,69 +6933,42 @@ public class JDBCResultSet implements ResultSet {
                 break;
             }
             case "java.util.UUID": {
-                Type columnType = resultMetaData.columnTypes[columnIndex - 1];
-                if (columnType.isUUIDType()) {
-                    o = Type.SQL_GUID.convertSQLToJava(session, source);
-                } else {
-                    Object value = Type.SQL_GUID.convertToTypeJDBC(session,
-                            source, columnType);
-                    o = Type.SQL_GUID.convertSQLToJava(session, value);
-                }
-                break;
-            }
-            case "java.time.Instant": {
-                Type columnType = resultMetaData.columnTypes[columnIndex - 1];
-                if (columnType.isDateOrTimestampType()) {
-                    TimestampData v = (TimestampData) source;
-                    o = ((DateTimeType) columnType).toInstant(session, v);
-                }
+                source = getColumnInType(columnIndex, hsqlType);
+                o = Type.SQL_GUID.convertSQLToJava(session, source);
                 break;
             }
             case "java.time.LocalDate": {
-                Type columnType = resultMetaData.columnTypes[columnIndex - 1];
-                if (columnType.isDateOrTimestampType()) {
-                    TimestampData v = (TimestampData) source;
-                    o = ((DateTimeType) columnType).toLocalDate(session, v);
-                }
+                source = getColumnInType(columnIndex, hsqlType);
+                TimestampData v = (TimestampData) source;
+                long millis = v.getMillis();
+                Calendar cal = session.getCalendarGMT();
+                cal.setTimeInMillis(millis);
+                o = LocalDate.of(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH) + 1, cal.get(Calendar.DAY_OF_MONTH));
                 break;
             }
             case "java.time.LocalTime": {
-                Type columnType = resultMetaData.columnTypes[columnIndex - 1];
-                if (columnType.isTimeType()) {
-                    TimeData v = (TimeData) source;
-                    o = ((DateTimeType) columnType).toLocalTime(session, v);
-                } else if (columnType.isTimestampType()) {
-                    TimestampData v = (TimestampData) source;
-                    o = ((DateTimeType) columnType).toLocalTime(session, v);
-                }
+                source = getColumnInType(columnIndex, hsqlType);
+                TimeData v = (TimeData) source;
+                o = LocalTime.ofNanoOfDay(v.getSeconds() * 1000000000L + v.getNanos());
                 break;
             }
             case "java.time.LocalDateTime": {
-                Type columnType = resultMetaData.columnTypes[columnIndex - 1];
-                if (columnType.isDateOrTimestampType()) {
-                    TimestampData v = (TimestampData) source;
-                    o = ((DateTimeType) columnType).toLocalDateTime(session, v);
-                }
+                source = getColumnInType(columnIndex, hsqlType);
+                TimestampData v = (TimestampData) source;
+
+                long millis = v.getMillis();
+                int nanos = v.getNanos();
+                Calendar cal = session.getCalendarGMT();
+                cal.setTimeInMillis(millis);
+                o = LocalDateTime.of(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH) + 1, cal.get(Calendar.DAY_OF_MONTH), cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), cal.get(Calendar.SECOND ), nanos);
                 break;
             }
             case "java.time.OffsetTime": {
-                Type columnType = resultMetaData.columnTypes[columnIndex - 1];
-                if (columnType.isTimeType()) {
-                    TimeData v = (TimeData) source;
-                    o = ((DateTimeType) columnType).toOffsetTime(session, v);
-                } else if (columnType.isTimestampType()) {
-                    TimestampData v = (TimestampData) source;
-                    o = ((DateTimeType) columnType).toOffsetTime(session, v);
-                }
-
+                o = getTimeWithZone(columnIndex);
                 break;
             }
             case "java.time.OffsetDateTime": {
-                Type columnType = resultMetaData.columnTypes[columnIndex - 1];
-                if (columnType.isDateOrTimestampType()) {
-                    TimestampData v = (TimestampData) source;
-                    o = ((DateTimeType) columnType).toOffsetDateTime(session, v);
-                }
+                o = getTimestampWithZone(columnIndex);
                 break;
             }
             case "java.time.Duration": {
@@ -7194,25 +7206,60 @@ public class JDBCResultSet implements ResultSet {
 
 //#endif JAVA8
 
+
+//#ifdef JAVA8
     private Object getTimestampWithZone(int columnIndex) throws SQLException {
-        TimestampData v = (TimestampData) getColumnInType(columnIndex,
-            Type.SQL_TIMESTAMP_WITH_TIME_ZONE);
+        TimestampData v = (TimestampData) getColumnInType(columnIndex, Type.SQL_TIMESTAMP_WITH_TIME_ZONE);
 
         if (v == null) {
             return null;
         }
-        return Type.SQL_TIMESTAMP_WITH_TIME_ZONE.convertSQLToJava(session, v);
+
+        ZoneOffset    z   = ZoneOffset.ofTotalSeconds(v.getZone());
+        LocalDateTime ldt = LocalDateTime.ofEpochSecond(v.getSeconds(), v.getNanos(), z);
+
+        return OffsetDateTime.of(ldt, z);
     }
 
     private Object getTimeWithZone(int columnIndex) throws SQLException {
-        DateTimeType columnType = (DateTimeType) resultMetaData.columnTypes[columnIndex - 1];
-        TimeData v = (TimeData) getColumnValue(columnIndex);
+        TimeData v = (TimeData) getColumnInType(columnIndex, Type.SQL_TIME_WITH_TIME_ZONE);
 
         if (v == null) {
             return null;
         }
-        return columnType.convertSQLToJava(session, v);
+
+        int s = v.getSeconds() + v.getZone();
+
+        s = DateTimeType.normaliseTime(s);
+
+        ZoneOffset z  = ZoneOffset.ofTotalSeconds(v.getZone());
+        LocalTime  lt = LocalTime.ofNanoOfDay(s * 1000000000L + v.getNanos());
+
+        return OffsetTime.of(lt, z);
     }
+
+//#else
+/*
+    private Object getTimestampWithZone(int columnIndex) throws SQLException {
+        TimestampData v = (TimestampData) getColumnInType(columnIndex, Type.SQL_TIMESTAMP_WITH_TIME_ZONE);
+
+        if (v == null) {
+            return null;
+        }
+        return Type.SQL_TIMESTAMP.convertSQLToJava(session, v);
+    }
+
+    private Object getTimeWithZone(int columnIndex) throws SQLException {
+        TimeData v = (TimeData) getColumnInType(columnIndex, Type.SQL_TIME_WITH_TIME_ZONE);
+
+        if (v == null) {
+            return null;
+        }
+        return Type.SQL_TIME.convertSQLToJava(session, v);
+    }
+*/
+//#endif JAVA8
+
 
 //------------------------ Internal Implementation -----------------------------
 
@@ -7236,7 +7283,7 @@ public class JDBCResultSet implements ResultSet {
     /** The ResultSetMetaData object for this ResultSet */
     private ResultSetMetaData resultSetMetaData;
 
-    /** Accelerates fineColumn {@code Map<columnName, columnIndex>} */
+    /** Accelerates findColumn; Map<columnName, columnIndex> */
     private IntValueHashMap columnMap;
 
     /** The first warning in the chain. Null if there are no warnings. */
@@ -7249,7 +7296,7 @@ public class JDBCResultSet implements ResultSet {
 
     /**
      * The Statement that generated this result. Null if the result is
-     * from DatabaseMetaData
+     * from DatabaseMetaData<p>
      */
     JDBCStatementBase statement;
 
@@ -7394,15 +7441,18 @@ public class JDBCResultSet implements ResultSet {
                                      Type targetType) throws SQLException {
 
         Object value = getColumnValue(columnIndex);
-        Type sourceType = resultMetaData.columnTypes[columnIndex - 1];
+        Type sourceType;
 
         if (value == null) {
             return null;
         }
 
+        sourceType = resultMetaData.columnTypes[columnIndex - 1];
+
         if (translateTTIType && targetType.isIntervalType()) {
             targetType = ((IntervalType) targetType).getCharacterType();
         }
+
 
         if (sourceType.typeCode != targetType.typeCode) {
             try {
@@ -7442,7 +7492,7 @@ public class JDBCResultSet implements ResultSet {
      * row number after any updateXXX()
      * -1 after updateRow(), clearUpdate() or moveToCurrentRow();
      */
-    int currentUpdateRowNumber = -1;
+    int currentUpdateRowNumber;
 
     private void checkUpdatable() throws SQLException {
 
@@ -7475,12 +7525,10 @@ public class JDBCResultSet implements ResultSet {
 
         checkUpdatable(columnIndex);
 
-        if (!isOnInsertRow) {
-            if (currentUpdateRowNumber != navigator.getRowNumber()) {
-                preparedStatement.clearParameters();
-            }
-            currentUpdateRowNumber = navigator.getRowNumber();
+        if (currentUpdateRowNumber != navigator.getRowNumber()) {
+            preparedStatement.clearParameters();
         }
+        currentUpdateRowNumber = navigator.getRowNumber();
         isRowUpdated           = true;
     }
 
@@ -7488,7 +7536,7 @@ public class JDBCResultSet implements ResultSet {
 
         checkUpdatable();
         preparedStatement.clearParameters();
-        currentUpdateRowNumber = -1;
+
         isRowUpdated = false;
     }
 
@@ -7497,7 +7545,6 @@ public class JDBCResultSet implements ResultSet {
         checkUpdatable();
 
         // check insertable
-        currentUpdateRowNumber = -2;
         isOnInsertRow = true;
     }
 
@@ -7506,7 +7553,6 @@ public class JDBCResultSet implements ResultSet {
         checkUpdatable();
         preparedStatement.clearParameters();
 
-        currentUpdateRowNumber = -1;
         isOnInsertRow = false;
     }
 
@@ -7542,9 +7588,7 @@ public class JDBCResultSet implements ResultSet {
             boolean set = preparedStatement.parameterSet[i];
 
             if (!set) {
-                if(!resultMetaData.columns[i].isIdentity()) {
-                    throw JDBCUtil.sqlException(ErrorCode.X_24515);
-                }
+                throw JDBCUtil.sqlException(ErrorCode.X_24515);
             }
             preparedStatement.resultOut.metaData.columnTypes[i] =
                 preparedStatement.parameterTypes[i];
@@ -7557,17 +7601,11 @@ public class JDBCResultSet implements ResultSet {
         rootWarning = preparedStatement.getWarnings();
 
         preparedStatement.clearWarnings();
-
-        isRowUpdated = false;
     }
 
     private void performDelete() throws SQLException {
 
         checkUpdatable();
-
-        if (isOnInsertRow) {
-            throw JDBCUtil.sqlExceptionSQL(ErrorCode.X_24504);
-        }
 
         preparedStatement.parameterValues[columnCount] =
             getCurrent()[columnCount];
@@ -7644,7 +7682,11 @@ public class JDBCResultSet implements ResultSet {
 
         if (conn != null) {
             translateTTIType = conn.isTranslateTTIType;
-            memoryLobs       = conn.isMemoryLobs;
+
+            if (conn.connProperties != null) {
+                memoryLobs = conn.connProperties.isPropertyTrue(
+                    HsqlDatabaseProperties.url_memory_lobs, false);
+            }
         }
     }
 

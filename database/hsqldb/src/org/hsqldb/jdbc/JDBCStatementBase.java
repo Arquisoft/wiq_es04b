@@ -1,4 +1,4 @@
-/* Copyright (c) 2001-2022, The HSQL Development Group
+/* Copyright (c) 2001-2021, The HSQL Development Group
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -61,7 +61,7 @@ import org.hsqldb.result.ResultConstants;
  *
  * ResultSets may be held over commits and span several transactions.
  *
- * There is no real relation between the current state of a Statement instance
+ * There is no real relation between the current state fo an Statement instance
  * and the various ResultSets that it may have returned for different queries.
  */
 

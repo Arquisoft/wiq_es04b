@@ -1,4 +1,4 @@
-/* Copyright (c) 2001-2023, The HSQL Development Group
+/* Copyright (c) 2001-2021, The HSQL Development Group
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -47,7 +47,6 @@ import org.hsqldb.persist.PersistentStore;
 import org.hsqldb.persist.RowStoreAVLDisk;
 import org.hsqldb.persist.ScriptLoader;
 import org.hsqldb.persist.TableSpaceManager;
-import org.hsqldb.persist.TextFileOps;
 import org.hsqldb.result.Result;
 import org.hsqldb.result.ResultMetaData;
 import org.hsqldb.rights.User;
@@ -60,7 +59,7 @@ import org.hsqldb.types.Type;
  * Implementation of Statement for SQL commands.<p>
  *
  * @author Fred Toussi (fredt@users dot sourceforge.net)
- * @version 2.7.2
+ * @version 2.6.1
  * @since 1.9.0
  */
 public class StatementCommand extends Statement {
@@ -118,8 +117,6 @@ public class StatementCommand extends Statement {
 
                 break;
             }
-            case StatementTypes.UNLOAD_DATA :
-            case StatementTypes.LOAD_DATA :
             case StatementTypes.LOAD_SCRIPT : {
                 group    = StatementTypes.X_HSQLDB_DATABASE_OPERATION;
                 isLogged = false;
@@ -382,8 +379,10 @@ public class StatementCommand extends Statement {
                     session.checkDDLWrite();
 
                     if (check) {
-                        value = HsqlDatabaseProperties.getPropertyWithinRange(
-                            HsqlDatabaseProperties.hsqldb_cache_rows, value);
+                        value =
+                            session.database.getProperties()
+                                .getPropertyWithinRange(HsqlDatabaseProperties
+                                    .hsqldb_cache_rows, value);
                     }
 
                     session.database.logger.setCacheMaxRows(value);
@@ -402,8 +401,10 @@ public class StatementCommand extends Statement {
                     session.checkDDLWrite();
 
                     if (check) {
-                        value = HsqlDatabaseProperties.getPropertyWithinRange(
-                            HsqlDatabaseProperties.hsqldb_cache_size, value);
+                        value =
+                            session.database.getProperties()
+                                .getPropertyWithinRange(HsqlDatabaseProperties
+                                    .hsqldb_cache_size, value);
                     }
 
                     session.database.logger.setCacheSize(value);
@@ -423,13 +424,13 @@ public class StatementCommand extends Statement {
 
                     if (session.isProcessingScript()) {
                         session.database.logger.setFilesTimestamp(value1);
-                        session.database.txManager.setSystemChangeNumber(
+                        session.database.txManager.setGlobalChangeTimestamp(
                             value1 + 1);
                     } else if (session.isProcessingLog()) {
                         if (value2 > 0) {
                             session.database.logger.setFilesTimestamp(value1);
                             session.database.txManager
-                                .setSystemChangeNumber(value1 + 1);
+                                .setGlobalChangeTimestamp(value1 + 1);
                         }
                     }
 
@@ -529,7 +530,7 @@ public class StatementCommand extends Statement {
                     session.checkAdmin();
                     session.checkDDLWrite();
 
-                    if (!HsqlDatabaseProperties.validateProperty(
+                    if (!session.database.getProperties().validateProperty(
                             HsqlDatabaseProperties.hsqldb_defrag_limit,
                             value)) {
                         throw Error.error(ErrorCode.X_42556);
@@ -544,19 +545,12 @@ public class StatementCommand extends Statement {
             }
             case StatementTypes.SET_DATABASE_FILES_EVENT_LOG : {
                 try {
-                    int     value    = ((Integer) arguments[0]).intValue();
-                    boolean isSql    = ((Boolean) arguments[1]).booleanValue();
-                    boolean internal = ((Boolean) arguments[2]).booleanValue();
+                    int     value = ((Integer) arguments[0]).intValue();
+                    boolean isSql = ((Boolean) arguments[1]).booleanValue();
 
                     session.checkAdmin();
                     session.checkDDLWrite();
-
-                    if (internal) {
-                        session.database.logger.setEventLogLevel(value, isSql);
-                    } else {
-                        session.database.logger.setExternalEventLogLevel(
-                            value);
-                    }
+                    session.database.logger.setEventLogLevel(value, isSql);
 
                     return Result.updateZeroResult;
                 } catch (HsqlException e) {
@@ -577,9 +571,6 @@ public class StatementCommand extends Statement {
                         session.database.logger.setNioDataFile(value);
                     } else {
                         int value = ((Integer) arguments[0]).intValue();
-
-                        value = HsqlDatabaseProperties.getPropertyWithinRange(
-                            HsqlDatabaseProperties.hsqldb_nio_max_size, value);
 
                         session.database.logger.setNioMaxSize(value);
                     }
@@ -608,10 +599,6 @@ public class StatementCommand extends Statement {
 
                     session.checkAdmin();
                     session.checkDDLWrite();
-
-                    value = HsqlDatabaseProperties.getPropertyWithinRange(
-                        HsqlDatabaseProperties.hsqldb_log_size, value);
-
                     session.database.logger.setLogSize(value);
 
                     return Result.updateZeroResult;
@@ -648,10 +635,6 @@ public class StatementCommand extends Statement {
             case StatementTypes.SET_DATABASE_FILES_WRITE_DELAY : {
                 try {
                     int value = ((Integer) arguments[0]).intValue();
-
-                    value = HsqlDatabaseProperties.getPropertyWithinRange(
-                        HsqlDatabaseProperties.hsqldb_write_delay_millis,
-                        value);
 
                     session.checkAdmin();
                     session.checkDDLWrite();
@@ -789,21 +772,9 @@ public class StatementCommand extends Statement {
                 } else if (HsqlDatabaseProperties.sql_convert_trunc.equals(
                         property)) {
                     session.database.setConvertTrunc(mode);
-                } else if (HsqlDatabaseProperties.sql_trunc_trailing.equals(
-                        property)) {
-                    session.database.setTruncateTrailing(mode);
                 } else if (HsqlDatabaseProperties.sql_avg_scale.equals(
                         property)) {
-                    value = HsqlDatabaseProperties.getPropertyWithinRange(
-                        HsqlDatabaseProperties.sql_avg_scale, value);
-
                     session.database.setAvgScale(value);
-                } else if (HsqlDatabaseProperties.sql_max_recursive.equals(
-                        property)) {
-                    value = HsqlDatabaseProperties.getPropertyWithinRange(
-                        HsqlDatabaseProperties.sql_max_recursive, value);
-
-                    session.database.setMaxRecursive(value);
                 } else if (HsqlDatabaseProperties.sql_double_nan.equals(
                         property)) {
                     session.database.setDoubleNaN(mode);
@@ -948,11 +919,6 @@ public class StatementCommand extends Statement {
                 int size = ((Integer) arguments[0]).intValue();
 
                 session.checkAdmin();
-
-                size = HsqlDatabaseProperties.getPropertyWithinRange(
-                    HsqlDatabaseProperties.hsqldb_result_max_memory_rows,
-                    size);
-
                 session.database.setResultMaxMemoryRows(size);
 
                 return Result.updateZeroResult;
@@ -1006,10 +972,6 @@ public class StatementCommand extends Statement {
                 try {
                     if (!session.getGrantee().canPerformScriptOps()) {
                         throw Error.error(ErrorCode.X_42507);
-                    }
-
-                    if (session.isProcessingScript() || session.isProcessingLog()) {
-                        return Result.updateZeroResult;
                     }
 
                     if (name == null) {
@@ -1081,69 +1043,8 @@ public class StatementCommand extends Statement {
                         throw Error.error(ErrorCode.X_42507);
                     }
 
-                    if (session.isProcessingScript() || session.isProcessingLog()) {
-                        return Result.updateZeroResult;
-                    }
-
                     return ScriptLoader.loadScriptData(
                         session, pathName, mode, isVersioning.booleanValue());
-                } catch (HsqlException e) {
-                    return Result.newErrorResult(e, sql);
-                }
-            }
-            case StatementTypes.LOAD_DATA : {
-                try {
-                    HsqlName tableName = (HsqlName) arguments[0];
-                    String   textprops = (String) arguments[1];
-                    int      mode      = ((Integer) arguments[2]).intValue();
-                    Table table =
-                        session.database.schemaManager.findTable(session,
-                            tableName.name, tableName.schema.name, null);
-
-                    if (table == null) {
-                        throw Error.error(
-                            ErrorCode.X_42501,
-                            tableName.getSchemaQualifiedStatementName());
-                    }
-
-                    if (!session.getGrantee().canPerformScriptOps()) {
-                        throw Error.error(ErrorCode.X_42507);
-                    }
-
-                    if (session.isProcessingScript() || session.isProcessingLog()) {
-                        return Result.updateZeroResult;
-                    }
-
-                    return TextFileOps.loadTextData(session, textprops, table,
-                                                    mode);
-                } catch (HsqlException e) {
-                    return Result.newErrorResult(e, sql);
-                }
-            }
-            case StatementTypes.UNLOAD_DATA : {
-                try {
-                    HsqlName tableName = (HsqlName) arguments[0];
-                    String   textprops = (String) arguments[1];
-                    Table table =
-                        session.database.schemaManager.findTable(session,
-                            tableName.name, tableName.schema.name, null);
-
-                    if (table == null) {
-                        throw Error.error(
-                            ErrorCode.X_42501,
-                            tableName.getSchemaQualifiedStatementName());
-                    }
-
-                    if (!session.getGrantee().canPerformScriptOps()) {
-                        throw Error.error(ErrorCode.X_42507);
-                    }
-
-                    if (session.isProcessingScript() || session.isProcessingLog()) {
-                        return Result.updateZeroResult;
-                    }
-
-                    return TextFileOps.unloadTextData(session, textprops,
-                                                      table);
                 } catch (HsqlException e) {
                     return Result.newErrorResult(e, sql);
                 }
@@ -1372,7 +1273,7 @@ public class StatementCommand extends Statement {
                     return Result.updateZeroResult;
                 } catch (Throwable e) {
                     if (!(e instanceof HsqlException)) {
-                        e = Error.error(e, ErrorCode.GENERAL_IO_ERROR,
+                        e = Error.error(ErrorCode.GENERAL_IO_ERROR,
                                         e.toString());
                     }
 
@@ -1409,12 +1310,13 @@ public class StatementCommand extends Statement {
                             table.getSchemaName());
 
                     TableWorks tw     = new TableWorks(session, table);
-                    boolean    result = tw.setTableType(type);
+                    boolean    result = tw.setTableType(session, type);
 
                     if (!result) {
                         throw Error.error(ErrorCode.GENERAL_IO_ERROR);
                     }
 
+                    oldStore.removeAll();
                     session.database.schemaManager.setSchemaChangeTimestamp();
 
                     if (name.schema == SqlInvariants.LOBS_SCHEMA_HSQLNAME) {
@@ -1538,7 +1440,7 @@ public class StatementCommand extends Statement {
 
                             session.database.txManager.resetSession(session,
                                     targetSession,
-                                    targetSession.statementStartSCN,
+                                    targetSession.statementStartTimestamp,
                                     TransactionManager.resetSessionStatement);
                             break;
                     }

@@ -1,4 +1,4 @@
-/* Copyright (c) 2001-2022, The HSQL Development Group
+/* Copyright (c) 2001-2021, The HSQL Development Group
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -47,7 +47,7 @@ import org.hsqldb.rowio.RowOutputInterface;
  * Sub-class of Result for communicating Blob and Clob operations.<p>
  *
  * @author Fred Toussi (fredt@users dot sourceforge.net)
- * @version 2.7.0
+ * @version 2.5.1
  * @since 1.9.0
  */
 public final class ResultLob extends Result {
@@ -105,7 +105,7 @@ public final class ResultLob extends Result {
     }
 
     public static ResultLob newLobGetBytesRequest(long id, long offset,
-            long length) {
+            int length) {
 
         ResultLob result = new ResultLob();
 
@@ -118,7 +118,7 @@ public final class ResultLob extends Result {
     }
 
     public static ResultLob newLobGetCharsRequest(long id, long offset,
-            long length) {
+            int length) {
 
         ResultLob result = new ResultLob();
 

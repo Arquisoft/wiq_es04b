@@ -1,4 +1,4 @@
-/* Copyright (c) 2001-2023, The HSQL Development Group
+/* Copyright (c) 2001-2021, The HSQL Development Group
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -46,7 +46,7 @@ import org.hsqldb.lib.OrderedHashSet;
  *
  * @author Fred Toussi (fredt@users dot sourceforge.net)
  *
- * @version 2.7.2
+ * @version 2.5.1
  * @since 1.9.0
  */
 public final class Right {
@@ -55,11 +55,9 @@ public final class Right {
     boolean        isFullSelect;
     boolean        isFullInsert;
     boolean        isFullUpdate;
-    boolean        isFullDelete;
     boolean        isFullReferences;
     boolean        isFullTrigger;
-    boolean        isFullExecute;    // used only in temporary Right object
-    boolean        isFullUsage;      // ditto
+    boolean        isFullDelete;
     OrderedHashSet selectColumnSet;
     OrderedHashSet insertColumnSet;
     OrderedHashSet updateColumnSet;
@@ -88,11 +86,11 @@ public final class Right {
         fullRights.grantor = GranteeManager.systemAuthorisation;
     }
 
-    public static final String[] tablePrivilegeNames = {
+    public static final String[] privilegeNames = {
         Tokens.T_SELECT, Tokens.T_INSERT, Tokens.T_UPDATE, Tokens.T_DELETE,
         Tokens.T_REFERENCES, Tokens.T_TRIGGER
     };
-    public static final int[] tablePrivilegeTypes = {
+    public static final int[] privilegeTypes = {
         GrantConstants.SELECT, GrantConstants.INSERT, GrantConstants.UPDATE,
         GrantConstants.DELETE, GrantConstants.REFERENCES,
         GrantConstants.TRIGGER
@@ -123,7 +121,7 @@ public final class Right {
                                        : grantableRights;
     }
 
-    Right duplicate() {
+    public Right duplicate() {
 
         Right right = new Right();
 
@@ -196,7 +194,7 @@ public final class Right {
     /**
      * Supports column level GRANT
      */
-    void add(Right right) {
+    public void add(Right right) {
 
         if (isFull) {
             return;
@@ -277,7 +275,7 @@ public final class Right {
     /**
      * supports column level REVOKE
      */
-    void remove(SchemaObject object, Right right) {
+    public void remove(SchemaObject object, Right right) {
 
         if (right.isFull) {
             clear();
@@ -402,7 +400,7 @@ public final class Right {
     /**
      * supports column level GRANT / REVOKE
      */
-    boolean isEmpty() {
+    public boolean isEmpty() {
 
         if (isFull || isFullSelect || isFullInsert || isFullUpdate
                 || isFullReferences || isFullDelete) {
@@ -463,7 +461,8 @@ public final class Right {
         return set;
     }
 
-    boolean contains(Right right) {
+    // construction
+    public boolean contains(Right right) {
 
         if (isFull) {
             return true;
@@ -580,10 +579,9 @@ public final class Right {
         return true;
     }
 
-    private static boolean containsRights(boolean isFull,
-                                          OrderedHashSet columnSet,
-                                          OrderedHashSet otherColumnSet,
-                                          boolean otherIsFull) {
+    static boolean containsRights(boolean isFull, OrderedHashSet columnSet,
+                                  OrderedHashSet otherColumnSet,
+                                  boolean otherIsFull) {
 
         if (isFull) {
             return true;
@@ -666,7 +664,41 @@ public final class Right {
         return isFull || isFullDelete;
     }
 
-    boolean canAccessNonSelect() {
+    public boolean canAccessFully(int action) {
+
+        if (isFull) {
+            return true;
+        }
+
+        switch (action) {
+
+            case GrantConstants.DELETE :
+                return isFullDelete;
+
+            case GrantConstants.SELECT :
+                return isFullSelect;
+
+            case GrantConstants.INSERT :
+                return isFullInsert;
+
+            case GrantConstants.UPDATE :
+                return isFullUpdate;
+
+            case GrantConstants.REFERENCES :
+                return isFullReferences;
+
+            case GrantConstants.TRIGGER :
+                return isFullTrigger;
+
+            case GrantConstants.EXECUTE :
+                return isFull;
+
+            default :
+                throw Error.runtimeError(ErrorCode.U_S0500, "Right");
+        }
+    }
+
+    public boolean canAccesssNonSelect() {
 
         if (isFull) {
             return true;
@@ -746,7 +778,7 @@ public final class Right {
         }
     }
 
-    boolean canAccess(Table table, int[] columnMap) {
+    public boolean canAccess(Table table, int[] columnMap) {
 
         if (isFull) {
             return true;
@@ -759,8 +791,8 @@ public final class Right {
 
         boolean result = false;
 
-        result |= (selectColumnSet != null && !selectColumnSet.isEmpty());
-        result |= (insertColumnSet != null && !insertColumnSet.isEmpty());
+        result |= (selectColumnSet != null && insertColumnSet.isEmpty());
+        result |= (insertColumnSet != null && insertColumnSet.isEmpty());
         result |= (updateColumnSet != null && !updateColumnSet.isEmpty());
         result |= referencesColumnSet != null
                   && !referencesColumnSet.isEmpty();
@@ -815,7 +847,7 @@ public final class Right {
         };
     }
 
-    boolean hasFilter() {
+    public boolean hasFilter() {
         return selectFilter != null || deleteFilter != null
                || insertFilter != null || updateFilter != null;
     }
@@ -939,7 +971,7 @@ public final class Right {
         buf.append(')');
     }
 
-    void addNewColumn(HsqlName name) {
+    public void addNewColumn(HsqlName name) {
 
         if (selectColumnSet != null) {
             selectColumnSet.add(name);
@@ -1064,14 +1096,6 @@ public final class Right {
                 }
 
                 triggerColumnSet = set;
-                break;
-
-            case GrantConstants.EXECUTE :
-                isFullExecute = true;
-                break;
-
-            case GrantConstants.USAGE :
-                isFullUsage = true;
                 break;
 
             default :

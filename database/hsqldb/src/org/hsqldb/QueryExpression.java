@@ -1,4 +1,4 @@
-/* Copyright (c) 2001-2022, The HSQL Development Group
+/* Copyright (c) 2001-2021, The HSQL Development Group
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,7 +56,7 @@ import org.hsqldb.types.Types;
  * Implementation of an SQL query expression
  *
  * @author Fred Toussi (fredt@users dot sourceforge.net)
- * @version 2.7.1
+ * @version 2.6.1
  * @since 1.9.0
  */
 public class QueryExpression implements RangeGroup {
@@ -668,6 +668,7 @@ public class QueryExpression implements RangeGroup {
     public void setRecursiveQuerySettings(RecursiveQuerySettings settings) {
 
         OrderedHashSet subqueryList = rightQueryExpression.getSubqueries();
+        OrderedHashSet refList      = new OrderedHashSet();
 
         if (subqueryList == null) {
             subqueryList = new OrderedHashSet();
@@ -686,15 +687,13 @@ public class QueryExpression implements RangeGroup {
                 continue;
             }
 
-            OrderedHashSet refList  = new OrderedHashSet();
-
-            qe.collectObjectNames(refList);
+            refList = qe.collectRangeVariables(refList);
 
             for (int j = 0; j < refList.size(); j++) {
-                HsqlName name = (HsqlName) refList.get(j);
+                RangeVariable range = (RangeVariable) refList.get(j);
 
-                if (name == recursiveWorkTable.tableName
-                        || name == recursiveResultTable.tableName) {
+                if (range.rangeTable == recursiveWorkTable
+                        || range.rangeTable == recursiveResultTable) {
                     materialiseList =
                         ArrayUtil.toAdjustedArray(materialiseList, td);
 
@@ -756,7 +755,7 @@ public class QueryExpression implements RangeGroup {
                 break;
             }
 
-            if (round > session.database.sqlMaxRecursive) {
+            if (round > 256) {
                 throw Error.error(ErrorCode.X_22522);
             }
 

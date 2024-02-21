@@ -1,4 +1,4 @@
-/* Copyright (c) 2001-2022, The HSQL Development Group
+/* Copyright (c) 2001-2021, The HSQL Development Group
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -48,7 +48,7 @@ import org.hsqldb.cmdline.sqltool.Token;
 import org.hsqldb.cmdline.libclone.FrameworkLogger;
 import org.hsqldb.cmdline.utilclone.RCData;
 
-/* $Id: SqlTool.java 6632 2022-11-20 21:35:32Z unsaved $ */
+/* $Id: SqlTool.java 6266 2021-01-25 16:08:06Z fredt $ */
 
 /**
  * A command-line JDBC SQL tool supporting both interactive and
@@ -70,18 +70,18 @@ import org.hsqldb.cmdline.utilclone.RCData;
  * @see #main(String[])
  * @see #objectMain(String[])
  * @see SqlFile
- * @version $Revision: 6632 $, $Date: 2022-11-20 21:35:32 +0000 (Sun, 20 Nov 2022) $
+ * @see org.hsqldb.sample.SqlFileEmbedder
+ * @version $Revision: 6266 $, $Date: 2021-01-25 16:08:06 +0000 (Mon, 25 Jan 2021) $
  * @author Blaine Simpson (blaine dot simpson at admc dot com)
  */
 public class SqlTool {
-    private static final FrameworkLogger logger =
+    private static FrameworkLogger logger =
             FrameworkLogger.getLog(SqlTool.class);
     public static final String DEFAULT_RCFILE =
         System.getProperty("user.home") + "/sqltool.rc";
     // N.b. the following are static!
-    private static final String revString = "$Revision: 6632 $";
+    private static final String revString = "$Revision: 6266 $";
     private static final int revStringLength = revString.length();
-    @SuppressWarnings("ConstantConditions")
     private static final String  revnum =
             (revStringLength - " $".length() > "$Revision: ".length())
             ?  revString.substring("$Revision: ".length(),
@@ -101,7 +101,7 @@ public class SqlTool {
      * The configuration identifier to use when connection parameters are
      * specified on the command line
      */
-    private static final String CMDLINE_ID = "cmdline";
+    private static String CMDLINE_ID = "cmdline";
 
     /** Platform-specific line separator */
     public static final String LS = System.getProperty("line.separator");
@@ -115,7 +115,7 @@ public class SqlTool {
     }
 
     /** Utility object for internal use. */
-    private static final BadCmdline bcl = new BadCmdline();
+    private static BadCmdline bcl = new BadCmdline();
 
     /** For trapping of exceptions inside this class.
      * These are always handled inside this class.
@@ -136,8 +136,8 @@ public class SqlTool {
 
     public static class SqlToolException extends Exception {
         static final long serialVersionUID = 1424909871915188519L;
-        int exitValue;
 
+        int exitValue = 1;
         SqlToolException(String message, int exitValue) {
             super(message);
             this.exitValue = exitValue;
@@ -162,6 +162,8 @@ public class SqlTool {
 
         BufferedReader console;
         String         password;
+
+        password = null;
 
         try {
             console = new BufferedReader(new InputStreamReader(System.in));
@@ -213,7 +215,7 @@ public class SqlTool {
             throw new IllegalArgumentException(
                     "inVarString is null in SqlTool.varParser call");
         }
-        boolean escapesPresent = inVarString.contains("\\,");
+        boolean escapesPresent = inVarString.indexOf("\\,") > -1;
         String  varString = escapesPresent ?
                 inVarString.replace("\\,", "\u0002")
                 : inVarString;
@@ -299,7 +301,7 @@ public class SqlTool {
         URL[]   scriptFiles      = null;
         int     i                = -1;
         boolean listMode         = false;
-        boolean interactive;
+        boolean interactive      = false;
         boolean noinput          = false;
         boolean noautoFile       = false;
         boolean autoCommit       = false;
@@ -307,23 +309,24 @@ public class SqlTool {
         Boolean coeOverride      = null;
         Boolean stdinputOverride = null;
         String  rcParams         = null;
-        String  rcUrl;
-        String  rcUsername;
-        String  rcUser;
-        String  rcPassword;
-        String  rcCharset;
-        String  rcTruststore;
-        String  rcTransIso;
-        String  rcDriver;
-        Map<String, String> rcFields;
+        String  rcUrl            = null;
+        String  rcUsername       = null;
+        String  rcUser           = null;
+        String  rcPassword       = null;
+        String  rcCharset        = null;
+        String  rcTruststore     = null;
+        String  rcTransIso       = null;
+        String  rcDriver         = null;
+        Map<String, String> rcFields = null;
         String  parameter;
-        SqlFile[] sqlFiles;
+        SqlFile[] sqlFiles       = null;
         Connection conn          = null;
-        Map<String, String> userVars = new HashMap<>();
+        Map<String, String> userVars = new HashMap<String, String>();
 
         try { // Try block to GC tmpReader
         try { // Try block for BadCmdline
-            while ((i + 1 < arg.length)) if (arg[i + 1].startsWith("--")) {
+            while ((i + 1 < arg.length))
+            if (arg[i + 1].startsWith("--")) {
                 i++;
 
                 if (arg[i].length() == 2) {
@@ -560,7 +563,7 @@ public class SqlTool {
             }
 
             if (stdinputOverride != null) {
-                noinput = !stdinputOverride;
+                noinput = !stdinputOverride.booleanValue();
             }
 
             interactive = (!noinput) && (arg.length <= i + 1);
@@ -574,7 +577,7 @@ public class SqlTool {
                 // I.e., if there are any SQL files specified.
                 scriptFiles = new URL[arg.length - i - 1
                         + ((stdinputOverride == null
-                                || !stdinputOverride) ? 0 : 1)];
+                                || !stdinputOverride.booleanValue()) ? 0 : 1)];
 
                 if (debug) {
                     System.err.println("scriptFiles has "
@@ -582,7 +585,7 @@ public class SqlTool {
                 }
 
                 while (i + 1 < arg.length) try {
-                    scriptFiles[scriptIndex++] =
+                    scriptFiles[scriptIndex] =
                       SqlFile.URL_WITH_PROTO_RE.matcher(arg[++i]).matches() ?
                         new URL(arg[i]) :
                         new URL("file", null, arg[i]);
@@ -592,7 +595,9 @@ public class SqlTool {
                       "Invalid SQL file URL " + arg[i]);
                 }
 
-                if (stdinputOverride != null && stdinputOverride) {
+                if (stdinputOverride != null
+                        && stdinputOverride.booleanValue()) {
+                    scriptFiles[scriptIndex++] = null;
                     noinput                    = true;
                 }
             }
@@ -625,7 +630,7 @@ public class SqlTool {
             if (!rcParamsOverride && conData != null)
                 throw new RuntimeException(
                   "inlineRc override but urlid was specified");
-            rcFields = new HashMap<>();
+            rcFields = new HashMap<String, String>();
 
             try {
                 varParser(rcParams, rcFields, true);
@@ -651,6 +656,7 @@ public class SqlTool {
                     throw new RuntimeException("RC params 'user' and "
                      + "'username' both set.  Set only 'username'");
                 rcUsername = rcUser;
+                rcUser = null;
             }
 
             if (rcDriver != null && driver != null)
@@ -702,7 +708,7 @@ public class SqlTool {
         if (listMode) {
             // listMode has been handled above.
             // Just returning here to prevent unexpected consequences if the
-            // user specifies both an inline RC (will be ignored) and
+            // user specifies both an inline RC (will will be ignored) and
             // --list.
             return;
         }
@@ -813,7 +819,7 @@ public class SqlTool {
                 if (userVars.size() > 0) sqlFile.addUserVars(userVars);
                 if (macros != null) sqlFile.addMacros(macros);
                 if (coeOverride != null)
-                    sqlFile.setContinueOnError(coeOverride);
+                    sqlFile.setContinueOnError(coeOverride.booleanValue());
 
                 sqlFile.execute();
                 userVars = sqlFile.getUserVars();

@@ -1,4 +1,4 @@
-/* Copyright (c) 2001-2022, The HSQL Development Group
+/* Copyright (c) 2001-2021, The HSQL Development Group
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -66,7 +66,7 @@ import org.hsqldb.types.UserTypeModifier;
  * Parser for DQL statements
  *
  * @author Fred Toussi (fredt@users dot sourceforge.net)
- * @version 2.7.1
+ * @version 2.6.1
  * @since 1.9.0
  */
 public class ParserDQL extends ParserBase {
@@ -153,7 +153,7 @@ public class ParserDQL extends ParserBase {
 
                 if (type != null) {
                     getRecordedToken().setExpression(type);
-                    compileContext.addDomainOrType(type);
+                    compileContext.addSchemaObject(type);
                     read();
 
                     return type;
@@ -1061,7 +1061,6 @@ public class ParserDQL extends ParserBase {
         if (token.tokenType == Tokens.WITH) {
             read();
             compileContext.unregisterSubqueries();
-            compileContext.registerSubquery(SqlInvariants.RECURSIVE_TABLE);
 
             boolean recursive = readIfThis(Tokens.RECURSIVE);
 
@@ -1077,6 +1076,7 @@ public class ParserDQL extends ParserBase {
                 queryName.schema = SqlInvariants.SYSTEM_SCHEMA_HSQLNAME;
 
                 read();
+                compileContext.registerSubquery(queryName.name);
 
                 if (token.tokenType == Tokens.OPENBRACKET) {
                     nameList = readColumnNames(queryName);
@@ -1089,9 +1089,10 @@ public class ParserDQL extends ParserBase {
 
                 TableDerived td;
 
-                compileContext.registerSubquery(queryName.name);
-
-                td = XreadTableNamedSubqueryBody(queryName, nameList);
+                td = XreadTableNamedSubqueryBody(queryName, nameList,
+                                                 recursive
+                                                 ? OpTypes.RECURSIVE_SUBQUERY
+                                                 : OpTypes.TABLE_SUBQUERY);
 
                 if (nameList == null) {
                     boolean[] cols = td.queryExpression.accessibleColumns;
@@ -1109,8 +1110,6 @@ public class ParserDQL extends ParserBase {
                 }
 
                 compileContext.registerSubquery(queryName.name, td);
-                compileContext.registerSubquery(SqlInvariants.RECURSIVE_TABLE,
-                                                null);
 
                 if (token.tokenType == Tokens.COMMA) {
                     read();
@@ -1913,22 +1912,14 @@ public class ParserDQL extends ParserBase {
         } else if (token.tokenType == Tokens.FETCH) {
             read();
 
-            boolean first = false;
-
             if (token.tokenType == Tokens.FIRST
                     || token.tokenType == Tokens.NEXT) {
-                first = true;
-
                 read();
             }
 
             e2 = XreadSimpleValueSpecificationOrNull();
 
             if (e2 == null) {
-                if (!first) {
-                    throw super.unexpectedTokenRequire(Tokens.T_FIRST);
-                }
-
                 e2 = new ExpressionValue(ValuePool.INTEGER_1,
                                          Type.SQL_INTEGER);
             }
@@ -2169,7 +2160,7 @@ public class ParserDQL extends ParserBase {
     }
 
     /**
-     * Creates a RangeVariable from the parse context.
+     * Creates a RangeVariable from the parse context. <p>
      */
     protected RangeVariable readTableOrSubquery() {
 
@@ -2631,7 +2622,7 @@ public class ParserDQL extends ParserBase {
             case Tokens.COLON :
                 read();
 
-                if (isIntegral()) {
+                if (token.tokenType == Tokens.X_VALUE) {
                     int pos = readInteger();
                     ExpressionColumn p =
                         new ExpressionColumn(OpTypes.DYNAMIC_PARAM, pos);
@@ -2639,23 +2630,29 @@ public class ParserDQL extends ParserBase {
                     compileContext.addParameter(p, getPosition());
 
                     return p;
-                } else if (isUndelimitedSimpleName()) {
-                    int pos = compileContext.parameters.size();
-                    ExpressionColumn p =
-                        new ExpressionColumn(OpTypes.DYNAMIC_PARAM, pos);
+                } else if (token.tokenType == Tokens.X_DELIMITED_IDENTIFIER
+                           || token.tokenType == Tokens.X_IDENTIFIER) {
+                    if (token.namePrefix == null) {
+                        int pos = compileContext.parameters.size();
+                        ExpressionColumn p =
+                            new ExpressionColumn(OpTypes.DYNAMIC_PARAM, pos);
 
-                    compileContext.addParameter(p, getPosition());
+                        compileContext.addParameter(p, getPosition());
 
-                    Token newToken = new Token();
+                        Token newToken = new Token();
 
-                    newToken.tokenType   = Tokens.X_VALUE;
-                    newToken.dataType    = Type.SQL_INTEGER;
-                    newToken.tokenString = String.valueOf(p.parameterIndex);
+                        newToken.tokenType = Tokens.X_VALUE;
+                        newToken.dataType  = Type.SQL_INTEGER;
+                        newToken.tokenString =
+                            String.valueOf(p.parameterIndex);
 
-                    replaceToken(newToken, null);
-                    read();
+                        replaceToken(newToken, null);
+                        read();
 
-                    return p;
+                        return p;
+                    } else {
+                        throw unexpectedToken(Tokens.T_COLON);
+                    }
                 } else {
                     throw unexpectedToken(Tokens.T_COLON);
                 }
@@ -3207,7 +3204,26 @@ public class ParserDQL extends ParserBase {
                 return new Expression(OpTypes.TABLE_SUBQUERY, td);
             }
             case Tokens.VALUES : {
+                /*
+                if (database.sqlSyntaxMys) {
+                    read();
+                    readThis(Tokens.OPENBRACKET);
+                    checkIsSimpleName();
 
+                    String name = token.tokenString;
+
+                    if(compileContext.contextuallyTypedExpression) {
+                        e = new ExpressionColumn(name);
+                    } else {
+                        e = new ExpressionValue(null, Type.SQL_INTEGER);
+                    }
+
+                    read();
+                    readThis(Tokens.CLOSEBRACKET);
+
+                    return e;
+                }
+                */
                 throw unexpectedToken();
             }
             case Tokens.GROUPING : {
@@ -3219,26 +3235,6 @@ public class ParserDQL extends ParserBase {
                 readThis(Tokens.CLOSEBRACKET);
 
                 return new ExpressionColumn(groupingElements);
-            }
-            case Tokens.JSON_ARRAY : {
-                read();
-
-                return readJSONArray();
-            }
-            case Tokens.JSON_ARRAYAGG : {
-                read();
-
-                return readJSONArrayAgg();
-            }
-            case Tokens.JSON_OBJECT : {
-                read();
-
-                return readJSONObject();
-            }
-            case Tokens.JSON_OBJECTAGG : {
-                read();
-
-                return readJSONObjectAgg();
             }
             default :
                 if (isCoreReservedKey()) {
@@ -3253,313 +3249,6 @@ public class ParserDQL extends ParserBase {
         }
 
         return e;
-    }
-
-    Expression readJSONArray() {
-
-        HsqlArrayList list       = new HsqlArrayList();
-        Expression    qe         = null;
-        boolean       nullOnNull = true;
-        Type          dataType   = Type.SQL_VARCHAR_LONG;
-
-        readThis(Tokens.OPENBRACKET);
-
-        int position = getPosition();
-
-        loop:
-        while (true) {
-            Expression value;
-
-            switch (token.tokenType) {
-
-                case Tokens.ABSENT :
-                case Tokens.NULL :
-                case Tokens.CLOSEBRACKET :
-                    break loop;
-
-                case Tokens.COMMA :
-                    if (list.size() == 0) {
-                        throw unexpectedToken();
-                    }
-
-                    read();
-            }
-
-            try {
-                value = XreadValueExpression();
-
-                list.add(value);
-            } catch (HsqlException e) {
-                if (list.size() > 0) {
-                    throw e;
-                }
-
-                rewind(position);
-
-                break loop;
-            }
-        }
-
-        if (list.size() == 0) {
-            if (token.tokenType != Tokens.CLOSEBRACKET) {
-                TableDerived td =
-                    XreadSubqueryTableBody(OpTypes.TABLE_SUBQUERY);
-
-                qe = new Expression(OpTypes.ARRAY_SUBQUERY, td);
-            }
-        }
-
-        nullOnNull = readJSONNullClause(nullOnNull);
-
-        if (readIfThis(Tokens.RETURNING)) {
-            dataType = readJSONReturningClause();
-        }
-
-        readThis(Tokens.CLOSEBRACKET);
-
-        if (qe == null) {
-            return new ExpressionJSON.ExpressionJSONArrayFromValues(list,
-                    nullOnNull, dataType);
-        } else {
-            return new ExpressionJSON.ExpressionJSONArrayFromQuery(qe,
-                    nullOnNull, dataType);
-        }
-    }
-
-    Expression readJSONArrayAgg() {
-
-        boolean                  nullOnNull = false;
-        Type                     dataType   = Type.SQL_VARCHAR_LONG;
-        Expression               valueExpr;
-        ExpressionArrayAggregate arrayAgg;
-        SortAndSlice             sort = null;
-
-        readThis(Tokens.OPENBRACKET);
-
-        valueExpr = XreadValueExpression();
-
-        if (token.tokenType == Tokens.ORDER) {
-            read();
-            readThis(Tokens.BY);
-
-            sort = XreadOrderBy();
-        }
-
-        arrayAgg = new ExpressionArrayAggregate(OpTypes.ARRAY_AGG, false,
-                valueExpr, sort, null);
-        nullOnNull = readJSONNullClause(nullOnNull);
-
-        if (readIfThis(Tokens.RETURNING)) {
-            dataType = readJSONReturningClause();
-        }
-
-        readThis(Tokens.CLOSEBRACKET);
-
-        return new ExpressionJSON.ExpressionJSONArrayAgg(arrayAgg, nullOnNull,
-                dataType);
-    }
-
-    Expression readJSONObject() {
-
-        OrderedHashMap map          = new OrderedHashMap();
-        boolean        nullOnNull   = true;
-        boolean        uniqueKeys   = false;
-        Type           dataType     = Type.SQL_VARCHAR_LONG;
-        boolean        hasDuplicate = false;
-
-        readThis(Tokens.OPENBRACKET);
-
-        loop:
-        while (true) {
-            Expression nameExpr;
-            Expression valueExpr;
-            boolean    isKey = false;
-
-            switch (token.tokenType) {
-
-                case Tokens.ABSENT :
-                case Tokens.NULL :
-                case Tokens.WITH :
-                case Tokens.WITHOUT :
-                case Tokens.CLOSEBRACKET :
-                    break loop;
-
-                case Tokens.COMMA :
-                    if (map.size() == 0) {
-                        throw unexpectedToken();
-                    }
-
-                    read();
-            }
-
-            if (readIfThis(Tokens.KEY)) {
-                isKey = true;
-            }
-
-            int position = getPosition();
-
-            nameExpr = XreadCharacterValueExpression();
-
-            if (nameExpr.opType == OpTypes.JSON_FUNCTION) {
-                rewind(position);
-
-                throw unexpectedToken();
-            }
-
-            if (!readIfThis(Tokens.VALUE)) {
-                if (isKey) {
-                    throw unexpectedToken();
-                }
-
-                readThis(Tokens.COLON);
-            }
-
-            valueExpr = XreadValueExpression();
-
-            if (readIfThis(Tokens.FORMAT)) {
-                readThis(Tokens.JSON);
-
-                valueExpr =
-                    new ExpressionJSON.ExpressionJSONWrapper(valueExpr);
-            }
-
-            Object e = map.put(nameExpr, valueExpr);
-
-            if (e != null) {
-                hasDuplicate = true;
-            }
-        }
-
-        nullOnNull = readJSONNullClause(nullOnNull);
-        uniqueKeys = readJSONUniqueClause(uniqueKeys);
-
-        if (uniqueKeys && hasDuplicate) {
-            throw Error.error(ErrorCode.X_23505);
-        }
-
-        if (readIfThis(Tokens.RETURNING)) {
-            dataType = readJSONReturningClause();
-        }
-
-        readThis(Tokens.CLOSEBRACKET);
-
-        return new ExpressionJSON.ExpressionJSONObject(map, nullOnNull,
-                uniqueKeys, dataType);
-    }
-
-    Expression readJSONObjectAgg() {
-
-        boolean                  nullOnNull = true;
-        boolean                  uniqueKeys = false;
-        Type                     dataType   = Type.SQL_VARCHAR_LONG;
-        Expression               nameExpr;
-        Expression               valueExpr;
-        ExpressionArrayAggregate arrayAggName;
-        ExpressionArrayAggregate arrayAggValue;
-
-        readThis(Tokens.OPENBRACKET);
-
-        int position = getPosition();
-
-        nameExpr = XreadCharacterValueExpression();
-
-        if (nameExpr.opType == OpTypes.JSON_FUNCTION) {
-            rewind(position);
-
-            throw unexpectedToken();
-        }
-
-        readThis(Tokens.COLON);
-
-        valueExpr = XreadValueExpression();
-        arrayAggName = new ExpressionArrayAggregate(OpTypes.ARRAY_AGG, false,
-                nameExpr, null, null);
-        arrayAggValue = new ExpressionArrayAggregate(OpTypes.ARRAY_AGG, false,
-                valueExpr, null, null);
-        nullOnNull = readJSONNullClause(nullOnNull);
-        uniqueKeys = readJSONUniqueClause(uniqueKeys);
-
-        if (readIfThis(Tokens.RETURNING)) {
-            dataType = readJSONReturningClause();
-        }
-
-        readThis(Tokens.CLOSEBRACKET);
-
-        return new ExpressionJSON.ExpressionJSONObjectAgg(arrayAggName,
-                arrayAggValue, nullOnNull, uniqueKeys, dataType);
-    }
-
-    boolean readJSONNullClause(boolean defaultValue) {
-
-        boolean nullOnNull = defaultValue;
-
-        switch (token.tokenType) {
-
-            case Tokens.ABSENT : {
-                read();
-                readThis(Tokens.ON);
-                readThis(Tokens.NULL);
-
-                nullOnNull = false;
-
-                break;
-            }
-            case Tokens.NULL : {
-                read();
-                readThis(Tokens.ON);
-                readThis(Tokens.NULL);
-
-                nullOnNull = true;
-
-                break;
-            }
-        }
-
-        return nullOnNull;
-    }
-
-    boolean readJSONUniqueClause(boolean defaultValue) {
-
-        boolean uniqueKeys = defaultValue;
-
-        switch (token.tokenType) {
-
-            case Tokens.WITH : {
-                read();
-                readThis(Tokens.UNIQUE);
-                readIfThis(Tokens.KEYS);
-
-                uniqueKeys = true;
-
-                break;
-            }
-            case Tokens.WITHOUT : {
-                read();
-                readThis(Tokens.UNIQUE);
-                readIfThis(Tokens.KEYS);
-
-                uniqueKeys = false;
-
-                break;
-            }
-        }
-
-        return uniqueKeys;
-    }
-
-    Type readJSONReturningClause() {
-
-        int  position = getPosition();
-        Type dataType = readTypeDefinition(false, true);
-
-        if (dataType.typeCode == Types.SQL_VARCHAR
-                || dataType.typeCode == Types.SQL_CLOB) {
-            return dataType;
-        }
-
-        rewind(position);
-
-        throw super.unexpectedTokenRequire("VARCHAR or CLOB");
     }
 
     Expression readNextvalFunction() {
@@ -3660,7 +3349,7 @@ public class ParserDQL extends ParserBase {
                 if (token.tokenType == Tokens.LOCAL) {
                     read();
                 } else if (token.tokenType == Tokens.TIME) {
-                    read();
+                    readThis(Tokens.TIME);
                     readThis(Tokens.ZONE);
 
                     e1 = XreadValueExpressionPrimary();
@@ -3871,10 +3560,10 @@ public class ParserDQL extends ParserBase {
     }
 
     /**
-     *   value expression ::=
-     *     common value expression
-     *   | boolean value expression
-     *   | row value expression
+     *     <value expression> ::=
+     *   <common value expression>
+     *   | <boolean value expression>
+     *   | <row value expression>
      *
      */
     Expression XreadValueExpression() {
@@ -4717,7 +4406,8 @@ public class ParserDQL extends ParserBase {
                 return l;
             }
             case Tokens.LIKE : {
-                e = XreadLikePredicateRightPart(l);
+                e                = XreadLikePredicateRightPart(l);
+                e.noOptimisation = isCheckOrTriggerCondition;
 
                 break;
             }
@@ -4727,7 +4417,8 @@ public class ParserDQL extends ParserBase {
                 break;
             }
             case Tokens.IN : {
-                e = XreadInPredicateRightPart(l);
+                e                = XreadInPredicateRightPart(l);
+                e.noOptimisation = isCheckOrTriggerCondition;
 
                 break;
             }
@@ -4992,9 +4683,13 @@ public class ParserDQL extends ParserBase {
 
         ExpressionLogical r;
 
-        r = new ExpressionLogical(OpTypes.EQUAL, l, e);
+        if (isCheckOrTriggerCondition) {
+            r = new ExpressionLogical(OpTypes.IN, l, e);
+        } else {
+            r = new ExpressionLogical(OpTypes.EQUAL, l, e);
 
-        r.setSubType(OpTypes.ANY_QUANTIFIED);
+            r.setSubType(OpTypes.ANY_QUANTIFIED);
+        }
 
         return r;
     }
@@ -5066,7 +4761,7 @@ public class ParserDQL extends ParserBase {
             escape = XreadStringValueExpression();
         }
 
-        return new ExpressionLike(a, b, escape);
+        return new ExpressionLike(a, b, escape, isCheckOrTriggerCondition);
     }
 
     private ExpressionLogical XreadMatchPredicateRightPart(Expression a) {
@@ -5457,55 +5152,55 @@ public class ParserDQL extends ParserBase {
     }
 
     TableDerived XreadTableNamedSubqueryBody(HsqlName name,
-            HsqlName[] columnNames) {
+            HsqlName[] columnNames, int type) {
 
         TableDerived td;
-        TableDerived namedtd  = null;
         int          position = getPosition();
+        int          depth    = compileContext.getDepth();
 
-        if (columnNames == null) {
-            td = XreadSubqueryTableBody(name, OpTypes.TABLE_SUBQUERY);
+        switch (type) {
 
-            if (td.queryExpression != null) {
-                td.queryExpression.resolve(session,
-                                           compileContext.getOuterRanges(),
-                                           null);
+            case OpTypes.RECURSIVE_SUBQUERY : {
+                try {
+                    td = XreadRecursiveSubqueryBody(name, columnNames);
+
+                    break;
+                } catch (HsqlException e) {
+                    rewind(position);
+                    compileContext.decrementDepth(depth);
+                }
             }
 
-            td.prepareTable(session);
-        } else {
-            try {
-                td = XreadSubqueryTableBody(name, OpTypes.TABLE_SUBQUERY);
+            // fall through
+            case OpTypes.TABLE_SUBQUERY : {
+                try {
+                    td = XreadSubqueryTableBody(name, type);
 
-                if (td.queryExpression != null) {
-                    td.queryExpression.resolve(session,
-                                               compileContext.getOuterRanges(),
-                                               null);
-                }
+                    if (td.queryExpression != null) {
+                        td.canRecompile = true;
 
-                td.prepareTable(session, columnNames);
-            } catch (HsqlException e) {
-                HsqlException ex = e;
-
-                if (e.getErrorCode() != ErrorCode.X_42501) {
-                    if (lastError != null
-                            && lastError.getErrorCode()
-                               == -ErrorCode.X_42501) {
-                        ex = lastError;
+                        td.queryExpression.resolve(
+                            session, compileContext.getOuterRanges(), null);
                     }
-                }
 
-                String token = ex.getToken();
+                    td.prepareTable(session, columnNames);
 
-                if (SqlInvariants.RECURSIVE_TABLE.equals(token)
-                        || name.name.equals(token)) {
-                    rewind(position);
+                    break;
+                } catch (HsqlException e) {
+                    if (database.sqlSyntaxDb2 || database.sqlSyntaxOra) {
+                        rewind(position);
+                        compileContext.decrementDepth(depth);
 
-                    td = XreadRecursiveSubqueryBody(name, columnNames);
-                } else {
+                        td = XreadRecursiveSubqueryBody(name, columnNames);
+
+                        break;
+                    }
+
                     throw e;
                 }
             }
+            default :
+                throw unexpectedToken();
         }
 
         return td;
@@ -5514,43 +5209,56 @@ public class ParserDQL extends ParserBase {
     TableDerived XreadRecursiveSubqueryBody(HsqlName name,
             HsqlName[] columnNames) {
 
-        int             position            = getPosition();
-        QueryExpression leftQueryExpression = XreadSimpleTable();
+        int position = getPosition();
 
-        leftQueryExpression.isBaseMergeable = false;
-        leftQueryExpression.isMergeable     = false;
+        compileContext.incrementDepth();
+        compileContext.incrementDepth();
 
-        leftQueryExpression.resolveReferences(session,
-                                              compileContext.getOuterRanges());
-        leftQueryExpression.resolve(session);
+        QuerySpecification leftQuerySpecification = XreadSimpleTable();
+
+        leftQuerySpecification.isBaseMergeable = false;
+        leftQuerySpecification.isMergeable     = false;
+
+        leftQuerySpecification.resolveReferences(session,
+                compileContext.getOuterRanges());
+        leftQuerySpecification.resolve(session);
 
         HsqlName leftName =
             database.nameManager.newHsqlName(SqlInvariants.SYSTEM_SUBQUERY,
                                              false, SchemaObject.SUBQUERY);
-        TableDerived leftTable = new TableDerived(database, leftName,
-            TableBase.SYSTEM_SUBQUERY, columnNames,
-            leftQueryExpression.getColumnTypes());
-        TableDerived workTable = new TableDerived(database, name,
-            TableBase.SYSTEM_SUBQUERY, columnNames,
-            leftQueryExpression.getColumnTypes());
-        HsqlName recursiveName =
-            database.nameManager.newHsqlName(SqlInvariants.RECURSIVE_TABLE,
-                                             false, SchemaObject.SUBQUERY);
-        TableDerived recursiveTable = new TableDerived(database,
-            recursiveName, TableBase.SYSTEM_SUBQUERY, columnNames,
-            leftQueryExpression.getColumnTypes());
+        TableDerived leftTable = newSubQueryTable(leftName,
+            leftQuerySpecification, OpTypes.TABLE_SUBQUERY);
 
+        compileContext.decrementDepth();
+        leftTable.prepareTable(session, columnNames);
+
+        TableDerived workTable = newSubQueryTable(name,
+            leftQuerySpecification, OpTypes.TABLE_SUBQUERY);
+
+        workTable.prepareTable(session, columnNames);
+
+        workTable.queryExpression = null;
+
+        HsqlName recursiveName =
+            database.nameManager.newHsqlName("RECURSIVE_TABLE", false,
+                                             SchemaObject.SUBQUERY);
+        TableDerived recursiveTable = newSubQueryTable(name,
+            leftQuerySpecification, OpTypes.TABLE_SUBQUERY);
+
+        recursiveTable.prepareTable(session, columnNames);
+
+        recursiveTable.queryExpression = null;
+
+        compileContext.registerSubquery(recursiveName.name);
         compileContext.registerSubquery(recursiveName.name, recursiveTable);
+        compileContext.registerSubquery(name.name);
         compileContext.registerSubquery(name.name, workTable);
         checkIsThis(Tokens.UNION);
 
-        int unionType = XreadUnionType();
-
-        compileContext.incrementDepth();
-
+        int                unionType               = XreadUnionType();
         QuerySpecification rightQuerySpecification = XreadSimpleTable();
         QueryExpression queryExpression = new QueryExpression(compileContext,
-            leftQueryExpression);
+            leftQuerySpecification);
 
         rightQuerySpecification.isBaseMergeable = false;
         rightQuerySpecification.isMergeable     = false;
@@ -5616,31 +5324,27 @@ public class ParserDQL extends ParserBase {
 
         compileContext.incrementDepth();
 
-        try {
-            QueryExpression queryExpression = XreadQueryExpression();
-            TableDerived    td              = null;
+        QueryExpression queryExpression = XreadQueryExpression();
+        TableDerived    td              = null;
 
-            if (type == OpTypes.EXISTS) {
-                queryExpression.setAsExists();
-            }
-
-            if (queryExpression.isValueList) {
-                td = ((QuerySpecification) queryExpression)
-                    .getValueListTable();
-            }
-
-            if (td == null) {
-                td = newSubQueryTable(name, queryExpression, type);
-            }
-
-            String sql = getLastPart(position);
-
-            td.setSQL(sql);
-
-            return td;
-        } finally {
-            compileContext.decrementDepth();
+        if (type == OpTypes.EXISTS) {
+            queryExpression.setAsExists();
         }
+
+        if (queryExpression.isValueList) {
+            td = ((QuerySpecification) queryExpression).getValueListTable();
+        }
+
+        if (td == null) {
+            td = newSubQueryTable(name, queryExpression, type);
+        }
+
+        String sql = getLastPart(position);
+
+        td.setSQL(sql);
+        compileContext.decrementDepth();
+
+        return td;
     }
 
     TableDerived XreadViewSubqueryTable(View view, boolean resolve) {
@@ -6087,7 +5791,7 @@ public class ParserDQL extends ParserBase {
     }
 
     /**
-     * Reads part of a CASE ... WHEN  expression
+     * Reads part of a CASE .. WHEN  expression
      */
     private Expression readCaseWhen(final Expression l) {
 
@@ -7275,12 +6979,7 @@ public class ParserDQL extends ParserBase {
             }
 
             if (table == null) {
-                HsqlException ex = Error.error(ErrorCode.X_42501,
-                                               token.tokenString);
-
-                ex.setToken(token.tokenString);
-
-                throw ex;
+                throw Error.error(ErrorCode.X_42501, token.tokenString);
             }
         }
 
@@ -7292,7 +6991,7 @@ public class ParserDQL extends ParserBase {
 
     /**
      * Returns a period condition (including a default) for all tables with a
-     * system period, otherwise null;
+     * system period. Otherwise null;
      */
     ExpressionPeriodOp XreadQuerySystemPeriodSpecOrNull(Table table) {
 
@@ -7611,10 +7310,9 @@ public class ParserDQL extends ParserBase {
 
         queryExpression.setReturningResult();
 
-        if (database.sqlLowerCaseIdentifier && !isRoutine) {
+        if (database.sqlLowerCaseIdentifier && !isRoutine ) {
             queryExpression.setLowerCaseResultIdentifer();
         }
-
         queryExpression.resolve(session, rangeGroups, null);
 
         StatementQuery cs = isRoutine
@@ -7717,7 +7415,7 @@ public class ParserDQL extends ParserBase {
         private HsqlArrayList usedRoutines      = new HsqlArrayList(16, true);
         private OrderedIntKeyHashMap rangeVariables =
             new OrderedIntKeyHashMap();
-        private HsqlArrayList usedTypes = new HsqlArrayList(16, true);
+        private HsqlArrayList usedObjects = new HsqlArrayList(16, true);
         Type                  currentDomain;
         boolean               contextuallyTypedExpression;
         boolean               onDuplicateTypedExpression;
@@ -7764,7 +7462,7 @@ public class ParserDQL extends ParserBase {
 
             callProcedure = null;
 
-            usedTypes.clear();
+            usedObjects.clear();
 
             outerRangeGroups = RangeGroup.emptyArray;
 
@@ -8064,11 +7762,7 @@ public class ParserDQL extends ParserBase {
             }
 
             for (int i = subqueryDepth; i < namedSubqueries.size(); i++) {
-                OrderedHashMap set = (OrderedHashMap) namedSubqueries.get(i);
-
-                if (set != null) {
-                    set.clear();
-                }
+                namedSubqueries.set(i, null);
             }
         }
 
@@ -8097,18 +7791,9 @@ public class ParserDQL extends ParserBase {
                     continue;
                 }
 
-                if (set.getIndex(name) >= 0) {
-                    TableDerived td = (TableDerived) set.get(name);
+                TableDerived td = (TableDerived) set.get(name);
 
-                    if (td == null) {
-                        HsqlException ex = Error.error(ErrorCode.X_42501,
-                                                       name);
-
-                        ex.setToken(name);
-
-                        throw ex;
-                    }
-
+                if (td != null) {
                     return td;
                 }
             }
@@ -8120,8 +7805,8 @@ public class ParserDQL extends ParserBase {
             parameters.put(position, e);
         }
 
-        private void addDomainOrType(SchemaObject object) {
-            usedTypes.add(object);
+        private void addSchemaObject(SchemaObject object) {
+            usedObjects.add(object);
         }
 
         private void addSequence(SchemaObject object) {
@@ -8161,8 +7846,8 @@ public class ParserDQL extends ParserBase {
                 set.add(object.getName());
             }
 
-            for (int i = 0; i < usedTypes.size(); i++) {
-                SchemaObject object = (SchemaObject) usedTypes.get(i);
+            for (int i = 0; i < usedObjects.size(); i++) {
+                SchemaObject object = (SchemaObject) usedObjects.get(i);
 
                 set.add(object.getName());
             }
@@ -8181,23 +7866,17 @@ public class ParserDQL extends ParserBase {
 
                 HsqlName name = range.rangeTable.getName();
 
-                if (name.type == SchemaObject.TRANSITION) {
+                if (name.schema != SqlInvariants.SYSTEM_SCHEMA_HSQLNAME) {
+                    set.add(name);
                     set.addAll(range.getColumnNames());
 
-                    continue;
-                }
-
-                if (name.schema == SqlInvariants.SYSTEM_SCHEMA_HSQLNAME) {
-                    continue;
-                }
-
-                set.add(name);
-                set.addAll(range.getColumnNames());
-
-                if (range.periodCondition != null) {
-                    if (range.periodCondition.isSystemVersionCondition()) {
-                        set.add(range.rangeTable.systemPeriod.getName());
+                    if (range.periodCondition != null) {
+                        if (range.periodCondition.isSystemVersionCondition()) {
+                            set.add(range.rangeTable.systemPeriod.getName());
+                        }
                     }
+                } else if (name.type == SchemaObject.TRANSITION) {
+                    set.addAll(range.getColumnNames());
                 }
             }
 

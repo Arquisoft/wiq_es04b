@@ -44,12 +44,12 @@
 </div>
 </div>
 <div>
-<p class="releaseinfo">$Revision: 6645 $</p>
+<p class="releaseinfo">$Revision: 6327 $</p>
 </div>
 <div>
 <div class="legalnotice">
-<a name="N14454"></a>
-<p>Copyright 2010-2022 Fred Toussi. Permission is granted to
+<a name="N14300"></a>
+<p>Copyright 2010-2021 Fred Toussi. Permission is granted to
       distribute this document without any alteration under the terms of the
       HSQLDB license. Additional permission is granted to the HSQL Development
       Group to distribute this document with or without alterations under the
@@ -57,7 +57,7 @@
 </div>
 </div>
 <div>
-<p class="pubdate">2023-05-29</p>
+<p class="pubdate">2021-10-21</p>
 </div>
 </div>
 </div>
@@ -196,7 +196,7 @@
 </div>
 </div>
 <p>SQL-invoked routines are functions and procedures called from SQL.
-    HyperSQL 2.7 supports routines conforming to two parts of the SQL
+    HyperSQL 2.6 supports routines conforming to two parts of the SQL
     Standard. Routines written in the SQL language are supported in
     conformance to SQL/PSM (Persistent Stored Modules) specification. Routines
     written in Java are supported in broad conformance to SQL/JRT
@@ -285,11 +285,11 @@
 <p>Routine definition has several mandatory or optional clauses. The
     complete BNF supported by HyperSQL and the remaining clauses are
     documented in this section.</p>
-<a name="N144A1" class="indexterm"></a>
+<a name="N1434D" class="indexterm"></a>
 <p>
 <span class="bold"><strong>CREATE FUNCTION</strong></span>
 </p>
-<a name="N144AA" class="indexterm"></a>
+<a name="N14356" class="indexterm"></a>
 <p>
 <span class="bold"><strong>CREATE PROCEDURE</strong></span>
 </p>
@@ -336,7 +336,7 @@
     type&gt;</code>
 </p>
 <p>Return Value and Table Functions</p>
-<a name="N144D7" class="indexterm"></a>
+<a name="N14383" class="indexterm"></a>
 <p>
 <span class="bold"><strong>RETURNS</strong></span>
 </p>
@@ -393,7 +393,7 @@
 <code class="literal">&lt;returns data type&gt; ::= &lt;data
     type&gt;</code>
 </p>
-<a name="N14517" class="indexterm"></a>
+<a name="N143C3" class="indexterm"></a>
 <p>
 <span class="bold"><strong>routine body</strong></span>
 </p>
@@ -425,7 +425,7 @@
 <code class="literal">&lt;rights clause&gt; ::= SQL SECURITY INVOKER | SQL
     SECURITY DEFINER</code>
 </p>
-<a name="N14537" class="indexterm"></a>
+<a name="N143E3" class="indexterm"></a>
 <p>
 <span class="bold"><strong>SQL routine body</strong></span>
 </p>
@@ -437,7 +437,7 @@
 <code class="literal">&lt;SQL routine body&gt; ::= &lt;SQL procedure
     statement&gt;</code>
 </p>
-<a name="N14548" class="indexterm"></a>
+<a name="N143F4" class="indexterm"></a>
 <p>
 <span class="bold"><strong>EXTERNAL NAME</strong></span>
 </p>
@@ -483,7 +483,7 @@
       characteristic&gt; | &lt;savepoint level
       indication&gt;</code>
 </p>
-<a name="N14571" class="indexterm"></a>
+<a name="N1441D" class="indexterm"></a>
 <p>
 <span class="bold"><strong>LANGUAGE</strong></span>
 </p>
@@ -508,7 +508,7 @@
 <p>
 <code class="literal">&lt;parameter style&gt; ::= JAVA</code>
 </p>
-<a name="N1458D" class="indexterm"></a>
+<a name="N14439" class="indexterm"></a>
 <p>
 <span class="bold"><strong>SPECIFIC NAME</strong></span>
 </p>
@@ -538,7 +538,7 @@
 
 </pre>
 </div>
-<a name="N145A7" class="indexterm"></a>
+<a name="N14453" class="indexterm"></a>
 <p>
 <span class="bold"><strong>DETERMINISTIC</strong></span>
 </p>
@@ -557,7 +557,7 @@
 <code class="literal">&lt;deterministic characteristic&gt; ::= DETERMINISTIC
       | NOT DETERMINISTIC</code>
 </p>
-<a name="N145BE" class="indexterm"></a>
+<a name="N1446A" class="indexterm"></a>
 <p>
 <span class="bold"><strong>SQL DATA access</strong></span>
 </p>
@@ -586,7 +586,7 @@
 <code class="literal">&lt;SQL-data access indication&gt; ::= NO SQL |
       CONTAINS SQL | READS SQL DATA | MODIFIES SQL DATA</code>
 </p>
-<a name="N145EC" class="indexterm"></a>
+<a name="N14498" class="indexterm"></a>
 <p>
 <span class="bold"><strong>NULL INPUT</strong></span>
 </p>
@@ -605,7 +605,7 @@
 <code class="literal">&lt;null-call clause&gt; ::= RETURNS NULL ON NULL
       INPUT | CALLED ON NULL INPUT</code>
 </p>
-<a name="N14605" class="indexterm"></a>
+<a name="N144B1" class="indexterm"></a>
 <p>
 <span class="bold"><strong>SAVEPOINT LEVEL</strong></span>
 </p>
@@ -623,7 +623,7 @@
 <code class="literal">&lt;savepoint level indication&gt; ::= NEW SAVEPOINT
       LEVEL | OLD SAVEPOINT LEVEL</code>
 </p>
-<a name="N1461F" class="indexterm"></a>
+<a name="N144CB" class="indexterm"></a>
 <p>
 <span class="bold"><strong>DYNAMIC RESULT SETS</strong></span>
 </p>
@@ -959,7 +959,7 @@
 </pre>
 </div>
 <p>The BNF for variable declaration is given below:</p>
-<a name="N14718" class="indexterm"></a>
+<a name="N145C4" class="indexterm"></a>
 <p>
 <span class="bold"><strong>DECLARE variable</strong></span>
 </p>
@@ -1122,7 +1122,7 @@
 </div>
 <p>The BNF for <code class="literal">&lt;handler declaration&gt;</code> is
       given below:</p>
-<a name="N147C5" class="indexterm"></a>
+<a name="N14671" class="indexterm"></a>
 <p>
 <span class="bold"><strong>DECLARE HANDLER</strong></span>
 </p>
@@ -1261,7 +1261,7 @@
 <p>A special form of SELECT can also be used for assigning values
       from a query to one or more arguments or variables. This works similar
       to a SET statement that has a SELECT statement as the source.</p>
-<a name="N1484A" class="indexterm"></a>
+<a name="N146F6" class="indexterm"></a>
 <p>
 <span class="bold"><strong>SELECT : SINGLE ROW</strong></span>
 </p>
@@ -1356,7 +1356,7 @@
       of one or more SQL statements. The <code class="literal">&lt;search
       condition&gt;</code> can be any valid SQL expression of BOOLEAN
       type.</p>
-<a name="N14891" class="indexterm"></a>
+<a name="N1473D" class="indexterm"></a>
 <p>
 <span class="bold"><strong>LOOP</strong></span>
 </p>
@@ -1371,7 +1371,7 @@
 <p>The LOOP statement is a simple loop without its own condition. A
       conditional LEAVE statement inside the loop is used to break out of the
       loop.</p>
-<a name="N148A2" class="indexterm"></a>
+<a name="N1474E" class="indexterm"></a>
 <p>
 <span class="bold"><strong>WHILE</strong></span>
 </p>
@@ -1399,7 +1399,7 @@
 
 </pre>
 </div>
-<a name="N148BB" class="indexterm"></a>
+<a name="N14767" class="indexterm"></a>
 <p>
 <span class="bold"><strong>REPEAT</strong></span>
 </p>
@@ -1430,7 +1430,7 @@
       iterated statement, but it is always used with a cursor declaration to
       iterate over the rows of the result set of the cursor and perform
       operations using the values of each row.</p>
-<a name="N148DB" class="indexterm"></a>
+<a name="N14787" class="indexterm"></a>
 <p>
 <span class="bold"><strong>FOR</strong></span>
 </p>
@@ -1494,7 +1494,7 @@
 </div>
 <p>There are two types of CASE ... WHEN statement and the IF ... THEN
       statement.</p>
-<a name="N14901" class="indexterm"></a>
+<a name="N147AD" class="indexterm"></a>
 <p>
 <span class="bold"><strong>CASE WHEN</strong></span>
 </p>
@@ -1562,7 +1562,7 @@
 
 </pre>
 </div>
-<a name="N1492D" class="indexterm"></a>
+<a name="N147D9" class="indexterm"></a>
 <p>
 <span class="bold"><strong>IF</strong></span>
 </p>
@@ -1617,7 +1617,7 @@
       ResultSet returned from a function that returns a result set. If the
       function returns a scalar value, the returned result has a single column
       and a single row which contains the scalar returned value.</p>
-<a name="N1495E" class="indexterm"></a>
+<a name="N1480A" class="indexterm"></a>
 <p>
 <span class="bold"><strong>RETURN</strong></span>
 </p>
@@ -1711,7 +1711,7 @@
 <p>Signal and Resignal Statements allow the routine to throw an
       exception. If used with the IF or CASE conditions, the exception is
       thrown conditionally.</p>
-<a name="N14999" class="indexterm"></a>
+<a name="N14845" class="indexterm"></a>
 <p>
 <span class="bold"><strong>SIGNAL</strong></span>
 </p>
@@ -1721,7 +1721,7 @@
 <p>The SIGNAL statement is used to throw an exception (or force an
       exception). When invoked, any exception handler for the given exception
       is in turn invoked. If there is no handler, the exception is propagated
-      to the enclosing context.</p>
+      to the enclosing context. </p>
 <p>In its simplest form, when there is no exception handler for the
       given exception, routine execution is halted, any change of data is
       rolled back and the routine throws the exception. By default, the
@@ -1733,7 +1733,7 @@
       value&gt; [ SET MESSAGE_TEXT = &lt;character string literal&gt; ]
       </code>
 </p>
-<a name="N149AC" class="indexterm"></a>
+<a name="N14858" class="indexterm"></a>
 <p>
 <span class="bold"><strong>RESIGNAL</strong></span>
 </p>
@@ -2497,26 +2497,26 @@
 </div>
 </div>
 </div>
-<p>The static methods of any class that is on the classpath can be
-      made available to be used. From version 2.7.1 access is not allowed by
-      default. The optional Java system property
-      <code class="literal">hsqldb.method_class_names</code> allows access to classes
-      other than <code class="literal">java.lang.Math</code> by specifying a
-      semicolon-separated list of allowed packages, classes, or methods. A
-      property value that ends with .* is treated as a wild card and allows
-      access to all class or method names formed by substitution of the *
-      (asterisk).</p>
+<p>By default, the static methods of any class that is on the
+      classpath are available to be used. This can compromise security in some
+      systems. The optional Java system property
+      <code class="literal">hsqldb.method_class_names</code> allows preventing access to
+      classes other than <code class="literal">java.lang.Math</code> or specifying a
+      semicolon-separated list of allowed classes. A property value that ends
+      with .* is treated as a wild card and allows access to all class or
+      method names formed by substitution of the * (asterisk).</p>
 <p>In the example below, the property has been included as an
       argument to the Java command.</p>
 <div class="informalexample">
-<pre class="programlisting"> java -Dhsqldb.method_class_names="org.me.MyClass.myMethod;org.you.YourClass.*;org.you.lib.*" [the rest of the command line]
+<pre class="programlisting"> java -Dhsqldb.method_class_names="org.me.MyClass;org.you.YourClass;org.you.lib.*" [the rest of the command line]
 </pre>
 </div>
-<p>The above example allows access to the method
-      <code class="classname">org.me.MyClass.myMethod</code> and all methods in the
-      class <code class="classname">org.you.YourClass</code> together with all the
-      classes in the <code class="classname">org.you.lib</code> package. Note that if
-      the property is not defined, no access is allowed.</p>
+<p>The above example allows access to the methods in the two classes:
+      <code class="classname">org.me.MyClass</code> and
+      <code class="classname">org.you.YourClass</code> together with all the classes
+      in the <code class="classname">org.you.lib</code> package. Note that if the
+      property is not defined, no access control is performed at this
+      level.</p>
 <p>The user who creates a Java routine must have the relevant access
       privileges on the tables that are used inside the Java method.</p>
 <p>Once the routine has been defined, the normal database access
@@ -2588,7 +2588,7 @@
       fourth parameters have user-defined types and must be defined as INOUT
       parameters. The defined return type of the function determines the type
       of the value returned when the function is invoked.</p>
-<a name="N14BBA" class="indexterm"></a>
+<a name="N14A66" class="indexterm"></a>
 <p>
 <span class="bold"><strong>CREATE AGGREGATE
       FUNCTION</strong></span>
@@ -2829,7 +2829,7 @@
 </div>
 </div>
 <HR xmlns:xi="http://www.w3.org/2001/XInclude">
-<P xmlns:xi="http://www.w3.org/2001/XInclude" class="svnrev">$Revision: 6645 $</P>
+<P xmlns:xi="http://www.w3.org/2001/XInclude" class="svnrev">$Revision: 6369 $</P>
 <div class="navfooter">
 <hr>
 <table summary="Navigation footer" width="100%">

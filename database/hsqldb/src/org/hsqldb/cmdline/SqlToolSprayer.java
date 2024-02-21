@@ -1,4 +1,4 @@
-/* Copyright (c) 2001-2022, The HSQL Development Group
+/* Copyright (c) 2001-2021, The HSQL Development Group
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -35,7 +35,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 
-/* $Id: SqlToolSprayer.java 6525 2022-05-23 00:50:39Z unsaved $ */
+/* $Id: SqlToolSprayer.java 6266 2021-01-25 16:08:06Z fredt $ */
 
 /**
  * Sql Tool Sprayer.
@@ -52,7 +52,7 @@ import java.util.Date;
  * </UL>
  *
  * @see #main(String[])
- * @version $Revision: 6525 $, $Date: 2022-05-23 01:50:39 +0100 (Mon, 23 May 2022) $
+ * @version $Revision: 6266 $, $Date: 2021-01-25 16:08:06 +0000 (Mon, 25 Jan 2021) $
  * @author Blaine Simpson (blaine dot simpson at admc dot com)
  */
 public class SqlToolSprayer {
@@ -92,10 +92,8 @@ public class SqlToolSprayer {
                                                                    : new File(
                                                                        System.getProperty(
                                                                            "sqltoolsprayer.monfile"));
-        ArrayList<String> urlids = new ArrayList<>();
+        ArrayList<String> urlids = new ArrayList<String>();
 
-        // I think false hit from IntelliJ.  Not copying the entire array
-        //noinspection ManualArrayToCollectionCopy
         for (int i = 1; i < sa.length; i++) {
             urlids.add(sa[i]);
         }
@@ -123,6 +121,8 @@ public class SqlToolSprayer {
                 System.err.println("Required file is gone:  " + monitorFile);
                 System.exit(2);
             }
+
+            onefailed = false;
 
             for (int i = 0; i < status.length; i++) {
                 if (status[i]) {
@@ -160,11 +160,11 @@ public class SqlToolSprayer {
             }
         }
 
-        ArrayList<String> failedUrlids = new ArrayList<>();
+        ArrayList<String> failedUrlids = new ArrayList<String>();
 
         // If all statuses true, then System.exit(0);
         for (int i = 0; i < status.length; i++) {
-            if (!status[i]) {
+            if (status[i] != true) {
                 failedUrlids.add(urlids.get(i));
             }
         }

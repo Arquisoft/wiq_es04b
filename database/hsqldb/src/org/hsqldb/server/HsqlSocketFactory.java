@@ -1,4 +1,4 @@
-/* Copyright (c) 2001-2022, The HSQL Development Group
+/* Copyright (c) 2001-2021, The HSQL Development Group
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -95,12 +95,12 @@ public class HsqlSocketFactory {
     }
 
     /**
-     * Returns a server socket bound to the specified port. The socket is
-     * configured with the socket options given to this factory.
+     * Returns a server socket bound to the specified port.
+     * The socket is configured with the socket options
+     * given to this factory.
      *
      * @return the ServerSocket
      * @param port the port to which to bind the ServerSocket
-     * @param address String
      * @throws Exception if a network error occurs
      */
     public ServerSocket createServerSocket(int port,
@@ -150,7 +150,7 @@ public class HsqlSocketFactory {
     }
 
 // ------------------------ static utility methods -----------------------------
-    private static HsqlSocketFactory getPlainImpl() {
+    private static HsqlSocketFactory getPlainImpl() throws Exception {
 
         synchronized (HsqlSocketFactory.class) {
             if (plainImpl == null) {

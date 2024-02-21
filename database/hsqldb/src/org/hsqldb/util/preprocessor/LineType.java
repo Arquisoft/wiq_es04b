@@ -1,4 +1,4 @@
-/* Copyright (c) 2001-2022, The HSQL Development Group
+/* Copyright (c) 2001-2007, The HSQL Development Group
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -32,82 +32,83 @@
 package org.hsqldb.util.preprocessor;
 
 import java.lang.reflect.Field;
-import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.Locale;
-import java.util.Map;
 
-/*
- * $Id: LineType.java 6480 2022-04-12 09:46:56Z fredt $
- */
+/* $Id: LineType.java 5793 2018-01-06 13:12:38Z fredt $ */
+
 /**
- * Static methods and constants to decode Preprocessor line types.
+ * Static methods and constants to decode preprocessor line types.
  *
  * @author Campbell Burnet (campbell-burnet@users dot sourceforge.net)
- * @version 2.7.0
+ * @version 1.8.1
  * @since 1.8.1
  */
-@SuppressWarnings("ClassWithoutLogger")
-public class LineType {
+class LineType {
+    //
+    static final int UNKNOWN    = 0;
+    static final int DEF        = 1;
+    static final int DEFINE     = 1;
+    static final int ELIF       = 2;
+    static final int ELIFDEF    = 3;
+    static final int ELIFNDEF   = 4;
+    static final int ELSE       = 5;
+    static final int ENDIF      = 6;
+    static final int ENDINCLUDE = 7;
+    static final int HIDDEN     = 8;
+    static final int IF         = 9;
+    static final int IFDEF      = 10;
+    static final int IFNDEF     = 11;
+    static final int INCLUDE    = 12;
+    static final int UNDEF      = 13;
+    static final int UNDEFINE   = 13;
+    static final int VISIBLE    = 14;
 
     //
-    public static final int UNKNOWN = 0;
-    public static final int DEF = 1;
-    public static final int DEFINE = 1;
-    public static final int ELIF = 2;
-    public static final int ELIFDEF = 3;
-    public static final int ELIFNDEF = 4;
-    public static final int ELSE = 5;
-    public static final int ENDIF = 6;
-    public static final int ENDINCLUDE = 7;
-    public static final int HIDDEN = 8;
-    public static final int IF = 9;
-    public static final int IFDEF = 10;
-    public static final int IFNDEF = 11;
-    public static final int INCLUDE = 12;
-    public static final int UNDEF = 13;
-    public static final int UNDEFINE = 13;
-    public static final int VISIBLE = 14;
+    private static Hashtable directives;
+    private static String[]  labels;
 
-    //
-    private static Map<String, Integer> directives;
-    private static Map<Integer, String> labels;
+    static synchronized String[] labels() {
+        if (labels == null) {
+            init();
+        }
 
-    static {
-        init();
+        return labels;
     }
 
-    public static String label(final Integer key) {
-        return labels.get(key);
-    }
+    static synchronized Hashtable directives() {
+        if (directives == null) {
+            init();
+        }
 
-    public static Integer id(final String key) {
-        return directives.get(key);
+        return directives;
     }
 
     private static void init() {
 
-        directives = new HashMap<>(23);
-        labels = new HashMap<>(23);
-        final Field[] fields = LineType.class.getDeclaredFields();
+        directives     = new Hashtable();
+        labels         = new String[17];
+        Field[] fields = LineType.class.getDeclaredFields();
+
         for (int i = 0, j = 0; i < fields.length; i++) {
-            final Field field = fields[i];
+            Field field = fields[i];
 
             if (field.getType().equals(Integer.TYPE)) {
-                final String label = field.getName();
+                String label = field.getName();
 
                 try {
                     int value = field.getInt(null);
 
-                    labels.put(value, label);
+                    labels[value] = label;
 
-                    switch (value) {
-                        case VISIBLE:
-                        case HIDDEN: {
+                    switch(value) {
+                        case VISIBLE :
+                        case HIDDEN : {
                             // ignore
                             break;
                         }
-                        default: {
-                            final String key = Line.DIRECTIVE_PREFIX
+                        default : {
+                            String key = Line.DIRECTIVE_PREFIX
                                     + label.toLowerCase(Locale.ENGLISH);
 
                             directives.put(key, new Integer(value));
@@ -116,14 +117,12 @@ public class LineType {
                         }
                     }
 
-                } catch (IllegalArgumentException | IllegalAccessException ignored) {
+                } catch (IllegalArgumentException ex) {
+                    // ex.printStackTrace();
+                } catch (IllegalAccessException ex) {
                     // ex.printStackTrace();
                 }
             }
         }
-    }
-
-    private LineType() {
-        throw new AssertionError("Pure Utiluity Class");
     }
 }

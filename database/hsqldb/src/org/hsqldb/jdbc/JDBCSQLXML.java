@@ -1,4 +1,4 @@
-/* Copyright (c) 2001-2022, The HSQL Development Group
+/* Copyright (c) 2001-2021, The HSQL Development Group
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -102,7 +102,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 
-/* $Id: JDBCSQLXML.java 6492 2022-04-21 07:30:40Z fredt $ */
+/* $Id: JDBCSQLXML.java 6299 2021-02-09 17:10:48Z fredt $ */
 
 /**
  * <!-- start generic documentation -->
@@ -641,7 +641,7 @@ public class JDBCSQLXML implements SQLXML {
 
     /**
      * This method closes this object and releases the resources that it held.
-     * The SQL XML object becomes invalid and neither readable nor writable
+     * The SQL XML object becomes invalid and neither readable or writable
      * when this method is called.<p>
      *
      * After <code>free</code> has been called, any attempt to invoke a

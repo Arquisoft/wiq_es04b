@@ -44,12 +44,12 @@
 </div>
 </div>
 <div>
-<p class="releaseinfo">$Revision: 6634 $</p>
+<p class="releaseinfo">$Revision: 6339 $</p>
 </div>
 <div>
 <div class="legalnotice">
-<a name="N10364"></a>
-<p>Copyright 2002-2022 Fred Toussi. Permission is granted to
+<a name="N1035E"></a>
+<p>Copyright 2002-2021 Fred Toussi. Permission is granted to
       distribute this document without any alteration under the terms of the
       HSQLDB license. Additional permission is granted to the HSQL Development
       Group to distribute this document with or without alterations under the
@@ -57,7 +57,7 @@
 </div>
 </div>
 <div>
-<p class="pubdate">2023-05-29</p>
+<p class="pubdate">2021-10-21</p>
 </div>
 </div>
 </div>
@@ -106,7 +106,7 @@
 <dd>
 <dl>
 <dt>
-<span class="section"><a href="sqlgeneral-chapt.html#N1048B">Case Sensitivity</a></span>
+<span class="section"><a href="sqlgeneral-chapt.html#N10485">Case Sensitivity</a></span>
 </dt>
 <dt>
 <span class="section"><a href="sqlgeneral-chapt.html#sgc_persist_tables">Persistent Tables</a></span>
@@ -200,16 +200,16 @@
 <p>Over 300 words are reserved by the Standard and should not be used
     as table or column names. For example, the word POSITION is reserved as it
     is a function defined by the Standards with a similar role as
-    <code class="methodname">String::indexOf(String)</code> in Java. By default,
-    HyperSQL does not prevent you from using a reserved word if it does not
-    support its use or can distinguish it. For example, CUBE is a reserved
-    word for a feature that is supported by HyperSQL from version 2.5.1.
-    Before this version, CUBE was allowed as a table or column name, but it is
-    no longer allowed. You should avoid using such names as future versions of
-    HyperSQL are likely to support the reserved words and may reject your
-    table definitions or queries. The full list of SQL reserved words is in
-    the appendix <a class="link" href="lists-app.html" title="Appendix&nbsp;A.&nbsp;Lists of Keywords">Lists of Keywords</a> . You
-    can set a property to disallow the use of reserved keywords for names of
+    <code class="methodname">String.indexOf()</code> in Java. By default, HyperSQL
+    does not prevent you from using a reserved word if it does not support its
+    use or can distinguish it. For example, CUBE is a reserved word for a
+    feature that is supported by HyperSQL from version 2.5.1. Before this
+    version, CUBE was allowed as a table or column name, but it is no longer
+    allowed. You should avoid using such names as future versions of HyperSQL
+    are likely to support the reserved words and may reject your table
+    definitions or queries. The full list of SQL reserved words is in the
+    appendix <a class="link" href="lists-app.html" title="Appendix&nbsp;A.&nbsp;Lists of Keywords">Lists of Keywords</a> . You can
+    set a property to disallow the use of reserved keywords for names of
     tables and other database objects. There are several other user-defined
     properties to control the strict application of the SQL Standard in
     different areas.</p>
@@ -471,7 +471,7 @@
 <div>
 <div>
 <h3 class="title">
-<a name="N1048B"></a>Case Sensitivity</h3>
+<a name="N10485"></a>Case Sensitivity</h3>
 </div>
 </div>
 </div>
@@ -492,7 +492,7 @@
       double-quoted name is all-uppercase, it can be referenced in any case;
       <code class="literal">"MYTABLE"</code> is the same as <code class="literal">myTable</code>
       and <code class="literal">MyTable</code> because they are all converted to
-      <code class="literal">MYTABLE</code>.</p>
+      <code class="literal">MYTABLE</code>. </p>
 </div>
 <div class="section">
 <div class="titlepage">
@@ -687,12 +687,12 @@
 </li>
 </ul>
 </div>
-<p>HyperSQL 2.7 has several compatibility modes which allow the type
+<p>HyperSQL 2.6 has several compatibility modes which allow the type
     names that are used by other RDBMS to be accepted and translated into the
     closest SQL Standard type. For example, the type TEXT, supported by MySQL
     and PostgreSQL is translated in these compatibility modes.</p>
 <div class="table">
-<a name="N10537"></a>
+<a name="N10531"></a>
 <p class="title">
 <b>Table&nbsp;2.1.&nbsp;List of SQL types</b>
 </p>
@@ -736,7 +736,7 @@
 </tr>
 <tr>
 <td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left">BINARY(L)</td><td style="border-bottom: 0.5pt solid ; ">fixed-length binary string type - padded with zero to
-            length L (**)</td>
+            length L (**) </td>
 </tr>
 <tr>
 <td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left">VARBINARY(L) or BINARY VARYING(L)</td><td style="border-bottom: 0.5pt solid ; ">variable-length binary string type (***)</td>
@@ -846,7 +846,7 @@
 </div>
 </div>
 </div>
-<a name="N105D7" class="indexterm"></a>
+<a name="N105D1" class="indexterm"></a>
 <p>TINYINT, SMALLINT, INTEGER, BIGINT, NUMERIC and DECIMAL (without a
       decimal point) are the supported integral types. They correspond
       respectively to <code class="classname">byte</code>,
@@ -1012,7 +1012,7 @@
 </div>
 </div>
 </div>
-<a name="N106A3" class="indexterm"></a>
+<a name="N1069D" class="indexterm"></a>
 <p>The BOOLEAN type conforms to the SQL Standard and represents the
       values <code class="literal">TRUE</code>, <code class="literal">FALSE</code> and
       <code class="literal">UNKNOWN</code>. This type of column can be initialised with
@@ -1046,7 +1046,7 @@
 </div>
 </div>
 </div>
-<a name="N106CA" class="indexterm"></a>
+<a name="N106C4" class="indexterm"></a>
 <p>The CHARACTER, CHARACTER VARYING and CLOB types are the SQL
       Standard character string types. CHAR, VARCHAR and CHARACTER LARGE
       OBJECT are synonyms for these types. HyperSQL also supports LONGVARCHAR
@@ -1139,7 +1139,7 @@
 </div>
 </div>
 </div>
-<a name="N10705" class="indexterm"></a>
+<a name="N106FF" class="indexterm"></a>
 <p>The BINARY, BINARY VARYING and BLOB types are the SQL Standard
       binary string types. VARBINARY and BINARY LARGE OBJECT are synonyms for
       BINARY VARYING and BLOB types. HyperSQL also supports LONGVARBINARY as a
@@ -1212,7 +1212,7 @@
 </div>
 </div>
 </div>
-<a name="N10732" class="indexterm"></a>
+<a name="N1072C" class="indexterm"></a>
 <p>The BIT and BIT VARYING types are the supported bit string types.
       These types were defined by SQL:1999 but were later removed from the
       Standard. Bit types represent bit maps of given lengths. Each bit is 0
@@ -1317,7 +1317,7 @@
 </div>
 </div>
 </div>
-<a name="N107AC" class="indexterm"></a>
+<a name="N107A6" class="indexterm"></a>
 <p>From version 2.3.4 there are two options for storing Java
       Objects.</p>
 <p>The default option allows storing Serializable object. The objects
@@ -1447,7 +1447,7 @@ SELECT obj FROM movies WHERE director LIKE 'Luc%'
 <p>HSQLDB fully supports datetime and interval types and operations,
     including all relevant optional features, as specified by the SQL Standard
     since SQL-92. The two groups of types are complementary.</p>
-<a name="N10809" class="indexterm"></a>
+<a name="N10803" class="indexterm"></a>
 <p>The DATE type represents a calendar date with YEAR, MONTH and DAY
     fields.</p>
 <p>The TIME type represents time of day with HOUR, MINUTE and SECOND
@@ -1498,7 +1498,7 @@ SELECT obj FROM movies WHERE director LIKE 'Luc%'
  TIME '20:08:08.034900'
  TIME '20:08:08.034900-8:00' /* US Pacific */</pre>
 </div>
-<a name="N1082F" class="indexterm"></a>
+<a name="N10829" class="indexterm"></a>
 <p>
 <span class="bold"><strong>Time Zone</strong></span>
 </p>
@@ -1519,39 +1519,28 @@ SELECT obj FROM movies WHERE director LIKE 'Luc%'
 <p>The time zone displacement is of the type INTERVAL HOUR TO MINUTE.
     This data type is described in the next section. The legal values are
     between '&ndash;18:00' and &nbsp; '+18:00'.</p>
-<a name="N1083E" class="indexterm"></a>
+<a name="N10838" class="indexterm"></a>
 <p>
 <span class="bold"><strong>Operations on Datetime
     Types</strong></span>
 </p>
-<p>The expression <code class="literal">&lt;datetime expression&gt; AT TIME ZONE {
-    &lt;interval primary&gt; | &lt;time zone name&gt; }</code> evaluates to
-    a datetime value representing exactly the same point of time in the
-    specified <code class="literal">&lt;time displacement&gt;</code> or the geographical
-    <code class="literal">&lt;time zone name&gt;</code>. The expression, <code class="literal">AT
+<p>The expression <code class="literal">&lt;datetime expression&gt; AT TIME ZONE
+    &lt;time displacement&gt;</code> evaluates to a datetime value
+    representing exactly the same point of time in the specified
+    <code class="literal">&lt;time displacement&gt;</code>. The expression, <code class="literal">AT
     LOCAL</code> is equivalent to <code class="literal">AT TIME ZONE &lt;local time
     displacement&gt;</code>. If <code class="literal">AT TIME ZONE</code> is used
     with a datetime operand of type WITHOUT TIME ZONE, the operand is first
-    converted to a value of type WITH TIME ZONE using the session's calendar,
-    then the specified time zone displacement is set for the value. Therefore,
-    in these cases, the final value depends on the time zone of the session in
-    which the statement was used, calculated at the exact point of time (of
-    the input) and accounting for daylight saving time at that point of
-    time.</p>
-<p>From version 2.7.0 it is possible to use regional time zones with AT
-    TIME ZONE. Any zone name used must match exactly a TimeZone id supported
-    by the JVM. These include names such as 'America/New_York'. Some zones
-    include daylight saving time periods which are used when converting the
-    time zone.</p>
-<p>See also the FROM_TZ function which allows you to convert to a time
-    zone without changing the date-time values such as hour and minute.</p>
+    converted to a value of type WITH TIME ZONE at the session&rsquo;s time
+    displacement, then the specified time zone displacement is set for the
+    value. Therefore, in these cases, the final value depends on the time zone
+    of the session in which the statement was used.</p>
 <p>AT TIME ZONE, modifies the field values of the datetime operand.
     This is done by the following procedure:</p>
 <div class="orderedlist">
 <ol class="orderedlist" type="1">
 <li class="listitem">
-<p>determine the corresponding datetime at UTC using the session's
-        calendar.</p>
+<p>determine the corresponding datetime at UTC.</p>
 </li>
 <li class="listitem">
 <p>find the datetime value at the given time zone that corresponds
@@ -1561,25 +1550,12 @@ SELECT obj FROM movies WHERE director LIKE 'Luc%'
 </div>
 <p>Example a:</p>
 <div class="informalexample">
-<pre class="programlisting"> VALUES TIMESTAMP'2022-03-28 11:00:00' AT TIME ZONE INTERVAL '-5:00' HOUR TO MINUTE
- C1                       
- ------------------------ 
- 2022-03-28 14:00:00-5:00 
-
- VALUES TIMESTAMP'2022-03-28 11:00:00+4:00' AT TIME ZONE 'America/Chicago'
- C1                       
- ------------------------ 
- 2022-03-28 02:00:00-5:00 
+<pre class="programlisting"> TIME '12:00:00' AT TIME ZONE INTERVAL '1:00' HOUR TO MINUTE
 </pre>
 </div>
-<p>In the first example above, the session's time zone displacement is
-    '-8:00'. In step 1, time '11:00:00' is converted to UTC, which is time
-    '19:00:00+0:00'. In step 2, this value is expressed as time
-    '14:00:00-5:00' in the target zone.</p>
-<p>In the second example, the session's time zone displacement is not
-    considered. In step 1, time is converted to UTC, which is time
-    '07:00:00+0:00', In step 2, this value is expressed as time
-    '02:00:00-5:00' in the target zone.</p>
+<p>If the session&rsquo;s time zone displacement is -'8:00', then in step 1,
+    TIME '12:00:00' is converted to UTC, which is TIME '20:00:00+0:00'. In
+    step 2, this value is expressed as TIME '21:00:00+1:00'.</p>
 <p>Example b:</p>
 <div class="informalexample">
 <pre class="programlisting"> TIME '12:00:00-5:00' AT TIME ZONE INTERVAL '1:00' HOUR TO MINUTE
@@ -1695,15 +1671,10 @@ SELECT obj FROM movies WHERE director LIKE 'Luc%'
 </p>
 <p>When an SQL session is started (with a JDBC connection) the local
     time zone of the client JVM (including any seasonal time adjustments such
-    as daylight-saving time) is used as the session time zone displacement. In
-    version 2.7.0 a Java Calendar object with the local time zone of the
-    client JVM is created and used. Therefore when a seasonal time adjustment
-    for daylight saving time is made while the session is open, the SQL
-    session zone displacement is changed. In some older versions of HyperSQL,
-    the SQL session time displacement was not changed when a seasonal time
-    adjustment took place.</p>
-<p>To change the SQL session time zone displacement, use the following
-    commands:</p>
+    as daylight-saving time) is used as the session time zone displacement.
+    Note that the SQL session time displacement is not changed when a seasonal
+    time adjustment takes place while the session is open. To change the SQL
+    session time zone displacement, use the following commands:</p>
 <p>
 <code class="literal">SET TIME ZONE &lt;time
     displacement&gt;</code>
@@ -1752,14 +1723,16 @@ SELECT obj FROM movies WHERE director LIKE 'Luc%'
     <code class="methodname">getTimestamp(...)</code> methods of the ResultSet
     interface which have a Calendar parameter can be used with a Calendar
     argument to retrieve the values.</p>
+<p>JDBC 4 and JAVA6 has an unfortunate limitation and does not include
+    type codes for SQL datetime types that have a TIME ZONE property.
+    Therefore, for compatibility with database tools that are limited to the
+    JDBC type codes, HyperSQL reports these types by default as datetime types
+    without TIME ZONE.</p>
 <p>
 <span class="bold"><strong>Java 8 Extensions</strong></span>
 </p>
-<p>JDBC 4 and JAVA6 did not include type codes for SQL datetime types
-    that have a TIME ZONE property. Therefore, HyperSQL reported these types
-    by default as datetime types without TIME ZONE.</p>
 <p>JAVA 8 introduced new type codes for TIMESTAMP WITH TIME ZONE and
-    TIME WITH TIME ZONE. HyperSQL (except the jars compiled with JDK 1.6)
+    TIME WITH TIME ZONE. HSQLDB 2.4.0 and later when compiled with JDK8
     supports this in <code class="classname">ResultSet</code>,
     <code class="classname">PreparedStatement</code> and
     <code class="classname">CallableStatement</code>.</p>
@@ -1781,9 +1754,8 @@ SELECT obj FROM movies WHERE director LIKE 'Luc%'
         <code class="classname">java.time</code> package types:
         <code class="classname">LocalDate</code>, <code class="classname">LocalTime</code>,
         <code class="classname">LocalDateTime</code>,
-        <code class="classname">OffsetTime</code>,
-        <code class="classname">OffsetDateTime</code>, and
-        <code class="classname">Instance</code> as well as
+        <code class="classname">OffsetTime</code> and
+        <code class="classname">OffsetDateTime</code> as well as
         <code class="classname">java.sql</code> package types,
         <code class="classname">Date</code>, <code class="classname">Time</code> and
         <code class="classname">Timestamp</code>.</p>
@@ -1804,7 +1776,7 @@ SELECT obj FROM movies WHERE director LIKE 'Luc%'
 <span class="bold"><strong>Non-Standard
     Extensions</strong></span>
 </p>
-<p>HyperSQL version 2.7 supports some extensions to the SQL standard
+<p>HyperSQL version 2.5 supports some extensions to the SQL standard
     treatment of datetime and interval types. For example, the Standard
     expression to add a number of days to a date has an explicit INTERVAL
     value but HSQLDB also allows an integer to be used without specifying DAY.
@@ -1832,7 +1804,7 @@ SELECT obj FROM movies WHERE director LIKE 'Luc%'
 </div>
 </div>
 </div>
-<a name="N10984" class="indexterm"></a>
+<a name="N10970" class="indexterm"></a>
 <p>Interval types are used to represent differences between date time
     values. The difference between two date time values can be measured in
     seconds or in months. For measurements in months, the units YEAR and MONTH
@@ -2053,8 +2025,8 @@ SELECT obj FROM movies WHERE director LIKE 'Luc%'
 <p>
 <span class="bold"><strong>Java 8 Extensions</strong></span>
 </p>
-<p>JAVA 8 does not have SQL type codes for INTERVAL types. HyperSQL
-    (except the jars compiled with JDK 1.6) supports
+<p>JAVA 8 does not have SQL type codes for INTERVAL types. HSQLDB 2.4.0
+    and later, when compiled with JDK8 or later, supports
     <code class="classname">java.time</code> types for INTERVAL types in
     <code class="classname">ResultSet</code>, <code class="classname">PreparedStatement</code>
     and <code class="classname">CallableStatement</code>.</p>
@@ -2062,10 +2034,10 @@ SELECT obj FROM movies WHERE director LIKE 'Luc%'
 <ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem">
 <p>The <code class="methodname">getObject(int columnIndex, Class
-        type)</code> method on an INTERVAL supports the
+        type)</code> method on an INTERVAL supports
         <code class="classname">java.time.Period</code> type for YEAR and MONTH
-        interval and the <code class="classname">java.time.Duration</code> type for
-        other interval types that cover DAY to SECOND.</p>
+        interval and <code class="classname">java.time.Duration</code> type for other
+        interval types that cover DAY to SECOND.</p>
 </li>
 <li class="listitem">
 <p>The <code class="methodname">setObject(int columnIndex)</code> method
@@ -2433,7 +2405,7 @@ ps.executeUpdate();
 </div>
 </div>
 <HR xmlns:xi="http://www.w3.org/2001/XInclude">
-<P xmlns:xi="http://www.w3.org/2001/XInclude" class="svnrev">$Revision: 6645 $</P>
+<P xmlns:xi="http://www.w3.org/2001/XInclude" class="svnrev">$Revision: 6369 $</P>
 <div class="navfooter">
 <hr>
 <table summary="Navigation footer" width="100%">

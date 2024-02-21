@@ -1,4 +1,4 @@
-/* Copyright (c) 2001-2022, The HSQL Development Group
+/* Copyright (c) 2001-2021, The HSQL Development Group
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -49,7 +49,7 @@ import org.hsqldb.rowio.RowOutputInterface;
  * Implementation of RowSetNavigator using a table as the data store.
  *
  * @author Fred Toussi (fredt@users dot sourceforge.net)
- * @version 2.7.0
+ * @version 2.6.1
  * @since 1.9.0
  */
 public class RowSetNavigatorDataTable extends RowSetNavigatorData {
@@ -162,14 +162,6 @@ public class RowSetNavigatorDataTable extends RowSetNavigatorData {
     public void add(Object[] data) {
 
         try {
-            if (table.getDataColumnCount() > data.length) {
-                Object[] d = table.getEmptyRowData();
-
-                ArrayUtil.copyArray(data, d, data.length);
-
-                data = d;
-            }
-
             Row row = (Row) store.getNewCachedObject((Session) session, data,
                 false);
 

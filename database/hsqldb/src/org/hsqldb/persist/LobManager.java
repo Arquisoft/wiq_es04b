@@ -1,4 +1,4 @@
-/* Copyright (c) 2001-2022, The HSQL Development Group
+/* Copyright (c) 2001-2021, The HSQL Development Group
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -42,6 +42,7 @@ import java.util.zip.Deflater;
 import java.util.zip.Inflater;
 
 import org.hsqldb.Database;
+import org.hsqldb.DatabaseType;
 import org.hsqldb.HsqlException;
 import org.hsqldb.Session;
 import org.hsqldb.SessionInterface;
@@ -67,7 +68,7 @@ import org.hsqldb.types.Types;
 
 /**
  * @author Fred Toussi (fredt@users dot sourceforge.net)
- * @version 2.7.0
+ * @version 2.6.0
  * @since 1.9.0
  */
 public class LobManager {
@@ -450,7 +451,9 @@ public class LobManager {
                 return null;
             }
 
-            return new BlobDataID(lobID);
+            BlobData blob = new BlobDataID(lobID);
+
+            return blob;
         } finally {
             writeLock.unlock();
         }
@@ -467,7 +470,9 @@ public class LobManager {
                 return null;
             }
 
-            return new ClobDataID(lobID);
+            ClobData clob = new ClobDataID(lobID);
+
+            return clob;
         } finally {
             writeLock.unlock();
         }
@@ -559,9 +564,9 @@ public class LobManager {
                 return Result.updateZeroResult;
             }
 
-            long           limitLobID  = Long.MAX_VALUE;
+            long           limitLobID = Long.MAX_VALUE;
             ResultMetaData meta = deleteUnusedLobs.getParametersMetaData();
-            Object[]       params      = new Object[meta.getColumnCount()];
+            Object[]       params     = new Object[meta.getColumnCount()];
             int            deleteCount = 0;
 
             params[0] = Long.valueOf(limitLobID);
@@ -1195,7 +1200,8 @@ public class LobManager {
 
         try {
             if (compressLobs || cryptLobs) {
-                result = getBytesCompressed(lobID, offset * 2, length * 2);
+                result = getBytesCompressed(lobID, offset * 2, length * 2,
+                                            true);
             } else {
                 result = getBytesNormal(lobID, offset * 2, length * 2);
             }
@@ -1219,7 +1225,7 @@ public class LobManager {
 
         try {
             if (compressLobs || cryptLobs) {
-                return getBytesCompressed(lobID, offset, length);
+                return getBytesCompressed(lobID, offset, length, false);
             } else {
                 return getBytesNormal(lobID, offset, length);
             }
@@ -1324,7 +1330,7 @@ public class LobManager {
     }
 
     private Result setBytesBA(long lobID, long offset, byte[] dataBytes,
-                              int dataLength) {
+                              int dataLength, boolean isClob) {
 
         if (dataLength == 0) {
             return ResultLob.newLobSetResponse(lobID, 0);
@@ -1335,7 +1341,7 @@ public class LobManager {
         try {
             if (compressLobs || cryptLobs) {
                 return setBytesBACompressed(lobID, offset, dataBytes,
-                                            dataLength);
+                                            dataLength, isClob);
             } else {
                 return setBytesBANormal(lobID, offset, dataBytes, dataLength);
             }
@@ -1432,14 +1438,14 @@ public class LobManager {
     }
 
     private Result setBytesIS(long lobID, InputStream inputStream,
-                              long offset, long length) {
+                              long length, boolean isClob) {
 
         if (length == 0) {
             return ResultLob.newLobSetResponse(lobID, 0);
         }
 
         if (compressLobs || cryptLobs) {
-            return setBytesISCompressed(lobID, inputStream, offset, length);
+            return setBytesISCompressed(lobID, inputStream, length, isClob);
         } else {
             return setBytesISNormal(lobID, inputStream, length);
         }
@@ -1537,7 +1543,8 @@ public class LobManager {
                 return ResultLob.newLobSetResponse(lobID, length);
             }
 
-            Result result = setBytesBA(lobID, offset, dataBytes, dataLength);
+            Result result = setBytesBA(lobID, offset, dataBytes, dataLength,
+                                       false);
 
             if (result.isError()) {
                 return result;
@@ -1561,7 +1568,7 @@ public class LobManager {
     /**
      * for new blob only
      *
-     * blob length is set to inputStream size (not given length which could be incorrect)
+     * blob length is set to inputStream size (not given length)
      */
     public Result setBytesForNewBlob(long lobID, InputStream inputStream,
                                      long length) {
@@ -1574,7 +1581,7 @@ public class LobManager {
         writeLock.lock();
 
         try {
-            Result result       = setBytesIS(lobID, inputStream, 0L, length);
+            Result result = setBytesIS(lobID, inputStream, length, false);
             Result actionResult = Result.updateZeroResult;
 
             if (result.isError()) {
@@ -1624,7 +1631,7 @@ public class LobManager {
 
             byte[] bytes = ArrayUtil.charArrayToBytes(chars, dataLength);
             Result result = setBytesBA(lobID, offset * 2, bytes,
-                                       dataLength * 2);
+                                       dataLength * 2, true);
 
             if (result.isError()) {
                 return result;
@@ -1655,7 +1662,7 @@ public class LobManager {
         writeLock.lock();
 
         try {
-            Result result = setBytesIS(lobID, inputStream, 0L, length * 2);
+            Result result = setBytesIS(lobID, inputStream, length * 2, false);
 
             if (result.isError()) {
                 return result;
@@ -1705,7 +1712,7 @@ public class LobManager {
             params[DELETE_BLOCKS.BLOCK_OFFSET] = Integer.valueOf(blockOffset);
             params[DELETE_BLOCKS.BLOCK_LIMIT]  = ValuePool.INTEGER_MAX;
             params[DELETE_BLOCKS.TX_ID] =
-                ValuePool.getLong(sysLobSession.getTransactionSCN());
+                ValuePool.getLong(sysLobSession.getTransactionTimestamp());
 
             Result result =
                 sysLobSession.executeCompiledStatement(deleteLobPartCall,
@@ -1804,7 +1811,7 @@ public class LobManager {
         params[DELETE_BLOCKS.BLOCK_OFFSET] = ValuePool.getInt(offset);
         params[DELETE_BLOCKS.BLOCK_LIMIT]  = ValuePool.getInt(limit);
         params[DELETE_BLOCKS.TX_ID] =
-            ValuePool.getLong(sysLobSession.getTransactionSCN());
+            ValuePool.getLong(sysLobSession.getTransactionTimestamp());
 
         Result result =
             sysLobSession.executeCompiledStatement(deleteLobPartCall, params,
@@ -1971,7 +1978,7 @@ public class LobManager {
         return blocks;
     }
 
-    private void inflate(byte[] data, int length) {
+    private void inflate(byte[] data, int length, boolean isClob) {
 
         if (cryptLobs) {
             length = database.logger.getCrypto().decode(data, 0, length, data,
@@ -1997,7 +2004,7 @@ public class LobManager {
         }
     }
 
-    private int deflate(byte[] data, int offset, int length) {
+    private int deflate(byte[] data, int offset, int length, boolean isClob) {
 
         deflater.setInput(data, offset, length);
         deflater.finish();
@@ -2029,7 +2036,7 @@ public class LobManager {
         for (int i = 0; i < aParts.length && i < bParts.length; i++) {
             int aPartLength = (int) aParts[i][ALLOC_PART.PART_LENGTH];
 
-            getPartBytesCompressedInBuffer(aID, aParts[i]);
+            getPartBytesCompressedInBuffer(aID, aParts[i], false);
 
             byte[] aPartBytes = new byte[aPartLength];
 
@@ -2037,7 +2044,7 @@ public class LobManager {
 
             int bPartLength = (int) bParts[i][ALLOC_PART.PART_LENGTH];
 
-            getPartBytesCompressedInBuffer(aID, bParts[i]);
+            getPartBytesCompressedInBuffer(aID, bParts[i], false);
 
             int result = ArrayUtil.compare(aPartBytes, 0, aPartLength,
                                            byteBuffer, 0, bPartLength);
@@ -2064,13 +2071,13 @@ public class LobManager {
         for (int i = 0; i < aParts.length && i < bParts.length; i++) {
             int aPartLength = (int) aParts[i][ALLOC_PART.PART_LENGTH];
 
-            getPartBytesCompressedInBuffer(aID, aParts[i]);
+            getPartBytesCompressedInBuffer(aID, aParts[i], true);
 
             String aString = new String(ArrayUtil.byteArrayToChars(dataBuffer,
                 aPartLength));
             int bPartLength = (int) bParts[i][ALLOC_PART.PART_LENGTH];
 
-            getPartBytesCompressedInBuffer(bID, bParts[i]);
+            getPartBytesCompressedInBuffer(bID, bParts[i], true);
 
             String bString = new String(ArrayUtil.byteArrayToChars(dataBuffer,
                 bPartLength));
@@ -2090,7 +2097,7 @@ public class LobManager {
     }
 
     private Result setBytesISCompressed(long lobID, InputStream inputStream,
-                                        long baseOffset, long length) {
+                                        long length, boolean isClob) {
 
         long   offset     = 0;
         byte[] tempBuffer = new byte[largeLobBlockSize];
@@ -2124,15 +2131,14 @@ public class LobManager {
                 return Result.newErrorResult(e);
             }
 
-            Result result = setBytesBACompressedPart(lobID, baseOffset,
-                tempBuffer, count);
+            Result result = setBytesBACompressedPart(lobID, offset,
+                tempBuffer, count, isClob);
 
             if (result.isError()) {
                 return result;
             }
 
-            offset     += count;
-            baseOffset += count;
+            offset += count;
 
             if (offset == length) {
                 break;
@@ -2145,7 +2151,8 @@ public class LobManager {
     }
 
     private Result setBytesBACompressed(long lobID, long offset,
-                                        byte[] dataBytes, int dataLength) {
+                                        byte[] dataBytes, int dataLength,
+                                        boolean isClob) {
 
         if (dataLength == 0) {
             return ResultLob.newLobSetResponse(lobID, 0);
@@ -2153,20 +2160,20 @@ public class LobManager {
 
         if (dataLength <= largeLobBlockSize) {
             return setBytesBACompressedPart(lobID, offset, dataBytes,
-                                            dataLength);
+                                            dataLength, isClob);
         }
 
         HsqlByteArrayInputStream is = new HsqlByteArrayInputStream(dataBytes,
             0, dataLength);
 
-        return setBytesISCompressed(lobID, is, offset, dataLength);
+        return setBytesISCompressed(lobID, is, dataLength, isClob);
     }
 
     /**
      * Only for loading parts of the same lob, not for overwriting parts of existing lob
      */
     private Result setBytesBACompressedPart(long lobID, long offset,
-            byte[] dataBytes, int dataLength) {
+            byte[] dataBytes, int dataLength, boolean isClob) {
 
         // get block offset after existing blocks and compressed block
         long[] lastPart = getLastPart(lobID);
@@ -2182,7 +2189,7 @@ public class LobManager {
                     "compressed lobs"));
         }
 
-        int byteLength = deflate(dataBytes, 0, dataLength);
+        int byteLength = deflate(dataBytes, 0, dataLength, isClob);
         int blockCount = (byteLength + lobBlockSize - 1) / lobBlockSize;
         Result result = createFullBlockAddresses(lobID, blockOffset,
             blockCount);
@@ -2209,7 +2216,8 @@ public class LobManager {
         return ResultLob.newLobSetResponse(lobID, dataLength);
     }
 
-    private Result getBytesCompressed(long lobID, long offset, int length) {
+    private Result getBytesCompressed(long lobID, long offset, int length,
+                                      boolean isClob) {
 
         byte[]   dataBytes = new byte[length];
         long[][] parts     = getParts(lobID, offset, offset + length);
@@ -2218,7 +2226,8 @@ public class LobManager {
             long[] part       = parts[i];
             long   partOffset = part[ALLOC_PART.PART_OFFSET];
             int    partLength = (int) part[ALLOC_PART.PART_LENGTH];
-            Result result     = getPartBytesCompressedInBuffer(lobID, part);
+            Result result = getPartBytesCompressedInBuffer(lobID, part,
+                isClob);
 
             if (result.isError()) {
                 return result;
@@ -2231,7 +2240,8 @@ public class LobManager {
         return ResultLob.newLobGetBytesResponse(lobID, offset, dataBytes);
     }
 
-    private Result getPartBytesCompressedInBuffer(long lobID, long[] part) {
+    private Result getPartBytesCompressedInBuffer(long lobID, long[] part,
+            boolean isClob) {
 
         long blockOffset     = part[ALLOC_PART.BLOCK_OFFSET];
         long partOffset      = part[ALLOC_PART.PART_OFFSET];
@@ -2247,7 +2257,7 @@ public class LobManager {
 
         byte[] byteBlock = ((ResultLob) result).getByteArray();
 
-        inflate(byteBlock, partBytesLength);
+        inflate(byteBlock, partBytesLength, isClob);
 
         return ResultLob.newLobSetResponse(lobID, partLength);
     }

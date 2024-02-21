@@ -1,4 +1,4 @@
-/* Copyright (c) 2001-2022, The HSQL Development Group
+/* Copyright (c) 2001-2021, The HSQL Development Group
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -72,7 +72,7 @@ import org.hsqldb.types.Type;
  * @author Fred Toussi (fredt@users dot sourceforge.net)
  * @author Blaine Simpson (blaine dot simpson at admc dot com)
  *
- * @version 2.7.1
+ * @version 2.6.0
  * @since 1.8.0
  */
 public class Grantee implements SchemaObject {
@@ -192,16 +192,6 @@ public class Grantee implements SchemaObject {
     }
 
     /**
-     * Gets direct roles and public role, not roles nested within them.
-     */
-    public OrderedHashSet getDirectRolesWithPublic() {
-        OrderedHashSet newSet = new OrderedHashSet();
-        newSet.addAll(roles);
-        newSet.add(granteeManager.publicRole);
-        return newSet;
-    }
-
-    /**
      * Gets direct and indirect roles.
      */
     public OrderedHashSet getAllRoles() {
@@ -304,44 +294,14 @@ public class Grantee implements SchemaObject {
         return getAllRoles().contains(role);
     }
 
-    private void grantToAll(HsqlName name, Right right, Grantee grantor,
-                            boolean withGrant) {
-
-        int objectType = SchemaObject.TABLE;
-
-        if (right.isFullUsage) {
-            right      = Right.fullRights;
-            objectType = SchemaObject.SEQUENCE;
-        } else if (right.isFullExecute) {
-            right      = Right.fullRights;
-            objectType = SchemaObject.SPECIFIC_ROUTINE;
-        }
-
-        Iterator it =
-            granteeManager.database.schemaManager.databaseObjectIterator(
-                name.name, objectType);
-
-        while (it.hasNext()) {
-            SchemaObject object = (SchemaObject) it.next();
-
-            grant(object.getName(), right, grantor, withGrant);
-        }
-    }
-
     /**
      * Grants the specified rights on the specified database object. <p>
      *
      * Keys stored in rightsMap for database tables are their HsqlName
-     * attribute. This allows rights to persist when a table is renamed.
+     * attribute. This allows rights to persist when a table is renamed. <p>
      */
     void grant(HsqlName name, Right right, Grantee grantor,
                boolean withGrant) {
-
-        if (name.type == SchemaObject.SCHEMA) {
-            grantToAll(name, right, grantor, withGrant);
-
-            return;
-        }
 
         final Right grantableRights = grantor.getAllGrantableRights(name);
         Right       existingRight   = null;
@@ -397,30 +357,6 @@ public class Grantee implements SchemaObject {
         updateAllRights();
     }
 
-    private void revokeFromAll(HsqlName name, Right right, Grantee grantor,
-                               boolean grantOption) {
-
-        int objectType = SchemaObject.TABLE;
-
-        if (right.isFullUsage) {
-            right      = Right.fullRights;
-            objectType = SchemaObject.SEQUENCE;
-        } else if (right.isFullExecute) {
-            right      = Right.fullRights;
-            objectType = SchemaObject.SPECIFIC_ROUTINE;
-        }
-
-        Iterator it =
-            granteeManager.database.schemaManager.databaseObjectIterator(
-                name.name, objectType);
-
-        while (it.hasNext()) {
-            SchemaObject object = (SchemaObject) it.next();
-
-            revoke(object, right, grantor, grantOption);
-        }
-    }
-
     /**
      * Revokes the specified rights on the specified database object. <p>
      *
@@ -432,12 +368,6 @@ public class Grantee implements SchemaObject {
                 boolean grantOption) {
 
         HsqlName name = object.getName();
-
-        if (name.type == SchemaObject.SCHEMA) {
-            grantToAll(name, right, grantor, grantOption);
-
-            return;
-        }
 
         if (object instanceof Routine) {
             name = ((Routine) object).getSpecificName();
@@ -497,7 +427,7 @@ public class Grantee implements SchemaObject {
     }
 
     /**
-     * Update own table column set rights to include a newly created column.
+     * Update own table column set rights to include a newly created column.<p?
      */
     void updateRightsForNewColumn(HsqlName tableName, HsqlName columnName) {
 
@@ -517,7 +447,7 @@ public class Grantee implements SchemaObject {
     }
 
     /**
-     * Update granted rights to include a newly created column.
+     * Update granted rights to include a newly created column.<p?
      */
     void updateRightsForNewColumn(HsqlName tableName) {
 
@@ -930,7 +860,7 @@ public class Grantee implements SchemaObject {
             return false;
         }
 
-        return right.canAccessNonSelect();
+        return right.canAccesssNonSelect();
     }
 
     public boolean hasColumnRights(SchemaObject table, int[] columnMap) {
@@ -1006,7 +936,10 @@ public class Grantee implements SchemaObject {
     /**
      * Method used with all Grantee objects to set the full set of rights
      * according to those inherited form ROLE Grantee objects and those
-     * granted to the object itself.
+     * granted to the object itself.<p>
+     *
+     * @todo -- see if this is correct and the currentRole.fullRightsMap
+     * is always updated prior to being added to this.fullRightsMap
      */
     void updateAllRights() {
 
@@ -1132,7 +1065,7 @@ public class Grantee implements SchemaObject {
      * Retrieves the map object that represents the rights that have been
      * granted on database objects.  <p>
      *
-     * The map has keys and values with the following interpretation:
+     * The map has keys and values with the following interpretation: <P>
      *
      * <UL>
      * <LI> The keys are generally (but not limited to) objects having

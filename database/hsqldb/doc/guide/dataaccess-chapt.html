@@ -44,12 +44,12 @@
 </div>
 </div>
 <div>
-<p class="releaseinfo">$Revision: 6535 $</p>
+<p class="releaseinfo">$Revision: 6369 $</p>
 </div>
 <div>
 <div class="legalnotice">
-<a name="N12C24"></a>
-<p>Copyright 2010-2022 Fred Toussi. Permission is granted to
+<a name="N12B13"></a>
+<p>Copyright 2010-2021 Fred Toussi. Permission is granted to
       distribute this document without any alteration under the terms of the
       HSQLDB license. Additional permission is granted to the HSQL Development
       Group to distribute this document with or without alterations under the
@@ -57,7 +57,7 @@
 </div>
 </div>
 <div>
-<p class="pubdate">2023-05-29</p>
+<p class="pubdate">2021-10-21</p>
 </div>
 </div>
 </div>
@@ -698,7 +698,7 @@
       In the current version of HyperSQL, the cursor is used only to return a
       result set from the procedure. Therefore, the cursor must be declared
       WITH RETURN and can only be READ ONLY.</p>
-<a name="N12DB4" class="indexterm"></a>
+<a name="N12CA3" class="indexterm"></a>
 <p>
 <span class="bold"><strong>DECLARE CURSOR</strong></span>
 </p>
@@ -764,7 +764,7 @@
 <p>Literals are used to express constant values. The general type of
       a literal is known by its format. The specific type is based on
       conventions.</p>
-<a name="N12DE3" class="indexterm"></a>
+<a name="N12CD2" class="indexterm"></a>
 <p>
 <span class="bold"><strong>unicode escape
       elements</strong></span>
@@ -802,7 +802,7 @@
       &lt;quote&gt;, &lt;double quote&gt;, or &lt;white
       space&gt;</code>
 </p>
-<a name="N12E01" class="indexterm"></a>
+<a name="N12CF0" class="indexterm"></a>
 <p>
 <span class="bold"><strong>character literal</strong></span>
 </p>
@@ -869,7 +869,7 @@
  U&amp;'Unicode string with forward slash // as custom escape character'UESCAPE'/'
 </pre>
 </div>
-<a name="N12E2E" class="indexterm"></a>
+<a name="N12D1D" class="indexterm"></a>
 <p>
 <span class="bold"><strong>binary literal</strong></span>
 </p>
@@ -897,7 +897,7 @@
 <div class="informalexample">
 <pre class="programlisting"> X'1abACD34' 'Af'</pre>
 </div>
-<a name="N12E45" class="indexterm"></a>
+<a name="N12D34" class="indexterm"></a>
 <p>
 <span class="bold"><strong>bit literal</strong></span>
 </p>
@@ -919,7 +919,7 @@
 <div class="informalexample">
 <pre class="programlisting"> B'10001001' '00010'</pre>
 </div>
-<a name="N12E5C" class="indexterm"></a>
+<a name="N12D4B" class="indexterm"></a>
 <p>
 <span class="bold"><strong>numeric literal</strong></span>
 </p>
@@ -979,7 +979,7 @@
  +12E-2
 </pre>
 </div>
-<a name="N12E8C" class="indexterm"></a>
+<a name="N12D7B" class="indexterm"></a>
 <p>
 <span class="bold"><strong>boolean literal</strong></span>
 </p>
@@ -991,7 +991,7 @@
       UNKNOWN</code>
 </p>
 <p>The boolean literal is one of the specified keywords.</p>
-<a name="N12E9D" class="indexterm"></a>
+<a name="N12D8C" class="indexterm"></a>
 <p>
 <span class="bold"><strong>datetime and interval
       literal</strong></span>
@@ -1150,7 +1150,7 @@
 <p>References are identifier chains, which can be a single
       identifiers or identifiers chains composed of single identifiers chained
       together with the period symbol.</p>
-<a name="N12F0F" class="indexterm"></a>
+<a name="N12DFE" class="indexterm"></a>
 <p>
 <span class="bold"><strong>identifier chain</strong></span>
 </p>
@@ -1180,7 +1180,7 @@
  ALTER SEQUENCE MYCATALOG.MYSCHEMA.MYSEQUENCE RESTART WITH 100
 </pre>
 </div>
-<a name="N12F2E" class="indexterm"></a>
+<a name="N12E1D" class="indexterm"></a>
 <p>
 <span class="bold"><strong>column reference</strong></span>
 </p>
@@ -1193,7 +1193,7 @@
       &lt;period&gt; &lt;column name&gt;</code>
 </p>
 <p>Reference a column or a routine variable.</p>
-<a name="N12F3F" class="indexterm"></a>
+<a name="N12E2E" class="indexterm"></a>
 <p>
 <span class="bold"><strong>SQL parameter
       reference</strong></span>
@@ -1206,7 +1206,7 @@
       identifier chain&gt;</code>
 </p>
 <p>Reference an SQL routine parameter.</p>
-<a name="N12F50" class="indexterm"></a>
+<a name="N12E3F" class="indexterm"></a>
 <p>
 <span class="bold"><strong>contextually typed value
       specification</strong></span>
@@ -1251,7 +1251,7 @@
 <p>Value expression is a general name for all expressions that return
       a value. Different types of expressions are allowed in different
       contexts.</p>
-<a name="N12F71" class="indexterm"></a>
+<a name="N12E60" class="indexterm"></a>
 <p>
 <span class="bold"><strong>value expression
       primary</strong></span>
@@ -1278,7 +1278,7 @@
       invocation&gt;</code>
 </p>
 <p>Specify a value that is syntactically self-delimited.</p>
-<a name="N12F88" class="indexterm"></a>
+<a name="N12E77" class="indexterm"></a>
 <p>
 <span class="bold"><strong>value specification</strong></span>
 </p>
@@ -1315,7 +1315,7 @@
 </p>
 <p>Specify one or more values, host parameters, SQL parameters,
       dynamic parameters, or host variables.</p>
-<a name="N12FA8" class="indexterm"></a>
+<a name="N12E97" class="indexterm"></a>
 <p>
 <span class="bold"><strong>row value expression</strong></span>
 </p>
@@ -1349,7 +1349,7 @@
       separated list of expressions, enclosed in brackets, with the optional
       keyword ROW. In SQL, a row containing a single element can often be used
       where a single value is expected.</p>
-<a name="N12FC5" class="indexterm"></a>
+<a name="N12EB4" class="indexterm"></a>
 <p>
 <span class="bold"><strong>set function
       specification</strong></span>
@@ -1370,7 +1370,7 @@
       of the column in the current row of the result of GROUPING SETS.
       HyperSQL supports <code class="literal">&lt;grouping operation&gt;</code> from
       version 2.5.1.</p>
-<a name="N12FDC" class="indexterm"></a>
+<a name="N12ECB" class="indexterm"></a>
 <p>
 <span class="bold"><strong>COALESCE</strong></span>
 </p>
@@ -1393,7 +1393,7 @@
       expression&gt;</code> instances. Therefore, any value returned is
       implicitly cast to this type. HyperSQL also features built-in functions
       with similar functionality.</p>
-<a name="N12FF5" class="indexterm"></a>
+<a name="N12EE4" class="indexterm"></a>
 <p>
 <span class="bold"><strong>NULLIF</strong></span>
 </p>
@@ -1413,7 +1413,7 @@
 <div class="informalexample">
 <pre class="programlisting"> SELECT i, NULLIF(n, 'not defined') FROM t</pre>
 </div>
-<a name="N1300F" class="indexterm"></a>
+<a name="N12EFE" class="indexterm"></a>
 <p>
 <span class="bold"><strong>CASE</strong></span>
 </p>
@@ -1491,7 +1491,7 @@
 </div>
 <p>The case statement can be far more complex and involve several
       conditions.</p>
-<a name="N13045" class="indexterm"></a>
+<a name="N12F34" class="indexterm"></a>
 <p>
 <span class="bold"><strong>CAST</strong></span>
 </p>
@@ -1534,7 +1534,7 @@
  CAST ('1992-04-21' AS DATE) = DATE '1992-04-21'
 </pre>
 </div>
-<a name="N13063" class="indexterm"></a>
+<a name="N12F52" class="indexterm"></a>
 <p>
 <span class="bold"><strong>NEXT VALUE FOR</strong></span>
 </p>
@@ -1560,7 +1560,7 @@
 <pre class="programlisting">INSERT INTO MYTABLE(COL1, COL2) VALUES 2, NEXT VALUE FOR MYSEQUENCE
 </pre>
 </div>
-<a name="N13077" class="indexterm"></a>
+<a name="N12F66" class="indexterm"></a>
 <p>
 <span class="bold"><strong>CURRENT VALUE FOR</strong></span>
 </p>
@@ -1580,7 +1580,7 @@
  INSERT INTO CHILDTABLE(COL1, COL2) VALUES 10, CURRENT VALUE FOR MYSEQUENCE;
 </pre>
 </div>
-<a name="N1308B" class="indexterm"></a>
+<a name="N12F7A" class="indexterm"></a>
 <p>
 <span class="bold"><strong>value expression</strong></span>
 </p>
@@ -1595,7 +1595,7 @@
 </p>
 <p>An expression that returns a value. The value can be a single
       value, or a row consisting more than one value.</p>
-<a name="N1309C" class="indexterm"></a>
+<a name="N12F8B" class="indexterm"></a>
 <p>
 <span class="bold"><strong>numeric value
       expression</strong></span>
@@ -1627,7 +1627,7 @@
       <code class="literal">&lt;solidus&gt;</code> (the operators for multiplication and
       division) have precedence over <code class="literal">&lt;minus sign&gt;</code> and
       <code class="literal">&lt;plus sign&gt;</code>.</p>
-<a name="N130C2" class="indexterm"></a>
+<a name="N12FB1" class="indexterm"></a>
 <p>
 <span class="bold"><strong>numeric value
       function</strong></span>
@@ -1643,7 +1643,7 @@
 <p>Specify a function yielding a value of type numeric. The
       supported numeric value functions are listed and described in the <a class="link" href="builtinfunctions-chapt.html" title="Chapter&nbsp;4.&nbsp;Built In Functions">Built In Functions</a>
       chapter.</p>
-<a name="N130D7" class="indexterm"></a>
+<a name="N12FC6" class="indexterm"></a>
 <p>
 <span class="bold"><strong>string value
       expression</strong></span>
@@ -1674,7 +1674,7 @@
       primary&gt;</code>. The types of the <code class="literal">&lt;value expression
       primary&gt;</code> elements must be compatible, that is, all must be
       string, or binary or bit string values.</p>
-<a name="N130F7" class="indexterm"></a>
+<a name="N12FE6" class="indexterm"></a>
 <p>
 <span class="bold"><strong>character value
       function</strong></span>
@@ -1689,7 +1689,7 @@
 <p>Specify a function that returns a character string or binary
       string. The supported character value functions are listed and described
       in the <a class="link" href="builtinfunctions-chapt.html" title="Chapter&nbsp;4.&nbsp;Built In Functions">Built In Functions</a> chapter.</p>
-<a name="N1310C" class="indexterm"></a>
+<a name="N12FFB" class="indexterm"></a>
 <p>
 <span class="bold"><strong>datetime value
       expression</strong></span>
@@ -1721,12 +1721,12 @@
       specifier&gt;</code>
 </p>
 <p>
-<code class="literal">&lt;time zone specifier&gt; ::= LOCAL | TIME ZONE {
-      &lt;interval primary&gt; | &lt;time zone name&gt; }</code>
+<code class="literal">&lt;time zone specifier&gt; ::= LOCAL | TIME ZONE
+      &lt;interval primary&gt;</code>
 </p>
 <p>Specify a datetime value. Details are described in the <a class="link" href="sqlgeneral-chapt.html" title="Chapter&nbsp;2.&nbsp;SQL Language">SQL Language</a>
       chapter.</p>
-<a name="N13130" class="indexterm"></a>
+<a name="N1301F" class="indexterm"></a>
 <p>
 <span class="bold"><strong>datetime value
       function</strong></span>
@@ -1740,7 +1740,7 @@
 </p>
 <p>Specify a function that returns a datetime value. The supported
       datetime value functions are listed and described in the <a class="link" href="builtinfunctions-chapt.html" title="Chapter&nbsp;4.&nbsp;Built In Functions">Built In Functions</a> chapter.</p>
-<a name="N13146" class="indexterm"></a>
+<a name="N13035" class="indexterm"></a>
 <p>
 <span class="bold"><strong>interval term</strong></span>
 </p>
@@ -1784,7 +1784,7 @@
 </p>
 <p>Specify an interval value. Details are described in the <a class="link" href="sqlgeneral-chapt.html" title="Chapter&nbsp;2.&nbsp;SQL Language">SQL Language</a>
       chapter.</p>
-<a name="N1316D" class="indexterm"></a>
+<a name="N1305C" class="indexterm"></a>
 <p>
 <span class="bold"><strong>interval absolute value
       function</strong></span>
@@ -1804,7 +1804,7 @@
 <p>Specify a function that returns the absolute value of an
       interval. If the interval is negative, it is negated, otherwise the
       original value is returned.</p>
-<a name="N13181" class="indexterm"></a>
+<a name="N13070" class="indexterm"></a>
 <p>
 <span class="bold"><strong>boolean value
       expression</strong></span>
@@ -1885,7 +1885,7 @@
       predicand&gt;</code> has more than one element, and one or more of
       the fields evaluate to NULL, the result depends on the particular
       predicate.</p>
-<a name="N131CE" class="indexterm"></a>
+<a name="N130BD" class="indexterm"></a>
 <p>
 <span class="bold"><strong>comparison predicand</strong></span>
 </p>
@@ -1954,7 +1954,7 @@
  ((2, NULL, ...) &lt; (1, NULL, ...)) IS FALSE
 </pre>
 </div>
-<a name="N1321C" class="indexterm"></a>
+<a name="N1310B" class="indexterm"></a>
 <p>
 <span class="bold"><strong>BETWEEN</strong></span>
 </p>
@@ -1980,7 +1980,7 @@
       BETWEEN ...)</code>. If any of the three <code class="literal">&lt;row value
       predicand&gt;</code> evaluates to NULL, the result is
       UNKNOWN.</p>
-<a name="N13245" class="indexterm"></a>
+<a name="N13134" class="indexterm"></a>
 <p>
 <span class="bold"><strong>IN</strong></span>
 </p>
@@ -2037,7 +2037,7 @@
  ResultSet rs = ps.executeQuery();
 </pre>
 </div>
-<a name="N13286" class="indexterm"></a>
+<a name="N13175" class="indexterm"></a>
 <p>
 <span class="bold"><strong>LIKE</strong></span>
 </p>
@@ -2097,7 +2097,7 @@
       (A LIKE B)</code>. If the length of the escape is not 1 or it is used
       in the pattern not immediately before an underscore or a percent
       character, an exception is raised.</p>
-<a name="N132D3" class="indexterm"></a>
+<a name="N131C2" class="indexterm"></a>
 <p>
 <span class="bold"><strong>IS NULL</strong></span>
 </p>
@@ -2117,7 +2117,7 @@
       IS NULL</code> and <code class="literal">X IS NOT NULL</code> are FALSE. If all
       fields are not null, <code class="literal">X IS NULL</code> is FALSE and
       <code class="literal">X IS NOT NULL</code> is TRUE.</p>
-<a name="N132FF" class="indexterm"></a>
+<a name="N131EE" class="indexterm"></a>
 <p>
 <span class="bold"><strong>ALL and ANY</strong></span>
 </p>
@@ -2171,7 +2171,7 @@
  invoice_date &lt; ALL (SELECT holiday_date FROM holidays)
 </pre>
 </div>
-<a name="N13342" class="indexterm"></a>
+<a name="N13231" class="indexterm"></a>
 <p>
 <span class="bold"><strong>EXISTS</strong></span>
 </p>
@@ -2185,7 +2185,7 @@
 <p>Specify a test for a non-empty set. If the evaluation of
       <code class="literal">&lt;table subquery&gt;</code> results in one or more rows,
       then the expression is TRUE, otherwise FALSE.</p>
-<a name="N13356" class="indexterm"></a>
+<a name="N13245" class="indexterm"></a>
 <p>
 <span class="bold"><strong>UNIQUE</strong></span>
 </p>
@@ -2203,7 +2203,7 @@
       distinct from each other, the result of the test is TRUE, otherwise it
       is FALSE. The distinctness of rows X and Y is tested with the predicate
       <code class="literal">X IS DISTINCT FROM Y</code>.</p>
-<a name="N1336D" class="indexterm"></a>
+<a name="N1325C" class="indexterm"></a>
 <p>
 <span class="bold"><strong>MATCH</strong></span>
 </p>
@@ -2245,7 +2245,7 @@
 <p>Note that MATCH can also be used in FOREIGN KEY constraint
       definitions. The exact meaning is described in the <a class="link" href="databaseobjects-chapt.html" title="Chapter&nbsp;3.&nbsp;Schemas and Database Objects">Schemas and Database Objects</a>
       chapter.</p>
-<a name="N133AF" class="indexterm"></a>
+<a name="N1329E" class="indexterm"></a>
 <p>
 <span class="bold"><strong>CONTAINS</strong></span>
 </p>
@@ -2270,7 +2270,7 @@
       result is TRUE. Otherwise it is false.</p>
 <p>If any of the values is NULL, the result is
       UNDEFINED.</p>
-<a name="N133CC" class="indexterm"></a>
+<a name="N132BB" class="indexterm"></a>
 <p>
 <span class="bold"><strong>EQUALS</strong></span>
 </p>
@@ -2288,7 +2288,7 @@
       TRUE. Otherwise it is false.</p>
 <p>If any of the values is NULL, the result is
       UNDEFINED.</p>
-<a name="N133DF" class="indexterm"></a>
+<a name="N132CE" class="indexterm"></a>
 <p>
 <span class="bold"><strong>IS DISTINCT</strong></span>
 </p>
@@ -2317,7 +2317,7 @@
 <div class="informalexample">
 <pre class="programlisting"> startdate IS DISTINCT FROM enddate</pre>
 </div>
-<a name="N13405" class="indexterm"></a>
+<a name="N132F4" class="indexterm"></a>
 <p>
 <span class="bold"><strong>OVERLAPS</strong></span>
 </p>
@@ -2345,7 +2345,7 @@
 <div class="informalexample">
 <pre class="programlisting"> (startdate, enddate) OVERLAPS (CURRENT_DATE - 7 DAY, CURRENT_DATE - 1 DAY)</pre>
 </div>
-<a name="N13422" class="indexterm"></a>
+<a name="N13311" class="indexterm"></a>
 <p>
 <span class="bold"><strong>PRECEDES</strong></span>
 </p>
@@ -2367,7 +2367,7 @@
       period.</p>
 <p>If any of the values is NULL, the result is
       UNDEFINED.</p>
-<a name="N13437" class="indexterm"></a>
+<a name="N13326" class="indexterm"></a>
 <p>
 <span class="bold"><strong>SUCCEEDS</strong></span>
 </p>
@@ -2400,7 +2400,7 @@
 </div>
 </div>
 </div>
-<a name="N13455" class="indexterm"></a>
+<a name="N13344" class="indexterm"></a>
 <p>
 <span class="bold"><strong>aggregate function</strong></span>
 </p>
@@ -2567,7 +2567,7 @@
 </div>
 </div>
 </div>
-<a name="N134F3" class="indexterm"></a>
+<a name="N133E2" class="indexterm"></a>
 <p>
 <span class="bold"><strong>search condition</strong></span>
 </p>
@@ -2580,7 +2580,7 @@
 </p>
 <p>Specify a condition that is TRUE, FALSE, or UNKNOWN. A search
       condition is often a predicate.</p>
-<a name="N13504" class="indexterm"></a>
+<a name="N133F3" class="indexterm"></a>
 <p>
 <span class="bold"><strong>PATH</strong></span>
 </p>
@@ -2597,7 +2597,7 @@
 </p>
 <p>Specify an order for searching for a user-defined SQL-invoked
       routine. This is not currently supported by HyperSQL.</p>
-<a name="N13518" class="indexterm"></a>
+<a name="N13407" class="indexterm"></a>
 <p>
 <span class="bold"><strong>routine invocation</strong></span>
 </p>
@@ -2623,7 +2623,7 @@
 </p>
 <p>Invoke an SQL-invoked routine. Examples are given in the <a class="link" href="sqlroutines-chapt.html" title="Chapter&nbsp;9.&nbsp;SQL-Invoked Routines">SQL-Invoked Routines</a>
       chapter.</p>
-<a name="N13536" class="indexterm"></a>
+<a name="N13425" class="indexterm"></a>
 <p>
 <span class="bold"><strong>COLLATE</strong></span>
 </p>
@@ -2640,7 +2640,7 @@
       UPDATE or DELETE statements, when a UNIQUE constraint or index is
       defined on the column, or when the rows are sorted by an ORDER BY
       clause.</p>
-<a name="N13547" class="indexterm"></a>
+<a name="N13436" class="indexterm"></a>
 <p>
 <span class="bold"><strong>CONSTRAINT</strong></span>
 </p>
@@ -2768,7 +2768,7 @@
       access statements, which may combine multiple SELECT statements. The
       <code class="literal">&lt;query specification&gt;</code> is the most common data
       access statement and begins with the SELECT keyword.</p>
-<a name="N135A1" class="indexterm"></a>
+<a name="N13490" class="indexterm"></a>
 <p>
 <span class="bold"><strong>SELECT STATEMENT</strong></span>
 </p>
@@ -3077,7 +3077,7 @@ SELECT DISTINCT firstname, lastname, email FROM customer FOR SYSTEM_TIME FROM CU
 </div>
 </div>
 </div>
-<a name="N13698" class="indexterm"></a>
+<a name="N13587" class="indexterm"></a>
 <p>
 <span class="bold"><strong>derived table</strong></span>
 </p>
@@ -3101,7 +3101,7 @@ SELECT DISTINCT firstname, lastname, email FROM customer FOR SYSTEM_TIME FROM CU
 </div>
 </div>
 </div>
-<a name="N136B3" class="indexterm"></a>
+<a name="N135A2" class="indexterm"></a>
 <p>
 <span class="bold"><strong>LATERAL</strong></span>
 </p>
@@ -3137,7 +3137,7 @@ SELECT firstname, lastname, a.c FROM customer, LATERAL(SELECT SUM(total) FROM in
 </div>
 </div>
 </div>
-<a name="N136D0" class="indexterm"></a>
+<a name="N135BF" class="indexterm"></a>
 <p>
 <span class="bold"><strong>UNNEST</strong></span>
 </p>
@@ -3215,7 +3215,7 @@ SELECT firstname, lastname, a.c FROM customer, LATERAL(SELECT SUM(total) FROM in
 </div>
 </div>
 </div>
-<a name="N136EC" class="indexterm"></a>
+<a name="N135DB" class="indexterm"></a>
 <p>
 <span class="bold"><strong>Table Function Derived
         Table</strong></span>
@@ -3260,7 +3260,7 @@ SELECT firstname, lastname, a.c FROM customer, LATERAL(SELECT SUM(total) FROM in
 </div>
 </div>
 </div>
-<a name="N1370A" class="indexterm"></a>
+<a name="N135F9" class="indexterm"></a>
 <p>
 <span class="bold"><strong>column name list</strong></span>
 </p>
@@ -3335,7 +3335,7 @@ SELECT firstname, lastname, a.c FROM customer, LATERAL(SELECT SUM(total) FROM in
 <code class="literal">&lt;join column list&gt; ::= &lt;column name
       list&gt;</code>
 </p>
-<a name="N1373F" class="indexterm"></a>
+<a name="N1362E" class="indexterm"></a>
 <p>
 <span class="bold"><strong>CROSS JOIN</strong></span>
 </p>
@@ -3357,7 +3357,7 @@ SELECT firstname, lastname, a.c FROM customer, LATERAL(SELECT SUM(total) FROM in
       before they are joined.</p>
 <p>CROSS JOIN is not is not generally very useful, as it returns
       large result tables unless WHERE conditions are used.</p>
-<a name="N13756" class="indexterm"></a>
+<a name="N13645" class="indexterm"></a>
 <p>
 <span class="bold"><strong>UNION JOIN</strong></span>
 </p>
@@ -3369,7 +3369,7 @@ SELECT firstname, lastname, a.c FROM customer, LATERAL(SELECT SUM(total) FROM in
       This should not be confused with <code class="literal">A UNION B</code>, which is
       a set operation. Union join is for special applications and is not
       commonly used.</p>
-<a name="N13767" class="indexterm"></a>
+<a name="N13656" class="indexterm"></a>
 <p>
 <span class="bold"><strong>JOIN ... ON</strong></span>
 </p>
@@ -3384,11 +3384,11 @@ SELECT firstname, lastname, a.c FROM customer, LATERAL(SELECT SUM(total) FROM in
 <pre class="programlisting">SELECT a.*, b.* FROM a INNER JOIN b ON a.col_one = b.col_two
 </pre>
 </div>
-<a name="N1377A" class="indexterm"></a>
+<a name="N13669" class="indexterm"></a>
 <p>
 <span class="bold"><strong>JOIN ... USING</strong></span>
 </p>
-<a name="N13783" class="indexterm"></a>
+<a name="N13672" class="indexterm"></a>
 <p>
 <span class="bold"><strong>NATURAL JOIN</strong></span>
 </p>
@@ -3427,7 +3427,7 @@ SELECT firstname, lastname, a.c FROM customer, LATERAL(SELECT SUM(total) FROM in
  SELECT * FROM a INNER JOIN b USING (col_two)
 </pre>
 </div>
-<a name="N1379D" class="indexterm"></a>
+<a name="N1368C" class="indexterm"></a>
 <p>
 <span class="bold"><strong>OUTER JOIN</strong></span>
 </p>
@@ -3524,7 +3524,7 @@ SELECT firstname, lastname, a.c FROM customer, LATERAL(SELECT SUM(total) FROM in
       as C1, C2, etc. As generated naming is implementation defined according
       to the SQL Standard, it is better to explicitly name the computed and
       derived columns in your applications.</p>
-<a name="N137D2" class="indexterm"></a>
+<a name="N136C1" class="indexterm"></a>
 <p>
 <span class="bold"><strong>Naming in Joined
       Table</strong></span>
@@ -3557,7 +3557,7 @@ SELECT firstname, lastname, a.c FROM customer, LATERAL(SELECT SUM(total) FROM in
  SELECT d, e, f FROM atable WHERE a + b = c
  SELECT x, y, z FROM atable AS t (u, v, w, x, y, z)  WHERE u + v = w</pre>
 </div>
-<a name="N137EE" class="indexterm"></a>
+<a name="N136DD" class="indexterm"></a>
 <p>
 <span class="bold"><strong>Naming in Select
       List</strong></span>
@@ -3577,7 +3577,7 @@ SELECT firstname, lastname, a.c FROM customer, LATERAL(SELECT SUM(total) FROM in
 <p>If the names <code class="literal">xysum</code> or <code class="literal">yzsum</code>
       are not used, the computed columns cannot be referenced in the ORDER BY
       list.</p>
-<a name="N13806" class="indexterm"></a>
+<a name="N136F5" class="indexterm"></a>
 <p>
 <span class="bold"><strong>Name Resolution</strong></span>
 </p>
@@ -3594,7 +3594,7 @@ SELECT firstname, lastname, a.c FROM customer, LATERAL(SELECT SUM(total) FROM in
 </div>
 </div>
 </div>
-<a name="N13815" class="indexterm"></a>
+<a name="N13704" class="indexterm"></a>
 <p>
 <span class="bold"><strong>Grouping Operations</strong></span>
 </p>
@@ -3605,7 +3605,7 @@ SELECT firstname, lastname, a.c FROM customer, LATERAL(SELECT SUM(total) FROM in
       of their columns when compared to another row). The other form of
       grouping is performed with the GROUP BY clause. This form is usually
       used together with aggregation.</p>
-<a name="N13820" class="indexterm"></a>
+<a name="N1370F" class="indexterm"></a>
 <p>
 <span class="bold"><strong>GROUP BY</strong></span>
 </p>
@@ -3749,7 +3749,7 @@ DIRECT SALES (null) (null)  3778500
       DISTINCT eliminates the duplicate groups.</p>
 <p>Note any ordering of the rows returned by GROUP BY in incidental.
       You need to use ORDER BY for the ordering you require.</p>
-<a name="N1389E" class="indexterm"></a>
+<a name="N1378D" class="indexterm"></a>
 <p>
 <span class="bold"><strong>HAVING</strong></span>
 </p>
@@ -3758,7 +3758,7 @@ DIRECT SALES (null) (null)  3778500
       clause&gt;</code> using its search condition. The search condition
       must be an expression based on the expressions in the GROUP BY list or
       the aggregate functions used.</p>
-<a name="N138AF" class="indexterm"></a>
+<a name="N1379E" class="indexterm"></a>
 <p>
 <span class="bold"><strong>DISTINCT</strong></span>
 </p>
@@ -3802,7 +3802,7 @@ DIRECT SALES (null) (null)  3778500
 </div>
 </div>
 </div>
-<a name="N138CF" class="indexterm"></a>
+<a name="N137BE" class="indexterm"></a>
 <p>
 <span class="bold"><strong>Set and Multiset
       Operations</strong></span>
@@ -3903,7 +3903,7 @@ DIRECT SALES (null) (null)  3778500
       body&gt;</code> that follows the WITH clause.</p>
 <p>HyperSQL limits recursion to 256 rounds. If this is exceeded, an
       error is raised.</p>
-<p>From version 2.6, HyperSQL extends recursive query processing by
+<p>From version 2.6.0, HyperSQL extends recursive query processing by
       allowing the use of <code class="literal">RECURSIVE_TABLE</code> to reference the
       current general result of the <code class="literal">&lt;query
       expression&gt;</code>. This table name can be used in subqueries with
@@ -4096,7 +4096,7 @@ DIRECT SALES (null) (null)  3778500
       when it can use the same index for accessing the table data and
       ordering. Optimisation can happen both with DESC + NULLS LAST and ASC +
       NULLS FIRST.</p>
-<a name="N139A8" class="indexterm"></a>
+<a name="N13897" class="indexterm"></a>
 <p>
 <span class="bold"><strong>sort specification
       list</strong></span>
@@ -4185,7 +4185,7 @@ DIRECT SALES (null) (null)  3778500
       indexes used, together with other useful information about the query.
       EXPLAIN PLAN can also be used for data manipulation statements such as
       UPDATE.</p>
-<a name="N139E9" class="indexterm"></a>
+<a name="N138D8" class="indexterm"></a>
 <p>
 <span class="bold"><strong>EXPLAIN PLAN</strong></span>
 </p>
@@ -4218,7 +4218,7 @@ DIRECT SALES (null) (null)  3778500
 </div>
 </div>
 </div>
-<a name="N13A05" class="indexterm"></a>
+<a name="N138F4" class="indexterm"></a>
 <p>
 <span class="bold"><strong>DELETE FROM</strong></span>
 </p>
@@ -4268,7 +4268,7 @@ DIRECT SALES (null) (null)  3778500
 </div>
 </div>
 </div>
-<a name="N13A29" class="indexterm"></a>
+<a name="N13918" class="indexterm"></a>
 <p>
 <span class="bold"><strong>TRUNCATE TABLE</strong></span>
 </p>
@@ -4318,7 +4318,7 @@ DIRECT SALES (null) (null)  3778500
       statement&gt;</code> is for removing old history rows from a
       system-versioned table. All history rows that expired before the given
       timestamp are removed. No current row is removed.</p>
-<a name="N13A55" class="indexterm"></a>
+<a name="N13944" class="indexterm"></a>
 <p>
 <span class="bold"><strong>TRUNCATE SCHEMA</strong></span>
 </p>
@@ -4350,7 +4350,7 @@ DIRECT SALES (null) (null)  3778500
 </div>
 </div>
 </div>
-<a name="N13A6E" class="indexterm"></a>
+<a name="N1395D" class="indexterm"></a>
 <p>
 <span class="bold"><strong>INSERT INTO</strong></span>
 </p>
@@ -4501,7 +4501,7 @@ DIRECT SALES (null) (null)  3778500
 </div>
 </div>
 </div>
-<a name="N13AD4" class="indexterm"></a>
+<a name="N139C3" class="indexterm"></a>
 <p>
 <span class="bold"><strong>UPDATE</strong></span>
 </p>
@@ -4541,7 +4541,7 @@ DIRECT SALES (null) (null)  3778500
       this situation, you can perform the operation is chunks and commit after
       each chunk to reduce memory usage and the total time of the
       operation.</p>
-<a name="N13AF8" class="indexterm"></a>
+<a name="N139E7" class="indexterm"></a>
 <p>
 <span class="bold"><strong>set clause list</strong></span>
 </p>
@@ -4609,7 +4609,7 @@ DIRECT SALES (null) (null)  3778500
 </div>
 </div>
 </div>
-<a name="N13B26" class="indexterm"></a>
+<a name="N13A15" class="indexterm"></a>
 <p>
 <span class="bold"><strong>MERGE INTO</strong></span>
 </p>
@@ -4760,7 +4760,7 @@ DIRECT SALES (null) (null)  3778500
     limited extent. The built-in function <code class="literal">DIAGNOSTICS()</code> is
     an alternative. These are normally used in SQL/PSM routines to check the
     result of the last data update operation.</p>
-<a name="N13BAC" class="indexterm"></a>
+<a name="N13A9B" class="indexterm"></a>
 <p>
 <span class="bold"><strong>GET DIAGNOSTICS</strong></span>
 </p>
@@ -4787,7 +4787,7 @@ DIRECT SALES (null) (null)  3778500
 </div>
 </div>
 <HR xmlns:xi="http://www.w3.org/2001/XInclude">
-<P xmlns:xi="http://www.w3.org/2001/XInclude" class="svnrev">$Revision: 6645 $</P>
+<P xmlns:xi="http://www.w3.org/2001/XInclude" class="svnrev">$Revision: 6369 $</P>
 <div class="navfooter">
 <hr>
 <table summary="Navigation footer" width="100%">

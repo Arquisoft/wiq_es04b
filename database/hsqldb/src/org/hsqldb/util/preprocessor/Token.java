@@ -31,40 +31,39 @@
 
 package org.hsqldb.util.preprocessor;
 
-/* $Id: Token.java 6434 2022-03-06 09:02:19Z campbell-burnet $ */
+/* $Id: Token.java 5793 2018-01-06 13:12:38Z fredt $ */
 
 /**
- * Static methods and constants to decode Preprocessor directive tokens.
+ * Static methods and constants to decode directive tokens.
  *
  * @author Campbell Burnet (campbell-burnet@users dot sourceforge.net)
  * @version 1.8.1
  * @since 1.8.1
  */
-public final class Token {
-    
-    public static final int EOI     = -1;
-    public static final int UNKNOWN = 0;
-    public static final int IDENT   = 1;
-    public static final int NUMBER  = 2;
-    public static final int STRING  = 3;
-    public static final int AND     = '&';
-    public static final int OR      = '|';
-    public static final int XOR     = '^';
-    public static final int NOT     = '!';
-    public static final int GT      = '>';
-    public static final int GTE     = '>' + '=';
-    public static final int LT      = '<';
-    public static final int LTE     = '<' + '=';
-    public static final int ASSIGN  = '=';
-    public static final int EQ      = '=' + '=';
-    public static final int LPAREN  = '(';
-    public static final int RPAREN  = ')';
+final class Token {
+    static final int EOI     = -1;
+    static final int UNKNOWN = 0;
+    static final int IDENT   = 1;
+    static final int NUMBER  = 2;
+    static final int STRING  = 3;
+    static final int AND     = '&';
+    static final int OR      = '|';
+    static final int XOR     = '^';
+    static final int NOT     = '!';
+    static final int GT      = '>';
+    static final int GTE     = '>' + '=';
+    static final int LT      = '<';
+    static final int LTE     = '<' + '=';
+    static final int ASSIGN  = '=';
+    static final int EQ      = '=' + '=';
+    static final int LPAREN  = '(';
+    static final int RPAREN  = ')';
 
-    public static boolean isAssignmentOperator(final int type) {
+    static boolean isAssignmentOperator(final int type) {
         return (type == ASSIGN);
     }
 
-    public static boolean isComparisonOperator(final int type) {
+    static boolean isComparisonOperator(final int type) {
         switch(type) {
             case EQ :
             case LT :
@@ -79,7 +78,7 @@ public final class Token {
         }
     }
 
-    public static boolean isLogicalOperator(final int type) {
+    static boolean isLogicalOperator(final int type) {
         switch(type) {
             case AND :
             case OR :
@@ -93,7 +92,7 @@ public final class Token {
         }
     }
 
-    public static boolean isValue(final int type) {
+    static boolean isValue(final int type) {
         switch (type) {
             case IDENT :
             case STRING :
@@ -104,9 +103,5 @@ public final class Token {
                 return false;
             }
         }
-    }
-
-    private Token() {
-        throw new AssertionError("Pure Utility Class");
     }
 }

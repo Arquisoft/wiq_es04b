@@ -1,4 +1,4 @@
-/* Copyright (c) 2001-2023, The HSQL Development Group
+/* Copyright (c) 2001-2021, The HSQL Development Group
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -34,8 +34,10 @@ package org.hsqldb;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.Locale;
 import java.util.Random;
 import java.util.TimeZone;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.hsqldb.HsqlNameManager.HsqlName;
 import org.hsqldb.error.Error;
@@ -64,7 +66,6 @@ import org.hsqldb.rights.Grantee;
 import org.hsqldb.rights.User;
 import org.hsqldb.types.BlobDataID;
 import org.hsqldb.types.ClobDataID;
-import org.hsqldb.types.DateTimeType;
 import org.hsqldb.types.TimeData;
 import org.hsqldb.types.TimestampData;
 import org.hsqldb.types.Type;
@@ -74,7 +75,7 @@ import org.hsqldb.types.TypedComparator;
  * Implementation of SQL sessions.
  *
  * @author Fred Toussi (fredt@users dot sourceforge.net)
- * @version 2.7.2
+ * @version 2.6.1
  * @since 1.7.0
  */
 public class Session implements SessionInterface {
@@ -94,15 +95,15 @@ public class Session implements SessionInterface {
     int isolationLevel        = SessionInterface.TX_READ_COMMITTED;
     boolean                 isReadOnlyIsolation;
     int                     actionIndex;
-    long                    actionStartSCN;
-    long                    actionSCN;
-    long                    statementStartSCN;
-    long                    transactionSCN;
-    long                    transactionEndSCN;
+    long                    actionStartTimestamp;
+    long                    actionTimestamp;
+    long                    statementStartTimestamp;
+    long                    transactionTimestamp;
+    long                    transactionEndTimestamp;
     final boolean           txConflictRollback;
     final boolean           txInterruptRollback;
-    volatile boolean        isPreTransaction;
-    volatile boolean        isTransaction;
+    boolean                 isPreTransaction;
+    boolean                 isTransaction;
     boolean                 isBatch;
     volatile boolean        abortAction;
     volatile boolean        abortTransaction;
@@ -117,15 +118,15 @@ public class Session implements SessionInterface {
     TimeoutManager          timeoutManager;
 
     // current settings
-    final TimeZone              timeZone;
-    TimeZone                    currentTimeZone;
-    final String                zoneString;
-    boolean                     isNetwork;
-    private int                 sessionMaxRows;
-    int                         sessionOptimization = 8;
-    private final long          sessionId;
-    private boolean             ignoreCase;
-    private final TimestampData connectTimestamp;
+    final String       zoneString;
+    final int          sessionTimeZoneSeconds;
+    int                timeZoneSeconds;
+    boolean            isNetwork;
+    private int        sessionMaxRows;
+    int                sessionOptimization = 8;
+    private final long sessionId;
+    private boolean    ignoreCase;
+    private final long connectTime = System.currentTimeMillis();
 
     // internal connection
     private JDBCConnection intConnection;
@@ -152,52 +153,52 @@ public class Session implements SessionInterface {
 
     //
     public Object special;
-    public int    sessionTxId;
 
     /**
      * Constructs a new Session object.
+     *
      * @param  db the database to which this represents a connection
      * @param  user the initial user
      * @param  autocommit the initial autocommit value
      * @param  readonly the initial readonly value
      * @param  id the session identifier, as known to the database
-     * @param  zone the TimeZone
      */
     Session(Database db, User user, boolean autocommit, boolean readonly,
-            long id, TimeZone zone) {
+            long id, String zoneString, int timeZoneSeconds) {
 
-        this.database         = db;
-        this.sessionUser      = user;
-        this.user             = user;
-        this.sessionId        = id;
-        this.timeZone         = zone;
-        this.currentTimeZone  = zone;
-        this.zoneString       = zone.getID();
-        rowActionList         = new HsqlArrayList(128, true);
-        waitedSessions        = new OrderedHashSet();
-        waitingSessions       = new OrderedHashSet();
-        tempSet               = new OrderedHashSet();
-        actionSet             = new OrderedHashSet();
-        isolationLevelDefault = database.defaultIsolationLevel;
-        ignoreCase            = database.sqlIgnoreCase;
-        isolationLevel        = isolationLevelDefault;
-        txConflictRollback    = database.txConflictRollback;
-        txInterruptRollback   = database.txInterruptRollback;
-        isReadOnlyDefault     = readonly;
+        sessionId                   = id;
+        database                    = db;
+        this.user                   = user;
+        this.sessionUser            = user;
+        this.zoneString             = zoneString;
+        this.sessionTimeZoneSeconds = timeZoneSeconds;
+        this.timeZoneSeconds        = timeZoneSeconds;
+        rowActionList               = new HsqlArrayList(128, true);
+        waitedSessions              = new OrderedHashSet();
+        waitingSessions             = new OrderedHashSet();
+        tempSet                     = new OrderedHashSet();
+        actionSet                   = new OrderedHashSet();
+        isolationLevelDefault       = database.defaultIsolationLevel;
+        ignoreCase                  = database.sqlIgnoreCase;
+        isolationLevel              = isolationLevelDefault;
+        txConflictRollback          = database.txConflictRollback;
+        txInterruptRollback         = database.txInterruptRollback;
+        isReadOnlyDefault           = readonly;
         isReadOnlyIsolation = isolationLevel
                               == SessionInterface.TX_READ_UNCOMMITTED;
         sessionContext              = new SessionContext(this);
-        sessionContext.isAutoCommit = autocommit;
-        sessionContext.isReadOnly   = isReadOnlyDefault;
+        sessionContext.isAutoCommit = autocommit ? Boolean.TRUE
+                                                 : Boolean.FALSE;
+        sessionContext.isReadOnly   = isReadOnlyDefault ? Boolean.TRUE
+                                                        : Boolean.FALSE;
         parser                      = new ParserCommand(this, new Scanner());
-        sessionData                 = new SessionData(database, this);
-        statementManager            = new StatementManager(this);
-        timeoutManager              = new TimeoutManager();
 
         setResultMemoryRowCount(database.getResultMaxMemoryRows());
         resetSchema();
 
-        connectTimestamp = getCurrentTimestamp();
+        sessionData      = new SessionData(database, this);
+        statementManager = new StatementManager(this);
+        timeoutManager   = new TimeoutManager();
     }
 
     void resetSchema() {
@@ -413,7 +414,7 @@ public class Session implements SessionInterface {
      */
     void checkReadWrite() {
 
-        if (sessionContext.isReadOnly || isReadOnlyIsolation) {
+        if (sessionContext.isReadOnly.booleanValue() || isReadOnlyIsolation) {
             throw Error.error(ErrorCode.X_25006);
         }
     }
@@ -430,8 +431,8 @@ public class Session implements SessionInterface {
         checkReadWrite();
     }
 
-    public long getActionSCN() {
-        return actionSCN;
+    public long getActionTimestamp() {
+        return actionTimestamp;
     }
 
     /**
@@ -452,12 +453,15 @@ public class Session implements SessionInterface {
             throw Error.error(ErrorCode.X_40502);
         }
 
+        getTransactionUTC();
         database.txManager.addDeleteAction(this, table, store, row,
                                            changedColumns);
     }
 
     void addInsertAction(Table table, PersistentStore store, Row row,
                          int[] changedColumns) {
+
+        getTransactionUTC();
 
 //        tempActionHistory.add("add insert to transaction " + actionTimestamp);
         database.txManager.addInsertAction(this, table, store, row,
@@ -492,24 +496,12 @@ public class Session implements SessionInterface {
             return;
         }
 
-        if (sessionContext.isAutoCommit != autocommit) {
+        if (sessionContext.isAutoCommit.booleanValue() != autocommit) {
             commit(false);
 
-            sessionContext.isAutoCommit = autocommit;
+            sessionContext.isAutoCommit = autocommit ? Boolean.TRUE
+                                                     : Boolean.FALSE;
         }
-    }
-
-    public void setAutoCommitRows(int rows) {
-
-        if (isClosed) {
-            return;
-        }
-
-        if (sessionContext.depth > 0) {
-            return;
-        }
-
-        sessionContext.autoCommitRows = rows;
     }
 
     public void beginAction(Statement cs) {
@@ -529,7 +521,8 @@ public class Session implements SessionInterface {
         sessionData.persistentStoreCollection.clearStatementTables();
 
         if (result.mode == ResultConstants.ERROR) {
-            sessionData.persistentStoreCollection.clearResultTables(actionSCN);
+            sessionData.persistentStoreCollection.clearResultTables(
+                actionTimestamp);
             database.txManager.rollbackAction(this);
         } else {
             sessionContext
@@ -625,7 +618,7 @@ public class Session implements SessionInterface {
             return;
         }
 
-        if (isTransaction || isPreTransaction) {
+        if (isTransaction) {
             database.txManager.rollback(this);
         }
 
@@ -646,7 +639,8 @@ public class Session implements SessionInterface {
         sessionData.closeAllTransactionNavigators();
 
         if (!chain) {
-            sessionContext.isReadOnly = isReadOnlyDefault;
+            sessionContext.isReadOnly = isReadOnlyDefault ? Boolean.TRUE
+                                                          : Boolean.FALSE;
 
             setIsolation(isolationLevelDefault);
         }
@@ -661,7 +655,7 @@ public class Session implements SessionInterface {
                                               SimpleLog.LOG_ERROR);
         }
 /* debug 190
-        tempActionHistory.add("transaction ends " + actionTimestamp);
+        tempActionHistory.add("commit ends " + actionTimestamp);
         tempActionHistory.clear();
 //*/
     }
@@ -682,14 +676,14 @@ public class Session implements SessionInterface {
         statementManager.reset();
 
         sessionContext.lastIdentity = ValuePool.INTEGER_0;
-        sessionContext.isAutoCommit = true;
+        sessionContext.isAutoCommit = Boolean.TRUE;
 
         setResultMemoryRowCount(database.getResultMaxMemoryRows());
 
         user = sessionUser;
 
         resetSchema();
-        resetTimeZone();
+        setZoneSeconds(sessionTimeZoneSeconds);
 
         sessionMaxRows = 0;
         ignoreCase     = database.sqlIgnoreCase;
@@ -712,11 +706,11 @@ public class Session implements SessionInterface {
             sessionContext.savepointTimestamps.remove(index);
         }
 
-        actionSCN = database.txManager.getNextSystemChangeNumber();
+        actionTimestamp = database.txManager.getNextGlobalChangeTimestamp();
 
         sessionContext.savepoints.add(name,
                                       ValuePool.getInt(rowActionList.size()));
-        sessionContext.savepointTimestamps.addLast(actionSCN);
+        sessionContext.savepointTimestamps.addLast(actionTimestamp);
     }
 
     /**
@@ -786,7 +780,7 @@ public class Session implements SessionInterface {
     }
 
     public void setNoSQL() {
-        sessionContext.noSQL = true;
+        sessionContext.noSQL = Boolean.TRUE;
     }
 
     public void setIgnoreCase(boolean mode) {
@@ -812,7 +806,8 @@ public class Session implements SessionInterface {
             throw Error.error(ErrorCode.X_25001);
         }
 
-        sessionContext.isReadOnly = readonly;
+        sessionContext.isReadOnly = readonly ? Boolean.TRUE
+                                             : Boolean.FALSE;
     }
 
     public synchronized void setReadOnlyDefault(boolean readonly) {
@@ -824,7 +819,8 @@ public class Session implements SessionInterface {
         isReadOnlyDefault = readonly;
 
         if (!isInMidTransaction()) {
-            sessionContext.isReadOnly = isReadOnlyDefault;
+            sessionContext.isReadOnly = isReadOnlyDefault ? Boolean.TRUE
+                                                          : Boolean.FALSE;
         }
     }
 
@@ -834,7 +830,7 @@ public class Session implements SessionInterface {
      * @return the current value
      */
     public boolean isReadOnly() {
-        return sessionContext.isReadOnly || isReadOnlyIsolation;
+        return sessionContext.isReadOnly.booleanValue() || isReadOnlyIsolation;
     }
 
     public synchronized boolean isReadOnlyDefault() {
@@ -847,7 +843,7 @@ public class Session implements SessionInterface {
      * @return the current value
      */
     public synchronized boolean isAutoCommit() {
-        return sessionContext.isAutoCommit;
+        return sessionContext.isAutoCommit.booleanValue();
     }
 
     public synchronized int getStreamBlockSize() {
@@ -911,8 +907,8 @@ public class Session implements SessionInterface {
      *
      * @return the value
      */
-    public TimestampData getConnectTimestamp() {
-        return connectTimestamp;
+    public long getConnectTime() {
+        return connectTime;
     }
 
     /**
@@ -924,8 +920,8 @@ public class Session implements SessionInterface {
         return rowActionList.size();
     }
 
-    public long getTransactionSCN() {
-        return transactionSCN;
+    public long getTransactionTimestamp() {
+        return transactionTimestamp;
     }
 
     public Statement compileStatement(String sql, int props) {
@@ -1231,15 +1227,9 @@ public class Session implements SessionInterface {
         for (int i = 0; i < list.size(); i++) {
             Statement cs = (Statement) list.get(i);
 
-            if (isClosed) {
-                result = Result.newErrorResult(Error.error(ErrorCode.X_08503));
-
-                break;
-            }
-
             if (i > 0) {
                 if (cs.getCompileTimestamp()
-                        > database.txManager.getSystemChangeNumber()) {
+                        > database.txManager.getGlobalChangeTimestamp()) {
                     recompile = true;
                 }
 
@@ -1290,7 +1280,8 @@ public class Session implements SessionInterface {
         }
 
         if (sessionContext.depth > 0) {
-            if (sessionContext.noSQL || cs.isAutoCommitStatement()) {
+            if (sessionContext.noSQL.booleanValue()
+                    || cs.isAutoCommitStatement()) {
                 return Result.newErrorResult(Error.error(ErrorCode.X_46000));
             }
         }
@@ -1310,13 +1301,14 @@ public class Session implements SessionInterface {
         }
 
         sessionContext.currentStatement = cs;
-        sessionContext.invalidStatement = false;
-        statementStartSCN = database.txManager.getSystemChangeNumber();
+        statementStartTimestamp =
+            database.txManager.getGlobalChangeTimestamp();
 
         boolean isTX = cs.isTransactionStatement();
 
         if (!isTX) {
-            actionSCN = database.txManager.getNextSystemChangeNumber();
+            actionTimestamp =
+                database.txManager.getNextGlobalChangeTimestamp();
 
             sessionContext.setDynamicArguments(pvals);
 
@@ -1330,7 +1322,6 @@ public class Session implements SessionInterface {
 
             r                               = cs.execute(this);
             sessionContext.currentStatement = null;
-            sessionContext.invalidStatement = false;
             abortAction                     = false;
 
             sessionData.persistentStoreCollection.clearStatementTables();
@@ -1352,23 +1343,23 @@ public class Session implements SessionInterface {
                 continue;
             }
 
+            cs = sessionContext.currentStatement;
+
+            if (cs == null) {
+                return Result.newErrorResult(Error.error(ErrorCode.X_07502));
+            }
+
             if (abortTransaction) {
                 return handleAbortTransaction();
             }
+
+            boolean interrupted = false;
 
             while (true) {
                 try {
                     latch.await();
                 } catch (InterruptedException e) {
-                    if (txInterruptRollback) {
-                        database.txManager.resetSession(
-                            this, this, Long.MAX_VALUE,
-                            TransactionManager.resetSessionStatement);
-
-                        abortTransaction = true;
-
-                        break;
-                    }
+                    interrupted = txInterruptRollback;
 
                     Thread.interrupted();
 
@@ -1386,36 +1377,30 @@ public class Session implements SessionInterface {
                 break repeatLoop;
             }
 
-            if (abortTransaction) {
+            if (abortTransaction || interrupted) {
                 Result result = handleAbortTransaction();
+
+                if (interrupted) {
+                    Thread.currentThread().interrupt();
+                }
 
                 return result;
             }
 
             database.txManager.beginActionResume(this);
 
-            // expiration check
-            cs = sessionContext.currentStatement;
+            //        tempActionHistory.add("sql execute " + cs.sql + " " + actionTimestamp + " " + rowActionList.size());
+            sessionContext.setDynamicArguments(pvals);
 
-            if (sessionContext.invalidStatement) {
-                r = Result.newErrorResult(Error.error(ErrorCode.X_07502));
-                abortTransaction = true;
-            } else {
+            r = cs.execute(this);
 
-                // tempActionHistory.add("sql execute " + cs.sql + " " + actionTimestamp + " " + rowActionList.size());
-                sessionContext.setDynamicArguments(pvals);
-
-                r = cs.execute(this);
-
-                // tempActionHistory.add("sql execute end " + actionTimestamp + " " + rowActionList.size());
-
-                if (database.logger.getSqlEventLogLevel()
-                        >= SimpleLog.LOG_NORMAL) {
-                    database.logger.logStatementEvent(this, cs, pvals, r,
-                                                      SimpleLog.LOG_NORMAL);
-                }
+            if (database.logger.getSqlEventLogLevel()
+                    >= SimpleLog.LOG_NORMAL) {
+                database.logger.logStatementEvent(this, cs, pvals, r,
+                                                  SimpleLog.LOG_NORMAL);
             }
 
+            //        tempActionHistory.add("sql execute end " + actionTimestamp + " " + rowActionList.size());
             endAction(r);
 
             if (abortTransaction) {
@@ -1429,16 +1414,6 @@ public class Session implements SessionInterface {
                     try {
                         latch.await();
                     } catch (InterruptedException e) {
-                        if (txInterruptRollback) {
-                            database.txManager.resetSession(
-                                this, this, Long.MAX_VALUE,
-                                TransactionManager.resetSessionStatement);
-
-                            abortTransaction = true;
-
-                            break repeatLoop;
-                        }
-
                         Thread.interrupted();
 
                         continue;
@@ -1455,38 +1430,24 @@ public class Session implements SessionInterface {
             return handleAbortTransaction();
         }
 
-        if (sessionContext.depth == 0) {
-            if (sessionContext.isAutoCommit || cs.isAutoCommitStatement()) {
-                try {
-                    if (r.mode == ResultConstants.ERROR) {
-                        rollbackNoCheck(false);
-                    } else {
-                        commit(false);
-                    }
-                } catch (Exception e) {
-                    sessionContext.currentStatement = null;
-                    sessionContext.invalidStatement = false;
-
-                    return Result.newErrorResult(Error.error(ErrorCode.X_40001,
-                            e));
+        if (sessionContext.depth == 0
+                && (sessionContext.isAutoCommit.booleanValue()
+                    || cs.isAutoCommitStatement())) {
+            try {
+                if (r.mode == ResultConstants.ERROR) {
+                    rollbackNoCheck(false);
+                } else {
+                    commit(false);
                 }
-            } else if (sessionContext.autoCommitRows > 0) {
-                if (rowActionList.size() > sessionContext.autoCommitRows) {
-                    try {
-                        commit(false);
-                    } catch (Exception e) {
-                        sessionContext.currentStatement = null;
-                        sessionContext.invalidStatement = false;
+            } catch (Exception e) {
+                sessionContext.currentStatement = null;
 
-                        return Result.newErrorResult(
-                            Error.error(ErrorCode.X_40001, e));
-                    }
-                }
+                return Result.newErrorResult(Error.error(ErrorCode.X_40001,
+                        e));
             }
         }
 
         sessionContext.currentStatement = null;
-        sessionContext.invalidStatement = false;
 
         return r;
     }
@@ -1496,7 +1457,6 @@ public class Session implements SessionInterface {
         rollbackNoCheck(false);
 
         sessionContext.currentStatement = null;
-        sessionContext.invalidStatement = false;
 
         return Result.newErrorResult(Error.error(ErrorCode.X_40001));
     }
@@ -1672,57 +1632,38 @@ public class Session implements SessionInterface {
     }
 
 // session DATETIME functions
-    long                  currentTimestampSCN = -1;    // initialise to invalid val
-    private TimestampData transactionUTC;
-    boolean               transactionUTCSet;
+    long                  currentTimestampSCN;
+    long                  currentMillis;
     private TimestampData currentDate;
     private TimestampData currentTimestamp;
     private TimestampData localTimestamp;
+    private TimestampData transactionUTC;
+    boolean               transactionUTCSet;
     private TimeData      currentTime;
     private TimeData      localTime;
 
     /**
-     * Returns the current date/time, unchanged for the duration of the current
+     * Returns the current date, unchanged for the duration of the current
      * execution unit (statement).<p>
      *
-     * SQL standards require that CURRENT_DATE, CURRENT_TIME,
-     * CURRENT_TIMESTAMP, LOCALTIME, and LOCALTIMESTAMP are all evaluated at
-     * the same point of time in the duration of each SQL statement, no matter
-     * how long the SQL statement takes to complete.<p>
+     * SQL standards require that CURRENT_DATE, CURRENT_TIME and
+     * CURRENT_TIMESTAMP are all evaluated at the same point of
+     * time in the duration of each SQL statement, no matter how long the
+     * SQL statement takes to complete.<p>
      *
      * When this method or a corresponding method for CURRENT_TIME or
      * CURRENT_TIMESTAMP is first called in the scope of a system change
-     * number, currentTimestamp is set to the current system time. All further
-     * CURRENT_XXXX and LOCALXXXX calls in this scope will use this base point
-     * of time.
-     *
+     * number, currentMillis is set to the current system time. All further
+     * CURRENT_XXXX calls in this scope will use this millisecond value.
      * (fredt@users)
      */
-    synchronized TimestampData getCurrentTimestamp() {
-
-        resetCurrentTimestamp();
-
-        return currentTimestamp;
-    }
-
-    synchronized TimestampData getLocalTimestamp() {
-
-        resetCurrentTimestamp();
-
-        if (localTimestamp == null) {
-            localTimestamp =
-                DateTimeType.toLocalTimestampValue(currentTimestamp);
-        }
-
-        return localTimestamp;
-    }
-
     public synchronized TimestampData getCurrentDate() {
 
         resetCurrentTimestamp();
 
         if (currentDate == null) {
-            currentDate = DateTimeType.toCurrentDateValue(currentTimestamp);
+            currentDate = (TimestampData) Type.SQL_DATE.getValue(this,
+                    currentMillis / 1000, 0, getZoneSeconds());
         }
 
         return currentDate;
@@ -1732,111 +1673,108 @@ public class Session implements SessionInterface {
      * Returns the current time, unchanged for the duration of the current
      * execution unit (statement)
      */
-    synchronized TimeData getCurrentTime() {
+    synchronized TimeData getCurrentTime(boolean withZone) {
 
         resetCurrentTimestamp();
 
-        if (currentTime == null) {
-            currentTime =
-                DateTimeType.toCurrentTimeWithZoneValue(currentTimestamp);
-        }
+        if (withZone) {
+            if (currentTime == null) {
+                int seconds =
+                    (int) (HsqlDateTime.getNormalisedTime(
+                        getCalendarGMT(), currentMillis)) / 1000;
+                int nanos = (int) (currentMillis % 1000) * 1000000;
 
-        return currentTime;
+                currentTime = new TimeData(seconds, nanos, getZoneSeconds());
+            }
+
+            return currentTime;
+        } else {
+            if (localTime == null) {
+                int seconds =
+                    (int) (HsqlDateTime.getNormalisedTime(
+                        getCalendarGMT(),
+                        currentMillis + getZoneSeconds() * 1000L)) / 1000;
+                int nanos = (int) (currentMillis % 1000) * 1000000;
+
+                localTime = new TimeData(seconds, nanos, 0);
+            }
+
+            return localTime;
+        }
     }
 
-    synchronized TimeData getLocalTime() {
+    /**
+     * Returns the current timestamp, unchanged for the duration of the current
+     * execution unit (statement)
+     */
+    synchronized TimestampData getCurrentTimestamp(boolean withZone) {
 
         resetCurrentTimestamp();
 
-        if (localTime == null) {
-            localTime = DateTimeType.toCurrentTimeValue(currentTimestamp);
-        }
+        if (withZone) {
+            if (currentTimestamp == null) {
+                int nanos = (int) (currentMillis % 1000) * 1000000;
 
-        return localTime;
+                currentTimestamp = new TimestampData((currentMillis / 1000),
+                                                     nanos, getZoneSeconds());
+            }
+
+            return currentTimestamp;
+        } else {
+            if (localTimestamp == null) {
+                int nanos = (int) (currentMillis % 1000) * 1000000;
+
+                localTimestamp = new TimestampData(currentMillis / 1000
+                                                   + getZoneSeconds(), nanos,
+                                                       0);
+            }
+
+            return localTimestamp;
+        }
     }
 
-    private void resetCurrentTimestamp() {
+    static TimestampData getSystemTimestamp(boolean withZone, boolean utc) {
 
-        if (currentTimestampSCN != actionSCN) {
-            currentTimestampSCN = actionSCN;
-            currentTimestamp =
-                DateTimeType.newCurrentTimestamp(currentTimeZone);
-            currentDate    = null;
-            localTimestamp = null;
-            currentTime    = null;
-            localTime      = null;
+        long millis  = System.currentTimeMillis();
+        long seconds = millis / 1000;
+        int  nanos   = (int) (millis % 1000) * 1000000;
+        int  offset  = 0;
+
+        if (!utc) {
+            TimeZone zone = TimeZone.getDefault();
+
+            offset = zone.getOffset(millis) / 1000;
+
+            if (!withZone) {
+                seconds += offset;
+                offset  = 0;
+            }
         }
+
+        return new TimestampData(seconds, nanos, offset);
     }
 
     TimestampData getTransactionUTC() {
 
         if (!transactionUTCSet) {
-            transactionUTC    = DateTimeType.newSystemTimestampUTC();
+            transactionUTC    = getSystemTimestamp(true, true);
             transactionUTCSet = true;
         }
 
         return transactionUTC;
     }
 
-    // session calendars
-    private Calendar calendar;
-    private Calendar calendarGMT;
+    private void resetCurrentTimestamp() {
 
-    public int getZoneSeconds() {
-        return currentTimestamp.getZone();
-    }
-
-    public void resetTimeZone() {
-
-        currentTimeZone = timeZone;
-
-        if (calendar != null) {
-            calendar.setTimeZone(currentTimeZone);
+        if (currentTimestampSCN != actionTimestamp) {
+            currentTimestampSCN = actionTimestamp;
+            currentMillis       = System.currentTimeMillis();
+            currentDate         = null;
+            currentTimestamp    = null;
+            localTimestamp      = null;
+            currentTime         = null;
+            localTime           = null;
         }
-    }
-
-    public void setTimeZone(TimeZone zone) {
-
-        currentTimeZone = zone;
-
-        if (calendar != null) {
-            calendar.setTimeZone(currentTimeZone);
-        }
-
-        resetCurrentTimestamp();
-    }
-
-    public Calendar getCalendar() {
-
-        if (calendar == null) {
-            calendar = new GregorianCalendar(currentTimeZone);
-        }
-
-        return calendar;
-    }
-
-    public Calendar getCalendarGMT() {
-
-        if (calendarGMT == null) {
-            calendarGMT = new GregorianCalendar(TimeZone.getTimeZone("GMT"));
-
-            calendarGMT.setFirstDayOfWeek(Calendar.MONDAY);
-            calendarGMT.setMinimalDaysInFirstWeek(4);
-        }
-
-        return calendarGMT;
-    }
-
-    public SimpleDateFormat getSimpleDateFormatGMT() {
-
-        if (simpleDateFormatGMT == null) {
-            simpleDateFormatGMT = new SimpleDateFormat("MMMM",
-                    HsqlDateTime.defaultLocale);
-
-            simpleDateFormatGMT.setCalendar(getCalendarGMT());
-        }
-
-        return simpleDateFormatGMT;
     }
 
     private Result getAttributesResult(int id) {
@@ -1932,7 +1870,8 @@ public class Session implements SessionInterface {
                 return sessionContext.isAutoCommit;
 
             case SessionInterface.INFO_CONNECTION_READONLY :
-                return isReadOnlyDefault;
+                return isReadOnlyDefault ? Boolean.TRUE
+                                         : Boolean.FALSE;
 
             case SessionInterface.INFO_CATALOG :
                 return database.getCatalogName().name;
@@ -2066,7 +2005,7 @@ public class Session implements SessionInterface {
         if (result.getType() == ResultConstants.SQLCANCEL) {
             if (result.getSessionRandomID() == randomId) {
                 database.txManager.resetSession(
-                    this, this, statementStartSCN,
+                    this, this, statementStartTimestamp,
                     TransactionManager.resetSessionStatement);
             }
         }
@@ -2187,6 +2126,56 @@ public class Session implements SessionInterface {
         if (sqlWarnings != null) {
             sqlWarnings.clear();
         }
+    }
+
+    // session zone
+    private Calendar calendar;
+    private Calendar calendarGMT;
+
+    public int getZoneSeconds() {
+        return timeZoneSeconds;
+    }
+
+    public void setZoneSeconds(int seconds) {
+        timeZoneSeconds = seconds;
+    }
+
+    public Calendar getCalendar() {
+
+        if (calendar == null) {
+            if (zoneString == null) {
+                calendar = new GregorianCalendar();
+            } else {
+                TimeZone zone = TimeZone.getTimeZone(zoneString);
+
+                calendar = new GregorianCalendar(zone);
+            }
+        }
+
+        return calendar;
+    }
+
+    public Calendar getCalendarGMT() {
+
+        if (calendarGMT == null) {
+            calendarGMT = new GregorianCalendar(TimeZone.getTimeZone("GMT"));
+
+            calendarGMT.setFirstDayOfWeek(Calendar.MONDAY);
+            calendarGMT.setMinimalDaysInFirstWeek(4);
+        }
+
+        return calendarGMT;
+    }
+
+    public SimpleDateFormat getSimpleDateFormatGMT() {
+
+        if (simpleDateFormatGMT == null) {
+            simpleDateFormatGMT = new SimpleDateFormat("MMMM", Locale.ENGLISH);
+
+            simpleDateFormatGMT.setCalendar(getCalendarGMT());
+        }
+
+        return simpleDateFormatGMT;
     }
 
     // services
@@ -2340,9 +2329,8 @@ public class Session implements SessionInterface {
 
         volatile int  currentTimeout;
         volatile long checkTimestampSCN;
-        volatile long checkTimestamp;
 
-        synchronized void startTimeout(int timeout) {
+        void startTimeout(int timeout) {
 
             if (timeout == 0) {
                 return;
@@ -2350,30 +2338,31 @@ public class Session implements SessionInterface {
 
             boolean add = checkTimestampSCN == 0;
 
-            currentTimeout    = timeout * 1000;
-            checkTimestampSCN = statementStartSCN;
-            checkTimestamp    = System.currentTimeMillis();
+            currentTimeout    = timeout + 1;
+            checkTimestampSCN = statementStartTimestamp;
 
             if (add) {
                 database.timeoutRunner.addSession(this);
             }
         }
 
-        synchronized void endTimeout() {
+        void endTimeout() {
             currentTimeout = 0;
         }
 
-        synchronized public boolean checkTimeout(long systemMillis) {
+        public boolean checkTimeout() {
 
             if (currentTimeout == 0) {
                 return false;
             }
 
-            if (checkTimestampSCN != statementStartSCN) {
+            if (checkTimestampSCN != statementStartTimestamp) {
                 return false;
             }
 
-            if (checkTimestamp + currentTimeout < systemMillis) {
+            currentTimeout--;
+
+            if (currentTimeout <= 0) {
                 currentTimeout = 0;
 
                 database.txManager.resetSession(
@@ -2386,7 +2375,7 @@ public class Session implements SessionInterface {
             return false;
         }
 
-        synchronized public boolean isClosed() {
+        public boolean isClosed() {
             return Session.this.isClosed;
         }
     }

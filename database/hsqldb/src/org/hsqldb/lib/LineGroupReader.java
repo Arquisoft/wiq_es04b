@@ -1,4 +1,4 @@
-/* Copyright (c) 2001-2022, The HSQL Development Group
+/* Copyright (c) 2001-2021, The HSQL Development Group
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -72,8 +72,6 @@ public class LineGroupReader {
      * Default constructor for TestUtil usage.
      * Sections start at lines beginning with any non-space character.
      * SQL comment lines are ignored.
-     *
-     * @param reader LineNumberReader
      */
     public LineGroupReader(LineNumberReader reader) {
 
@@ -89,9 +87,6 @@ public class LineGroupReader {
 
     /**
      * Constructor for sections starting with specified strings.
-     *
-     * @param reader LineNumberReader
-     * @param sectionStarts String[]
      */
     public LineGroupReader(LineNumberReader reader, String[] sectionStarts) {
 
@@ -157,12 +152,9 @@ public class LineGroupReader {
         HsqlArrayList list = getNextSection();
         return convertToString(list, 0);
     }
-
     /**
-     * Returns a map/list which contains the first line of each line group as
-     * key and the rest of the lines as a String value.
-     *
-     * @return OrderedHashMap
+     * Returns a map/list which contains the first line of each line group
+     * as key and the rest of the lines as a String value.
      */
     public OrderedHashMap getAsMap() {
 

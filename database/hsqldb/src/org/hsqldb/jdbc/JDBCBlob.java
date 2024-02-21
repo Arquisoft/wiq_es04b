@@ -1,4 +1,4 @@
-/* Copyright (c) 2001-2022, The HSQL Development Group
+/* Copyright (c) 2001-2021, The HSQL Development Group
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -68,7 +68,7 @@ import org.hsqldb.lib.java.JavaSystem;
  * <code>Blob</code> object contains a logical pointer to the
  * SQL <code>BLOB</code> data rather than the data itself.
  * A <code>Blob</code> object is valid for the duration of the
- * transaction in which it was created.
+ * transaction in which is was created.
  *
  * <P>Methods in the interfaces {@link java.sql.ResultSet},
  * {@link java.sql.CallableStatement}, and {@link java.sql.PreparedStatement}, such as
@@ -321,7 +321,7 @@ public class JDBCBlob implements Blob {
      * value will be increased to accommodate the extra bytes.
      * <p>
      * <b>Note:</b> If the value specified for <code>pos</code>
-     * is greater than the length+1 of the <code>BLOB</code> value then the
+     * is greater then the length+1 of the <code>BLOB</code> value then the
      * behavior is undefined. Some JDBC drivers may throw a
      * <code>SQLException</code> while other drivers may support this
      * operation.
@@ -389,7 +389,7 @@ public class JDBCBlob implements Blob {
      * value will be increased to accommodate the extra bytes.
      * <p>
      * <b>Note:</b> If the value specified for <code>pos</code>
-     * is greater than the length+1 of the <code>BLOB</code> value then the
+     * is greater then the length+1 of the <code>BLOB</code> value then the
      * behavior is undefined. Some JDBC drivers may throw a
      * <code>SQLException</code> while other drivers may support this
      * operation.
@@ -500,7 +500,7 @@ public class JDBCBlob implements Blob {
      * value will be increased to accommodate the extra bytes.
      * <p>
      * <b>Note:</b> If the value specified for <code>pos</code>
-     * is greater than the length+1 of the <code>BLOB</code> value then the
+     * is greater then the length+1 of the <code>BLOB</code> value then the
      * behavior is undefined. Some JDBC drivers may throw a
      * <code>SQLException</code> while other drivers may support this
      * operation.
@@ -602,7 +602,7 @@ public class JDBCBlob implements Blob {
      * object represents to be <code>len</code> bytes in length.
      * <p>
      * <b>Note:</b> If the value specified for <code>pos</code>
-     * is greater than the length+1 of the <code>BLOB</code> value then the
+     * is greater then the length+1 of the <code>BLOB</code> value then the
      * behavior is undefined. Some JDBC drivers may throw a
      * <code>SQLException</code> while other drivers may support this
      * operation.

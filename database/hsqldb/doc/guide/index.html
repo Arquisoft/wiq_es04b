@@ -28,7 +28,7 @@
 <a name="guide"></a>HyperSQL User Guide</h1>
 </div>
 <div>
-<h2 class="subtitle">HyperSQL Database Engine 2.7.2</h2>
+<h2 class="subtitle">HyperSQL Database Engine 2.6.1</h2>
 </div>
 <table xmlns:xi="http://www.w3.org/2001/XInclude" class="titlead" cellspacing="0">
 <tr>
@@ -66,7 +66,7 @@
 <div>
 <div class="legalnotice">
 <a name="N1003E"></a>
-<p>Copyright 2002-2022 Blaine Simpson, Fred Toussi and The HSQL
+<p>Copyright 2002-2021 Blaine Simpson, Fred Toussi and The HSQL
       Development Group. Permission is granted to distribute this document
       without any alteration under the terms of the HSQLDB license. You are
       not allowed to distribute or display this document on the web in an
@@ -74,7 +74,7 @@
 </div>
 </div>
 <div>
-<p class="pubdate">2023-05-29</p>
+<p class="pubdate">2021-10-21</p>
 </div>
 </td><td class="sponsorad">
 <div xml:base="../doc-src/branding-frag.xhtml" class="branding">
@@ -201,7 +201,7 @@
 <dd>
 <dl>
 <dt>
-<span class="section"><a href="sqlgeneral-chapt.html#N1048B">Case Sensitivity</a></span>
+<span class="section"><a href="sqlgeneral-chapt.html#N10485">Case Sensitivity</a></span>
 </dt>
 <dt>
 <span class="section"><a href="sqlgeneral-chapt.html#sgc_persist_tables">Persistent Tables</a></span>
@@ -424,9 +424,6 @@
 </dt>
 <dt>
 <span class="section"><a href="builtinfunctions-chapt.html#bfc_string_binary_functions">String and Binary String Functions</a></span>
-</dt>
-<dt>
-<span class="section"><a href="builtinfunctions-chapt.html#bfc_JSON_functions">JSON Functions</a></span>
 </dt>
 <dt>
 <span class="section"><a href="builtinfunctions-chapt.html#bfc_numeric_functions">Numeric Functions</a></span>
@@ -753,9 +750,6 @@
 </dt>
 <dt>
 <span class="section"><a href="accesscontrol-chapt.html#acc_access_rights">Access Rights</a></span>
-</dt>
-<dt>
-<span class="section"><a href="accesscontrol-chapt.html#N1425C">Simple Access Control</a></span>
 </dt>
 <dt>
 <span class="section"><a href="accesscontrol-chapt.html#acc_fine_grained_access">Fine-Grained Data Access Control</a></span>
@@ -1263,7 +1257,7 @@
 <span class="section"><a href="dbproperties-chapt.html#dpc_variables_url">Variables in Connection URL</a></span>
 </dt>
 <dt>
-<span class="section"><a href="dbproperties-chapt.html#N16217">Connection Properties</a></span>
+<span class="section"><a href="dbproperties-chapt.html#N16054">Connection Properties</a></span>
 </dt>
 <dt>
 <span class="section"><a href="dbproperties-chapt.html#dpc_connection_props">Properties for Individual Connections</a></span>
@@ -1540,182 +1534,174 @@
 <dl>
 <dt>1. <a href="book-pref.html#altformats-tbl">Available formats of this document</a>
 </dt>
-<dt>2.1. <a href="sqlgeneral-chapt.html#N10537">List of SQL types</a>
+<dt>2.1. <a href="sqlgeneral-chapt.html#N10531">List of SQL types</a>
 </dt>
-<dt>4.1. <a href="builtinfunctions-chapt.html#N127C5">TO_CHAR, TO_DATE and TO_TIMESTAMP format elements</a>
+<dt>4.1. <a href="builtinfunctions-chapt.html#N126CE">TO_CHAR, TO_DATE and TO_TIMESTAMP format elements</a>
 </dt>
-<dt>14.1. <a href="dbproperties-chapt.html#N160D2">Memory Database URL</a>
+<dt>14.1. <a href="dbproperties-chapt.html#N15F0F">Memory Database URL</a>
 </dt>
-<dt>14.2. <a href="dbproperties-chapt.html#N16113">File Database URL</a>
+<dt>14.2. <a href="dbproperties-chapt.html#N15F50">File Database URL</a>
 </dt>
-<dt>14.3. <a href="dbproperties-chapt.html#N16159">Resource Database URL</a>
+<dt>14.3. <a href="dbproperties-chapt.html#N15F96">Resource Database URL</a>
 </dt>
-<dt>14.4. <a href="dbproperties-chapt.html#N1618D">Server Database URL</a>
+<dt>14.4. <a href="dbproperties-chapt.html#N15FCA">Server Database URL</a>
 </dt>
-<dt>14.5. <a href="dbproperties-chapt.html#N16242">User and Password</a>
+<dt>14.5. <a href="dbproperties-chapt.html#N1607B">User and Password</a>
 </dt>
-<dt>14.6. <a href="dbproperties-chapt.html#N16283">Closing old ResultSet when Statement is reused</a>
+<dt>14.6. <a href="dbproperties-chapt.html#N160BC">Creating New Database</a>
 </dt>
-<dt>14.7. <a href="dbproperties-chapt.html#N162CA">Column Names in JDBC ResultSet</a>
+<dt>14.7. <a href="dbproperties-chapt.html#N1611B">Closing old ResultSet when Statement is reused</a>
 </dt>
-<dt>14.8. <a href="dbproperties-chapt.html#N16303">In-memory LOBs from JDBC ResultSet</a>
+<dt>14.8. <a href="dbproperties-chapt.html#N16162">Column Names in JDBC ResultSet</a>
 </dt>
-<dt>14.9. <a href="dbproperties-chapt.html#N16334">Empty batch in JDBC PreparedStatement</a>
+<dt>14.9. <a href="dbproperties-chapt.html#N1619B">In-memory LOBs from JDBC ResultSet</a>
 </dt>
-<dt>14.10. <a href="dbproperties-chapt.html#N1636A">Automatic Shutdown</a>
+<dt>14.10. <a href="dbproperties-chapt.html#N161CC">Empty batch in JDBC PreparedStatement</a>
 </dt>
-<dt>14.11. <a href="dbproperties-chapt.html#N163A1">OpenOffice and Libre Office usage</a>
+<dt>14.11. <a href="dbproperties-chapt.html#N16202">Automatic Shutdown</a>
 </dt>
-<dt>14.12. <a href="dbproperties-chapt.html#N16407">Validity Check Property</a>
+<dt>14.12. <a href="dbproperties-chapt.html#N1626C">Validity Check Property</a>
 </dt>
-<dt>14.13. <a href="dbproperties-chapt.html#N16434">Creating New Database Check Property</a>
+<dt>14.13. <a href="dbproperties-chapt.html#N1629D">Execution of Multiple SQL Statements etc.</a>
 </dt>
-<dt>14.14. <a href="dbproperties-chapt.html#N16497">Execution of Multiple SQL Statements etc.</a>
+<dt>14.14. <a href="dbproperties-chapt.html#N162DD">SQL Keyword Use as Identifier</a>
 </dt>
-<dt>14.15. <a href="dbproperties-chapt.html#N164D7">SQL Keyword Use as Identifier</a>
-</dt>
-<dt>14.16. <a href="dbproperties-chapt.html#N16504">SQL Keyword Starting with the Underscore or Containing Dollar
+<dt>14.15. <a href="dbproperties-chapt.html#N1630A">SQL Keyword Starting with the Underscore or Containing Dollar
         Characters</a>
 </dt>
-<dt>14.17. <a href="dbproperties-chapt.html#N16531">Reference to Columns Names</a>
+<dt>14.16. <a href="dbproperties-chapt.html#N16337">Reference to Columns Names</a>
 </dt>
-<dt>14.18. <a href="dbproperties-chapt.html#N1655E">String Size Declaration</a>
+<dt>14.17. <a href="dbproperties-chapt.html#N16364">String Size Declaration</a>
 </dt>
-<dt>14.19. <a href="dbproperties-chapt.html#N1658B">Truncation of trailing spaces from string</a>
+<dt>14.18. <a href="dbproperties-chapt.html#N16391">Type Enforcement in Comparison and Assignment</a>
 </dt>
-<dt>14.20. <a href="dbproperties-chapt.html#N165B8">Type Enforcement in Comparison and Assignment</a>
+<dt>14.19. <a href="dbproperties-chapt.html#N163BE">Foreign Key Triggered Data Change</a>
 </dt>
-<dt>14.21. <a href="dbproperties-chapt.html#N165E5">Foreign Key Triggered Data Change</a>
+<dt>14.20. <a href="dbproperties-chapt.html#N16401">Use of LOB for LONGVAR Types</a>
 </dt>
-<dt>14.22. <a href="dbproperties-chapt.html#N16628">Use of LOB for LONGVAR Types</a>
+<dt>14.21. <a href="dbproperties-chapt.html#N1642E">Type of string literals in CASE WHEN</a>
 </dt>
-<dt>14.23. <a href="dbproperties-chapt.html#N16655">Type of string literals in CASE WHEN</a>
+<dt>14.22. <a href="dbproperties-chapt.html#N1645B">Concatenation with NULL</a>
 </dt>
-<dt>14.24. <a href="dbproperties-chapt.html#N16682">Concatenation with NULL</a>
+<dt>14.23. <a href="dbproperties-chapt.html#N16488">NULL in Multi-Column UNIQUE Constraints</a>
 </dt>
-<dt>14.25. <a href="dbproperties-chapt.html#N166AF">NULL in Multi-Column UNIQUE Constraints</a>
+<dt>14.24. <a href="dbproperties-chapt.html#N164B5">Truncation or Rounding in Type Conversion</a>
 </dt>
-<dt>14.26. <a href="dbproperties-chapt.html#N166DC">Truncation or Rounding in Type Conversion</a>
+<dt>14.25. <a href="dbproperties-chapt.html#N164E2">Decimal Scale of Division and AVG Values</a>
 </dt>
-<dt>14.27. <a href="dbproperties-chapt.html#N16709">Decimal Scale of Division and AVG Values</a>
+<dt>14.26. <a href="dbproperties-chapt.html#N1650F">Support for NaN values</a>
 </dt>
-<dt>14.28. <a href="dbproperties-chapt.html#N16736">Support for NaN values</a>
+<dt>14.27. <a href="dbproperties-chapt.html#N1653C">Sort order of NULL values</a>
 </dt>
-<dt>14.29. <a href="dbproperties-chapt.html#N16763">Sort order of NULL values</a>
+<dt>14.28. <a href="dbproperties-chapt.html#N16569">Sort order of NULL values with DESC</a>
 </dt>
-<dt>14.30. <a href="dbproperties-chapt.html#N16790">Sort order of NULL values with DESC</a>
+<dt>14.29. <a href="dbproperties-chapt.html#N16599">String Comparison with Padding</a>
 </dt>
-<dt>14.31. <a href="dbproperties-chapt.html#N167C0">String Comparison with Padding</a>
+<dt>14.30. <a href="dbproperties-chapt.html#N165C8">Default Locale Language Collation</a>
 </dt>
-<dt>14.32. <a href="dbproperties-chapt.html#N167EF">Default Locale Language Collation</a>
+<dt>14.31. <a href="dbproperties-chapt.html#N165F5">Case-Insensitive Varchar columns</a>
 </dt>
-<dt>14.33. <a href="dbproperties-chapt.html#N1681C">Case-Insensitive Varchar columns</a>
+<dt>14.32. <a href="dbproperties-chapt.html#N16622">Lowercase column identifiers in ResultSet</a>
 </dt>
-<dt>14.34. <a href="dbproperties-chapt.html#N16849">Lowercase column identifiers in ResultSet</a>
+<dt>14.33. <a href="dbproperties-chapt.html#N1664F">Storage of Live Java Objects</a>
 </dt>
-<dt>14.35. <a href="dbproperties-chapt.html#N16876">Storage of Live Java Objects</a>
+<dt>14.34. <a href="dbproperties-chapt.html#N1667C">Names of System Indexes Used for Constraints</a>
 </dt>
-<dt>14.36. <a href="dbproperties-chapt.html#N168A3">Names of System Indexes Used for Constraints</a>
+<dt>14.35. <a href="dbproperties-chapt.html#N166A9">DB2 Style Syntax</a>
 </dt>
-<dt>14.37. <a href="dbproperties-chapt.html#N168D2">DB2 Style Syntax</a>
+<dt>14.36. <a href="dbproperties-chapt.html#N166D5">MSSQL Style Syntax</a>
 </dt>
-<dt>14.38. <a href="dbproperties-chapt.html#N168FE">MSSQL Style Syntax</a>
+<dt>14.37. <a href="dbproperties-chapt.html#N16701">MySQL Style Syntax</a>
 </dt>
-<dt>14.39. <a href="dbproperties-chapt.html#N1692A">MySQL Style Syntax</a>
+<dt>14.38. <a href="dbproperties-chapt.html#N1672E">Oracle Style Syntax</a>
 </dt>
-<dt>14.40. <a href="dbproperties-chapt.html#N16957">Oracle Style Syntax</a>
+<dt>14.39. <a href="dbproperties-chapt.html#N1675B">PostgreSQL Style Syntax</a>
 </dt>
-<dt>14.41. <a href="dbproperties-chapt.html#N16984">PostgreSQL Style Syntax</a>
+<dt>14.40. <a href="dbproperties-chapt.html#N1678B">Default Table Type</a>
 </dt>
-<dt>14.42. <a href="dbproperties-chapt.html#N169B0">Maximum Iterations of Recursive Queries</a>
+<dt>14.41. <a href="dbproperties-chapt.html#N167BB">Transaction Control Mode</a>
 </dt>
-<dt>14.43. <a href="dbproperties-chapt.html#N169E3">Default Table Type</a>
+<dt>14.42. <a href="dbproperties-chapt.html#N167F1">Default Isolation Level for Sessions</a>
 </dt>
-<dt>14.44. <a href="dbproperties-chapt.html#N16A13">Transaction Control Mode</a>
+<dt>14.43. <a href="dbproperties-chapt.html#N16824">Transaction Rollback in Deadlock</a>
 </dt>
-<dt>14.45. <a href="dbproperties-chapt.html#N16A49">Default Isolation Level for Sessions</a>
+<dt>14.44. <a href="dbproperties-chapt.html#N16851">Transaction Rollback on Interrupt</a>
 </dt>
-<dt>14.46. <a href="dbproperties-chapt.html#N16A7C">Transaction Rollback in Deadlock</a>
+<dt>14.45. <a href="dbproperties-chapt.html#N1687E">Time Zone and Interval Types</a>
 </dt>
-<dt>14.47. <a href="dbproperties-chapt.html#N16AA9">Transaction Rollback on Interrupt</a>
+<dt>14.46. <a href="dbproperties-chapt.html#N168B5">Opening Database as Read Only</a>
 </dt>
-<dt>14.48. <a href="dbproperties-chapt.html#N16AD6">Time Zone and Interval Types</a>
+<dt>14.47. <a href="dbproperties-chapt.html#N168E5">Opening Database Without Modifying the Files</a>
 </dt>
-<dt>14.49. <a href="dbproperties-chapt.html#N16B0B">Temporary Result Rows in Memory</a>
+<dt>14.48. <a href="dbproperties-chapt.html#N16915">Huge database files and tables</a>
 </dt>
-<dt>14.50. <a href="dbproperties-chapt.html#N16B3C">Opening Database as Read Only</a>
+<dt>14.49. <a href="dbproperties-chapt.html#N16945">Event Logging</a>
 </dt>
-<dt>14.51. <a href="dbproperties-chapt.html#N16B6C">Opening Database Without Modifying the Files</a>
+<dt>14.50. <a href="dbproperties-chapt.html#N16975">SQL Logging</a>
 </dt>
-<dt>14.52. <a href="dbproperties-chapt.html#N16B9C">Event Logging</a>
+<dt>14.51. <a href="dbproperties-chapt.html#N169A5">Temporary Result Rows in Memory</a>
 </dt>
-<dt>14.53. <a href="dbproperties-chapt.html#N16BCC">SQL Logging</a>
+<dt>14.52. <a href="dbproperties-chapt.html#N169D2">Unused Space Recovery</a>
 </dt>
-<dt>14.54. <a href="dbproperties-chapt.html#N16BFC">Table Spaces for Cached Tables</a>
+<dt>14.53. <a href="dbproperties-chapt.html#N16A04">Rows Cached In Memory</a>
 </dt>
-<dt>14.55. <a href="dbproperties-chapt.html#N16C29">Huge database files and tables</a>
+<dt>14.54. <a href="dbproperties-chapt.html#N16A33">Size of Rows Cached in Memory</a>
 </dt>
-<dt>14.56. <a href="dbproperties-chapt.html#N16C59">Use of NIO for Disk Table Storage</a>
+<dt>14.55. <a href="dbproperties-chapt.html#N16A62">Size Scale of Disk Table Storage</a>
 </dt>
-<dt>14.57. <a href="dbproperties-chapt.html#N16C8C">Use of NIO for Disk Table Storage</a>
+<dt>14.56. <a href="dbproperties-chapt.html#N16A8F">Size Scale of LOB Storage</a>
 </dt>
-<dt>14.58. <a href="dbproperties-chapt.html#N16CB9">Internal Backup of the .data File</a>
+<dt>14.57. <a href="dbproperties-chapt.html#N16ABC">Compression of BLOB and CLOB data</a>
 </dt>
-<dt>14.59. <a href="dbproperties-chapt.html#N16CEA">Unused Space Recovery</a>
+<dt>14.58. <a href="dbproperties-chapt.html#N16AE9">Internal Backup of Database Files</a>
 </dt>
-<dt>14.60. <a href="dbproperties-chapt.html#N16D1E">Rows Cached In Memory</a>
+<dt>14.59. <a href="dbproperties-chapt.html#N16B1A">Use of Lock File</a>
 </dt>
-<dt>14.61. <a href="dbproperties-chapt.html#N16D4D">Size of Rows Cached in Memory</a>
+<dt>14.60. <a href="dbproperties-chapt.html#N16B4A">Logging Data Change Statements</a>
 </dt>
-<dt>14.62. <a href="dbproperties-chapt.html#N16D7C">Size Scale of Disk Table Storage</a>
+<dt>14.61. <a href="dbproperties-chapt.html#N16B80">Automatic Checkpoint Frequency</a>
 </dt>
-<dt>14.63. <a href="dbproperties-chapt.html#N16DA9">Size Scale of LOB Storage</a>
+<dt>14.62. <a href="dbproperties-chapt.html#N16BB6">Automatic Defrag at Checkpoint</a>
 </dt>
-<dt>14.64. <a href="dbproperties-chapt.html#N16DD6">Compression of BLOB and CLOB data</a>
+<dt>14.63. <a href="dbproperties-chapt.html#N16BE3">Compression of the .script file</a>
 </dt>
-<dt>14.65. <a href="dbproperties-chapt.html#N16E03">Use of Lock File</a>
+<dt>14.64. <a href="dbproperties-chapt.html#N16C13">Logging Data Change Statements Frequency</a>
 </dt>
-<dt>14.66. <a href="dbproperties-chapt.html#N16E33">Logging Data Change Statements</a>
+<dt>14.65. <a href="dbproperties-chapt.html#N16C40">Logging Data Change Statements Frequency</a>
 </dt>
-<dt>14.67. <a href="dbproperties-chapt.html#N16E69">Automatic Checkpoint Frequency</a>
+<dt>14.66. <a href="dbproperties-chapt.html#N16C6D">Use of NIO for Disk Table Storage</a>
 </dt>
-<dt>14.68. <a href="dbproperties-chapt.html#N16E9F">Automatic Defrag at Checkpoint</a>
+<dt>14.67. <a href="dbproperties-chapt.html#N16CA0">Use of NIO for Disk Table Storage</a>
 </dt>
-<dt>14.69. <a href="dbproperties-chapt.html#N16ECC">Compression of the .script file</a>
+<dt>14.68. <a href="dbproperties-chapt.html#N16CCD">Recovery Log Processing</a>
 </dt>
-<dt>14.70. <a href="dbproperties-chapt.html#N16EFC">Logging Data Change Statements Frequency</a>
+<dt>14.69. <a href="dbproperties-chapt.html#N16CFA">Default Properties for TEXT Tables</a>
 </dt>
-<dt>14.71. <a href="dbproperties-chapt.html#N16F29">Logging Data Change Statements Frequency</a>
+<dt>14.70. <a href="dbproperties-chapt.html#N16D2E">Forcing Garbage Collection</a>
 </dt>
-<dt>14.72. <a href="dbproperties-chapt.html#N16F56">Recovery Log Processing</a>
+<dt>14.71. <a href="dbproperties-chapt.html#N16D5F">Crypt Property For LOBs</a>
 </dt>
-<dt>14.73. <a href="dbproperties-chapt.html#N16F83">Default Properties for TEXT Tables</a>
+<dt>14.72. <a href="dbproperties-chapt.html#N16D8C">Cipher Key for Encrypted Database</a>
 </dt>
-<dt>14.74. <a href="dbproperties-chapt.html#N16FB7">Forcing Garbage Collection</a>
+<dt>14.73. <a href="dbproperties-chapt.html#N16DB9">Cipher Initialization Vector for Encrypted Database</a>
 </dt>
-<dt>14.75. <a href="dbproperties-chapt.html#N16FE8">Crypt Property For LOBs</a>
+<dt>14.74. <a href="dbproperties-chapt.html#N16DE6">Crypt Provider Encrypted Database</a>
 </dt>
-<dt>14.76. <a href="dbproperties-chapt.html#N17015">Cipher Key for Encrypted Database</a>
+<dt>14.75. <a href="dbproperties-chapt.html#N16E13">Cipher Specification for Encrypted Database</a>
 </dt>
-<dt>14.77. <a href="dbproperties-chapt.html#N17042">Cipher Initialization Vector for Encrypted Database</a>
+<dt>14.76. <a href="dbproperties-chapt.html#N16E4D">Logging Framework</a>
 </dt>
-<dt>14.78. <a href="dbproperties-chapt.html#N1706F">Crypt Provider Encrypted Database</a>
+<dt>14.77. <a href="dbproperties-chapt.html#N16E77">Text Tables</a>
 </dt>
-<dt>14.79. <a href="dbproperties-chapt.html#N1709C">Cipher Specification for Encrypted Database</a>
+<dt>14.78. <a href="dbproperties-chapt.html#N16EA4">Java Functions</a>
 </dt>
-<dt>14.80. <a href="dbproperties-chapt.html#N170CF">Logging Framework</a>
+<dt>15.1. <a href="listeners-chapt.html#N16F70">common server and webserver properties</a>
 </dt>
-<dt>14.81. <a href="dbproperties-chapt.html#N170F9">Text Tables</a>
+<dt>15.2. <a href="listeners-chapt.html#N1700D">server properties</a>
 </dt>
-<dt>14.82. <a href="dbproperties-chapt.html#N17126">Java Functions</a>
+<dt>15.3. <a href="listeners-chapt.html#N1703F">webserver properties</a>
 </dt>
-<dt>15.1. <a href="listeners-chapt.html#N171F2">common server and webserver properties</a>
-</dt>
-<dt>15.2. <a href="listeners-chapt.html#N1728F">server properties</a>
-</dt>
-<dt>15.3. <a href="listeners-chapt.html#N172C1">webserver properties</a>
-</dt>
-<dt>17.1. <a href="odbc-chapt.html#N17A13">Settings List</a>
+<dt>17.1. <a href="odbc-chapt.html#N17791">Settings List</a>
 </dt>
 </dl>
 </div>
@@ -1724,100 +1710,100 @@
 <b>List of Examples</b>
 </p>
 <dl>
-<dt>1.1. <a href="running-chapt.html#N1023C">Java code to connect to the local hsql Server</a>
+<dt>1.1. <a href="running-chapt.html#N10236">Java code to connect to the local hsql Server</a>
 </dt>
-<dt>1.2. <a href="running-chapt.html#N10246">Java code to connect to the local http Server</a>
+<dt>1.2. <a href="running-chapt.html#N10240">Java code to connect to the local http Server</a>
 </dt>
-<dt>1.3. <a href="running-chapt.html#N1026A">Java code to connect to the local secure SSL hsqls: and
+<dt>1.3. <a href="running-chapt.html#N10264">Java code to connect to the local secure SSL hsqls: and
           https: Servers</a>
 </dt>
-<dt>1.4. <a href="running-chapt.html#N10310">specifying a connection property to shutdown the database when
+<dt>1.4. <a href="running-chapt.html#N1030A">specifying a connection property to shutdown the database when
         the last connection is closed</a>
 </dt>
-<dt>1.5. <a href="running-chapt.html#N1032D">specifying a connection property to disallow creating a new
+<dt>1.5. <a href="running-chapt.html#N10327">specifying a connection property to disallow creating a new
         database</a>
 </dt>
-<dt>3.1. <a href="databaseobjects-chapt.html#N10C22">inserting the next sequence value into a table row</a>
+<dt>3.1. <a href="databaseobjects-chapt.html#N10C0E">inserting the next sequence value into a table row</a>
 </dt>
-<dt>3.2. <a href="databaseobjects-chapt.html#N10C29">numbering returned rows of a SELECT in sequential order</a>
+<dt>3.2. <a href="databaseobjects-chapt.html#N10C15">numbering returned rows of a SELECT in sequential order</a>
 </dt>
-<dt>3.3. <a href="databaseobjects-chapt.html#N10C35">using the last value of a sequence</a>
+<dt>3.3. <a href="databaseobjects-chapt.html#N10C21">using the last value of a sequence</a>
 </dt>
-<dt>3.4. <a href="databaseobjects-chapt.html#N10CDA">Column values which satisfy a 2-column UNIQUE
+<dt>3.4. <a href="databaseobjects-chapt.html#N10CC6">Column values which satisfy a 2-column UNIQUE
         constraint</a>
 </dt>
-<dt>6.1. <a href="sessions-chapt.html#N13C39">User-defined Session Variables</a>
+<dt>6.1. <a href="sessions-chapt.html#N13B26">User-defined Session Variables</a>
 </dt>
-<dt>6.2. <a href="sessions-chapt.html#N13C4E">User-defined Temporary Session Tables</a>
+<dt>6.2. <a href="sessions-chapt.html#N13B3B">User-defined Temporary Session Tables</a>
 </dt>
-<dt>6.3. <a href="sessions-chapt.html#N13D61">Setting Transaction Characteristics</a>
+<dt>6.3. <a href="sessions-chapt.html#N13C4E">Setting Transaction Characteristics</a>
 </dt>
-<dt>6.4. <a href="sessions-chapt.html#N13D8F">Locking Tables</a>
+<dt>6.4. <a href="sessions-chapt.html#N13C7C">Locking Tables</a>
 </dt>
-<dt>6.5. <a href="sessions-chapt.html#N13DF2">Rollback</a>
+<dt>6.5. <a href="sessions-chapt.html#N13CDF">Rollback</a>
 </dt>
-<dt>6.6. <a href="sessions-chapt.html#N13E24">Setting Session Characteristics</a>
+<dt>6.6. <a href="sessions-chapt.html#N13D11">Setting Session Characteristics</a>
 </dt>
-<dt>6.7. <a href="sessions-chapt.html#N13E3A">Setting Session Authorization</a>
+<dt>6.7. <a href="sessions-chapt.html#N13D27">Setting Session Authorization</a>
 </dt>
-<dt>6.8. <a href="sessions-chapt.html#N13E6B">Setting Session Time Zone</a>
+<dt>6.8. <a href="sessions-chapt.html#N13D54">Setting Session Time Zone</a>
 </dt>
-<dt>11.1. <a href="management-chapt.html#N14EB8">Using CACHED tables for the LOB schema</a>
+<dt>11.1. <a href="management-chapt.html#N14D64">Using CACHED tables for the LOB schema</a>
 </dt>
-<dt>11.2. <a href="management-chapt.html#N1502B">Creating a system-versioned table</a>
+<dt>11.2. <a href="management-chapt.html#N14ED7">Creating a system-versioned table</a>
 </dt>
-<dt>11.3. <a href="management-chapt.html#N150ED">Displaying DbBackup Syntax</a>
+<dt>11.3. <a href="management-chapt.html#N14F94">Displaying DbBackup Syntax</a>
 </dt>
-<dt>11.4. <a href="management-chapt.html#N150F8">Offline Backup Example</a>
+<dt>11.4. <a href="management-chapt.html#N14F9F">Offline Backup Example</a>
 </dt>
-<dt>11.5. <a href="management-chapt.html#N15119">Listing a Backup with DbBackup</a>
+<dt>11.5. <a href="management-chapt.html#N14FC0">Listing a Backup with DbBackup</a>
 </dt>
-<dt>11.6. <a href="management-chapt.html#N15130">Restoring a Backup with DbBackup</a>
+<dt>11.6. <a href="management-chapt.html#N14FD7">Restoring a Backup with DbBackup</a>
 </dt>
-<dt>11.7. <a href="management-chapt.html#N1545D">SQL Log Example</a>
+<dt>11.7. <a href="management-chapt.html#N152CE">SQL Log Example</a>
 </dt>
-<dt>11.8. <a href="management-chapt.html#N15937">Finding foreign key rows with no parents after a bulk
+<dt>11.8. <a href="management-chapt.html#N15781">Finding foreign key rows with no parents after a bulk
         import</a>
 </dt>
-<dt>12.1. <a href="deployment-chapt.html#N15BDB">Using CACHED tables for the LOB schema</a>
+<dt>12.1. <a href="deployment-chapt.html#N15A25">Using CACHED tables for the LOB schema</a>
 </dt>
-<dt>12.2. <a href="deployment-chapt.html#N15CED">MainInvoker Example</a>
+<dt>12.2. <a href="deployment-chapt.html#N15B37">MainInvoker Example</a>
 </dt>
-<dt>12.3. <a href="deployment-chapt.html#N15E5E">Sample Range Ivy Dependency</a>
+<dt>12.3. <a href="deployment-chapt.html#N15C9B">Sample Range Ivy Dependency</a>
 </dt>
-<dt>12.4. <a href="deployment-chapt.html#N15E70">Sample Range Maven Dependency</a>
+<dt>12.4. <a href="deployment-chapt.html#N15CAD">Sample Range Maven Dependency</a>
 </dt>
-<dt>12.5. <a href="deployment-chapt.html#N15E7B">Sample Range Gradle Dependency</a>
+<dt>12.5. <a href="deployment-chapt.html#N15CB8">Sample Range Gradle Dependency</a>
 </dt>
-<dt>12.6. <a href="deployment-chapt.html#N15E93">Sample Range ivy.xml loaded by Ivyxml plugin</a>
+<dt>12.6. <a href="deployment-chapt.html#N15CD0">Sample Range ivy.xml loaded by Ivyxml plugin</a>
 </dt>
-<dt>12.7. <a href="deployment-chapt.html#N15E98">Sample Range Groovy Dependency, using Grape</a>
+<dt>12.7. <a href="deployment-chapt.html#N15CD5">Sample Range Groovy Dependency, using Grape</a>
 </dt>
-<dt>15.1. <a href="listeners-chapt.html#N173E7">Exporting certificate from the server's keystore</a>
+<dt>15.1. <a href="listeners-chapt.html#N17165">Exporting certificate from the server's keystore</a>
 </dt>
-<dt>15.2. <a href="listeners-chapt.html#N173F9">Adding a certificate to the client keystore</a>
+<dt>15.2. <a href="listeners-chapt.html#N17177">Adding a certificate to the client keystore</a>
 </dt>
-<dt>15.3. <a href="listeners-chapt.html#N1740D">Specifying your own trust store to a JDBC client</a>
+<dt>15.3. <a href="listeners-chapt.html#N1718B">Specifying your own trust store to a JDBC client</a>
 </dt>
-<dt>15.4. <a href="listeners-chapt.html#N17488">Getting a pem-style private key into a JKS keystore</a>
+<dt>15.4. <a href="listeners-chapt.html#N17206">Getting a pem-style private key into a JKS keystore</a>
 </dt>
-<dt>15.5. <a href="listeners-chapt.html#N17511">Validating and Testing an ACL file</a>
+<dt>15.5. <a href="listeners-chapt.html#N1728F">Validating and Testing an ACL file</a>
 </dt>
-<dt>16.1. <a href="unix-chapt.html#N177D9">example sqltool.rc stanza</a>
+<dt>16.1. <a href="unix-chapt.html#N17557">example sqltool.rc stanza</a>
 </dt>
-<dt>C.1. <a href="building-app.html#N17EE4">Buiding the standard HSQLDB jar file with Ant</a>
+<dt>C.1. <a href="building-app.html#N17C62">Buiding the standard HSQLDB jar file with Ant</a>
 </dt>
-<dt>C.2. <a href="building-app.html#N17EFD">Example source code before CodeSwitcher is run</a>
+<dt>C.2. <a href="building-app.html#N17C7B">Example source code before CodeSwitcher is run</a>
 </dt>
-<dt>C.3. <a href="building-app.html#N17F04">CodeSwitcher command line invocation</a>
+<dt>C.3. <a href="building-app.html#N17C82">CodeSwitcher command line invocation</a>
 </dt>
-<dt>C.4. <a href="building-app.html#N17F0E">Source code after CodeSwitcher processing</a>
+<dt>C.4. <a href="building-app.html#N17C8C">Source code after CodeSwitcher processing</a>
 </dt>
 </dl>
 </div>
 </div>
 <HR xmlns:xi="http://www.w3.org/2001/XInclude">
-<P xmlns:xi="http://www.w3.org/2001/XInclude" class="svnrev">$Revision: 6645 $</P>
+<P xmlns:xi="http://www.w3.org/2001/XInclude" class="svnrev">$Revision: 6369 $</P>
 <div class="navfooter">
 <hr>
 <table summary="Navigation footer" width="100%">

@@ -1,4 +1,4 @@
-/* Copyright (c) 2001-2022, The HSQL Development Group
+/* Copyright (c) 2001-2021, The HSQL Development Group
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -31,6 +31,9 @@
 
 package org.hsqldb.lib;
 
+import java.util.ListIterator;
+
+
 /**
  * A list which is also a Set which maintains the inserted order of elements and
  * allows access by index. Iterators return the elements in the index order.<p>
@@ -38,7 +41,7 @@ package org.hsqldb.lib;
  * This class does not store null elements.
  *
  * @author Fred Toussi (fredt@users dot sourceforge.net)
- * @version 2.7.0
+ * @version 2.6.0
  * @since 1.9.0
  */
 public class OrderedHashSet<E> extends HashSet<E> implements List<E>, Set<E> {
@@ -59,14 +62,6 @@ public class OrderedHashSet<E> extends HashSet<E> implements List<E>, Set<E> {
         super(initialCapacity, comparator);
 
         this.isList = true;
-    }
-
-    public OrderedHashSet(Object[] valueList) {
-        this(valueList.length);
-
-        for (int i = 0; i < valueList.length; i++) {
-            add((E) valueList[i]);
-        }
     }
 
     public boolean remove(Object key) {

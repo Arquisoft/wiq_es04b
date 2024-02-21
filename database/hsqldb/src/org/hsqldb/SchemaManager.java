@@ -1,4 +1,4 @@
-/* Copyright (c) 2001-2022, The HSQL Development Group
+/* Copyright (c) 2001-2021, The HSQL Development Group
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -55,7 +55,7 @@ import org.hsqldb.types.Type;
  * Manages all SCHEMA related database objects
  *
  * @author Fred Toussi (fredt@users dot sourceforge.net)
- * @version 2.7.0
+ * @version 2.6.0
  * @since 1.8.0
  */
 public class SchemaManager {
@@ -108,7 +108,7 @@ public class SchemaManager {
     }
 
     public void setSchemaChangeTimestamp() {
-        schemaChangeTimestamp = database.txManager.getSystemChangeNumber();
+        schemaChangeTimestamp = database.txManager.getGlobalChangeTimestamp();
     }
 
     public long getSchemaChangeTimestamp() {
@@ -1836,10 +1836,6 @@ public class SchemaManager {
         readLock.lock();
 
         try {
-            if (type == SchemaObject.SCHEMA) {
-                return getSchemaHsqlName(name);
-            }
-
             Schema          schema = (Schema) schemaMap.get(schemaName.name);
             SchemaObjectSet set    = null;
 
@@ -1879,10 +1875,7 @@ public class SchemaManager {
         readLock.lock();
 
         try {
-            String nameString = name.type == SchemaObject.SCHEMA ? name.name
-                                                                 : name.schema
-                                                                     .name;
-            Schema schema = (Schema) schemaMap.get(nameString);
+            Schema schema = (Schema) schemaMap.get(name.schema.name);
 
             if (schema == null) {
                 return null;
@@ -1967,9 +1960,6 @@ public class SchemaManager {
 
                 case SchemaObject.REFERENCE :
                     return schema.referenceLookup.getObject(name.name);
-
-                case SchemaObject.SCHEMA :
-                    return schema;
             }
 
             return null;

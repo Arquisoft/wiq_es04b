@@ -1,4 +1,4 @@
-/* Copyright (c) 2001-2022, The HSQL Development Group
+/* Copyright (c) 2001-2021, The HSQL Development Group
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -45,7 +45,7 @@ import java.util.HashSet;
 import java.util.StringTokenizer;
 import java.util.regex.Pattern;
 
-/* $Id: RCData.java 6555 2022-06-11 10:02:16Z fredt $ */
+/* $Id: RCData.java 6299 2021-02-09 17:10:48Z fredt $ */
 
 /**
  * Manages all the details we need to connect up to JDBC database(s),
@@ -58,6 +58,7 @@ import java.util.regex.Pattern;
  * @see <A href="../../../../util-guide/sqltool-chapt.html#sqltool_auth-sect"
  *      target="guide">
  *     The RC File section of the HyperSQL Utilities Guide</A>
+ * @see org.hsqldb.sample.SqlFileEmbedder
  * @author Blaine Simpson (blaine dot simpson at admc dot com)
  */
 public class RCData {
@@ -82,7 +83,6 @@ public class RCData {
         System.err.println("urlid: " + id + ", url: " + url + ", username: "
                            + username + ", password: " + password);
     }
-     * @return string representation
      */
 
     public String toString() {
@@ -313,11 +313,12 @@ public class RCData {
      * Gets a JDBC Connection using the data of this RCData object.
      *
      * @return New JDBC Connection
+     * @throws ClassNotFoundException on class not found
      * @throws SQLException on database access error
      * @throws MalformedURLException on malformed URL
      */
     public Connection getConnection()
-    throws SQLException, MalformedURLException {
+    throws ClassNotFoundException, SQLException, MalformedURLException {
         return getConnection(null, null);
     }
 
@@ -328,6 +329,7 @@ public class RCData {
      * @param curDriverIn driver
      * @param curTrustStoreIn trusted store
      * @return New JDBC Connection
+     * @throws ClassNotFoundException on class not found
      * @throws MalformedURLException on malformed URL
      * @throws SQLException on database access error
      */
@@ -421,9 +423,6 @@ public class RCData {
      * Returns a copy of the given String with System property names in the
      * format <code>${system.property}</code> replaced by the corresponding Java
      * System Properties.
-     *
-     * @param inString String
-     * @return formatted string
      */
     public static String expandSysPropVars(String inString) {
 

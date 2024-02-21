@@ -1,4 +1,4 @@
-/* Copyright (c) 2001-2022, The HSQL Development Group
+/* Copyright (c) 2001-2021, The HSQL Development Group
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -41,7 +41,6 @@ import java.sql.NClob;
 import java.sql.PreparedStatement;
 import java.sql.SQLClientInfoException;
 import java.sql.SQLFeatureNotSupportedException;
-
 //import java.sql.SQLData;
 //import java.sql.SQLOutput;
 //import java.sql.SQLInput;
@@ -51,17 +50,17 @@ import java.sql.SQLXML;
 import java.sql.Savepoint;
 import java.sql.Statement;
 import java.sql.Struct;
-import java.util.HashMap;
+import java.util.Calendar;
 import java.util.Map;
 import java.util.Properties;
-import java.util.TimeZone;
-
 // import java.util.logging.Level;
 // import java.util.logging.Logger;
+
 import org.hsqldb.ClientConnection;
 import org.hsqldb.ClientConnectionHTTP;
 import org.hsqldb.DatabaseManager;
 import org.hsqldb.DatabaseURL;
+import org.hsqldb.HsqlDateTime;
 import org.hsqldb.HsqlException;
 import org.hsqldb.SessionInterface;
 import org.hsqldb.error.ErrorCode;
@@ -74,7 +73,8 @@ import org.hsqldb.result.ResultProperties;
 import org.hsqldb.types.ArrayType;
 import org.hsqldb.types.Type;
 
-/* $Id: JDBCConnection.java 6524 2022-05-22 19:09:49Z fredt $ */
+
+/* $Id: JDBCConnection.java 6294 2021-02-07 18:08:27Z fredt $ */
 
 // fredt@users    20020320 - patch 1.7.0 - JDBC 2 support and error trapping
 //
@@ -121,7 +121,7 @@ import org.hsqldb.types.Type;
  *  should use the appropriate <code>Connection</code> method such as
  *  <code>setAutoCommit</code> or <code>setTransactionIsolation</code>.
  *  Applications should not invoke SQL commands directly to change the connection's
- *   configuration when there is a JDBC method available. By default, a <code>Connection</code> object is in
+ *   configuration when there is a JDBC method available.  By default a <code>Connection</code> object is in
  * auto-commit mode, which means that it automatically commits changes
  * after executing each statement. If auto-commit mode has been
  * disabled, the method <code>commit</code> must be called explicitly in
@@ -220,7 +220,7 @@ import org.hsqldb.types.Type;
  * For more information on server configuration regarding mounting multiple
  * databases and assigning them <b>&lt;alias&gt;</b> values, please read the
  * Java API documentation for {@link org.hsqldb.server.Server Server} and related
- * chapters in the general documentation, especially the <em>HyperSQL User
+ * chapters in the general documentation, especially the <em>Advanced Users
  * Guide</em>.
  *
  * <hr>
@@ -361,10 +361,13 @@ import org.hsqldb.types.Type;
  *      Please read your OS file system documentation.
  * </ol> <p>
  *
- * <b>Note:</b>HSQLDB creates
+ * <b>Note:</b> Versions of HSQLDB previous to 1.7.0 did not support creating
  * directories along the file path specified in the persistent, in-process mode
  * database connection <b>&lt;url&gt;</b> form, in the case that they did
- * not already exist.
+ * not already exist.  Starting with HSQLDB 1.7.0, directories <i>will</i>
+ * be created if they do not already exist., but only if HSQLDB is built under
+ * a version of the compiler greater than JDK 1.1.x.
+ *
  * <hr>
  *
  * <b>res: protocol Connections:</b><p>
@@ -432,7 +435,7 @@ import org.hsqldb.types.Type;
  *
  * For more information about HSQLDB file structure, various database modes
  * and other attributes such as those controlled through the HSQLDB properties
- * files, please read the general documentation, especially the HyperSQL User
+ * files, please read the general documentation, especially the Advanced Users
  * Guide. <p>
  *
  * <b>JDBC 4.0 Notes:</b><p>
@@ -440,7 +443,7 @@ import org.hsqldb.types.Type;
  * Starting with JDBC 4.0 (JDK 1.6), the <code>DriverManager</code> methods
  * <code>getConnection</code> and <code>getDrivers</code> have been
  * enhanced to support the Java Standard Edition Service Provider mechanism.
- * HSQLDB distribution
+ * When built under a Java runtime that supports JDBC 4.0, HSQLDB distribution
  * jars containing the Driver implementation also include the file
  * <code>META-INF/services/java.sql.Driver</code>. This file contains the fully
  * qualified class name ('org.hsqldb.jdbc.JDBCDriver') of the HSQLDB implementation
@@ -459,7 +462,7 @@ import org.hsqldb.types.Type;
  * </div> <!-- end release-specific documentation -->
  * @author Campbell Burnet (campbell-burnet@users dot sourceforge.net)
  * @author Fred Toussi (fredt@users dot sourceforge.net)
- * @version 2.7.0
+ * @version 2.6.0
  * @since HSQLDB 1.9.0
  * @see JDBCDriver
  * @see JDBCStatement
@@ -521,8 +524,7 @@ public class JDBCConnection implements Connection {
 
         int props =
             ResultProperties.getValueForJDBC(JDBCResultSet.TYPE_FORWARD_ONLY,
-                                             JDBCResultSet.CONCUR_READ_ONLY,
-                                             rsHoldability);
+                JDBCResultSet.CONCUR_READ_ONLY, rsHoldability);
         Statement stmt = new JDBCStatement(this, props);
 
         return stmt;
@@ -580,16 +582,16 @@ public class JDBCConnection implements Connection {
      * or this method is called on a closed connection
      * @see #prepareStatement(String,int,int)
      */
-    public synchronized PreparedStatement prepareStatement(String sql)
-    throws SQLException {
+    public synchronized PreparedStatement prepareStatement(
+            String sql) throws SQLException {
 
         checkClosed();
 
         try {
-            return new JDBCPreparedStatement(
-                this, sql, JDBCResultSet.TYPE_FORWARD_ONLY,
-                JDBCResultSet.CONCUR_READ_ONLY, rsHoldability,
-                ResultConstants.RETURN_NO_GENERATED_KEYS, null, null);
+            return new JDBCPreparedStatement(this, sql,
+                    JDBCResultSet.TYPE_FORWARD_ONLY,
+                    JDBCResultSet.CONCUR_READ_ONLY, rsHoldability,
+                    ResultConstants.RETURN_NO_GENERATED_KEYS, null, null);
         } catch (HsqlException e) {
             throw JDBCUtil.sqlException(e);
         }
@@ -640,8 +642,8 @@ public class JDBCConnection implements Connection {
      * or this method is called on a closed connection
      * @see #prepareCall(String,int,int)
      */
-    public synchronized CallableStatement prepareCall(String sql)
-    throws SQLException {
+    public synchronized CallableStatement prepareCall(
+            String sql) throws SQLException {
 
         CallableStatement stmt;
 
@@ -649,9 +651,8 @@ public class JDBCConnection implements Connection {
 
         try {
             stmt = new JDBCCallableStatement(this, sql,
-                                             JDBCResultSet.TYPE_FORWARD_ONLY,
-                                             JDBCResultSet.CONCUR_READ_ONLY,
-                                             rsHoldability);
+                    JDBCResultSet.TYPE_FORWARD_ONLY,
+                    JDBCResultSet.CONCUR_READ_ONLY, rsHoldability);
 
             return stmt;
         } catch (HsqlException e) {
@@ -735,8 +736,8 @@ public class JDBCConnection implements Connection {
      * (JDBC4 clarification:)
      * or this method is called on a closed connection
      */
-    public synchronized String nativeSQL(final String sql)
-    throws SQLException {
+    public synchronized String nativeSQL(
+            final String sql) throws SQLException {
 
         checkClosed();
 
@@ -784,7 +785,6 @@ public class JDBCConnection implements Connection {
                         if (sb == null) {
                             sb = new StringBuilder(sql.length());
                         }
-
                         sb.append(sql, tail, i);
 
                         i       = onStartEscapeSequence(sql, sb, i);
@@ -795,22 +795,22 @@ public class JDBCConnection implements Connection {
 
                         state = inside_escape;
                     }
-                    break;
 
+                    break;
                 case outside_escape_inside_single_quotes :    // inside ' ' only
                 case inside_escape_inside_single_quotes :     // inside { } and ' '
                     if (c == '\'') {
                         state -= 1;
                     }
-                    break;
 
+                    break;
                 case outside_escape_inside_double_quotes :    // inside " " only
                 case inside_escape_inside_double_quotes :     // inside { } and " "
                     if (c == '"') {
                         state -= 2;
                     }
-                    break;
 
+                    break;
                 case inside_escape :                          // inside { }
                     if (c == '\'') {
                         state = inside_escape_inside_single_quotes;
@@ -828,7 +828,7 @@ public class JDBCConnection implements Connection {
                         nest--;
 
                         state = (nest == 0) ? outside_all
-                                            : inside_escape;
+                                : inside_escape;
                     } else if (c == '{') {
                         sb.append(sql, tail, i);
 
@@ -841,15 +841,13 @@ public class JDBCConnection implements Connection {
                         state = inside_escape;
                     }
                     break;
-
-                default :
+                default:
             }
         }
 
         if (!changed) {
             return sql;
         }
-
         sb.append(sql.substring(tail));
 
         return sb.toString();
@@ -919,8 +917,8 @@ public class JDBCConnection implements Connection {
      * or this method is called on a closed connection
      * @see #getAutoCommit
      */
-    public synchronized void setAutoCommit(boolean autoCommit)
-    throws SQLException {
+    public synchronized void setAutoCommit(
+            boolean autoCommit) throws SQLException {
 
         checkClosed();
 
@@ -1055,7 +1053,7 @@ public class JDBCConnection implements Connection {
      *
      * </div> <!-- end release-specific documentation -->
      *
-     * @exception SQLException if a database access error occurs
+     * @exception SQLException SQLException if a database access error occurs
      */
     public synchronized void close() throws SQLException {
 
@@ -1066,7 +1064,6 @@ public class JDBCConnection implements Connection {
         if (isInternal || isClosed) {
             return;
         }
-
         isClosed       = true;
         rootWarning    = null;
         connProperties = null;
@@ -1194,8 +1191,8 @@ public class JDBCConnection implements Connection {
      *  method is called on a closed connection or this
      *            method is called during a transaction
      */
-    public synchronized void setReadOnly(boolean readOnly)
-    throws SQLException {
+    public synchronized void setReadOnly(
+            boolean readOnly) throws SQLException {
 
         checkClosed();
 
@@ -1212,7 +1209,7 @@ public class JDBCConnection implements Connection {
      *
      * @return <code>true</code> if this <code>Connection</code> object
      *         is read-only; <code>false</code> otherwise
-     * @exception SQLException if a database access error occurs
+     * @exception SQLException SQLException if a database access error occurs
      * (JDBC4 Clarification:)
      * or this method is called on a closed connection
      */
@@ -1347,8 +1344,8 @@ public class JDBCConnection implements Connection {
      * @see JDBCDatabaseMetaData#supportsTransactionIsolationLevel
      * @see #getTransactionIsolation
      */
-    public synchronized void setTransactionIsolation(int level)
-    throws SQLException {
+    public synchronized void setTransactionIsolation(
+            int level) throws SQLException {
 
         checkClosed();
 
@@ -1359,7 +1356,6 @@ public class JDBCConnection implements Connection {
             case TRANSACTION_REPEATABLE_READ :
             case TRANSACTION_SERIALIZABLE :
                 break;
-
             default :
                 throw JDBCUtil.invalidArgument();
         }
@@ -1475,7 +1471,7 @@ public class JDBCConnection implements Connection {
      *
      * </div> <!-- end release-specific documentation -->
      *
-     * @exception SQLException if a database access error occurs
+     * @exception SQLException SQLException if a database access error occurs
      * (JDBC4 Clarification:)
      * or this method is called on a closed connection
      */
@@ -1613,9 +1609,9 @@ public class JDBCConnection implements Connection {
         checkClosed();
 
         try {
-            return new JDBCPreparedStatement(
-                this, sql, resultSetType, resultSetConcurrency, rsHoldability,
-                ResultConstants.RETURN_NO_GENERATED_KEYS, null, null);
+            return new JDBCPreparedStatement(this, sql, resultSetType,
+                    resultSetConcurrency, rsHoldability,
+                    ResultConstants.RETURN_NO_GENERATED_KEYS, null, null);
         } catch (HsqlException e) {
             throw JDBCUtil.sqlException(e);
         }
@@ -1683,8 +1679,7 @@ public class JDBCConnection implements Connection {
 
         try {
             return new JDBCCallableStatement(this, sql, resultSetType,
-                                             resultSetConcurrency,
-                                             rsHoldability);
+                    resultSetConcurrency, rsHoldability);
         } catch (HsqlException e) {
             throw JDBCUtil.sqlException(e);
         }
@@ -1726,12 +1721,13 @@ public class JDBCConnection implements Connection {
      * @since JDK 1.2
      * @see #setTypeMap
      */
-    public synchronized Map<String, Class<?>> getTypeMap()
-    throws SQLException {
+    public synchronized java.util
+            .Map<java.lang.String,
+                 java.lang.Class<?>> getTypeMap() throws SQLException {
 
         checkClosed();
 
-        return new HashMap<String, Class<?>>();
+        return new java.util.HashMap<java.lang.String, java.lang.Class<?>>();
     }
 
     /**
@@ -1741,7 +1737,7 @@ public class JDBCConnection implements Connection {
      * this <code>Connection</code> object.  The type map will be used for the
      * custom mapping of SQL structured types and distinct types.
      * JDBC4.1[<p>
-     * You must set the values for the <code>TypeMap</code> prior to
+     * You must set the the values for the <code>TypeMap</code> prior to
      * calling <code>setMap</code> as a JDBC driver may create an internal copy
      * of the <code>TypeMap</code>:
      *
@@ -1775,8 +1771,8 @@ public class JDBCConnection implements Connection {
      * @since JDK 1.2
      * @see #getTypeMap
      */
-    public synchronized void setTypeMap(Map<String, Class<?>> map)
-    throws SQLException {
+    public synchronized void setTypeMap(Map<String,
+            Class<?>> map) throws SQLException {
 
         checkClosed();
 
@@ -1792,7 +1788,7 @@ public class JDBCConnection implements Connection {
      * Changes the default holdability of <code>ResultSet</code> objects
      * created using this <code>Connection</code> object to the given
      * holdability.  The default holdability of <code>ResultSet</code> objects
-     * can be determined by invoking
+     * can be be determined by invoking
      * {@link DatabaseMetaData#getResultSetHoldability}.
      *
      * <!-- end generic documentation -->
@@ -1817,8 +1813,8 @@ public class JDBCConnection implements Connection {
      * @see JDBCResultSet
      * @since JDK 1.4, HSQLDB 1.7.2
      */
-    public synchronized void setHoldability(int holdability)
-    throws SQLException {
+    public synchronized void setHoldability(
+            int holdability) throws SQLException {
 
         checkClosed();
 
@@ -1827,11 +1823,9 @@ public class JDBCConnection implements Connection {
             case JDBCResultSet.HOLD_CURSORS_OVER_COMMIT :
             case JDBCResultSet.CLOSE_CURSORS_AT_COMMIT :
                 break;
-
             default :
                 throw JDBCUtil.invalidArgument();
         }
-
         rsHoldability = holdability;
     }
 
@@ -1959,8 +1953,8 @@ public class JDBCConnection implements Connection {
      * @see java.sql.Savepoint
      * @since JDK 1.4, HSQLDB 1.7.2
      */
-    public synchronized Savepoint setSavepoint(String name)
-    throws SQLException {
+    public synchronized Savepoint setSavepoint(
+            String name) throws SQLException {
 
         checkClosed();
 
@@ -2025,8 +2019,8 @@ public class JDBCConnection implements Connection {
      * @see #rollback
      * @since JDK 1.4, HSQLDB 1.7.2
      */
-    public synchronized void rollback(Savepoint savepoint)
-    throws SQLException {
+    public synchronized void rollback(
+            Savepoint savepoint) throws SQLException {
 
         JDBCSavepoint sp;
 
@@ -2039,7 +2033,6 @@ public class JDBCConnection implements Connection {
         if (!(savepoint instanceof JDBCSavepoint)) {
             throw JDBCUtil.invalidArgument(ErrorCode.X_3B001);
         }
-
         sp = (JDBCSavepoint) savepoint;
 
         if (JDBCDatabaseMetaData.JDBC_MAJOR >= 4 && sp.name == null) {
@@ -2105,8 +2098,8 @@ public class JDBCConnection implements Connection {
      * @see java.sql.Savepoint
      * @since JDK 1.4, HSQLDB 1.7.2
      */
-    public synchronized void releaseSavepoint(Savepoint savepoint)
-    throws SQLException {
+    public synchronized void releaseSavepoint(
+            Savepoint savepoint) throws SQLException {
 
         JDBCSavepoint sp;
         Result        req;
@@ -2120,7 +2113,6 @@ public class JDBCConnection implements Connection {
         if (!(savepoint instanceof JDBCSavepoint)) {
             throw JDBCUtil.invalidArgument(ErrorCode.X_3B001);
         }
-
         sp = (JDBCSavepoint) savepoint;
 
         if (JDBCDatabaseMetaData.JDBC_MAJOR >= 4 && sp.name == null) {
@@ -2293,10 +2285,9 @@ public class JDBCConnection implements Connection {
         checkClosed();
 
         try {
-            return new JDBCPreparedStatement(
-                this, sql, resultSetType, resultSetConcurrency,
-                resultSetHoldability,
-                ResultConstants.RETURN_NO_GENERATED_KEYS, null, null);
+            return new JDBCPreparedStatement(this, sql, resultSetType,
+                    resultSetConcurrency, resultSetHoldability,
+                    ResultConstants.RETURN_NO_GENERATED_KEYS, null, null);
         } catch (HsqlException e) {
             throw JDBCUtil.sqlException(e);
         }
@@ -2370,8 +2361,7 @@ public class JDBCConnection implements Connection {
 
         try {
             return new JDBCCallableStatement(this, sql, resultSetType,
-                                             resultSetConcurrency,
-                                             resultSetHoldability);
+                    resultSetConcurrency, resultSetHoldability);
         } catch (HsqlException e) {
             throw JDBCUtil.sqlException(e);
         }
@@ -2447,17 +2437,15 @@ public class JDBCConnection implements Connection {
 
         try {
             if (autoGeneratedKeys != Statement.RETURN_GENERATED_KEYS
-                    && autoGeneratedKeys != Statement.NO_GENERATED_KEYS
-                    && autoGeneratedKeys
-                       != JDBCStatement.RETURN_PRIMARY_KEYS) {
+                && autoGeneratedKeys != Statement.NO_GENERATED_KEYS
+                && autoGeneratedKeys != JDBCStatement.RETURN_PRIMARY_KEYS) {
                 throw JDBCUtil.invalidArgument("autoGeneratedKeys");
             }
 
             return new JDBCPreparedStatement(this, sql,
-                                             JDBCResultSet.TYPE_FORWARD_ONLY,
-                                             JDBCResultSet.CONCUR_READ_ONLY,
-                                             rsHoldability, autoGeneratedKeys,
-                                             null, null);
+                    JDBCResultSet.TYPE_FORWARD_ONLY,
+                    JDBCResultSet.CONCUR_READ_ONLY, rsHoldability,
+                    autoGeneratedKeys, null, null);
         } catch (HsqlException e) {
             throw JDBCUtil.sqlException(e);
         }
@@ -2527,11 +2515,11 @@ public class JDBCConnection implements Connection {
         checkClosed();
 
         try {
-            return new JDBCPreparedStatement(
-                this, sql, JDBCResultSet.TYPE_FORWARD_ONLY,
-                JDBCResultSet.CONCUR_READ_ONLY, rsHoldability,
-                ResultConstants.RETURN_GENERATED_KEYS_COL_INDEXES,
-                columnIndexes, null);
+            return new JDBCPreparedStatement(this, sql,
+                    JDBCResultSet.TYPE_FORWARD_ONLY,
+                    JDBCResultSet.CONCUR_READ_ONLY, rsHoldability,
+                    ResultConstants.RETURN_GENERATED_KEYS_COL_INDEXES,
+                    columnIndexes, null);
         } catch (HsqlException e) {
             throw JDBCUtil.sqlException(e);
         }
@@ -2603,11 +2591,11 @@ public class JDBCConnection implements Connection {
         checkClosed();
 
         try {
-            return new JDBCPreparedStatement(
-                this, sql, JDBCResultSet.TYPE_FORWARD_ONLY,
-                JDBCResultSet.CONCUR_READ_ONLY, rsHoldability,
-                ResultConstants.RETURN_GENERATED_KEYS_COL_NAMES, null,
-                columnNames);
+            return new JDBCPreparedStatement(this, sql,
+                    JDBCResultSet.TYPE_FORWARD_ONLY,
+                    JDBCResultSet.CONCUR_READ_ONLY, rsHoldability,
+                    ResultConstants.RETURN_GENERATED_KEYS_COL_NAMES, null,
+                    columnNames);
         } catch (HsqlException e) {
             throw JDBCUtil.sqlException(e);
         }
@@ -2671,6 +2659,7 @@ public class JDBCConnection implements Connection {
      *
      * @since JDK 1.6, HSQLDB 2.0
      */
+
     public NClob createNClob() throws SQLException {
 
         checkClosed();
@@ -2730,7 +2719,7 @@ public class JDBCConnection implements Connection {
      *
      * @return true if the connection is valid, false otherwise
      * @exception SQLException if the value supplied for <code>timeout</code>
-     * is less than 0
+     * is less then 0
      * @since JDK 1.6, HSQLDB 2.0
      *
      * @see JDBCDatabaseMetaData#getClientInfoProperties
@@ -2749,7 +2738,7 @@ public class JDBCConnection implements Connection {
             return false;
         }
 
-        final boolean[] flag = new boolean[]{ true };
+        final boolean[] flag = new boolean[] { true };
         Thread          t    = new Thread() {
 
             public void run() {
@@ -2778,7 +2767,8 @@ public class JDBCConnection implements Connection {
 
             try {
                 t.setContextClassLoader(null);
-            } catch (Throwable th) {}
+            } catch (Throwable th) {
+            }
 
             if (timeout == 0) {
                 return flag[0];
@@ -2806,7 +2796,7 @@ public class JDBCConnection implements Connection {
      * value in the database until the next time a statement is executed or
      * prepared.  Other than storing the client information in the appropriate
      * place in the database, these methods shall not alter the behavior of
-     * the connection in any way.  The values supplied to these methods are
+     * the connection in anyway.  The values supplied to these methods are
      * used for accounting, diagnostics and debugging purposes only.
      * <p>
      * The driver shall generate a warning if the client info name specified
@@ -2896,8 +2886,8 @@ public class JDBCConnection implements Connection {
      * is called on a closed connection
      *
      */
-    public void setClientInfo(Properties properties)
-    throws SQLClientInfoException {
+    public void setClientInfo(
+            Properties properties) throws SQLClientInfoException {
 
         if (!this.isClosed && (properties == null || properties.isEmpty())) {
             return;
@@ -3005,7 +2995,6 @@ public class JDBCConnection implements Connection {
         if (typeName == null) {
             throw JDBCUtil.nullArgument();
         }
-
         typeName = typeName.toUpperCase();
 
         int typeNumber = Type.getTypeNr(typeName);
@@ -3066,7 +3055,7 @@ public class JDBCConnection implements Connection {
      * If the receiver implements the interface then the result is the receiver
      * or a proxy for the receiver. If the receiver is a wrapper
      * and the wrapped object implements the interface then the result is the
-     * wrapped object or a proxy for the wrapped object. Otherwise return
+     * wrapped object or a proxy for the wrapped object. Otherwise return the
      * the result of calling <code>unwrap</code> recursively on the wrapped object
      * or a proxy for that result. If the receiver is not a
      * wrapper and does not implement the interface, then an <code>SQLException</code> is thrown.
@@ -3078,7 +3067,7 @@ public class JDBCConnection implements Connection {
      * @since JDK 1.6, HSQLDB 2.0
      */
     @SuppressWarnings("unchecked")
-    public <T>T unwrap(Class<T> iface) throws java.sql.SQLException {
+    public <T>T unwrap(java.lang.Class<T> iface) throws java.sql.SQLException {
 
         checkClosed();
 
@@ -3104,7 +3093,8 @@ public class JDBCConnection implements Connection {
      * for an object with the given interface.
      * @since JDK 1.6, HSQLDB 2.0
      */
-    public boolean isWrapperFor(Class<?> iface) throws SQLException {
+    public boolean isWrapperFor(
+            java.lang.Class<?> iface) throws java.sql.SQLException {
 
         checkClosed();
 
@@ -3198,13 +3188,12 @@ public class JDBCConnection implements Connection {
      * @see java.util.concurrent.Executor
      * @since JDK 1.7, HSQLDB 2.0.1
      */
-    public void abort(java.util.concurrent.Executor executor)
-    throws SQLException {
+    public void abort(
+            java.util.concurrent.Executor executor) throws SQLException {
 
         if (executor == null) {
             throw JDBCUtil.nullArgument("executor");
         }
-
         close();
     }
 
@@ -3230,7 +3219,7 @@ public class JDBCConnection implements Connection {
      * JDBC connection is accessible to the administrator thread.
      * The <code>setNetworkTimeout</code> method will cover cases where
      * there is no administrator thread, or it has no access to the
-     * connection. This method is severe in its effects, and should be
+     * connection. This method is severe in it's effects, and should be
      * given a high enough value so it is never triggered before any more
      * normal timeouts, such as transaction timeouts.
      * <p>
@@ -3281,7 +3270,7 @@ public class JDBCConnection implements Connection {
      * JDBC driver will round the value up to the nearest second.  If the
      * timeout period expires before the operation
      * completes, a SQLException will be thrown.
-     * A value of 0 indicates that there is no timeout for database operations.
+     * A value of 0 indicates that there is not timeout for database operations.
      * @throws java.sql.SQLException if a database access error occurs, this
      * method is called on a closed connection,
      * the {@code executor} is {@code null},
@@ -3327,8 +3316,6 @@ public class JDBCConnection implements Connection {
 
 //---------------------- internal implementation ---------------------------
 // -------------------------- Common Attributes ------------------------------
-    /** Shared, reused local TimeZone which should not be modified*/
-    TimeZone timeZone = TimeZone.getDefault();
 
     /** Initial holdability */
     int rsHoldability = JDBCResultSet.HOLD_CURSORS_OVER_COMMIT;
@@ -3368,22 +3355,16 @@ public class JDBCConnection implements Connection {
     private int savepointIDSequence;
 
     /** reuse count in ConnectionPool */
-    int incarnation;
+    int                         incarnation;
 
     /** used by a JDBCPool or other custom ConnectionPool instance */
-    boolean isPooled;
+    boolean                     isPooled;
 
     /** used by a JDBCPool or other custom ConnectionPool instance */
     JDBCConnectionEventListener poolEventListener;
 
     /** connection URL property close_result indicates to close old result when Statement is reused */
     boolean isCloseResultSet;
-
-    /** connection URL property defult_schema for use with OpenOffic indicates to use PUBLIC schema by default */
-    boolean isDefaultSchema;
-
-    /** connection URL property memory_lobs indicates to load lobs fully into memory in ResultSet */
-    boolean isMemoryLobs;
 
     /** connection URL property use_column_name indicates to return column name in ResultMetadata */
     boolean isUseColumnName = true;
@@ -3392,7 +3373,7 @@ public class JDBCConnection implements Connection {
     boolean isTranslateTTIType = true;
 
     /** connection URL property allow_empty_batch indicates to accept executeBatch() when the batch is empty */
-    boolean isAllowEmptyBatch = false;
+    boolean isEmptyBatchAllowed = false;
 
     /** database URL property hsqldb.live_object indicates to store non-serialized object in OTHER columns */
     boolean isStoreLiveObject = false;
@@ -3433,9 +3414,7 @@ public class JDBCConnection implements Connection {
         String database = props.getProperty("database");
         boolean isTLS = (DatabaseURL.S_HSQLS.equals(connType)
                          || DatabaseURL.S_HTTPS.equals(connType));
-        boolean isTLSWrapper =
-            props.isPropertyTrue(HsqlDatabaseProperties.url_tls_wrapper,
-                                 false);
+        boolean isTLSWrapper = props.isPropertyTrue(HsqlDatabaseProperties.url_tls_wrapper, false);
 
         isTLSWrapper &= isTLS;
 
@@ -3447,31 +3426,32 @@ public class JDBCConnection implements Connection {
             password = "";
         }
 
+        Calendar cal         = Calendar.getInstance();
+        int      zoneSeconds = HsqlDateTime.getZoneSeconds(cal);
+
         try {
             if (DatabaseURL.isInProcessDatabaseType(connType)) {
+
                 /*
                  * @todo - fredt - this should be the only static reference to
                  * a core class (apart form references to the Type package)
                  * from the jdbc package - we might make it dynamic
                  */
                 sessionProxy = DatabaseManager.newSession(connType, database,
-                        user, password, props, timeZone);
+                        user, password, props, null, zoneSeconds);
             } else if (DatabaseURL.S_HSQL.equals(connType)
                        || DatabaseURL.S_HSQLS.equals(connType)) {
                 sessionProxy = new ClientConnection(host, port, path,
-                                                    database, isTLS,
-                                                    isTLSWrapper, user,
-                                                    password, timeZone);
+                        database, isTLS, isTLSWrapper, user, password, zoneSeconds);
                 isNetConn = true;
             } else if (DatabaseURL.S_HTTP.equals(connType)
                        || DatabaseURL.S_HTTPS.equals(connType)) {
                 sessionProxy = new ClientConnectionHTTP(host, port, path,
-                        database, isTLS, isTLSWrapper, user, password, timeZone);
+                        database, isTLS, isTLSWrapper, user, password, zoneSeconds);
                 isNetConn = true;
             } else {    // alias: type not yet implemented
                 throw JDBCUtil.invalidArgument(connType);
             }
-
             sessionProxy.setJDBCConnection(this);
 
             connProperties   = props;
@@ -3551,32 +3531,27 @@ public class JDBCConnection implements Connection {
     }
 
     private void setLocalVariables() {
-
         if (connProperties == null) {
             return;
         }
 
-        isMemoryLobs = connProperties.isPropertyTrue(
-            HsqlDatabaseProperties.url_memory_lobs, false);
         isCloseResultSet = connProperties.isPropertyTrue(
             HsqlDatabaseProperties.url_close_result, false);
-        isDefaultSchema = connProperties.isPropertyTrue(
-            HsqlDatabaseProperties.url_default_schema, false);
-        isAllowEmptyBatch = connProperties.isPropertyTrue(
-            HsqlDatabaseProperties.url_allow_empty_batch, false);
         isUseColumnName = connProperties.isPropertyTrue(
             HsqlDatabaseProperties.url_get_column_name, true);
+        isEmptyBatchAllowed = connProperties.isPropertyTrue(
+            HsqlDatabaseProperties.url_allow_empty_batch, false);
         isTranslateTTIType = clientProperties.isPropertyTrue(
             HsqlDatabaseProperties.jdbc_translate_tti_types, true);
         isStoreLiveObject = clientProperties.isPropertyTrue(
             HsqlDatabaseProperties.sql_live_object, false);
-        if (isStoreLiveObject) {
-            String connType = connProperties.getProperty("connection_type");
 
-            if (!DatabaseURL.S_MEM.equals(connType)) {
-                isStoreLiveObject = false;
-            }
+        if (isStoreLiveObject)  {
+            String connType = connProperties.getProperty("connection_type");
+            if(!DatabaseURL.S_MEM.equals(connType))
+            isStoreLiveObject = false;
         }
+
     }
 
     synchronized int getSavepointID() {
@@ -3591,7 +3566,7 @@ public class JDBCConnection implements Connection {
      *      constructed
      * @throws SQLException if this connection is closed
      */
-    synchronized public String getURL() throws SQLException {
+    synchronized String getURL() throws SQLException {
 
         checkClosed();
 
@@ -3738,22 +3713,5 @@ public class JDBCConnection implements Connection {
         }
 
         return i;
-    }
-
-    public boolean isInternal() {
-        return isInternal;
-    }
-
-    public boolean isNetwork() {
-        return isNetConn;
-    }
-
-    public HsqlProperties getConnProperties() {
-
-        HsqlProperties props = new HsqlProperties();
-
-        props.addProperties(connProperties);
-
-        return props;
     }
 }

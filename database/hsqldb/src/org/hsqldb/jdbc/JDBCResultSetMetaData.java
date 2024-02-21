@@ -1,4 +1,4 @@
-/* Copyright (c) 2001-2022, The HSQL Development Group
+/* Copyright (c) 2001-2021, The HSQL Development Group
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -40,7 +40,7 @@ import org.hsqldb.types.IntervalType;
 import org.hsqldb.types.Type;
 import org.hsqldb.types.Types;
 
-/* $Id: JDBCResultSetMetaData.java 6492 2022-04-21 07:30:40Z fredt $ */
+/* $Id: JDBCResultSetMetaData.java 6266 2021-01-25 16:08:06Z fredt $ */
 
 // fredt@users    - 20040412 - removed DITypeInfo dependencies
 // campbell-burnet@users - 200404xx - removed unused imports;refinement for better
@@ -823,7 +823,7 @@ public class JDBCResultSetMetaData implements ResultSetMetaData {
      * or a proxy for the receiver. If the receiver is a wrapper
      * and the wrapped object implements the interface then the result is the
      * wrapped object or a proxy for the wrapped object. Otherwise return the
-     * result of calling <code>unwrap</code> recursively on the wrapped object
+     * the result of calling <code>unwrap</code> recursively on the wrapped object
      * or a proxy for that result. If the receiver is not a
      * wrapper and does not implement the interface, then an <code>SQLException</code> is thrown.
      *

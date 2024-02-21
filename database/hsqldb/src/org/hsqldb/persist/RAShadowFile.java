@@ -1,4 +1,4 @@
-/* Copyright (c) 2001-2022, The HSQL Development Group
+/* Copyright (c) 2001-2021, The HSQL Development Group
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -36,17 +36,16 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import org.hsqldb.Database;
-import org.hsqldb.lib.EventLogInterface;
 import org.hsqldb.lib.HsqlByteArrayOutputStream;
 import org.hsqldb.lib.InputStreamInterface;
 import org.hsqldb.lib.java.JavaSystem;
 import org.hsqldb.map.BitMap;
 
-/**
+/*
  * Wrapper for random access file for incremental backup of the .data file.
  *
  * @author Fred Toussi (fredt@users dot sourceforge.net)
- * @version  2.7.0
+ * @version 2.5.0
  * @since 1.9.0
  */
 public class RAShadowFile {

@@ -1,4 +1,4 @@
-/* Copyright (c) 2001-2022, The HSQL Development Group
+/* Copyright (c) 2001-2021, The HSQL Development Group
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -87,6 +87,7 @@ public class QuerySpecification extends QueryExpression {
     int                   endInnerRange   = -1;
     Expression            queryCondition;
     Expression            checkQueryCondition;
+    Expression            rowExpression;
     Expression[]          exprColumns;
     HsqlArrayList         exprColumnList;
     GroupSet              groupSet;
@@ -955,6 +956,8 @@ public class QuerySpecification extends QueryExpression {
                     (Expression) sortAndSlice.exprList.get(i);
             }
         }
+
+        rowExpression = new Expression(OpTypes.ROW, exprColumns);
     }
 
     private int replaceColumnIndexInOrderBy(Expression orderBy) {
@@ -1016,8 +1019,6 @@ public class QuerySpecification extends QueryExpression {
      */
     public void resolveExpressionTypes(Session session) {
 
-        Expression rowExpression = new Expression(OpTypes.ROW, exprColumns);
-
         for (int i = 0; i < indexStartAggregates; i++) {
             Expression e = exprColumns[i];
 
@@ -1037,18 +1038,11 @@ public class QuerySpecification extends QueryExpression {
             }
         }
 
-        rowExpression.nodes = new Expression[1];
-
         for (int i = 0; i < rangeVariables.length; i++) {
             Expression e = rangeVariables[i].getJoinCondition();
 
             if (e != null) {
-                rowExpression.setLeftNode(e);
-                e.resolveTypes(session, rowExpression);
-
-                e = rowExpression.getLeftNode();
-
-                rangeVariables[i].setJoinCondition(e);
+                e.resolveTypes(session, null);
 
                 if (e.getDataType() != Type.SQL_BOOLEAN) {
                     throw Error.error(ErrorCode.X_42568);
@@ -1057,10 +1051,7 @@ public class QuerySpecification extends QueryExpression {
         }
 
         if (queryCondition != null) {
-            rowExpression.setLeftNode(queryCondition);
-            queryCondition.resolveTypes(session, rowExpression);
-
-            queryCondition = rowExpression.getLeftNode();
+            queryCondition.resolveTypes(session, null);
 
             if (queryCondition.getDataType() != Type.SQL_BOOLEAN) {
                 throw Error.error(ErrorCode.X_42568);

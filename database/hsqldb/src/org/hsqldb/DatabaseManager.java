@@ -1,4 +1,4 @@
-/* Copyright (c) 2001-2022, The HSQL Development Group
+/* Copyright (c) 2001-2021, The HSQL Development Group
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -31,7 +31,6 @@
 
 package org.hsqldb;
 
-import java.util.TimeZone;
 import java.util.Vector;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -59,7 +58,7 @@ import org.hsqldb.persist.HsqlProperties;
  * Maintains a reference to the timer used for file locks and logging.<p>
  *
  * @author Fred Toussi (fredt@users dot sourceforge.net)
- * @version 2.7.0
+ * @version 2.5.0
  * @since 1.7.2
  */
 public class DatabaseManager {
@@ -128,7 +127,7 @@ public class DatabaseManager {
      * Used by server to open a new session
      */
     public static Session newSession(int dbID, String user, String password,
-                                     String zoneString) {
+                                     String zoneString, int timeZoneSeconds) {
 
         Database db = null;
 
@@ -140,8 +139,8 @@ public class DatabaseManager {
             return null;
         }
 
-        Session session = db.connect(user, password,
-                                     TimeZone.getTimeZone(zoneString));
+        Session session = db.connect(user, password, zoneString,
+                                     timeZoneSeconds);
 
         session.isNetwork = true;
 
@@ -153,11 +152,11 @@ public class DatabaseManager {
      */
     public static Session newSession(String type, String path, String user,
                                      String password, HsqlProperties props,
-                                     TimeZone zone) {
+                                     String zoneString, int timeZoneSeconds) {
 
         Database db = getDatabase(type, path, props);
 
-        return db.connect(user, password, zone);
+        return db.connect(user, password, zoneString, timeZoneSeconds);
     }
 
     /**

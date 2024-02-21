@@ -1,4 +1,4 @@
-/* Copyright (c) 2001-2023, The HSQL Development Group
+/* Copyright (c) 2001-2021, The HSQL Development Group
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -46,11 +46,11 @@ import org.hsqldb.navigator.RowSetNavigatorDataChange;
 import org.hsqldb.navigator.RowSetNavigatorDataChangeMemory;
 import org.hsqldb.result.Result;
 
-/**
+/*
  * Session execution context and temporary data structures
  *
  * @author Fred Toussi (fredt@users dot sourceforge.net)
- * @version 2.7.2
+ * @version 2.4.0
  * @since 1.9.0
  */
 public class SessionContext {
@@ -58,10 +58,9 @@ public class SessionContext {
     Session session;
 
     //
-    public boolean isAutoCommit;
-    boolean        isReadOnly;
-    boolean        noSQL;
-    int            autoCommitRows;
+    public Boolean isAutoCommit;
+    Boolean        isReadOnly;
+    Boolean        noSQL;
     int            currentMaxRows;
 
     //
@@ -78,7 +77,7 @@ public class SessionContext {
     Object[]              dynamicArguments     = ValuePool.emptyObjectArray;
     Object[][]            triggerArguments     = null;
     public int            depth;
-    boolean               isInRoutine;
+    Boolean               isInRoutine;
 
     //
     Number         lastIdentity = ValuePool.INTEGER_0;
@@ -90,15 +89,14 @@ public class SessionContext {
 
     // grouping sets data
     GroupSet groupSet;
-    List     currentGroup;
+    List currentGroup;
 
     // session tables
     OrderedHashMap sessionTables;
     OrderedHashMap popSessionTables;
 
     //
-    public volatile Statement currentStatement;
-    public volatile boolean invalidStatement;
+    public Statement currentStatement;
 
     //
     public int rownum;
@@ -131,16 +129,16 @@ public class SessionContext {
                 true, RangeVariable.VARIALBE_RANGE);
         sessionVariableRangeGroups = new RangeGroup[]{
             new RangeGroupSimple(sessionVariablesRange, true) };
-        isAutoCommit = false;
-        isReadOnly   = false;
-        noSQL        = false;
-        isInRoutine  = false;
+        isAutoCommit = Boolean.FALSE;
+        isReadOnly   = Boolean.FALSE;
+        noSQL        = Boolean.FALSE;
+        isInRoutine  = Boolean.FALSE;
     }
 
     void resetStack() {
 
         while (depth > 0) {
-            pop(isInRoutine);
+            pop(isInRoutine.booleanValue());
         }
     }
 
@@ -182,7 +180,7 @@ public class SessionContext {
         rangeIterators      = new RangeIterator[8];
         savepoints          = new OrderedHashMap(4);
         savepointTimestamps = new LongDeque();
-        isAutoCommit        = false;
+        isAutoCommit        = Boolean.FALSE;
         currentMaxRows      = 0;
         isInRoutine         = Boolean.valueOf(isRoutine);
 

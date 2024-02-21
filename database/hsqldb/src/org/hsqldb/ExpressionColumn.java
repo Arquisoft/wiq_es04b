@@ -1,4 +1,4 @@
-/* Copyright (c) 2001-2022, The HSQL Development Group
+/* Copyright (c) 2001-2021, The HSQL Development Group
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -50,7 +50,7 @@ import org.hsqldb.types.Type;
  * Implementation of column, variable, parameter, etc. access operations.
  *
  * @author Fred Toussi (fredt@users dot sourceforge.net)
- * @version 2.7.1
+ * @version 2.6.1
  * @since 1.9.0
  */
 public class ExpressionColumn extends Expression {
@@ -401,10 +401,8 @@ public class ExpressionColumn extends Expression {
     }
 
     public List resolveColumnReferences(Session session,
-                                        RangeGroup rangeGroup, int rangeCount,
-                                        RangeGroup[] rangeGroups,
-                                        List unresolvedSet,
-                                        boolean acceptsSequences) {
+            RangeGroup rangeGroup, int rangeCount, RangeGroup[] rangeGroups,
+            List unresolvedSet, boolean acceptsSequences) {
 
         switch (opType) {
 
@@ -698,11 +696,6 @@ public class ExpressionColumn extends Expression {
                 dataType = type;
 
                 break;
-            }
-            case OpTypes.COLUMN : {
-                if (dataType == null) {
-                    dataType = column.getDataType();
-                }
             }
         }
     }

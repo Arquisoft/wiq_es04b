@@ -1,6 +1,6 @@
 package com.uniovi.entities;
 
-import jakarta.annotation.Nonnull;
+
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NonNull;
@@ -34,4 +34,12 @@ public class AppUser {
     private String passwordConfirm;
 
     protected AppUser() {}
+
+    public AppUser(String nickname, String name, String surname, String email, String password) {
+        this.nickname = nickname;
+        this.name = name;
+        this.surname = surname;
+        this.email = email;
+        this.password = password;
+    }
 }

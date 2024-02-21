@@ -1,4 +1,4 @@
-/* Copyright (c) 2001-2022, The HSQL Development Group
+/* Copyright (c) 2001-2021, The HSQL Development Group
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -62,13 +62,14 @@ public interface ClobData extends LobData {
 
     void setString(SessionInterface session, long pos, String str);
 
-    void setClob(SessionInterface session, long pos, ClobData clob,
-                 long offset, long len);
+    void setClob(SessionInterface session, long pos, ClobData clob, long offset,
+                  long len);
 
-    void setChars(SessionInterface session, long pos, char[] chars,
-                  int offset, int len);
+    void setChars(SessionInterface session, long pos, char[] chars, int offset,
+                 int len);
 
-    void setCharacterStream(SessionInterface session, long pos, Reader in);
+    void setCharacterStream(SessionInterface session, long pos,
+                                   Reader in);
 
     long position(SessionInterface session, String searchstr, long start);
 

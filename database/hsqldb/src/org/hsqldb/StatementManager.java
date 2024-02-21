@@ -1,4 +1,4 @@
-/* Copyright (c) 2001-2022, The HSQL Development Group
+/* Copyright (c) 2001-2021, The HSQL Development Group
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -69,7 +69,7 @@ import org.hsqldb.result.ResultMetaData;
  * @author Campbell Burnet (campbell-burnet@users dot sourceforge.net)
  * @author Fred Toussi (fredt@users dot sourceforge.net)
  *
- * @version 2.7.0
+ * @version 2.6.1
  * @since 1.7.2
  */
 public final class StatementManager {
@@ -83,7 +83,7 @@ public final class StatementManager {
     /** Set of wrappers for Statement object. */
     private HashSet<StatementWrapper> statementSet;
 
-    /** Map: Statement id (int) maps to: wrapper for Statement object. */
+    /** Map: Statement id (int) => wrapper for Statement object. */
     private LongKeyHashMap csidMap;
 
     /**
@@ -164,7 +164,7 @@ public final class StatementManager {
             }
 
             newStatement.setCompileTimestamp(
-                database.txManager.getSystemChangeNumber());
+                database.txManager.getGlobalChangeTimestamp());
 
             sw.statement = newStatement;
 
@@ -237,7 +237,7 @@ public final class StatementManager {
             }
 
             newStatement.setCompileTimestamp(
-                database.txManager.getSystemChangeNumber());
+                database.txManager.getGlobalChangeTimestamp());
 
             if (setGenerated) {
                 StatementDML si = (StatementDML) cs;
@@ -264,7 +264,7 @@ public final class StatementManager {
 
         Statement cs = wrapper.statement;
 
-        cs.setCompileTimestamp(database.txManager.getSystemChangeNumber());
+        cs.setCompileTimestamp(database.txManager.getGlobalChangeTimestamp());
 
         long csid = nextID();
 

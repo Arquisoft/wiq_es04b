@@ -1,4 +1,4 @@
-/* Copyright (c) 2001-2022, The HSQL Development Group
+/* Copyright (c) 2001-2021, The HSQL Development Group
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,7 +56,6 @@ import org.hsqldb.lib.WrapperIterator;
 import org.hsqldb.map.ValuePool;
 import org.hsqldb.persist.HsqlDatabaseProperties;
 import org.hsqldb.persist.HsqlProperties;
-import org.hsqldb.persist.HsqlProperties.PropertyMeta;
 import org.hsqldb.persist.PersistentStore;
 import org.hsqldb.rights.GrantConstants;
 import org.hsqldb.rights.Grantee;
@@ -69,6 +68,8 @@ import org.hsqldb.types.IntervalType;
 import org.hsqldb.types.NumberType;
 import org.hsqldb.types.Type;
 import org.hsqldb.types.Types;
+
+/* $Id: DatabaseInformationMain.java 6303 2021-02-19 16:04:03Z fredt $ */
 
 // fredt@users - 1.7.2 - structural modifications to allow inheritance
 // campbell-burnet@users - 1.7.2 - 20020225
@@ -142,7 +143,7 @@ import org.hsqldb.types.Types;
  * (fredt@users) <p>
  * @author Campbell Burnet (campbell-burnet@users dot sourceforge.net)
  * @author Fred Toussi (fredt@users dot sourceforge.net)
- * @version 2.7.0
+ * @version 2.6.0
  * @since 1.7.2
  */
 class DatabaseInformationMain extends DatabaseInformation {
@@ -340,9 +341,6 @@ class DatabaseInformationMain extends DatabaseInformation {
             case SYSTEM_USERS :
                 return SYSTEM_USERS(session, store);
 
-            case SYSTEM_UDTATTRIBUTES :
-                return SYSTEM_UDTATTRIBUTES(session, store);
-
             case SYSTEM_UDTS :
                 return SYSTEM_UDTS(session, store);
 
@@ -368,7 +366,7 @@ class DatabaseInformationMain extends DatabaseInformation {
 
     /**
      * One time initialisation of instance attributes
-     * at construction time.
+     * at construction time. <p>
      *
      */
     protected final void init(Session session) {
@@ -415,7 +413,7 @@ class DatabaseInformationMain extends DatabaseInformation {
      * @return true if the table is accessible, else false
      * @param object the schmea object for which to check accessibility
      */
-    private boolean isAccessible(Session session, SchemaObject object) {
+    private final boolean isAccessible(Session session, SchemaObject object) {
         return session.getGrantee().isAccessible(object);
     }
 
@@ -427,7 +425,9 @@ class DatabaseInformationMain extends DatabaseInformation {
      */
     protected final Table createBlankTable(HsqlName name) {
 
-        return new Table(database, name, TableBase.INFO_SCHEMA_TABLE);
+        Table table = new Table(database, name, TableBase.INFO_SCHEMA_TABLE);
+
+        return table;
     }
 
     /**
@@ -498,7 +498,7 @@ class DatabaseInformationMain extends DatabaseInformation {
      *
      * Each row describes a single column of the best row identifier column
      * set for a particular table.  Each row has the following
-     * columns:
+     * columns: <p>
      *
      * <pre class="SqlCodeExample">
      * SCOPE          SMALLINT  scope of applicability
@@ -540,7 +540,7 @@ class DatabaseInformationMain extends DatabaseInformation {
      *
      * <b>DEFINTIONS:</b>  <p>
      *
-     * <b>Alternate key</b>
+     * <b>Alternate key</b> <p>
      *
      *  <UL>
      *   <LI> An attribute of a table that, by virtue of its having a set of
@@ -550,7 +550,7 @@ class DatabaseInformationMain extends DatabaseInformation {
      *        primary key on those same columns.
      *  </UL> <p>
      *
-     * <b>Column set performance ranking</b>
+     * <b>Column set performance ranking</b> <p>
      *
      *  <UL>
      *  <LI> The ranking of the expected average performance w.r.t a subset of
@@ -567,7 +567,7 @@ class DatabaseInformationMain extends DatabaseInformation {
      * <b>Rules:</b> <p>
      *
      * Given the above definitions, the rules currently in effect for reporting
-     * best row identifier are as follows, in order of precedence:
+     * best row identifier are as follows, in order of precedence: <p>
      *
      * <OL>
      * <LI> if the table under consideration has a primary key constraint, then
@@ -591,14 +591,14 @@ class DatabaseInformationMain extends DatabaseInformation {
      *      candidate column sets. If there exists a tie for lowest non-zero
      *      count of columns having a not null constraint, then the columns
      *      of the first such encountered candidate set are reported. Each
-     *      row has its IN_KEY column set to FALSE.
+     *      row has its IN_KEY column set to FALSE. <p>
      *
      * <LI> Finally, if the set of candidate column sets in 3.) is the empty,
      *      then no column set is reported for the table under consideration.
      * </OL> <p>
      *
      * The scope reported for a best row identifier column set is determined
-     * thus:
+     * thus: <p>
      *
      * <OL>
      * <LI> if the database containing the table under consideration is in
@@ -771,7 +771,7 @@ class DatabaseInformationMain extends DatabaseInformation {
      * visible columns of all accessible tables defined
      * within this database.<p>
      *
-     * Each row is a column description with the following columns:
+     * Each row is a column description with the following columns: <p>
      *
      * <pre class="SqlCodeExample">
      * TABLE_CAT         VARCHAR   table catalog
@@ -804,7 +804,7 @@ class DatabaseInformationMain extends DatabaseInformation {
      *
      * @return a <code>Table</code> object describing the
      *        visible columns of all accessible
-     *        tables defined within this database.
+     *        tables defined within this database.<p>
      */
     final Table SYSTEM_COLUMNS(Session session, PersistentStore store) {
 
@@ -1025,7 +1025,7 @@ class DatabaseInformationMain extends DatabaseInformation {
      * the columns of the referenced tables.<p>
      *
      * Each row is a foreign key column description with the following
-     * columns:
+     * columns: <p>
      *
      * <pre class="SqlCodeExample">
      * PKTABLE_CAT   VARCHAR   referenced table catalog
@@ -1227,7 +1227,7 @@ class DatabaseInformationMain extends DatabaseInformation {
      * within this database.<p>
      *
      * Each row is an index column description with the following
-     * columns:
+     * columns: <p>
      *
      * <pre class="SqlCodeExample">
      * TABLE_CAT        VARCHAR   table's catalog
@@ -1418,7 +1418,7 @@ class DatabaseInformationMain extends DatabaseInformation {
      * this database. <p>
      *
      * Each row is a PRIMARY KEY column description with the following
-     * columns:
+     * columns: <p>
      *
      * <pre class="SqlCodeExample">
      * TABLE_CAT   VARCHAR   table catalog
@@ -1528,7 +1528,7 @@ class DatabaseInformationMain extends DatabaseInformation {
      * routines defined within this database.<p>
      *
      * Each row is a procedure column description with the following
-     * columns:
+     * columns: <p>
      *
      * <pre class="SqlCodeExample">
      * PROCEDURE_CAT   VARCHAR   routine catalog
@@ -1777,7 +1777,7 @@ class DatabaseInformationMain extends DatabaseInformation {
      * routines (both functions and procedures) defined within this database.<p>
      *
      * Each row is a procedure description with the following
-     * columns:
+     * columns: <p>
      *
      * <pre class="SqlCodeExample">
      * PROCEDURE_CAT     VARCHAR   catalog in which routine is defined
@@ -1888,14 +1888,13 @@ class DatabaseInformationMain extends DatabaseInformation {
      * getClientInfoProperties
      *
      * @return Result
-     * <ul>
-     * <li><b>NAME</b> String : The name of the client info property<br>
-     * <li><b>MAX_LEN</b> int : The maximum length of the value for the property<br>
-     * <li><b>DEFAULT_VALUE</b> String : The default value of the property<br>
-     * <li><b>DESCRIPTION</b> String : A description of the property.  This will typically
+     *
+     * <li><b>NAME</b> String=> The name of the client info property<br>
+     * <li><b>MAX_LEN</b> int=> The maximum length of the value for the property<br>
+     * <li><b>DEFAULT_VALUE</b> String=> The default value of the property<br>
+     * <li><b>DESCRIPTION</b> String=> A description of the property.  This will typically
      *                                                  contain information as to where this property is
      *                                                  stored in the database.
-     * </ul>
      */
     final Table SYSTEM_CONNECTION_PROPERTIES(Session session,
             PersistentStore store) {
@@ -1927,17 +1926,30 @@ class DatabaseInformationMain extends DatabaseInformation {
         final int imax_len       = 1;
         final int idefault_value = 2;
         final int idescription   = 3;
-        Iterator  it = HsqlDatabaseProperties.getUrlUserConnectionProperties();
+        Iterator  it = HsqlDatabaseProperties.getPropertiesMetaIterator();
 
         while (it.hasNext()) {
-            PropertyMeta meta     = (PropertyMeta) it.next();
-            int          propType = meta.propType;
+            Object[] meta = (Object[]) it.next();
+            int propType =
+                ((Integer) meta[HsqlProperties.indexType]).intValue();
+
+            if (propType == HsqlDatabaseProperties.FILE_PROPERTY) {
+                if (HsqlDatabaseProperties.hsqldb_readonly.equals(
+                        meta[HsqlProperties.indexName]) || HsqlDatabaseProperties
+                            .hsqldb_files_readonly.equals(
+                                meta[HsqlProperties.indexName])) {}
+                else {
+                    continue;
+                }
+            } else if (propType != HsqlDatabaseProperties.SQL_PROPERTY) {
+                continue;
+            }
 
             row = t.getEmptyRowData();
 
-            Object def = meta.propDefaultValue;
+            Object def = meta[HsqlProperties.indexDefaultValue];
 
-            row[iname]          = meta.propName;
+            row[iname]          = meta[HsqlProperties.indexName];
             row[imax_len]       = ValuePool.getInt(8);
             row[idefault_value] = def == null ? null
                                               : def.toString();
@@ -2168,7 +2180,7 @@ class DatabaseInformationMain extends DatabaseInformation {
      * defined within this database. <p>
      *
      * Each row is a schema description with the following
-     * columns:
+     * columns: <p>
      *
      * <pre class="SqlCodeExample">
      * TABLE_SCHEM      VARCHAR   simple schema name
@@ -2232,7 +2244,7 @@ class DatabaseInformationMain extends DatabaseInformation {
      * Retrieves a <code>Table</code> object describing the accessible
      * tables defined within this database. <p>
      *
-     * Each row is a table description with the following columns:
+     * Each row is a table description with the following columns: <p>
      *
      * <pre class="SqlCodeExample">
      * TABLE_CAT                 VARCHAR   table catalog
@@ -2372,26 +2384,29 @@ class DatabaseInformationMain extends DatabaseInformation {
      * available in this database. <p>
      *
      * In general, the range of values that may be commonly encountered across
-     * most DBMS implementations is:
+     * most DBMS implementations is: <p>
      *
      * <UL>
-     *   <li>"TABLE"
-     *   <li>"VIEW"
-     *   <li>"SYSTEM TABLE"
-     *   <li>"GLOBAL TEMPORARY"
-     *   <li>"LOCAL TEMPORARY"
-     *   <li>"ALIAS"
-     *   <li>"SYNONYM"
+     *   <LI><FONT color='#FF00FF'>"TABLE"</FONT>
+     *   <LI><FONT color='#FF00FF'>"VIEW"</FONT>
+     *   <LI><FONT color='#FF00FF'>"SYSTEM TABLE"</FONT>
+     *   <LI><FONT color='#FF00FF'>"GLOBAL TEMPORARY"</FONT>
+     *   <LI><FONT color='#FF00FF'>"LOCAL TEMPORARY"</FONT>
+     *   <LI><FONT color='#FF00FF'>"ALIAS"</FONT>
+     *   <LI><FONT color='#FF00FF'>"SYNONYM"</FONT>
      * </UL> <p>
      *
-     * This method reports the following from the range above:
+     * As of HSQLDB 1.7.2, the engine supports and thus this method reports
+     * only a subset of the range above: <p>
      *
      * <UL>
-     *   <LI>"TABLE" (HSQLDB MEMORY, CACHED and TEXT tables)
-     *   <LI>"VIEW"  (Views)
-     *   <LI>"SYSTEM TABLE" (INFORMATION_SCHEMA views)
-     *   <LI>"GLOBAL TEMPORAR" (GLOBAL TEMORARY and TEMP TEXT tables)
-     *   <LI>"LOCAL TEMPORARY" (the session-declared LOCAL TEMPORARY tables)
+     *   <LI><FONT color='#FF00FF'>"TABLE"</FONT>
+     *    (HSQLDB MEMORY, CACHED and TEXT tables)
+     *   <LI><FONT color='#FF00FF'>"VIEW"</FONT>  (Views)
+     *   <LI><FONT color='#FF00FF'>"SYSTEM TABLE"</FONT>
+     *    (The tables generated by this object)
+     *   <LI><FONT color='#FF00FF'>"GLOBAL TEMPORARY"</FONT>
+     *    (HSQLDB TEMP and TEMP TEXT tables)
      * </UL> <p>
      *
      * @return a <code>Table</code> object describing the table types
@@ -2438,9 +2453,9 @@ class DatabaseInformationMain extends DatabaseInformation {
      * TYPE_NAME          VARCHAR   the canonical name for DDL statements.
      * DATA_TYPE          SMALLINT  data type code from DITypes.
      * PRECISION          INTEGER   max column size.
-     *                              number  : max precision.
-     *                              character  : max characters.
-     *                              datetime  : max chars incl. frac. component.
+     *                              number => max precision.
+     *                              character => max characters.
+     *                              datetime => max chars incl. frac. component.
      * LITERAL_PREFIX     VARCHAR   char(s) prefixing literal of this type.
      * LITERAL_SUFFIX     VARCHAR   char(s) terminating literal of this type.
      * CREATE_PARAMS      VARCHAR   Localized syntax-order list of domain
@@ -2579,8 +2594,8 @@ class DatabaseInformationMain extends DatabaseInformation {
 
             if (type.isBinaryType() || type.isCharacterType()
                     || type.isDateTimeType() || type.isIntervalType()) {
-                row[iliteral_prefix] = "'";
-                row[iliteral_suffix] = "'";
+                row[iliteral_prefix] = "\'";
+                row[iliteral_suffix] = "\'";
             }
 
             if (type.acceptsPrecision() && type.acceptsScale()) {
@@ -2638,108 +2653,23 @@ class DatabaseInformationMain extends DatabaseInformation {
 
     /**
      * Retrieves a <code>Table</code> object describing the accessible
-     * attributes of the accessible user-defined type (UDT) objects
-     * defined within this database. <p>
-     *
-     * This description does not contain inherited attributes. <p>
-     *
-     * Each row is a user-defined type attributes description with the
-     * following columns:
-     *
-     * <pre class="SqlCodeExample">
-     * TYPE_CAT          VARCHAR   type catalog
-     * TYPE_SCHEM        VARCHAR   type schema
-     * TYPE_NAME         VARCHAR   type name
-     * ATTR_NAME         VARCHAR   attribute name
-     * DATA_TYPE         SMALLINT  attribute's SQL type from DITypes
-     * ATTR_TYPE_NAME    VARCHAR   UDT: fully qualified type name
-     *                            REF: fully qualified type name of target type of
-     *                            the reference type.
-     * ATTR_SIZE         INTEGER   column size.
-     *                            char or date types  : maximum number of characters;
-     *                            numeric or decimal types  : precision.
-     * DECIMAL_DIGITS    INTEGER   # of fractional digits (scale) of number type
-     * NUM_PREC_RADIX    INTEGER   Radix of number type
-     * NULLABLE          INTEGER   whether NULL is allowed
-     * REMARKS           VARCHAR   comment describing attribute
-     * ATTR_DEF          VARCHAR   default attribute value
-     * SQL_DATA_TYPE     INTEGER   expected value of SQL CLI SQL_DESC_TYPE in the SQLDA
-     * SQL_DATETIME_SUB  INTEGER   DATETIME/INTERVAL  : datetime/interval subcode
-     * CHAR_OCTET_LENGTH INTEGER   for char types:  max bytes in column
-     * ORDINAL_POSITION  INTEGER   index of column in table (starting at 1)
-     * IS_NULLABLE       VARCHAR   "NO"  : strictly no NULL values;
-     *                             "YES"  : maybe NULL values;
-     *                             ""  : unknown.
-     * SCOPE_CATALOG     VARCHAR   catalog of REF attribute scope table or NULL
-     * SCOPE_SCHEMA      VARCHAR   schema of REF attribute scope table or NULL
-     * SCOPE_TABLE       VARCHAR   name of REF attribute scope table or NULL
-     * SOURCE_DATA_TYPE  SMALLINT  For DISTINCT or user-generated REF DATA_TYPE:
-     *                            source SQL type from DITypes
-     *                            For other DATA_TYPE values:  NULL
-     * </pre>
-     *
-     * <B>Note:</B> Currently, neither the HSQLDB engine or the JDBC driver
-     * support UDTs, so an empty table is returned. <p>
-     * @return a <code>Table</code> object describing the accessible
-     *        attrubutes of the accessible user-defined type
-     *        (UDT) objects defined within this database
-     * @throws HsqlException if an error occurs while producing the table
-     */
-    Table SYSTEM_UDTATTRIBUTES(Session session, PersistentStore store) {
-
-        Table t = sysTables[SYSTEM_UDTATTRIBUTES];
-
-        if (t == null) {
-            t = createBlankTable(sysTableHsqlNames[SYSTEM_UDTATTRIBUTES]);
-
-            addColumn(t, "TYPE_CAT", SQL_IDENTIFIER);
-            addColumn(t, "TYPE_SCHEM", SQL_IDENTIFIER);
-            addColumn(t, "TYPE_NAME", SQL_IDENTIFIER);             // not null
-            addColumn(t, "ATTR_NAME", SQL_IDENTIFIER);             // not null
-            addColumn(t, "DATA_TYPE", Type.SQL_SMALLINT);          // not null
-            addColumn(t, "ATTR_TYPE_NAME", SQL_IDENTIFIER);        // not null
-            addColumn(t, "ATTR_SIZE", Type.SQL_INTEGER);
-            addColumn(t, "DECIMAL_DIGITS", Type.SQL_INTEGER);
-            addColumn(t, "NUM_PREC_RADIX", Type.SQL_INTEGER);
-            addColumn(t, "NULLABLE", Type.SQL_INTEGER);
-            addColumn(t, "REMARKS", CHARACTER_DATA);
-            addColumn(t, "ATTR_DEF", CHARACTER_DATA);
-            addColumn(t, "SQL_DATA_TYPE", Type.SQL_INTEGER);
-            addColumn(t, "SQL_DATETIME_SUB", Type.SQL_INTEGER);
-            addColumn(t, "CHAR_OCTET_LENGTH", Type.SQL_INTEGER);
-            addColumn(t, "ORDINAL_POSITION", Type.SQL_INTEGER);    // not null
-            addColumn(t, "IS_NULLABLE", YES_OR_NO);                // not null
-            addColumn(t, "SCOPE_CATALOG", SQL_IDENTIFIER);
-            addColumn(t, "SCOPE_SCHEMA", SQL_IDENTIFIER);
-            addColumn(t, "SCOPE_TABLE", SQL_IDENTIFIER);
-            addColumn(t, "SOURCE_DATA_TYPE", Type.SQL_SMALLINT);
-            t.createPrimaryKey();
-
-            return t;
-        }
-
-        return t;
-    }
-
-    /**
-     * Retrieves a <code>Table</code> object describing the accessible
      * user-defined types defined in this database. <p>
      *
      * Schema-specific UDTs may have type JAVA_OBJECT, STRUCT, or DISTINCT.
      *
      * <P>Each row is a UDT description with the following columns:
      * <OL>
-     *   <LI><B>TYPE_CAT</B> <code>VARCHAR</code>  : the type's catalog
-     *   <LI><B>TYPE_SCHEM</B> <code>VARCHAR</code>  : type's schema
-     *   <LI><B>TYPE_NAME</B> <code>VARCHAR</code>  : type name
-     *   <LI><B>CLASS_NAME</B> <code>VARCHAR</code>  : Java class name
-     *   <LI><B>DATA_TYPE</B> <code>VARCHAR</code>  :
+     *   <LI><B>TYPE_CAT</B> <code>VARCHAR</code> => the type's catalog
+     *   <LI><B>TYPE_SCHEM</B> <code>VARCHAR</code> => type's schema
+     *   <LI><B>TYPE_NAME</B> <code>VARCHAR</code> => type name
+     *   <LI><B>CLASS_NAME</B> <code>VARCHAR</code> => Java class name
+     *   <LI><B>DATA_TYPE</B> <code>VARCHAR</code> =>
      *         type value defined in <code>DITypes</code>;
      *         one of <code>JAVA_OBJECT</code>, <code>STRUCT</code>, or
      *        <code>DISTINCT</code>
-     *   <LI><B>REMARKS</B> <code>VARCHAR</code>  :
+     *   <LI><B>REMARKS</B> <code>VARCHAR</code> =>
      *          explanatory comment on the type
-     *   <LI><B>BASE_TYPE</B><code>SMALLINT</code>  :
+     *   <LI><B>BASE_TYPE</B><code>SMALLINT</code> =>
      *          type code of the source type of a DISTINCT type or the
      *          type that implements the user-generated reference type of the
      *          SELF_REFERENCING_COLUMN of a structured type as defined in
@@ -2822,22 +2752,22 @@ class DatabaseInformationMain extends DatabaseInformation {
     /**
      * Retrieves a <code>Table</code> object describing the accessible
      * columns that are automatically updated when any value in a row
-     * is updated.<P>
+     * is updated. <p>
      *
-     * Each row is a version column description with the following columns:
+     * Each row is a version column description with the following columns: <p>
      *
      * <OL>
-     * <LI><B>SCOPE</B> <code>SMALLINT</code>  : is not used
-     * <LI><B>COLUMN_NAME</B> <code>VARCHAR</code>  : column name
-     * <LI><B>DATA_TYPE</B> <code>SMALLINT</code>  :
+     * <LI><B>SCOPE</B> <code>SMALLINT</code> => is not used
+     * <LI><B>COLUMN_NAME</B> <code>VARCHAR</code> => column name
+     * <LI><B>DATA_TYPE</B> <code>SMALLINT</code> =>
      *        SQL data type from java.sql.Types
-     * <LI><B>TYPE_NAME</B> <code>SMALLINT</code>  :
+     * <LI><B>TYPE_NAME</B> <code>SMALLINT</code> =>
      *       Data source dependent type name
-     * <LI><B>COLUMN_SIZE</B> <code>INTEGER</code>  : precision
-     * <LI><B>BUFFER_LENGTH</B> <code>INTEGER</code>  :
+     * <LI><B>COLUMN_SIZE</B> <code>INTEGER</code> => precision
+     * <LI><B>BUFFER_LENGTH</B> <code>INTEGER</code> =>
      *        length of column value in bytes
-     * <LI><B>DECIMAL_DIGITS</B> <code>SMALLINT</code>  : scale
-     * <LI><B>PSEUDO_COLUMN</B> <code>SMALLINT</code>  :
+     * <LI><B>DECIMAL_DIGITS</B> <code>SMALLINT</code> => scale
+     * <LI><B>PSEUDO_COLUMN</B> <code>SMALLINT</code> =>
      *        is this a pseudo column like an Oracle <code>ROWID</code>:<BR>
      *        (as defined in <code>java.sql.DatabaseMetadata</code>)
      * <UL>
@@ -3031,7 +2961,7 @@ class DatabaseInformationMain extends DatabaseInformation {
      * tables defined within this database.<p>
      *
      * Each row is a column privilege description with the following
-     * columns:
+     * columns: <p>
      *
      * <pre class="SqlCodeExample">
      * TABLE_CAT    VARCHAR   table catalog
@@ -3132,14 +3062,13 @@ class DatabaseInformationMain extends DatabaseInformation {
                     Right right          = (Right) rights.get(j);
                     Right grantableRight = right.getGrantableRights();
 
-                    for (int k = 0; k < Right.tablePrivilegeTypes.length;
-                            k++) {
+                    for (int k = 0; k < Right.privilegeTypes.length; k++) {
                         OrderedHashSet columnList =
                             right.getColumnsForPrivilege(
-                                table, Right.tablePrivilegeTypes[k]);
+                                table, Right.privilegeTypes[k]);
                         OrderedHashSet grantableList =
                             grantableRight.getColumnsForPrivilege(table,
-                                Right.tablePrivilegeTypes[k]);
+                                Right.privilegeTypes[k]);
 
                         for (int l = 0; l < columnList.size(); l++) {
                             HsqlName fullName = ((HsqlName) columnList.get(l));
@@ -3151,7 +3080,7 @@ class DatabaseInformationMain extends DatabaseInformation {
                             row[table_schema]   = tableSchema;
                             row[table_name]     = tableName;
                             row[column_name]    = fullName.name;
-                            row[privilege_type] = Right.tablePrivilegeNames[k];
+                            row[privilege_type] = Right.privilegeNames[k];
                             row[is_grantable] =
                                 right.getGrantee() == table.getOwner()
                                 || grantableList.contains(fullName) ? "YES"
@@ -3173,7 +3102,7 @@ class DatabaseInformationMain extends DatabaseInformation {
      * The SEQUENCES view has one row for each external sequence
      * generator. <p>
      *
-     * <b>Definition:</b>
+     * <b>Definition:</b> <p>
      *
      * <pre class="SqlCodeExample">
      *
@@ -3197,34 +3126,43 @@ class DatabaseInformationMain extends DatabaseInformation {
      *
      * </pre>
      *
-     * <b>DESCRIPTION:</b>
+     * <b>DESCRIPTION:</b><p>
      *
      * <ol>
      * <li> The values of SEQUENCE_CATALOG, SEQUENCE_SCHEMA, and
      *      SEQUENCE_NAME are the catalog name, unqualified schema name,
      *      and qualified identifier, respectively, of the sequence generator
-     *      being described.
+     *      being described. <p>
      *
      * <li> The values of SEQUENCE_CATALOG, SEQUENCE_SCHEMA, SEQUENCE_NAME, and
      *      DTD_IDENTIFIER are the values of OBJECT_CATALOG, OBJECT_SCHEMA,
      *      OBJECT_NAME, and DTD_IDENTIFIER, respectively, of the row in
      *      DATA_TYPE_DESCRIPTOR (not yet implemented) that describes the data
-     *      type of the sequence generator.
+     *      type of the sequence generator. <p>
      *
      * <li> The values of MAXIMUM_VALUE, MINIMUM_VALUE, and INCREMENT are the
      *      character representations of maximum value, minimum value,
      *      and increment, respectively, of the sequence generator being
-     *      described.
+     *      described. <p>
      *
-     * <li> The values of CYCLE_OPTION have the following meanings:<br>
+     * <li> The values of CYCLE_OPTION have the following meanings: <p>
      *
-     *              YES : The cycle option of the sequence generator
-     *                         is CYCLE.<br>
-     *              NO : The cycle option of the sequence generator is
-     *                         NO CYCLE.
+     *      <table border cellpadding="3">
+     *          <tr>
+     *              <td nowrap>YES</td>
+     *              <td nowrap>The cycle option of the sequence generator
+     *                         is CYCLE.</td>
+     *          <tr>
+     *              <td nowrap>NO</td>
+     *              <td nowrap>The cycle option of the sequence generator is
+     *                         NO CYCLE.</td>
+     *          </tr>
+     *      </table> <p>
      *
      * <li> The value of START_WITH is HSQLDB-specific (not in the SQL 200n
-     *      spec). It is the character representation of the START WITH value.
+     *      spec).  <p>
+     *
+     *      It is the character representation of the START WITH value. <p>
      *
      * <li> The value of NEXT_VALUE is HSQLDB-specific (not in the SQL 200n)<p>
      *      This is the character representation of the value that
@@ -3456,7 +3394,7 @@ class DatabaseInformationMain extends DatabaseInformation {
      * The TABLE_PRIVILEGES view has one row for each visible access
      * right for each accessible table defined within this database. <p>
      *
-     * Each row is a table privilege description with the following columns:
+     * Each row is a table privilege description with the following columns: <p>
      *
      * <pre class="SqlCodeExample">
      * GRANTOR      VARCHAR   grantor of access
@@ -3551,13 +3489,12 @@ class DatabaseInformationMain extends DatabaseInformation {
                     Right right          = (Right) rights.get(j);
                     Right grantableRight = right.getGrantableRights();
 
-                    for (int k = 0; k < Right.tablePrivilegeTypes.length;
-                            k++) {
-                        if (!right.canAccess(Right.tablePrivilegeTypes[k])) {
+                    for (int k = 0; k < Right.privilegeTypes.length; k++) {
+                        if (!right.canAccessFully(Right.privilegeTypes[k])) {
                             continue;
                         }
 
-                        privilege           = Right.tablePrivilegeNames[k];
+                        privilege           = Right.privilegeNames[k];
                         row                 = t.getEmptyRowData();
                         row[grantor] = right.getGrantor().getName().name;
                         row[grantee] = right.getGrantee().getName().name;
@@ -3567,9 +3504,9 @@ class DatabaseInformationMain extends DatabaseInformation {
                         row[privilege_type] = privilege;
                         row[is_grantable] =
                             right.getGrantee() == table.getOwner()
-                            || grantableRight.canAccess(
-                                Right.tablePrivilegeTypes[k]) ? "YES"
-                                                              : "NO";
+                            || grantableRight.canAccessFully(
+                                Right.privilegeTypes[k]) ? "YES"
+                                                         : "NO";
                         row[with_hierarchy] = "NO";
 
                         try {
@@ -3700,7 +3637,7 @@ class DatabaseInformationMain extends DatabaseInformation {
      * Retrieves a <code>Table</code> object naming the accessible catalogs
      * defined within this database. <p>
      *
-     * Each row is a catalog name description with the following column:
+     * Each row is a catalog name description with the following column: <p>
      *
      * <pre class="SqlCodeExample">
      * TABLE_CAT   VARCHAR   catalog name

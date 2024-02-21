@@ -1,4 +1,4 @@
-/* Copyright (c) 2001-2022, The HSQL Development Group
+/* Copyright (c) 2001-2021, The HSQL Development Group
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -79,7 +79,7 @@ import org.hsqldb.lib.KMPSearchAlgorithm;
  * </div>
  * <!-- end release-specific documentation -->
  * @author Campbell Burnet (campbell-burnet@users dot sourceforge.net)
- * @version 2.7.1
+ * @version 2.5.0
  * @since HSQLDB 2.1
  */
 public class JDBCBlobFile implements java.sql.Blob {
@@ -291,7 +291,7 @@ public class JDBCBlobFile implements java.sql.Blob {
      * value will be increased to accommodate the extra bytes.
      * <p>
      * <b>Note:</b> If the value specified for <code>pos</code>
-     * is greater than the length+1 of the <code>BLOB</code> value then the
+     * is greater then the length+1 of the <code>BLOB</code> value then the
      * behavior is undefined. Some JDBC drivers may throw a
      * <code>SQLException</code> while other drivers may support this
      * operation.
@@ -341,7 +341,7 @@ public class JDBCBlobFile implements java.sql.Blob {
      * value will be increased to accommodate the extra bytes.
      * <p>
      * <b>Note:</b> If the value specified for <code>pos</code>
-     * is greater than the length+1 of the <code>BLOB</code> value then the
+     * is greater then the length+1 of the <code>BLOB</code> value then the
      * behavior is undefined. Some JDBC drivers may throw a
      * <code>SQLException</code> while other drivers may support this
      * operation.
@@ -407,7 +407,7 @@ public class JDBCBlobFile implements java.sql.Blob {
      * value will be increased to accommodate the extra bytes.
      * <p>
      * <b>Note:</b> If the value specified for <code>pos</code>
-     * is greater than the length+1 of the <code>BLOB</code> value then the
+     * is greater then the length+1 of the <code>BLOB</code> value then the
      * behavior is undefined. Some JDBC drivers may throw a
      * <code>SQLException</code> while other drivers may support this
      * operation.
@@ -483,7 +483,7 @@ public class JDBCBlobFile implements java.sql.Blob {
      * object represents to be <code>len</code> bytes in length.
      * <p>
      * <b>Note:</b> If the value specified for <code>pos</code>
-     * is greater than the length+1 of the <code>BLOB</code> value then the
+     * is greater then the length+1 of the <code>BLOB</code> value then the
      * behavior is undefined. Some JDBC drivers may throw a
      * <code>SQLException</code> while other drivers may support this
      * operation.
@@ -618,13 +618,10 @@ public class JDBCBlobFile implements java.sql.Blob {
         checkClosed();
 
         InputStream result;
-        
-        final List streams = m_streams;
 
         try {
             result = new InputStreamAdapter(m_file, pos - 1, length) {
                 private boolean closed;
-                private final InputStream self = this;
 
                 public void close() throws IOException {
                     if (closed) {
@@ -634,7 +631,7 @@ public class JDBCBlobFile implements java.sql.Blob {
                     try {
                         super.close();
                     } finally {
-                        streams.remove(self);
+                        m_streams.remove(this);
                     }
                 }
             };
@@ -642,7 +639,7 @@ public class JDBCBlobFile implements java.sql.Blob {
             throw JDBCUtil.sqlException(ex);
         }
 
-        streams.add(result);
+        m_streams.add(result);
 
         return result;
     }

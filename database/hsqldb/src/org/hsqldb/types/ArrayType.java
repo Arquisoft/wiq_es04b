@@ -1,4 +1,4 @@
-/* Copyright (c) 2001-2022, The HSQL Development Group
+/* Copyright (c) 2001-2021, The HSQL Development Group
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -48,12 +48,12 @@ import org.hsqldb.lib.ArraySort;
  * Class for ARRAY type objects.<p>
  *
  * @author Fred Toussi (fredt@users dot sourceforge.net)
- * @version 2.7.0
+ * @version 2.6.0
  * @since 2.0.0
  */
 public class ArrayType extends Type {
 
-    public static final int defaultArrayCardinality      = 1024 * 1024;
+    public static final int defaultArrayCardinality      = 1024*1024;
     public static final int defaultLargeArrayCardinality = Integer.MAX_VALUE;
     final Type              dataType;
     final int               maxCardinality;
@@ -330,54 +330,6 @@ public class ArrayType extends Type {
         return sb.toString();
     }
 
-    public void convertToJSON(Object a, StringBuilder sb) {
-
-        Object[] arra = (Object[]) a;
-
-        if (a == null) {
-            sb.append("null");
-
-            return;
-        }
-
-        sb.append('[');
-
-        for (int i = 0; i < arra.length; i++) {
-            if (i > 0) {
-                sb.append(',');
-            }
-
-            dataType.convertToJSON(arra[i], sb);
-        }
-
-        sb.append(']');
-    }
-
-    public void convertToJSONsimple(Object a, StringBuilder sb) {
-
-        Object[] arra = (Object[]) a;
-
-        if (a == null) {
-            sb.append("null");
-
-            return;
-        }
-
-        sb.append('[');
-
-        for (int i = 0; i < arra.length; i++) {
-            if (i > 0) {
-                sb.append(',');
-            }
-
-            Object value = dataType.convertToString(arra[i]);
-
-            sb.append(value);
-        }
-
-        sb.append(']');
-    }
-
     public boolean canConvertFrom(Type otherType) {
 
         if (otherType == null) {
@@ -396,15 +348,15 @@ public class ArrayType extends Type {
     public int canMoveFrom(Type otherType) {
 
         if (!otherType.isArrayType()) {
-            return Type.ReType.change;
+            return -1;
         }
 
         if (maxCardinality >= ((ArrayType) otherType).maxCardinality) {
             return dataType.canMoveFrom(otherType);
-        } else if (dataType.canMoveFrom(otherType) == ReType.keep) {
-            return Type.ReType.check;
+        } else if (dataType.canMoveFrom(otherType) == 0) {
+            return 1;
         } else {
-            return Type.ReType.change;
+            return -1;
         }
     }
 

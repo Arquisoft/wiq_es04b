@@ -1,4 +1,4 @@
-/* Copyright (c) 2001-2023, The HSQL Development Group
+/* Copyright (c) 2001-2021, The HSQL Development Group
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -39,7 +39,7 @@ import org.hsqldb.persist.PersistentStore;
  * Manages rows involved in transactions
  *
  * @author Fred Toussi (fredt@users dot sourceforge.net)
- * @version 2.7.2
+ * @version 2.6.0
  * @since 2.0.0
  */
 public class TransactionManager2PL extends TransactionManagerCommon
@@ -53,12 +53,12 @@ implements TransactionManager {
         txModel    = LOCKS;
     }
 
-    public long getSystemChangeNumber() {
-        return systemChangeNumber.get();
+    public long getGlobalChangeTimestamp() {
+        return globalChangeTimestamp.get();
     }
 
-    public void setSystemChangeNumber(long ts) {
-        systemChangeNumber.set(ts);
+    public void setGlobalChangeTimestamp(long ts) {
+        globalChangeTimestamp.set(ts);
     }
 
     public boolean isMVRows() {
@@ -87,7 +87,7 @@ implements TransactionManager {
 
     public boolean prepareCommitActions(Session session) {
 
-        session.actionSCN = getNextSystemChangeNumber();
+        session.actionTimestamp = getNextGlobalChangeTimestamp();
 
         return true;
     }
@@ -104,8 +104,8 @@ implements TransactionManager {
             int limit = session.rowActionList.size();
 
             // new actionTimestamp used for commitTimestamp
-            session.actionSCN         = getNextSystemChangeNumber();
-            session.transactionEndSCN = session.actionSCN;
+            session.actionTimestamp         = getNextGlobalChangeTimestamp();
+            session.transactionEndTimestamp = session.actionTimestamp;
 
             endTransaction(session);
 
@@ -135,11 +135,11 @@ implements TransactionManager {
         writeLock.lock();
 
         try {
-            session.abortTransaction  = false;
-            session.actionSCN         = getNextSystemChangeNumber();
-            session.transactionEndSCN = session.actionSCN;
+            session.abortTransaction        = false;
+            session.actionTimestamp         = getNextGlobalChangeTimestamp();
+            session.transactionEndTimestamp = session.actionTimestamp;
 
-            rollbackPartial(session, 0, session.transactionSCN);
+            rollbackPartial(session, 0, session.transactionTimestamp);
             endTransaction(session);
             session.logSequences();
 
@@ -167,7 +167,9 @@ implements TransactionManager {
     }
 
     public void rollbackAction(Session session) {
-        rollbackPartial(session, session.actionIndex, session.actionStartSCN);
+
+        rollbackPartial(session, session.actionIndex,
+                        session.actionStartTimestamp);
         endActionTPL(session);
     }
 
@@ -283,12 +285,16 @@ implements TransactionManager {
                 return;
             }
 
+            cs = updateCurrentStatement(session, cs);
+
+            if (cs == null) {
+                return;
+            }
+
             boolean canProceed = setWaitedSessionsTPL(session, cs);
 
             if (canProceed) {
-                if (!session.isTransaction) {
-                    session.isPreTransaction = true;
-                }
+                session.isPreTransaction = true;
 
                 if (session.tempSet.isEmpty()) {
                     lockTablesTPL(session, cs);
@@ -309,17 +315,10 @@ implements TransactionManager {
     }
 
     public void beginActionResume(Session session) {
-        Statement cs = session.sessionContext.currentStatement;
-
-        cs = updateCurrentStatement(session, cs);
-
-        if (session.sessionContext.invalidStatement) {
-            return;
-        }
 
         if (session.isTransaction) {
-            session.actionSCN      = getNextSystemChangeNumber();
-            session.actionStartSCN = session.actionSCN;
+            session.actionTimestamp      = getNextGlobalChangeTimestamp();
+            session.actionStartTimestamp = session.actionTimestamp;
         } else {
             beginTransactionCommon(session);
         }

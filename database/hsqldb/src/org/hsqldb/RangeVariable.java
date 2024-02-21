@@ -1,4 +1,4 @@
-/* Copyright (c) 2001-2023, The HSQL Development Group
+/* Copyright (c) 2001-2021, The HSQL Development Group
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -55,7 +55,7 @@ import org.hsqldb.types.Type;
  * Metadata for range variables, including conditions.
  *
  * @author Fred Toussi (fredt@users dot sourceforge.net)
- * @version 2.7.2
+ * @version 2.6.1
  * @since 1.9.0
  */
 public class RangeVariable {
@@ -693,10 +693,6 @@ public class RangeVariable {
      */
     public Expression getJoinCondition() {
         return joinCondition;
-    }
-
-    public void setJoinCondition(Expression e) {
-        joinCondition = e;
     }
 
     public void addJoinCondition(Expression e) {
@@ -1888,8 +1884,8 @@ public class RangeVariable {
                 }
             }
 
-            addToNonIndexCondition(e);
-
+            nonIndexCondition =
+                ExpressionLogical.andExpressions(nonIndexCondition, e);
             isFalse = Expression.EXPR_FALSE.equals(nonIndexCondition);
 
             if (rangeIndex == null || rangeIndex.getColumnCount() == 0) {
@@ -1916,9 +1912,10 @@ public class RangeVariable {
                     // replaces existing condition
                     if (opType == OpTypes.NOT) {
                         if (indexCols[indexedColumnCount - 1] == colIndex) {
-                            addToNonIndexCondition(
-                                indexCond[indexedColumnCount - 1]);
-
+                            nonIndexCondition =
+                                ExpressionLogical.andExpressions(
+                                    nonIndexCondition,
+                                    indexCond[indexedColumnCount - 1]);
                             indexCond[indexedColumnCount - 1] = e;
                             opType                            = e.opType;
                             opTypes[indexedColumnCount - 1]   = e.opType;
@@ -1949,9 +1946,9 @@ public class RangeVariable {
 
                         if (indexCols[indexedColumnCount - 1] == colIndex) {
                             indexEndCond[indexedColumnCount - 1] = e;
-
-                            addToIndexEndCondition(e);
-
+                            indexEndCondition =
+                                ExpressionLogical.andExpressions(
+                                    indexEndCondition, e);
                             opTypeEnd                          = e.opType;
                             opTypesEnd[indexedColumnCount - 1] = e.opType;
                         }
@@ -1999,9 +1996,9 @@ public class RangeVariable {
 
                         indexCond[indexedColumnCount]    = condition;
                         indexEndCond[indexedColumnCount] = e;
-
-                        addToIndexEndCondition(e);
-
+                        indexEndCondition =
+                            ExpressionLogical.andExpressions(indexEndCondition,
+                                                             e);
                         opType                         = OpTypes.NOT;
                         opTypes[indexedColumnCount]    = OpTypes.NOT;
                         opTypeEnd                      = e.opType;
@@ -2081,9 +2078,9 @@ public class RangeVariable {
                         Expression e = exprList[i];
 
                         indexEndCond[i] = e;
-
-                        addToIndexEndCondition(e);
-
+                        indexEndCondition =
+                            ExpressionLogical.andExpressions(indexEndCondition,
+                                                             e);
                         opType        = e.opType;
                         opTypes[i]    = e.opType;
                         opTypesEnd[i] = e.opType;
@@ -2100,22 +2097,6 @@ public class RangeVariable {
 
             indexedColumnCount = colCount;
             hasIndex           = true;
-        }
-
-        boolean addToIndexEndCondition(Expression e) {
-
-            indexEndCondition =
-                ExpressionLogical.andExpressions(indexEndCondition, e);
-
-            return true;
-        }
-
-        boolean addToNonIndexCondition(Expression e) {
-
-            nonIndexCondition =
-                ExpressionLogical.andExpressions(nonIndexCondition, e);
-
-            return true;
         }
 
         private void reverseIndexCondition() {
@@ -2145,7 +2126,8 @@ public class RangeVariable {
                 for (int i = 0; i < indexedColumnCount; i++) {
                     Expression e = indexEndCond[i];
 
-                    addToIndexEndCondition(e);
+                    indexEndCondition =
+                        ExpressionLogical.andExpressions(indexEndCondition, e);
                 }
 
                 if (indexedColumnCount > 1

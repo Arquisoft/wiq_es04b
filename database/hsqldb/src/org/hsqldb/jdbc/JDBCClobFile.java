@@ -1,4 +1,4 @@
-/* Copyright (c) 2001-2022, The HSQL Development Group
+/* Copyright (c) 2001-2021, The HSQL Development Group
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -91,7 +91,7 @@ import org.hsqldb.lib.List;
  * </div>
  * <!-- end release-specific documentation -->
  * @author Campbell Burnet (campbell-burnet@users dot sourceforge.net)
- * @version 2.7.1
+ * @version 2.5.0
  * @since HSQLDB 2.1
  */
 public class JDBCClobFile implements java.sql.Clob {
@@ -211,16 +211,12 @@ public class JDBCClobFile implements java.sql.Clob {
     public InputStream getAsciiStream() throws SQLException {
 
         InputStream stream;
-        
-        final List streams = m_streams;
 
         try {
             stream = new JDBCBlobFile.InputStreamAdapter(m_file, 0,
                     Long.MAX_VALUE) {
 
                 private boolean closed;
-                
-                private InputStream self = this;
 
                 public synchronized void close() throws IOException {
 
@@ -233,7 +229,7 @@ public class JDBCClobFile implements java.sql.Clob {
                     try {
                         super.close();
                     } finally {
-                       streams.remove(self);
+                        m_streams.remove(this);
                     }
                 }
             };
@@ -249,7 +245,7 @@ public class JDBCClobFile implements java.sql.Clob {
             throw JDBCUtil.sqlException(ex);
         }
 
-        streams.add(stream);
+        m_streams.add(stream);
 
         return stream;
     }
@@ -474,7 +470,7 @@ public class JDBCClobFile implements java.sql.Clob {
      * value will be increased to accommodate the extra characters.
      * <p>
      * <b>Note:</b> If the value specified for <code>pos</code>
-     * is greater than the length+1 of the <code>CLOB</code> value then the
+     * is greater then the length+1 of the <code>CLOB</code> value then the
      * behavior is undefined. Some JDBC drivers may throw a
      * <code>SQLException</code> while other drivers may support this
      * operation.
@@ -508,7 +504,7 @@ public class JDBCClobFile implements java.sql.Clob {
      * value will be increased to accommodate the extra characters.
      * <p>
      * <b>Note:</b> If the value specified for <code>pos</code>
-     * is greater than the length+1 of the <code>CLOB</code> value then the
+     * is greater then the length+1 of the <code>CLOB</code> value then the
      * behavior is undefined. Some JDBC drivers may throw a
      * <code>SQLException</code> while other drivers may support this
      * operation.
@@ -613,7 +609,7 @@ public class JDBCClobFile implements java.sql.Clob {
      * value will be increased to accommodate the extra characters.
      * <p>
      * <b>Note:</b> If the value specified for <code>pos</code>
-     * is greater than the length+1 of the <code>CLOB</code> value then the
+     * is greater then the length+1 of the <code>CLOB</code> value then the
      * behavior is undefined. Some JDBC drivers may throw a
      * <code>SQLException</code> while other drivers may support this
      * operation.
@@ -686,7 +682,7 @@ public class JDBCClobFile implements java.sql.Clob {
      * value will be increased to accommodate the extra characters.
      * <p>
      * <b>Note:</b> If the value specified for <code>pos</code>
-     * is greater than the length+1 of the <code>CLOB</code> value then the
+     * is greater then the length+1 of the <code>CLOB</code> value then the
      * behavior is undefined. Some JDBC drivers may throw a
      * <code>SQLException</code> while other drivers may support this
      * operation.
@@ -759,7 +755,7 @@ public class JDBCClobFile implements java.sql.Clob {
      * characters.
      * <p>
      * <b>Note:</b> If the value specified for <code>pos</code>
-     * is greater than the length+1 of the <code>CLOB</code> value then the
+     * is greater then the length+1 of the <code>CLOB</code> value then the
      * behavior is undefined. Some JDBC drivers may throw a
      * <code>SQLException</code> while other drivers may support this
      * operation.
@@ -805,7 +801,7 @@ public class JDBCClobFile implements java.sql.Clob {
     }
 
     /**
-     * This method frees the <code>Clob</code> object and releases the resources
+     * This method frees the <code>Clob</code> object and releases the resources the resources
      * that it holds.  The object is invalid once the <code>free</code> method
      * is called.
      * <p>
@@ -874,8 +870,6 @@ public class JDBCClobFile implements java.sql.Clob {
         }
 
         Reader reader;
-        
-        final List streams = m_streams;
 
         try {
             reader = new ReaderAdapter(m_file, pos - 1, length) {
@@ -885,7 +879,7 @@ public class JDBCClobFile implements java.sql.Clob {
                     try {
                         super.close();
                     } finally {
-                        streams.remove(this);
+                        m_streams.remove(this);
                     }
                 }
             };
@@ -895,7 +889,7 @@ public class JDBCClobFile implements java.sql.Clob {
             throw JDBCUtil.sqlException(ex);
         }
 
-        streams.add(reader);
+        m_streams.add(reader);
 
         return reader;
     }
@@ -975,7 +969,7 @@ public class JDBCClobFile implements java.sql.Clob {
     }
 
     /**
-     * Constructs a new JDBCClobFile instance backed by a File object
+     * Constructs a new JDBCClobFile instance backed by an File object
      * created by File.createTempFile(TEMP_FILE_PREFIX, TEMP_FILE_SUFFIX),
      * using the given encoding to read and write file content.
      *

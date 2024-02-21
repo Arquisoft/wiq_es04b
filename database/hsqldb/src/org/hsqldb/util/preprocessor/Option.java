@@ -31,7 +31,7 @@
 
 package org.hsqldb.util.preprocessor;
 
-/* $Id: Option.java 6434 2022-03-06 09:02:19Z campbell-burnet $ */
+/* $Id: Option.java 5793 2018-01-06 13:12:38Z fredt $ */
 
 /**
  * Static methods and constants to decode preprocessor options.
@@ -97,16 +97,5 @@ public class Option {
 
     public static int setVerbose(int options, boolean verbose) {
         return (verbose) ? (options | VERBOSE) : (options & ~VERBOSE);
-    }
-    
-    public static String toOptionsString(int options) {
-        Object[] values = {
-            isBackup(options),
-            isFilter(options), 
-            isIndent(options), 
-            isTestOnly(options), 
-            isVerbose(options)};
-        
-        return String.format("backup: %s, filter: %s, indent: %s, testOnly: %s, verbose: %s", values);
     }
 }

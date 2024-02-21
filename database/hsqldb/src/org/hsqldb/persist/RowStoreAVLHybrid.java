@@ -1,4 +1,4 @@
-/* Copyright (c) 2001-2022, The HSQL Development Group
+/* Copyright (c) 2001-2021, The HSQL Development Group
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -31,7 +31,7 @@
 
 package org.hsqldb.persist;
 
-import java.util.Arrays;
+import java.io.IOException;
 
 import org.hsqldb.HsqlException;
 import org.hsqldb.Row;
@@ -77,7 +77,7 @@ public class RowStoreAVLHybrid extends RowStoreAVL {
         }
 
         if (table.getTableType() == TableBase.RESULT_TABLE) {
-            setTimestamp(session.getActionSCN());
+            setTimestamp(session.getActionTimestamp());
         }
 
 // test code to force use of cache
@@ -215,7 +215,9 @@ public class RowStoreAVLHybrid extends RowStoreAVL {
         elementCount.set(0);
         ArrayUtil.fillArray(accessorList, null);
 
-        Arrays.fill(nullsList, false);
+        for (int i = 0; i < nullsList.length; i++) {
+            nullsList[i] = false;
+        }
     }
 
     public void remove(CachedObject object) {

@@ -45,12 +45,12 @@
 </div>
 </div>
 <div>
-<p class="releaseinfo">$Revision: 6634 $</p>
+<p class="releaseinfo">$Revision: 6366 $</p>
 </div>
 <div>
 <div class="legalnotice">
-<a name="N160A7"></a>
-<p>Copyright 2002-2022 Fred Toussi. Permission is granted to
+<a name="N15EE4"></a>
+<p>Copyright 2002-2021 Fred Toussi. Permission is granted to
       distribute this document without any alteration under the terms of the
       HSQLDB license. Additional permission is granted to the HSQL Development
       Group to distribute this document with or without alterations under the
@@ -58,7 +58,7 @@
 </div>
 </div>
 <div>
-<p class="pubdate">2023-05-29</p>
+<p class="pubdate">2021-10-21</p>
 </div>
 </div>
 </div>
@@ -74,7 +74,7 @@
 <span class="section"><a href="dbproperties-chapt.html#dpc_variables_url">Variables in Connection URL</a></span>
 </dt>
 <dt>
-<span class="section"><a href="dbproperties-chapt.html#N16217">Connection Properties</a></span>
+<span class="section"><a href="dbproperties-chapt.html#N16054">Connection Properties</a></span>
 </dt>
 <dt>
 <span class="section"><a href="dbproperties-chapt.html#dpc_connection_props">Properties for Individual Connections</a></span>
@@ -114,9 +114,9 @@
 </div>
 <p>The normal method of accessing a HyperSQL catalog is via the JDBC
     Connection interface. An introduction to different methods of providing
-    database services and accessing them can be found in the <a class="link" href="running-chapt.html" title="Chapter&nbsp;1.&nbsp;Running and Using HyperSQL">Running and Using HyperSQL</a> chapter. Details and
-    examples of how to connect via JDBC are provided in our JavaDoc for
-    <code class="classname"><a class="classname" href="filelinks-app.html#JDBCConnection.html-link">JDBCConnection</a></code>.</p>
+    database services and accessing them can be found in the <a class="link" href="sqlgeneral-chapt.html" title="Chapter&nbsp;2.&nbsp;SQL Language">SQL Language</a> chapter.
+    Details and examples of how to connect via JDBC are provided in our
+    JavaDoc for <code class="classname"><a class="classname" href="filelinks-app.html#JDBCConnection.html-link">JDBCConnection</a></code>.</p>
 <p>A uniform method is used to distinguish between different types of
     connection. The common driver identifier is
     <code class="literal">jdbc:hsqldb:</code> followed by a protocol identifier
@@ -128,7 +128,7 @@
     property / value pairs can be appended to the end of the URL, separated
     with semicolons.</p>
 <div class="table">
-<a name="N160D2"></a>
+<a name="N15F0F"></a>
 <p class="title">
 <b>Table&nbsp;14.1.&nbsp;Memory Database URL</b>
 </p>
@@ -188,7 +188,7 @@
 </div>
 <br class="table-break">
 <div class="table">
-<a name="N16113"></a>
+<a name="N15F50"></a>
 <p class="title">
 <b>Table&nbsp;14.2.&nbsp;File Database URL</b>
 </p>
@@ -249,7 +249,7 @@
 </div>
 <br class="table-break">
 <div class="table">
-<a name="N16159"></a>
+<a name="N15F96"></a>
 <p class="title">
 <b>Table&nbsp;14.3.&nbsp;Resource Database URL</b>
 </p>
@@ -296,7 +296,7 @@
 </div>
 <br class="table-break">
 <div class="table">
-<a name="N1618D"></a>
+<a name="N15FCA"></a>
 <p class="title">
 <b>Table&nbsp;14.4.&nbsp;Server Database URL</b>
 </p>
@@ -426,12 +426,12 @@
 <div>
 <div>
 <h2 class="title" style="clear: both">
-<a name="N16217"></a>Connection Properties</h2>
+<a name="N16054"></a>Connection Properties</h2>
 </div>
 </div>
 </div>
 <p>There are two types of connection properties: properties for
-    individual connections, and properties for the whole database.</p>
+    individual connections, and Properties for the whole database.</p>
 <p>The properties for individual connections apply only to the
     connection that uses them and can be different for different connections.
     These properties can be used when connecting to in-process and server
@@ -442,14 +442,9 @@
     <em class="glossterm">mem:</em> database. For the connection that creates a
     new database all the user-defined database properties can be specified as
     URL properties.</p>
-<p>A few of the properties for the database can be applied to an
-    existing database when the database is reopened after a shutdown.</p>
 <p>When running a server, these properties are not used on the
     connection URL but can be appended to the database path URL in
     <code class="literal">server.properties</code> or the server command line.</p>
-<p>Almost all properties for the database listed in this chapter have
-    corresponding SQL statements which can be used after connecting to the
-    database. The SQL statement for each property is listed here.</p>
 </div>
 <div class="section">
 <div class="titlepage">
@@ -470,7 +465,7 @@
     Connection URL.</p>
 <pre class="programlisting"> DriverManager.getConnection (String url, Properties info);</pre>
 <div class="table">
-<a name="N16242"></a>
+<a name="N1607B"></a>
 <p class="title">
 <b>Table&nbsp;14.5.&nbsp;User and Password</b>
 </p>
@@ -520,376 +515,12 @@
 </div>
 <br class="table-break">
 <div class="table">
-<a name="N16283"></a>
+<a name="N160BC"></a>
 <p class="title">
-<b>Table&nbsp;14.6.&nbsp;Closing old ResultSet when Statement is reused</b>
+<b>Table&nbsp;14.6.&nbsp;Creating New Database</b>
 </p>
 <div class="table-contents">
-<table summary="Closing old ResultSet when Statement is reused" cellspacing="0" width="100%" style="border-collapse: collapse;border-top: 0.5pt solid ; border-bottom: 0.5pt solid ; border-left: 0.5pt solid ; border-right: 0.5pt solid ; ">
-<colgroup>
-<col width="7cm" align="left" class="c1">
-<col width="1.5cm" align="left" class="c2">
-<col align="left" class="c3">
-</colgroup>
-<thead>
-<tr>
-<th style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left">Name</th><th style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left">Default</th><th style="border-bottom: 0.5pt solid ; " align="left">Description</th>
-</tr>
-</thead>
-<tbody valign="top">
-<tr>
-<td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left" valign="top"><span class="property">close_result</span></td><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left" valign="top"><code class="literal">false</code></td><td style="border-bottom: 0.5pt solid ; " align="left" valign="top">closing the old result set when a new ResultSet is created
-            by a Statement</td>
-</tr>
-<tr>
-<td style="" colspan="3" align="left" valign="top">
-<p>This property is used for
-            compatibility with the JDBC specification. When true (the JDBC
-            specification), a <code class="classname">ResultSet</code> that was
-            previously returned by executing a
-            <code class="classname">Statement</code> or
-            <code class="classname">PreparedStatement</code> is closed as soon as the
-            <code class="classname">Statement</code> is executed
-            again.</p>
-<p>The default is false as previous versions of
-            HSQLDB did not close old result set. The user application should
-            close old result sets when they are no longer needed and should
-            not rely on auto-closing side effect of executing the
-            Statement.</p>
-<p>The default is false. When the property is
-            true, the old <code class="classname">ResultSet</code> is closed when a
-            <code class="classname">Statement</code> is re-executed. Example
-            below:</p>
-<pre class="programlisting"> jdbc:hsqldb:hsql://localhost/enrolments;close_result=true</pre>
-<p>When
-            a <code class="classname">ResultSet</code> is used inside a user-defined
-            stored procedure, the default, false, is always used for this
-            property.</p>
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<br class="table-break">
-<div class="table">
-<a name="N162CA"></a>
-<p class="title">
-<b>Table&nbsp;14.7.&nbsp;Column Names in JDBC ResultSet</b>
-</p>
-<div class="table-contents">
-<table summary="Column Names in JDBC ResultSet" cellspacing="0" width="100%" style="border-collapse: collapse;border-top: 0.5pt solid ; border-bottom: 0.5pt solid ; border-left: 0.5pt solid ; border-right: 0.5pt solid ; ">
-<colgroup>
-<col width="7cm" align="left" class="c1">
-<col width="1.5cm" align="left" class="c2">
-<col align="left" class="c3">
-</colgroup>
-<thead>
-<tr>
-<th style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left">Name</th><th style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left">Default</th><th style="border-bottom: 0.5pt solid ; " align="left">Description</th>
-</tr>
-</thead>
-<tbody valign="top">
-<tr>
-<td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left" valign="top"><span class="property">get_column_name</span></td><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left" valign="top"><code class="literal">true</code></td><td style="border-bottom: 0.5pt solid ; " align="left" valign="top">column name in ResultSet</td>
-</tr>
-<tr>
-<td style="" colspan="3" align="left" valign="top">
-<p>This property is used for
-            compatibility with other JDBC driver implementations. When true
-            (the default), <code class="methodname">ResultSet.getColumnName(int
-            c)</code> returns the underlying column name. This property
-            can be specified differently for different connections to the same
-            database.</p>
-<p>The default is true. When the property is
-            false, the above method returns the same value as
-            <code class="methodname">ResultSet.getColumnLabel(int column)</code>
-            Example below:</p>
-<pre class="programlisting"> jdbc:hsqldb:hsql://localhost/enrolments;get_column_name=false</pre>
-<p>When
-            a <code class="classname">ResultSet</code> is used inside a user-defined
-            stored procedure, the default, true, is always used for this
-            property.</p>
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<br class="table-break">
-<div class="table">
-<a name="N16303"></a>
-<p class="title">
-<b>Table&nbsp;14.8.&nbsp;In-memory LOBs from JDBC ResultSet</b>
-</p>
-<div class="table-contents">
-<table summary="In-memory LOBs from JDBC ResultSet" cellspacing="0" width="100%" style="border-collapse: collapse;border-top: 0.5pt solid ; border-bottom: 0.5pt solid ; border-left: 0.5pt solid ; border-right: 0.5pt solid ; ">
-<colgroup>
-<col width="7cm" align="left" class="c1">
-<col width="1.5cm" align="left" class="c2">
-<col align="left" class="c3">
-</colgroup>
-<thead>
-<tr>
-<th style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left">Name</th><th style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left">Default</th><th style="border-bottom: 0.5pt solid ; " align="left">Description</th>
-</tr>
-</thead>
-<tbody valign="top">
-<tr>
-<td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left" valign="top"><span class="property">memory_lobs</span></td><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left" valign="top"><code class="literal">false</code></td><td style="border-bottom: 0.5pt solid ; " align="left" valign="top">lobs retrieved in full from server by ResultSet</td>
-</tr>
-<tr>
-<td style="" colspan="3" align="left" valign="top">
-<p>This property can be set to
-            retrieve lobs as fully in-memory objects by the JDBC driver. When
-            false (the default), <code class="methodname">ResultSet</code> methods
-            for streaming BLOB and CLOB retrieve large lobs in chunks in order
-            to limit memory use on the client. When true, the lob is returned
-            fully as soon as it is streamed. This property can be specified
-            differently for different connections to the same
-            database.</p>
-<p>The default is false.</p>
-<pre class="programlisting"> jdbc:hsqldb:hsql://localhost/enrolments;memory_lobs=true</pre>
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<br class="table-break">
-<div class="table">
-<a name="N16334"></a>
-<p class="title">
-<b>Table&nbsp;14.9.&nbsp;Empty batch in JDBC PreparedStatement</b>
-</p>
-<div class="table-contents">
-<table summary="Empty batch in JDBC PreparedStatement" cellspacing="0" width="100%" style="border-collapse: collapse;border-top: 0.5pt solid ; border-bottom: 0.5pt solid ; border-left: 0.5pt solid ; border-right: 0.5pt solid ; ">
-<colgroup>
-<col width="7cm" align="left" class="c1">
-<col width="1.5cm" align="left" class="c2">
-<col align="left" class="c3">
-</colgroup>
-<thead>
-<tr>
-<th style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left">Name</th><th style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left">Default</th><th style="border-bottom: 0.5pt solid ; " align="left">Description</th>
-</tr>
-</thead>
-<tbody valign="top">
-<tr>
-<td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left" valign="top"><span class="property">allow_empty_batch</span></td><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left" valign="top"><code class="literal">false</code></td><td style="border-bottom: 0.5pt solid ; " align="left" valign="top">executeBatch with empty batch</td>
-</tr>
-<tr>
-<td style="" colspan="3" align="left" valign="top">
-<p>This property is used for
-            compatibility with other JDBC driver implementations such as the
-            PostgreSQL driver. By default
-            <code class="methodname">PreparedStatement.executeBatch()</code> throws
-            an exception if addBatch() has not been called at all. Setting
-            this property to true ignores the empty batch and returns an empty
-            int[]. This property can be specified differently for different
-            connections to the same database.</p>
-<p>The default is
-            false. Example below:</p>
-<pre class="programlisting"> jdbc:hsqldb:hsql://localhost/enrolments;allow_empty_batch=true</pre>
-<p>When
-            a <code class="classname">PreparedStatement</code> is used inside a
-            user-defined stored procedure, the default, false, is always used
-            for this property.</p>
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<br class="table-break">
-<div class="table">
-<a name="N1636A"></a>
-<p class="title">
-<b>Table&nbsp;14.10.&nbsp;Automatic Shutdown</b>
-</p>
-<div class="table-contents">
-<table summary="Automatic Shutdown" cellspacing="0" width="100%" style="border-collapse: collapse;border-top: 0.5pt solid ; border-bottom: 0.5pt solid ; border-left: 0.5pt solid ; border-right: 0.5pt solid ; ">
-<colgroup>
-<col width="6.5cm" align="left" class="c1">
-<col width="1.5cm" align="left" class="c2">
-<col align="left" class="c3">
-</colgroup>
-<thead>
-<tr>
-<th style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left">Name</th><th style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left">Default</th><th style="border-bottom: 0.5pt solid ; " align="left">Description</th>
-</tr>
-</thead>
-<tbody valign="top">
-<tr>
-<td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left" valign="top"><span class="property">shutdown</span></td><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left" valign="top"><code class="literal">false</code></td><td style="border-bottom: 0.5pt solid ; " align="left" valign="top">shut down the database when the last connection is
-            closed</td>
-</tr>
-<tr>
-<td style="" colspan="3" align="left" valign="top">
-<p>Has an effect only with
-            <em class="glossterm">mem:</em> and <em class="glossterm">file:</em>
-            databases. If this property is <code class="literal">true</code>, when the
-            last connection to a database is closed, the database is
-            automatically shut down. The property takes effect only when the
-            first connection is made to the database. This means the
-            connection that opens the database. It has no effect if used with
-            subsequent connections.</p>
-<p>This command has two uses. One
-            is for test suites, where connections to the database are made
-            from one JVM context, immediately followed by another context. The
-            other use is for applications where it is not easy to configure
-            the environment to shutdown the database. Examples reported by
-            users include web application servers, where the closing of the
-            last connection coincides with the web app being shut down. Note
-            the automatic shutdown happens in a background thread and the
-            Connection.close() call returns before the shutdown is complete.
-            This may cause an issue if the shutdown takes a long time to save
-            the data and the user application (or unit test) immediately
-            reopens the database while this is happening. In these contexts,
-            use an explicit SHUTDOWN as an SQL
-            statement.</p>
-<pre class="programlisting"> jdbc:hsqldb:file:enrolments;shutdown=true</pre>
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<br class="table-break">
-<div class="table">
-<a name="N163A1"></a>
-<p class="title">
-<b>Table&nbsp;14.11.&nbsp;OpenOffice and Libre Office usage</b>
-</p>
-<div class="table-contents">
-<table summary="OpenOffice and Libre Office usage" cellspacing="0" width="100%" style="border-collapse: collapse;border-top: 0.5pt solid ; border-bottom: 0.5pt solid ; border-left: 0.5pt solid ; border-right: 0.5pt solid ; ">
-<colgroup>
-<col width="7cm" align="left" class="c1">
-<col width="1.5cm" align="left" class="c2">
-<col align="left" class="c3">
-</colgroup>
-<thead>
-<tr>
-<th style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left">Name</th><th style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left">Default</th><th style="border-bottom: 0.5pt solid ; " align="left">Description</th>
-</tr>
-</thead>
-<tbody valign="top">
-<tr>
-<td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left" valign="top"><span class="property">default_schema</span></td><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left" valign="top"><code class="literal">false</code></td><td style="border-bottom: 0.5pt solid ; " align="left" valign="top">OpenOffice and LibreOffice connections</td>
-</tr>
-<tr>
-<td style="" colspan="3" align="left" valign="top">
-<p>When HyperSQL is used with
-            OpenOffice.org as an external database, the property
-            "default_schema=true" must be set on the URL, otherwise the
-            program will not operate correctly as it does with its built-in
-            hsqldb instance.</p>
-<p>The default is
-            false.</p>
-<pre class="programlisting"> jdbc:hsqldb:hsql://localhost/enrolments;default_schema=true</pre>
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<br class="table-break">
-</div>
-<div class="section">
-<div class="titlepage">
-<div>
-<div>
-<h2 class="title" style="clear: both">
-<a name="dpc_db_props_url"></a>Properties for the Database</h2>
-</div>
-</div>
-</div>
-<p>Each database has several default settings (properties) that are
-    listed in the <a class="link" href="management-chapt.html" title="Chapter&nbsp;11.&nbsp;System Management">System Management</a> chapter. These properties can be changed
-    via SQL commands after a connection is made to the database. It is also
-    possible to specify most of these properties in the connection properties
-    or as part of the URL string when the first connection is made to a new
-    <em class="glossterm">file:</em> or <em class="glossterm">mem:</em> database. This
-    allows the properties to be set without using any SQL commands. The
-    corresponding SQL command is given for each property. For a server, these
-    properties can be appended to the database path URL in server.properties
-    or the server command line.</p>
-<p>When connecting to an <em class="glossterm">in-process</em> database
-    creates a new database, or opens an existing database (i.e. it is the
-    first connection made to the database by the application), all the
-    user-defined database properties listed in this section can be specified
-    as URL properties.</p>
-<p>Note the preferred method of setting database properties is by using
-    a set of SQL statements. These statements can be used both for a new
-    database or an existing database, unlike URL properties that are generally
-    effective for new databases only.</p>
-<p>If these properties are used for connection to an existing database,
-    they are ignored.</p>
-<p>The exceptions are the following property settings that are allowed
-    for the first connection to an existing database (the connection which
-    reopens the database): <code class="literal">readonly=true</code>,
-    <code class="literal">files_readonly=true</code>,
-    <code class="literal">hsqldb.lock_file=false</code>,
-    <code class="literal">hsqldb.sqllog=1-3</code>,
-    <code class="literal">hsqldb.applog=1-3</code>. These specific property / value
-    pairs override the existing database properties. For example a normal
-    database is opened as readonly, or the lock file is not created, or the
-    sql log level is set to a value between 1 and 3.</p>
-<p>Properties for database encryption and compressed .script file are
-    also required on the first connection to an existing database.</p>
-<p>Management of properties has changed since version 1.8. The old SET
-    PROPERTY statement does not change a property and is ignored. The
-    statement is retained to simplify application upgrades.</p>
-<p>In the example URL below, two properties are set for the first
-    connection to a new database.</p>
-<pre class="programlisting"> jdbc:hsqldb:file:enrolments;hsqldb.cache_rows=10000;hsqldb.nio_data_file=false</pre>
-<p>In the table below, database properties that can be used as part of
-    the URL or in connection properties are listed. For each property that can
-    also be set with an SQL statement, the statement is also given. These
-    statements are described more extensively in the <a class="link" href="management-chapt.html" title="Chapter&nbsp;11.&nbsp;System Management">System Management</a>
-    chapter.</p>
-<div class="table">
-<a name="N16407"></a>
-<p class="title">
-<b>Table&nbsp;14.12.&nbsp;Validity Check Property</b>
-</p>
-<div class="table-contents">
-<table summary="Validity Check Property" cellspacing="0" width="100%" style="border-collapse: collapse;border-top: 0.5pt solid ; border-bottom: 0.5pt solid ; border-left: 0.5pt solid ; border-right: 0.5pt solid ; ">
-<colgroup>
-<col width="6.5cm" align="left" class="c1">
-<col width="1.5cm" align="left" class="c2">
-<col align="left" class="c3">
-</colgroup>
-<thead>
-<tr>
-<th style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left">Name</th><th style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left">Default</th><th style="border-bottom: 0.5pt solid ; " align="left">Description</th>
-</tr>
-</thead>
-<tbody valign="top">
-<tr>
-<td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left" valign="top"><span class="property">check_props</span></td><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left" valign="top"><code class="literal">false</code></td><td style="border-bottom: 0.5pt solid ; " align="left" valign="top">checks the validity of the database properties</td>
-</tr>
-<tr>
-<td style="" colspan="3" align="left" valign="top">
-<p>If the property is true,
-            every database property that is specified on the URL or in
-            connection properties is checked and if it is not used correctly,
-            an error is returned.</p>
-<pre class="programlisting">this property cannot be set with an SQL statement</pre>
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<br class="table-break">
-<div class="table">
-<a name="N16434"></a>
-<p class="title">
-<b>Table&nbsp;14.13.&nbsp;Creating New Database Check Property</b>
-</p>
-<div class="table-contents">
-<table summary="Creating New Database Check Property" cellspacing="0" width="100%" style="border-collapse: collapse;border-top: 0.5pt solid ; border-bottom: 0.5pt solid ; border-left: 0.5pt solid ; border-right: 0.5pt solid ; ">
+<table summary="Creating New Database" cellspacing="0" width="100%" style="border-collapse: collapse;border-top: 0.5pt solid ; border-bottom: 0.5pt solid ; border-left: 0.5pt solid ; border-right: 0.5pt solid ; ">
 <colgroup>
 <col width="6.5cm" align="left" class="c1">
 <col width="1.5cm" align="left" class="c2">
@@ -947,6 +578,327 @@
 </div>
 </div>
 <br class="table-break">
+<div class="table">
+<a name="N1611B"></a>
+<p class="title">
+<b>Table&nbsp;14.7.&nbsp;Closing old ResultSet when Statement is reused</b>
+</p>
+<div class="table-contents">
+<table summary="Closing old ResultSet when Statement is reused" cellspacing="0" width="100%" style="border-collapse: collapse;border-top: 0.5pt solid ; border-bottom: 0.5pt solid ; border-left: 0.5pt solid ; border-right: 0.5pt solid ; ">
+<colgroup>
+<col width="7cm" align="left" class="c1">
+<col width="1.5cm" align="left" class="c2">
+<col align="left" class="c3">
+</colgroup>
+<thead>
+<tr>
+<th style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left">Name</th><th style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left">Default</th><th style="border-bottom: 0.5pt solid ; " align="left">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr>
+<td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left" valign="top"><span class="property">close_result</span></td><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left" valign="top"><code class="literal">false</code></td><td style="border-bottom: 0.5pt solid ; " align="left" valign="top">closing the old result set when a new ResultSet is created
+            by a Statement</td>
+</tr>
+<tr>
+<td style="" colspan="3" align="left" valign="top">
+<p>This property is used for
+            compatibility with the JDBC specification. When true (the JDBC
+            specification), a <code class="classname">ResultSet</code> that was
+            previously returned by executing a
+            <code class="classname">Statement</code> or
+            <code class="classname">PreparedStatement</code> is closed as soon as the
+            <code class="classname">Statement</code> is executed
+            again.</p>
+<p>The default is false as previous versions of
+            HSQLDB did not close old result set. The user application should
+            close old result sets when they are no longer needed and should
+            not rely on auto-closing side effect of executing the
+            Statement.</p>
+<p>The default is false. When the property is
+            true, the old <code class="classname">ResultSet</code> is closed when a
+            <code class="classname">Statement</code> is re-executed. Example
+            below:</p>
+<pre class="programlisting"> jdbc:hsqldb:hsql://localhost/enrolments;close_result=true</pre>
+<p>When
+            a <code class="classname">ResultSet</code> is used inside a user-defined
+            stored procedure, the default, false, is always used for this
+            property.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<br class="table-break">
+<div class="table">
+<a name="N16162"></a>
+<p class="title">
+<b>Table&nbsp;14.8.&nbsp;Column Names in JDBC ResultSet</b>
+</p>
+<div class="table-contents">
+<table summary="Column Names in JDBC ResultSet" cellspacing="0" width="100%" style="border-collapse: collapse;border-top: 0.5pt solid ; border-bottom: 0.5pt solid ; border-left: 0.5pt solid ; border-right: 0.5pt solid ; ">
+<colgroup>
+<col width="7cm" align="left" class="c1">
+<col width="1.5cm" align="left" class="c2">
+<col align="left" class="c3">
+</colgroup>
+<thead>
+<tr>
+<th style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left">Name</th><th style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left">Default</th><th style="border-bottom: 0.5pt solid ; " align="left">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr>
+<td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left" valign="top"><span class="property">get_column_name</span></td><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left" valign="top"><code class="literal">true</code></td><td style="border-bottom: 0.5pt solid ; " align="left" valign="top">column name in ResultSet</td>
+</tr>
+<tr>
+<td style="" colspan="3" align="left" valign="top">
+<p>This property is used for
+            compatibility with other JDBC driver implementations. When true
+            (the default), <code class="methodname">ResultSet.getColumnName(int
+            c)</code> returns the underlying column name. This property
+            can be specified differently for different connections to the same
+            database.</p>
+<p>The default is true. When the property is
+            false, the above method returns the same value as
+            <code class="methodname">ResultSet.getColumnLabel(int column)</code>
+            Example below:</p>
+<pre class="programlisting"> jdbc:hsqldb:hsql://localhost/enrolments;get_column_name=false</pre>
+<p>When
+            a <code class="classname">ResultSet</code> is used inside a user-defined
+            stored procedure, the default, true, is always used for this
+            property.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<br class="table-break">
+<div class="table">
+<a name="N1619B"></a>
+<p class="title">
+<b>Table&nbsp;14.9.&nbsp;In-memory LOBs from JDBC ResultSet</b>
+</p>
+<div class="table-contents">
+<table summary="In-memory LOBs from JDBC ResultSet" cellspacing="0" width="100%" style="border-collapse: collapse;border-top: 0.5pt solid ; border-bottom: 0.5pt solid ; border-left: 0.5pt solid ; border-right: 0.5pt solid ; ">
+<colgroup>
+<col width="7cm" align="left" class="c1">
+<col width="1.5cm" align="left" class="c2">
+<col align="left" class="c3">
+</colgroup>
+<thead>
+<tr>
+<th style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left">Name</th><th style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left">Default</th><th style="border-bottom: 0.5pt solid ; " align="left">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr>
+<td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left" valign="top"><span class="property">memory_lobs</span></td><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left" valign="top"><code class="literal">false</code></td><td style="border-bottom: 0.5pt solid ; " align="left" valign="top">lobs retrieved in full from server by ResultSet</td>
+</tr>
+<tr>
+<td style="" colspan="3" align="left" valign="top">
+<p>This property can be set to
+            retrieve lobs as fully in-memory objects by the JDBC driver. When
+            false (the default), <code class="methodname">ResultSet</code> methods
+            for streaming BLOB and CLOB retrieve large lobs in chunks in order
+            to limit memory use on the client. When true, the lob is returned
+            fully as soon as it is streamed. This property can be specified
+            differently for different connections to the same
+            database.</p>
+<p>The default is false.</p>
+<pre class="programlisting"> jdbc:hsqldb:hsql://localhost/enrolments;memory_lobs=true</pre>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<br class="table-break">
+<div class="table">
+<a name="N161CC"></a>
+<p class="title">
+<b>Table&nbsp;14.10.&nbsp;Empty batch in JDBC PreparedStatement</b>
+</p>
+<div class="table-contents">
+<table summary="Empty batch in JDBC PreparedStatement" cellspacing="0" width="100%" style="border-collapse: collapse;border-top: 0.5pt solid ; border-bottom: 0.5pt solid ; border-left: 0.5pt solid ; border-right: 0.5pt solid ; ">
+<colgroup>
+<col width="7cm" align="left" class="c1">
+<col width="1.5cm" align="left" class="c2">
+<col align="left" class="c3">
+</colgroup>
+<thead>
+<tr>
+<th style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left">Name</th><th style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left">Default</th><th style="border-bottom: 0.5pt solid ; " align="left">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr>
+<td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left" valign="top"><span class="property">allow_empty_batch</span></td><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left" valign="top"><code class="literal">false</code></td><td style="border-bottom: 0.5pt solid ; " align="left" valign="top">executeBatch with empty batch</td>
+</tr>
+<tr>
+<td style="" colspan="3" align="left" valign="top">
+<p>This property is used for
+            compatibility with other JDBC driver implementations such as the
+            PostgreSQL driver. By default
+            <code class="methodname">PreparedStatement.executeBatch()</code> throws
+            an exception if addBatch() has not been called at all. Setting
+            this property to true ignores the empty batch and returns an empty
+            int[]. This property can be specified differently for different
+            connections to the same database.</p>
+<p>The default is
+            false. Example below:</p>
+<pre class="programlisting"> jdbc:hsqldb:hsql://localhost/enrolments;allow_empty_batch=true</pre>
+<p>When
+            a <code class="classname">PreparedStatement</code> is used inside a
+            user-defined stored procedure, the default, false, is always used
+            for this property.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<br class="table-break">
+<div class="table">
+<a name="N16202"></a>
+<p class="title">
+<b>Table&nbsp;14.11.&nbsp;Automatic Shutdown</b>
+</p>
+<div class="table-contents">
+<table summary="Automatic Shutdown" cellspacing="0" width="100%" style="border-collapse: collapse;border-top: 0.5pt solid ; border-bottom: 0.5pt solid ; border-left: 0.5pt solid ; border-right: 0.5pt solid ; ">
+<colgroup>
+<col width="6.5cm" align="left" class="c1">
+<col width="1.5cm" align="left" class="c2">
+<col align="left" class="c3">
+</colgroup>
+<thead>
+<tr>
+<th style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left">Name</th><th style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left">Default</th><th style="border-bottom: 0.5pt solid ; " align="left">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr>
+<td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left" valign="top"><span class="property">shutdown</span></td><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left" valign="top"><code class="literal">false</code></td><td style="border-bottom: 0.5pt solid ; " align="left" valign="top">shut down the database when the last connection is
+            closed</td>
+</tr>
+<tr>
+<td style="" colspan="3" align="left" valign="top">
+<p>Has an effect only with
+            <em class="glossterm">mem:</em> and <em class="glossterm">file:</em>
+            databases. If this property is <code class="literal">true</code>, when the
+            last connection to a database is closed, the database is
+            automatically shut down. The property takes effect only when the
+            first connection is made to the database. This means the
+            connection that opens the database. It has no effect if used with
+            subsequent connections.</p>
+<p>This command has two uses. One
+            is for test suites, where connections to the database are made
+            from one JVM context, immediately followed by another context. The
+            other use is for applications where it is not easy to configure
+            the environment to shutdown the database. Examples reported by
+            users include web application servers, where the closing of the
+            last connection coincides with the web app being shut down. Note
+            the automatic shutdown happens in a background thread and the
+            Connection.close() call returns before the shutdown is complete.
+            This may cause an issue if the shutdown takes a long time to save
+            the data and the user application (or unit test) immediately
+            reopens the database while this is happening. In these contexts,
+            use an explicit SHUTDOWN as an SQL
+            statement.</p>
+<pre class="programlisting"> jdbc:hsqldb:file:enrolments;shutdown=true</pre>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<br class="table-break">
+</div>
+<div class="section">
+<div class="titlepage">
+<div>
+<div>
+<h2 class="title" style="clear: both">
+<a name="dpc_db_props_url"></a>Properties for the Database</h2>
+</div>
+</div>
+</div>
+<p>Each database has several default settings (properties) that are
+    listed in the <a class="link" href="management-chapt.html" title="Chapter&nbsp;11.&nbsp;System Management">System Management</a> chapter. These properties can be changed
+    via SQL commands after a connection is made to the database. It is also
+    possible to specify most of these properties in the connection properties
+    or as part of the URL string when the first connection is made to a new
+    <em class="glossterm">file:</em> or <em class="glossterm">mem:</em> database. This
+    allows the properties to be set without using any SQL commands. The
+    corresponding SQL command is given for each property. For a server, these
+    properties can be appended to the database path URL in server.properties
+    or the server command line.</p>
+<p>Note the preferred method of setting database properties is by using
+    a set of SQL statements. These statements can be used both for a new
+    database or an existing database, unlike URL properties that are generally
+    effective for new databases only.</p>
+<p>If the properties are used for connection to an existing database,
+    they are ignored.</p>
+<p>The exceptions are the following property settings that are allowed
+    for the first connection to an existing database (the connection which
+    reopens the database): <code class="literal">readonly=true</code>,
+    <code class="literal">files_readonly=true</code>,
+    <code class="literal">hsqldb.lock_file=false</code>,
+    <code class="literal">hsqldb.sqllog=1-3</code>,
+    <code class="literal">hsqldb.applog=1-3</code>. These specific property / value
+    pairs override the existing database properties. For example a normal
+    database is opened as readonly, or the lock file is not created, or the
+    sql log level is set to a value between 1 and 3.</p>
+<p>Properties for database encryption and compressed .script file are
+    also required on the first connection to an existing database.</p>
+<p>Management of properties has changed since version 1.8. The old SET
+    PROPERTY statement does not change a property and is ignored. The
+    statement is retained to simplify application upgrades.</p>
+<p>In the example URL below, two properties are set for the first
+    connection to a new database.</p>
+<pre class="programlisting"> jdbc:hsqldb:file:enrolments;hsqldb.cache_rows=10000;hsqldb.nio_data_file=false</pre>
+<p>In the table below, database properties that can be used as part of
+    the URL or in connection properties are listed. For each property that can
+    also be set with an SQL statement, the statement is also given. These
+    statements are described more extensively in the <a class="link" href="management-chapt.html" title="Chapter&nbsp;11.&nbsp;System Management">System Management</a>
+    chapter.</p>
+<div class="table">
+<a name="N1626C"></a>
+<p class="title">
+<b>Table&nbsp;14.12.&nbsp;Validity Check Property</b>
+</p>
+<div class="table-contents">
+<table summary="Validity Check Property" cellspacing="0" width="100%" style="border-collapse: collapse;border-top: 0.5pt solid ; border-bottom: 0.5pt solid ; border-left: 0.5pt solid ; border-right: 0.5pt solid ; ">
+<colgroup>
+<col width="6.5cm" align="left" class="c1">
+<col width="1.5cm" align="left" class="c2">
+<col align="left" class="c3">
+</colgroup>
+<thead>
+<tr>
+<th style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left">Name</th><th style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left">Default</th><th style="border-bottom: 0.5pt solid ; " align="left">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr>
+<td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left" valign="top"><span class="property">check_props</span></td><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left" valign="top"><code class="literal">false</code></td><td style="border-bottom: 0.5pt solid ; " align="left" valign="top">checks the validity of the database properties</td>
+</tr>
+<tr>
+<td style="" colspan="3" align="left" valign="top">
+<p>If the property is true,
+            every database property that is specified on the URL or in
+            connection properties is checked and if it is not used correctly,
+            an error is returned.</p>
+<pre class="programlisting">this property cannot be set with an SQL statement</pre>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<br class="table-break">
 <div class="section">
 <div class="titlepage">
 <div>
@@ -957,9 +909,9 @@
 </div>
 </div>
 <div class="table">
-<a name="N16497"></a>
+<a name="N1629D"></a>
 <p class="title">
-<b>Table&nbsp;14.14.&nbsp;Execution of Multiple SQL Statements etc.</b>
+<b>Table&nbsp;14.13.&nbsp;Execution of Multiple SQL Statements etc.</b>
 </p>
 <div class="table-contents">
 <table summary="Execution of Multiple SQL Statements etc." cellspacing="0" width="100%" style="border-collapse: collapse;border-top: 0.5pt solid ; border-bottom: 0.5pt solid ; border-left: 0.5pt solid ; border-right: 0.5pt solid ; ">
@@ -1005,9 +957,9 @@
 </div>
 <br class="table-break">
 <div class="table">
-<a name="N164D7"></a>
+<a name="N162DD"></a>
 <p class="title">
-<b>Table&nbsp;14.15.&nbsp;SQL Keyword Use as Identifier</b>
+<b>Table&nbsp;14.14.&nbsp;SQL Keyword Use as Identifier</b>
 </p>
 <div class="table-contents">
 <table summary="SQL Keyword Use as Identifier" cellspacing="0" width="100%" style="border-collapse: collapse;border-top: 0.5pt solid ; border-bottom: 0.5pt solid ; border-left: 0.5pt solid ; border-right: 0.5pt solid ; ">
@@ -1039,9 +991,9 @@
 </div>
 <br class="table-break">
 <div class="table">
-<a name="N16504"></a>
+<a name="N1630A"></a>
 <p class="title">
-<b>Table&nbsp;14.16.&nbsp;SQL Keyword Starting with the Underscore or Containing Dollar
+<b>Table&nbsp;14.15.&nbsp;SQL Keyword Starting with the Underscore or Containing Dollar
         Characters</b>
 </p>
 <div class="table-contents">
@@ -1076,9 +1028,9 @@
 </div>
 <br class="table-break">
 <div class="table">
-<a name="N16531"></a>
+<a name="N16337"></a>
 <p class="title">
-<b>Table&nbsp;14.17.&nbsp;Reference to Columns Names</b>
+<b>Table&nbsp;14.16.&nbsp;Reference to Columns Names</b>
 </p>
 <div class="table-contents">
 <table summary="Reference to Columns Names" cellspacing="0" width="100%" style="border-collapse: collapse;border-top: 0.5pt solid ; border-bottom: 0.5pt solid ; border-left: 0.5pt solid ; border-right: 0.5pt solid ; ">
@@ -1113,9 +1065,9 @@
 </div>
 <br class="table-break">
 <div class="table">
-<a name="N1655E"></a>
+<a name="N16364"></a>
 <p class="title">
-<b>Table&nbsp;14.18.&nbsp;String Size Declaration</b>
+<b>Table&nbsp;14.17.&nbsp;String Size Declaration</b>
 </p>
 <div class="table-contents">
 <table summary="String Size Declaration" cellspacing="0" width="100%" style="border-collapse: collapse;border-top: 0.5pt solid ; border-bottom: 0.5pt solid ; border-left: 0.5pt solid ; border-right: 0.5pt solid ; ">
@@ -1151,46 +1103,9 @@
 </div>
 <br class="table-break">
 <div class="table">
-<a name="N1658B"></a>
+<a name="N16391"></a>
 <p class="title">
-<b>Table&nbsp;14.19.&nbsp;Truncation of trailing spaces from string</b>
-</p>
-<div class="table-contents">
-<table summary="Truncation of trailing spaces from string" cellspacing="0" width="100%" style="border-collapse: collapse;border-top: 0.5pt solid ; border-bottom: 0.5pt solid ; border-left: 0.5pt solid ; border-right: 0.5pt solid ; ">
-<colgroup>
-<col width="6.5cm" align="left" class="c1">
-<col width="1.5cm" align="left" class="c2">
-<col align="left" class="c3">
-</colgroup>
-<thead>
-<tr>
-<th style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left">Name</th><th style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left">Default</th><th style="border-bottom: 0.5pt solid ; " align="left">Description</th>
-</tr>
-</thead>
-<tbody valign="top">
-<tr>
-<td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left" valign="top"><span class="property">sql.truncate_trailing</span></td><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left" valign="top"><code class="literal">true</code></td><td style="border-bottom: 0.5pt solid ; " align="left" valign="top">truncation of long strings with trailing spaces</td>
-</tr>
-<tr>
-<td style="" colspan="3" align="left" valign="top">
-<p>When a string that is
-              longer than the maximum size of a column is inserted, the
-              default behaviour is to remove any trailing spaces until the
-              length of the string equals the maximum size of the column. When
-              this property is set to false, long strings are always rejected
-              and an exception is raised.</p>
-<pre class="programlisting">SET DATABASE SQL TRUNCATE TRAILING { TRUE | FALSE }</pre>
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<br class="table-break">
-<div class="table">
-<a name="N165B8"></a>
-<p class="title">
-<b>Table&nbsp;14.20.&nbsp;Type Enforcement in Comparison and Assignment</b>
+<b>Table&nbsp;14.18.&nbsp;Type Enforcement in Comparison and Assignment</b>
 </p>
 <div class="table-contents">
 <table summary="Type Enforcement in Comparison and Assignment" cellspacing="0" width="100%" style="border-collapse: collapse;border-top: 0.5pt solid ; border-bottom: 0.5pt solid ; border-left: 0.5pt solid ; border-right: 0.5pt solid ; ">
@@ -1227,9 +1142,9 @@
 </div>
 <br class="table-break">
 <div class="table">
-<a name="N165E5"></a>
+<a name="N163BE"></a>
 <p class="title">
-<b>Table&nbsp;14.21.&nbsp;Foreign Key Triggered Data Change</b>
+<b>Table&nbsp;14.19.&nbsp;Foreign Key Triggered Data Change</b>
 </p>
 <div class="table-contents">
 <table summary="Foreign Key Triggered Data Change" cellspacing="0" width="100%" style="border-collapse: collapse;border-top: 0.5pt solid ; border-bottom: 0.5pt solid ; border-left: 0.5pt solid ; border-right: 0.5pt solid ; ">
@@ -1289,9 +1204,9 @@
 </div>
 <br class="table-break">
 <div class="table">
-<a name="N16628"></a>
+<a name="N16401"></a>
 <p class="title">
-<b>Table&nbsp;14.22.&nbsp;Use of LOB for LONGVAR Types</b>
+<b>Table&nbsp;14.20.&nbsp;Use of LOB for LONGVAR Types</b>
 </p>
 <div class="table-contents">
 <table summary="Use of LOB for LONGVAR Types" cellspacing="0" width="100%" style="border-collapse: collapse;border-top: 0.5pt solid ; border-bottom: 0.5pt solid ; border-left: 0.5pt solid ; border-right: 0.5pt solid ; ">
@@ -1325,9 +1240,9 @@
 </div>
 <br class="table-break">
 <div class="table">
-<a name="N16655"></a>
+<a name="N1642E"></a>
 <p class="title">
-<b>Table&nbsp;14.23.&nbsp;Type of string literals in CASE WHEN</b>
+<b>Table&nbsp;14.21.&nbsp;Type of string literals in CASE WHEN</b>
 </p>
 <div class="table-contents">
 <table summary="Type of string literals in CASE WHEN" cellspacing="0" width="100%" style="border-collapse: collapse;border-top: 0.5pt solid ; border-bottom: 0.5pt solid ; border-left: 0.5pt solid ; border-right: 0.5pt solid ; ">
@@ -1362,9 +1277,9 @@
 </div>
 <br class="table-break">
 <div class="table">
-<a name="N16682"></a>
+<a name="N1645B"></a>
 <p class="title">
-<b>Table&nbsp;14.24.&nbsp;Concatenation with NULL</b>
+<b>Table&nbsp;14.22.&nbsp;Concatenation with NULL</b>
 </p>
 <div class="table-contents">
 <table summary="Concatenation with NULL" cellspacing="0" width="100%" style="border-collapse: collapse;border-top: 0.5pt solid ; border-bottom: 0.5pt solid ; border-left: 0.5pt solid ; border-right: 0.5pt solid ; ">
@@ -1397,9 +1312,9 @@
 </div>
 <br class="table-break">
 <div class="table">
-<a name="N166AF"></a>
+<a name="N16488"></a>
 <p class="title">
-<b>Table&nbsp;14.25.&nbsp;NULL in Multi-Column UNIQUE Constraints</b>
+<b>Table&nbsp;14.23.&nbsp;NULL in Multi-Column UNIQUE Constraints</b>
 </p>
 <div class="table-contents">
 <table summary="NULL in Multi-Column UNIQUE Constraints" cellspacing="0" width="100%" style="border-collapse: collapse;border-top: 0.5pt solid ; border-bottom: 0.5pt solid ; border-left: 0.5pt solid ; border-right: 0.5pt solid ; ">
@@ -1433,9 +1348,9 @@
 </div>
 <br class="table-break">
 <div class="table">
-<a name="N166DC"></a>
+<a name="N164B5"></a>
 <p class="title">
-<b>Table&nbsp;14.26.&nbsp;Truncation or Rounding in Type Conversion</b>
+<b>Table&nbsp;14.24.&nbsp;Truncation or Rounding in Type Conversion</b>
 </p>
 <div class="table-contents">
 <table summary="Truncation or Rounding in Type Conversion" cellspacing="0" width="100%" style="border-collapse: collapse;border-top: 0.5pt solid ; border-bottom: 0.5pt solid ; border-left: 0.5pt solid ; border-right: 0.5pt solid ; ">
@@ -1469,9 +1384,9 @@
 </div>
 <br class="table-break">
 <div class="table">
-<a name="N16709"></a>
+<a name="N164E2"></a>
 <p class="title">
-<b>Table&nbsp;14.27.&nbsp;Decimal Scale of Division and AVG Values</b>
+<b>Table&nbsp;14.25.&nbsp;Decimal Scale of Division and AVG Values</b>
 </p>
 <div class="table-contents">
 <table summary="Decimal Scale of Division and AVG Values" cellspacing="0" width="100%" style="border-collapse: collapse;border-top: 0.5pt solid ; border-bottom: 0.5pt solid ; border-left: 0.5pt solid ; border-right: 0.5pt solid ; ">
@@ -1509,9 +1424,9 @@
 </div>
 <br class="table-break">
 <div class="table">
-<a name="N16736"></a>
+<a name="N1650F"></a>
 <p class="title">
-<b>Table&nbsp;14.28.&nbsp;Support for NaN values</b>
+<b>Table&nbsp;14.26.&nbsp;Support for NaN values</b>
 </p>
 <div class="table-contents">
 <table summary="Support for NaN values" cellspacing="0" width="100%" style="border-collapse: collapse;border-top: 0.5pt solid ; border-bottom: 0.5pt solid ; border-left: 0.5pt solid ; border-right: 0.5pt solid ; ">
@@ -1544,9 +1459,9 @@
 </div>
 <br class="table-break">
 <div class="table">
-<a name="N16763"></a>
+<a name="N1653C"></a>
 <p class="title">
-<b>Table&nbsp;14.29.&nbsp;Sort order of NULL values</b>
+<b>Table&nbsp;14.27.&nbsp;Sort order of NULL values</b>
 </p>
 <div class="table-contents">
 <table summary="Sort order of NULL values" cellspacing="0" width="100%" style="border-collapse: collapse;border-top: 0.5pt solid ; border-bottom: 0.5pt solid ; border-left: 0.5pt solid ; border-right: 0.5pt solid ; ">
@@ -1580,9 +1495,9 @@
 </div>
 <br class="table-break">
 <div class="table">
-<a name="N16790"></a>
+<a name="N16569"></a>
 <p class="title">
-<b>Table&nbsp;14.30.&nbsp;Sort order of NULL values with DESC</b>
+<b>Table&nbsp;14.28.&nbsp;Sort order of NULL values with DESC</b>
 </p>
 <div class="table-contents">
 <table summary="Sort order of NULL values with DESC" cellspacing="0" width="100%" style="border-collapse: collapse;border-top: 0.5pt solid ; border-bottom: 0.5pt solid ; border-left: 0.5pt solid ; border-right: 0.5pt solid ; ">
@@ -1618,9 +1533,9 @@
 </div>
 <br class="table-break">
 <div class="table">
-<a name="N167C0"></a>
+<a name="N16599"></a>
 <p class="title">
-<b>Table&nbsp;14.31.&nbsp;String Comparison with Padding</b>
+<b>Table&nbsp;14.29.&nbsp;String Comparison with Padding</b>
 </p>
 <div class="table-contents">
 <table summary="String Comparison with Padding" cellspacing="0" width="100%" style="border-collapse: collapse;border-top: 0.5pt solid ; border-bottom: 0.5pt solid ; border-left: 0.5pt solid ; border-right: 0.5pt solid ; ">
@@ -1658,9 +1573,9 @@
 </div>
 <br class="table-break">
 <div class="table">
-<a name="N167EF"></a>
+<a name="N165C8"></a>
 <p class="title">
-<b>Table&nbsp;14.32.&nbsp;Default Locale Language Collation</b>
+<b>Table&nbsp;14.30.&nbsp;Default Locale Language Collation</b>
 </p>
 <div class="table-contents">
 <table summary="Default Locale Language Collation" cellspacing="0" width="100%" style="border-collapse: collapse;border-top: 0.5pt solid ; border-bottom: 0.5pt solid ; border-left: 0.5pt solid ; border-right: 0.5pt solid ; ">
@@ -1693,9 +1608,9 @@
 </div>
 <br class="table-break">
 <div class="table">
-<a name="N1681C"></a>
+<a name="N165F5"></a>
 <p class="title">
-<b>Table&nbsp;14.33.&nbsp;Case-Insensitive Varchar columns</b>
+<b>Table&nbsp;14.31.&nbsp;Case-Insensitive Varchar columns</b>
 </p>
 <div class="table-contents">
 <table summary="Case-Insensitive Varchar columns" cellspacing="0" width="100%" style="border-collapse: collapse;border-top: 0.5pt solid ; border-bottom: 0.5pt solid ; border-left: 0.5pt solid ; border-right: 0.5pt solid ; ">
@@ -1731,9 +1646,9 @@
 </div>
 <br class="table-break">
 <div class="table">
-<a name="N16849"></a>
+<a name="N16622"></a>
 <p class="title">
-<b>Table&nbsp;14.34.&nbsp;Lowercase column identifiers in ResultSet</b>
+<b>Table&nbsp;14.32.&nbsp;Lowercase column identifiers in ResultSet</b>
 </p>
 <div class="table-contents">
 <table summary="Lowercase column identifiers in ResultSet" cellspacing="0" width="100%" style="border-collapse: collapse;border-top: 0.5pt solid ; border-bottom: 0.5pt solid ; border-left: 0.5pt solid ; border-right: 0.5pt solid ; ">
@@ -1770,9 +1685,9 @@
 </div>
 <br class="table-break">
 <div class="table">
-<a name="N16876"></a>
+<a name="N1664F"></a>
 <p class="title">
-<b>Table&nbsp;14.35.&nbsp;Storage of Live Java Objects</b>
+<b>Table&nbsp;14.33.&nbsp;Storage of Live Java Objects</b>
 </p>
 <div class="table-contents">
 <table summary="Storage of Live Java Objects" cellspacing="0" width="100%" style="border-collapse: collapse;border-top: 0.5pt solid ; border-bottom: 0.5pt solid ; border-left: 0.5pt solid ; border-right: 0.5pt solid ; ">
@@ -1807,9 +1722,9 @@
 </div>
 <br class="table-break">
 <div class="table">
-<a name="N168A3"></a>
+<a name="N1667C"></a>
 <p class="title">
-<b>Table&nbsp;14.36.&nbsp;Names of System Indexes Used for Constraints</b>
+<b>Table&nbsp;14.34.&nbsp;Names of System Indexes Used for Constraints</b>
 </p>
 <div class="table-contents">
 <table summary="Names of System Indexes Used for Constraints" cellspacing="0" width="100%" style="border-collapse: collapse;border-top: 0.5pt solid ; border-bottom: 0.5pt solid ; border-left: 0.5pt solid ; border-right: 0.5pt solid ; ">
@@ -1825,21 +1740,16 @@
 </thead>
 <tbody valign="top">
 <tr>
-<td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left" valign="top"><span class="property">sql.sys_index_names</span></td><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left" valign="top"><code class="literal">true</code></td><td style="border-bottom: 0.5pt solid ; " align="left" valign="top">name of system generated indexes for constraints</td>
+<td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left" valign="top"><span class="property">sql.sys_index_names</span></td><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left" valign="top"><code class="literal">false</code></td><td style="border-bottom: 0.5pt solid ; " align="left" valign="top">name of system generated indexes for constraints</td>
 </tr>
 <tr>
 <td style="" colspan="3" align="left" valign="top">
 <p>HSQLDB automatically
               creates a system index for each PRIMARY KEY, UNIQUE and FOREIGN
-              KEY constraint. If a constraint is not defined with a name, the
-              system generates a name. By default, the names of these indexes
-              will be the same as the constraint names. This helps associating
-              the index name with the user-defined constraint name. When this
-              property is false, the names of those indexes are generated the
-              system as a string beginning with SYS_. </p>
-<p>The default
-              value for this property was false before version
-              2.7.0.</p>
+              KEY constraint. By default the names of those indexes are
+              generated the system as a string beginning with SYS_. When the
+              setting is changed to true, the names will be the same as the
+              constraint names.</p>
 <pre class="programlisting">SET DATABASE SQL SYS INDEX NAMES { TRUE | FALSE }</pre>
 </td>
 </tr>
@@ -1849,9 +1759,9 @@
 </div>
 <br class="table-break">
 <div class="table">
-<a name="N168D2"></a>
+<a name="N166A9"></a>
 <p class="title">
-<b>Table&nbsp;14.37.&nbsp;DB2 Style Syntax</b>
+<b>Table&nbsp;14.35.&nbsp;DB2 Style Syntax</b>
 </p>
 <div class="table-contents">
 <table summary="DB2 Style Syntax" cellspacing="0" width="100%" style="border-collapse: collapse;border-top: 0.5pt solid ; border-bottom: 0.5pt solid ; border-left: 0.5pt solid ; border-right: 0.5pt solid ; ">
@@ -1883,9 +1793,9 @@
 </div>
 <br class="table-break">
 <div class="table">
-<a name="N168FE"></a>
+<a name="N166D5"></a>
 <p class="title">
-<b>Table&nbsp;14.38.&nbsp;MSSQL Style Syntax</b>
+<b>Table&nbsp;14.36.&nbsp;MSSQL Style Syntax</b>
 </p>
 <div class="table-contents">
 <table summary="MSSQL Style Syntax" cellspacing="0" width="100%" style="border-collapse: collapse;border-top: 0.5pt solid ; border-bottom: 0.5pt solid ; border-left: 0.5pt solid ; border-right: 0.5pt solid ; ">
@@ -1918,9 +1828,9 @@
 </div>
 <br class="table-break">
 <div class="table">
-<a name="N1692A"></a>
+<a name="N16701"></a>
 <p class="title">
-<b>Table&nbsp;14.39.&nbsp;MySQL Style Syntax</b>
+<b>Table&nbsp;14.37.&nbsp;MySQL Style Syntax</b>
 </p>
 <div class="table-contents">
 <table summary="MySQL Style Syntax" cellspacing="0" width="100%" style="border-collapse: collapse;border-top: 0.5pt solid ; border-bottom: 0.5pt solid ; border-left: 0.5pt solid ; border-right: 0.5pt solid ; ">
@@ -1953,9 +1863,9 @@
 </div>
 <br class="table-break">
 <div class="table">
-<a name="N16957"></a>
+<a name="N1672E"></a>
 <p class="title">
-<b>Table&nbsp;14.40.&nbsp;Oracle Style Syntax</b>
+<b>Table&nbsp;14.38.&nbsp;Oracle Style Syntax</b>
 </p>
 <div class="table-contents">
 <table summary="Oracle Style Syntax" cellspacing="0" width="100%" style="border-collapse: collapse;border-top: 0.5pt solid ; border-bottom: 0.5pt solid ; border-left: 0.5pt solid ; border-right: 0.5pt solid ; ">
@@ -1989,9 +1899,9 @@
 </div>
 <br class="table-break">
 <div class="table">
-<a name="N16984"></a>
+<a name="N1675B"></a>
 <p class="title">
-<b>Table&nbsp;14.41.&nbsp;PostgreSQL Style Syntax</b>
+<b>Table&nbsp;14.39.&nbsp;PostgreSQL Style Syntax</b>
 </p>
 <div class="table-contents">
 <table summary="PostgreSQL Style Syntax" cellspacing="0" width="100%" style="border-collapse: collapse;border-top: 0.5pt solid ; border-bottom: 0.5pt solid ; border-left: 0.5pt solid ; border-right: 0.5pt solid ; ">
@@ -2023,44 +1933,6 @@
 </div>
 </div>
 <br class="table-break">
-<div class="table">
-<a name="N169B0"></a>
-<p class="title">
-<b>Table&nbsp;14.42.&nbsp;Maximum Iterations of Recursive Queries</b>
-</p>
-<div class="table-contents">
-<table summary="Maximum Iterations of Recursive Queries" cellspacing="0" width="100%" style="border-collapse: collapse;border-top: 0.5pt solid ; border-bottom: 0.5pt solid ; border-left: 0.5pt solid ; border-right: 0.5pt solid ; ">
-<colgroup>
-<col width="6.5cm" align="left" class="c1">
-<col width="1.5cm" align="left" class="c2">
-<col align="left" class="c3">
-</colgroup>
-<thead>
-<tr>
-<th style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left">Name</th><th style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left">Default</th><th style="border-bottom: 0.5pt solid ; " align="left">Description</th>
-</tr>
-</thead>
-<tbody valign="top">
-<tr>
-<td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left" valign="top"><span class="property">sql.max_recursive</span></td><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left" valign="top"><code class="literal">256</code></td><td style="border-bottom: 0.5pt solid ; " align="left" valign="top">maximum number of iterations of a recursive query</td>
-</tr>
-<tr>
-<td style="" colspan="3" align="left" valign="top">
-<p>Recursive queries
-              terminate if they are not completed when the maximum number of
-              iterations is reached. This is to avoid long-running queries
-              that may never actually finish.</p>
-<p>The default value is
-              fine for most use-cases. You can change the default if you need
-              to.</p>
-<pre class="programlisting">SET DATABASE SQL MAX RECURSIVE &lt;count&gt;</pre>
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<br class="table-break">
 </div>
 <div class="section">
 <div class="titlepage">
@@ -2072,9 +1944,9 @@
 </div>
 </div>
 <div class="table">
-<a name="N169E3"></a>
+<a name="N1678B"></a>
 <p class="title">
-<b>Table&nbsp;14.43.&nbsp;Default Table Type</b>
+<b>Table&nbsp;14.40.&nbsp;Default Table Type</b>
 </p>
 <div class="table-contents">
 <table summary="Default Table Type" cellspacing="0" width="100%" style="border-collapse: collapse;border-top: 0.5pt solid ; border-bottom: 0.5pt solid ; border-left: 0.5pt solid ; border-right: 0.5pt solid ; ">
@@ -2110,9 +1982,9 @@
 </div>
 <br class="table-break">
 <div class="table">
-<a name="N16A13"></a>
+<a name="N167BB"></a>
 <p class="title">
-<b>Table&nbsp;14.44.&nbsp;Transaction Control Mode</b>
+<b>Table&nbsp;14.41.&nbsp;Transaction Control Mode</b>
 </p>
 <div class="table-contents">
 <table summary="Transaction Control Mode" cellspacing="0" width="100%" style="border-collapse: collapse;border-top: 0.5pt solid ; border-bottom: 0.5pt solid ; border-left: 0.5pt solid ; border-right: 0.5pt solid ; ">
@@ -2146,9 +2018,9 @@
 </div>
 <br class="table-break">
 <div class="table">
-<a name="N16A49"></a>
+<a name="N167F1"></a>
 <p class="title">
-<b>Table&nbsp;14.45.&nbsp;Default Isolation Level for Sessions</b>
+<b>Table&nbsp;14.42.&nbsp;Default Isolation Level for Sessions</b>
 </p>
 <div class="table-contents">
 <table summary="Default Isolation Level for Sessions" cellspacing="0" width="100%" style="border-collapse: collapse;border-top: 0.5pt solid ; border-bottom: 0.5pt solid ; border-left: 0.5pt solid ; border-right: 0.5pt solid ; ">
@@ -2182,9 +2054,9 @@
 </div>
 <br class="table-break">
 <div class="table">
-<a name="N16A7C"></a>
+<a name="N16824"></a>
 <p class="title">
-<b>Table&nbsp;14.46.&nbsp;Transaction Rollback in Deadlock</b>
+<b>Table&nbsp;14.43.&nbsp;Transaction Rollback in Deadlock</b>
 </p>
 <div class="table-contents">
 <table summary="Transaction Rollback in Deadlock" cellspacing="0" width="100%" style="border-collapse: collapse;border-top: 0.5pt solid ; border-bottom: 0.5pt solid ; border-left: 0.5pt solid ; border-right: 0.5pt solid ; ">
@@ -2225,9 +2097,9 @@
 </div>
 <br class="table-break">
 <div class="table">
-<a name="N16AA9"></a>
+<a name="N16851"></a>
 <p class="title">
-<b>Table&nbsp;14.47.&nbsp;Transaction Rollback on Interrupt</b>
+<b>Table&nbsp;14.44.&nbsp;Transaction Rollback on Interrupt</b>
 </p>
 <div class="table-contents">
 <table summary="Transaction Rollback on Interrupt" cellspacing="0" width="100%" style="border-collapse: collapse;border-top: 0.5pt solid ; border-bottom: 0.5pt solid ; border-left: 0.5pt solid ; border-right: 0.5pt solid ; ">
@@ -2263,9 +2135,9 @@
 </div>
 <br class="table-break">
 <div class="table">
-<a name="N16AD6"></a>
+<a name="N1687E"></a>
 <p class="title">
-<b>Table&nbsp;14.48.&nbsp;Time Zone and Interval Types</b>
+<b>Table&nbsp;14.45.&nbsp;Time Zone and Interval Types</b>
 </p>
 <div class="table-contents">
 <table summary="Time Zone and Interval Types" cellspacing="0" width="100%" style="border-collapse: collapse;border-top: 0.5pt solid ; border-bottom: 0.5pt solid ; border-left: 0.5pt solid ; border-right: 0.5pt solid ; ">
@@ -2281,59 +2153,19 @@
 </thead>
 <tbody valign="top">
 <tr>
-<td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left" valign="top"><span class="property">hsqldb.translate_tti_types</span></td><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left" valign="top"><code class="literal">true</code></td><td style="border-bottom: 0.5pt solid ; " align="left" valign="top">usage of type codes for advanced interval types</td>
+<td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left" valign="top"><span class="property">hsqldb.translate_tti_types</span></td><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left" valign="top"><code class="literal">true</code></td><td style="border-bottom: 0.5pt solid ; " align="left" valign="top">usage of type codes for advanced datetime and interval
+              types</td>
 </tr>
 <tr>
 <td style="" colspan="3" align="left" valign="top">
 <p>If the property is true,
-              the INTERVAL types are represented in JDBC methods of
+              the TIME / TIMESTAMP WITH TIME ZONE types and INTERVAL types are
+              represented in JDBC methods of
               <code class="classname">ResultSetMetaData</code> and
-              <code class="classname">DatabaseMetaData</code> as the VARCHAR type. The
+              <code class="classname">DatabaseMetaData</code> as JDBC datetime types
+              without time zone and the VARCHAR type respectively. The
               original type names are preserved.</p>
-<p>JDBC does not
-              have direct support for names and codes of INTERVAL types. From
-              Java 8, getting and setting INTERVAL values is possible via
-              getObject() and setObject() methods of ResultSet and
-              PreparedStatement.</p>
 <pre class="programlisting">SET DATABASE SQL TRANSLATE TTI TYPES { TRUE | FALSE }</pre>
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<br class="table-break">
-<div class="table">
-<a name="N16B0B"></a>
-<p class="title">
-<b>Table&nbsp;14.49.&nbsp;Temporary Result Rows in Memory</b>
-</p>
-<div class="table-contents">
-<table summary="Temporary Result Rows in Memory" cellspacing="0" width="100%" style="border-collapse: collapse;border-top: 0.5pt solid ; border-bottom: 0.5pt solid ; border-left: 0.5pt solid ; border-right: 0.5pt solid ; ">
-<colgroup>
-<col width="6.5cm" align="left" class="c1">
-<col width="1.5cm" align="left" class="c2">
-<col align="left" class="c3">
-</colgroup>
-<thead>
-<tr>
-<th style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left">Name</th><th style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left">Default</th><th style="border-bottom: 0.5pt solid ; " align="left">Description</th>
-</tr>
-</thead>
-<tbody valign="top">
-<tr>
-<td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left" valign="top"><span class="property">hsqldb.result_max_memory_rows</span></td><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left" valign="top"><code class="literal">0</code></td><td style="border-bottom: 0.5pt solid ; " align="left" valign="top">storage of temporary results and tables in memory or on
-              disk</td>
-</tr>
-<tr>
-<td style="" colspan="3" align="left" valign="top">
-<p>This property can be set
-              to specify how many rows of each results or temporary table are
-              stored in memory before the table is written to disk. The
-              default is zero and means data is always stored in memory. If
-              this setting is used, it should be set above
-              1000.</p>
-<pre class="programlisting">SET DATABASE DEFAULT RESULT MEMORY ROWS &lt;numeric value&gt;</pre>
 </td>
 </tr>
 </tbody>
@@ -2352,9 +2184,9 @@
 </div>
 </div>
 <div class="table">
-<a name="N16B3C"></a>
+<a name="N168B5"></a>
 <p class="title">
-<b>Table&nbsp;14.50.&nbsp;Opening Database as Read Only</b>
+<b>Table&nbsp;14.46.&nbsp;Opening Database as Read Only</b>
 </p>
 <div class="table-contents">
 <table summary="Opening Database as Read Only" cellspacing="0" width="100%" style="border-collapse: collapse;border-top: 0.5pt solid ; border-bottom: 0.5pt solid ; border-left: 0.5pt solid ; border-right: 0.5pt solid ; ">
@@ -2390,9 +2222,9 @@
 </div>
 <br class="table-break">
 <div class="table">
-<a name="N16B6C"></a>
+<a name="N168E5"></a>
 <p class="title">
-<b>Table&nbsp;14.51.&nbsp;Opening Database Without Modifying the Files</b>
+<b>Table&nbsp;14.47.&nbsp;Opening Database Without Modifying the Files</b>
 </p>
 <div class="table-contents">
 <table summary="Opening Database Without Modifying the Files" cellspacing="0" width="100%" style="border-collapse: collapse;border-top: 0.5pt solid ; border-bottom: 0.5pt solid ; border-left: 0.5pt solid ; border-right: 0.5pt solid ; ">
@@ -2427,125 +2259,9 @@
 </div>
 <br class="table-break">
 <div class="table">
-<a name="N16B9C"></a>
+<a name="N16915"></a>
 <p class="title">
-<b>Table&nbsp;14.52.&nbsp;Event Logging</b>
-</p>
-<div class="table-contents">
-<table summary="Event Logging" cellspacing="0" width="100%" style="border-collapse: collapse;border-top: 0.5pt solid ; border-bottom: 0.5pt solid ; border-left: 0.5pt solid ; border-right: 0.5pt solid ; ">
-<colgroup>
-<col width="6.5cm" align="left" class="c1">
-<col width="1.5cm" align="left" class="c2">
-<col align="left" class="c3">
-</colgroup>
-<thead>
-<tr>
-<th style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left">Name</th><th style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left">Default</th><th style="border-bottom: 0.5pt solid ; " align="left">Description</th>
-</tr>
-</thead>
-<tbody valign="top">
-<tr>
-<td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left" valign="top"><span class="property">hsqldb.applog</span></td><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left" valign="top"><code class="literal">0</code></td><td style="border-bottom: 0.5pt solid ; " align="left" valign="top">application logging level - can also be used when opening
-              an existing <em class="glossterm">file:</em> database</td>
-</tr>
-<tr>
-<td style="" colspan="3" align="left" valign="top">
-<p>The default level 0
-              indicates no logging. Level 1 and 2 result in minimal logging,
-              including any failures. Level 3 indicates all events, including
-              ordinary events. Level 4 adds details of some of the normal
-              operations. The events are logged in a file ending with
-              ".app.log".</p>
-<pre class="programlisting">SET DATABASE EVENT LOG LEVEL { 0 | 1 | 2 | 3 | 4}</pre>
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<br class="table-break">
-<div class="table">
-<a name="N16BCC"></a>
-<p class="title">
-<b>Table&nbsp;14.53.&nbsp;SQL Logging</b>
-</p>
-<div class="table-contents">
-<table summary="SQL Logging" cellspacing="0" width="100%" style="border-collapse: collapse;border-top: 0.5pt solid ; border-bottom: 0.5pt solid ; border-left: 0.5pt solid ; border-right: 0.5pt solid ; ">
-<colgroup>
-<col width="6.5cm" align="left" class="c1">
-<col width="1.5cm" align="left" class="c2">
-<col align="left" class="c3">
-</colgroup>
-<thead>
-<tr>
-<th style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left">Name</th><th style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left">Default</th><th style="border-bottom: 0.5pt solid ; " align="left">Description</th>
-</tr>
-</thead>
-<tbody valign="top">
-<tr>
-<td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left" valign="top"><span class="property">hsqldb.sqllog</span></td><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left" valign="top"><code class="literal">0</code></td><td style="border-bottom: 0.5pt solid ; " align="left" valign="top">sql logging level - can also be used when opening an
-              existing <em class="glossterm">file:</em> database</td>
-</tr>
-<tr>
-<td style="" colspan="3" align="left" valign="top">
-<p>The default level 0
-              indicates no logging. Level 1 and 2 logs only commits and
-              rollbacks. Level 3 logs all the SQL statements executed,
-              together with their parameter values. Long statements and
-              parameter values are truncated. Level 4 is similar to Level 3
-              but does not truncate long statements and values. The events are
-              logged in a file ending with ".sql.log". This property applies
-              to existing file: databases as well as new
-              databases.</p>
-<pre class="programlisting">SET DATABASE EVENT LOG SQL LEVEL { 0 | 1 | 2 | 3 | 4}</pre>
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<br class="table-break">
-<div class="table">
-<a name="N16BFC"></a>
-<p class="title">
-<b>Table&nbsp;14.54.&nbsp;Table Spaces for Cached Tables</b>
-</p>
-<div class="table-contents">
-<table summary="Table Spaces for Cached Tables" cellspacing="0" width="100%" style="border-collapse: collapse;border-top: 0.5pt solid ; border-bottom: 0.5pt solid ; border-left: 0.5pt solid ; border-right: 0.5pt solid ; ">
-<colgroup>
-<col width="6.5cm" align="left" class="c1">
-<col width="1.5cm" align="left" class="c2">
-<col align="left" class="c3">
-</colgroup>
-<thead>
-<tr>
-<th style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left">Name</th><th style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left">Default</th><th style="border-bottom: 0.5pt solid ; " align="left">Description</th>
-</tr>
-</thead>
-<tbody valign="top">
-<tr>
-<td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left" valign="top"><span class="property">hsqldb.files_space</span></td><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left" valign="top"><code class="literal">false</code></td><td style="border-bottom: 0.5pt solid ; " align="left" valign="top">use of separate table spaces for each CACHED
-              table</td>
-</tr>
-<tr>
-<td style="" colspan="3" align="left" valign="top">
-<p>The default value is
-              false, indicating table space management is not used. When the
-              value is true at the time of creation of a new database, the
-              directory structures are created inside the .data file and table
-              space support is enabled</p>
-<pre class="programlisting">SET FILES SPACE { TRUE | FALSE }</pre>
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<br class="table-break">
-<div class="table">
-<a name="N16C29"></a>
-<p class="title">
-<b>Table&nbsp;14.55.&nbsp;Huge database files and tables</b>
+<b>Table&nbsp;14.48.&nbsp;Huge database files and tables</b>
 </p>
 <div class="table-contents">
 <table summary="Huge database files and tables" cellspacing="0" width="100%" style="border-collapse: collapse;border-top: 0.5pt solid ; border-bottom: 0.5pt solid ; border-left: 0.5pt solid ; border-right: 0.5pt solid ; ">
@@ -2580,12 +2296,12 @@
 </div>
 <br class="table-break">
 <div class="table">
-<a name="N16C59"></a>
+<a name="N16945"></a>
 <p class="title">
-<b>Table&nbsp;14.56.&nbsp;Use of NIO for Disk Table Storage</b>
+<b>Table&nbsp;14.49.&nbsp;Event Logging</b>
 </p>
 <div class="table-contents">
-<table summary="Use of NIO for Disk Table Storage" cellspacing="0" width="100%" style="border-collapse: collapse;border-top: 0.5pt solid ; border-bottom: 0.5pt solid ; border-left: 0.5pt solid ; border-right: 0.5pt solid ; ">
+<table summary="Event Logging" cellspacing="0" width="100%" style="border-collapse: collapse;border-top: 0.5pt solid ; border-bottom: 0.5pt solid ; border-left: 0.5pt solid ; border-right: 0.5pt solid ; ">
 <colgroup>
 <col width="6.5cm" align="left" class="c1">
 <col width="1.5cm" align="left" class="c2">
@@ -2598,20 +2314,18 @@
 </thead>
 <tbody valign="top">
 <tr>
-<td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left" valign="top"><span class="property">hsqldb.nio_data_file</span></td><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left" valign="top"><code class="literal">true</code></td><td style="border-bottom: 0.5pt solid ; " align="left" valign="top">use of nio access methods for the .data file</td>
+<td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left" valign="top"><span class="property">hsqldb.applog</span></td><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left" valign="top"><code class="literal">0</code></td><td style="border-bottom: 0.5pt solid ; " align="left" valign="top">application logging level - can also be used when opening
+              an existing <em class="glossterm">file:</em> database</td>
 </tr>
 <tr>
 <td style="" colspan="3" align="left" valign="top">
-<p>Setting this property to
-              <code class="literal">false</code> will avoid the use of nio access
-              methods, resulting in somewhat reduced speed. If the data file
-              is larger than <code class="literal">hsqldb.nio_max_size</code> (default
-              256MB) when it is first opened (or when its size is increased),
-              nio access methods are not used. Also, if the file gets larger
-              than the amount of available computer memory that needs to be
-              allocated for nio access, non-nio access methods are
-              used.</p>
-<pre class="programlisting">SET FILES NIO { TRUE | FALSE }</pre>
+<p>The default level 0
+              indicates no logging. Level 1 results in minimal logging,
+              including any failures. Level 2 indicates all events, including
+              ordinary events. LEVEL 3 adds details of some of the normal
+              operations. The events are logged in a file ending with
+              ".app.log".</p>
+<pre class="programlisting">SET DATABASE EVENT LOG LEVEL { 0 | 1 | 2 | 3}</pre>
 </td>
 </tr>
 </tbody>
@@ -2620,12 +2334,12 @@
 </div>
 <br class="table-break">
 <div class="table">
-<a name="N16C8C"></a>
+<a name="N16975"></a>
 <p class="title">
-<b>Table&nbsp;14.57.&nbsp;Use of NIO for Disk Table Storage</b>
+<b>Table&nbsp;14.50.&nbsp;SQL Logging</b>
 </p>
 <div class="table-contents">
-<table summary="Use of NIO for Disk Table Storage" cellspacing="0" width="100%" style="border-collapse: collapse;border-top: 0.5pt solid ; border-bottom: 0.5pt solid ; border-left: 0.5pt solid ; border-right: 0.5pt solid ; ">
+<table summary="SQL Logging" cellspacing="0" width="100%" style="border-collapse: collapse;border-top: 0.5pt solid ; border-bottom: 0.5pt solid ; border-left: 0.5pt solid ; border-right: 0.5pt solid ; ">
 <colgroup>
 <col width="6.5cm" align="left" class="c1">
 <col width="1.5cm" align="left" class="c2">
@@ -2638,17 +2352,20 @@
 </thead>
 <tbody valign="top">
 <tr>
-<td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left" valign="top"><span class="property">hsqldb.nio_max_size</span></td><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left" valign="top"><code class="literal">256</code></td><td style="border-bottom: 0.5pt solid ; " align="left" valign="top">nio buffer size limit</td>
+<td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left" valign="top"><span class="property">hsqldb.sqllog</span></td><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left" valign="top"><code class="literal">0</code></td><td style="border-bottom: 0.5pt solid ; " align="left" valign="top">sql logging level - can also be used when opening an
+              existing <em class="glossterm">file:</em> database</td>
 </tr>
 <tr>
 <td style="" colspan="3" align="left" valign="top">
-<p>The maximum size of .data
-              file in mega bytes that can use the nio access method. When the
-              file gets larger than this limit, non-nio access methods are
-              used. Values 64, 128, 256, 512, 1024, and larger multiples of
-              512 can be used. The default is
-              256MB.</p>
-<pre class="programlisting">SET FILES NIO SIZE &lt;numeric value&gt;</pre>
+<p>The default level 0
+              indicates no logging. Level 1 logs only commits and rollbacks.
+              Level 2 logs all the SQL statements executed, together with
+              their parameter values. Long statements and parameter values are
+              truncated. Level 3 is similar to Level 2 but does not truncate
+              long statements and values. The events are logged in a file
+              ending with ".sql.log". This property applies to existing file:
+              databases as well as new databases.</p>
+<pre class="programlisting">SET DATABASE EVENT LOG SQL LEVEL { 0 | 1 | 2 | 3}</pre>
 </td>
 </tr>
 </tbody>
@@ -2657,12 +2374,12 @@
 </div>
 <br class="table-break">
 <div class="table">
-<a name="N16CB9"></a>
+<a name="N169A5"></a>
 <p class="title">
-<b>Table&nbsp;14.58.&nbsp;Internal Backup of the .data File</b>
+<b>Table&nbsp;14.51.&nbsp;Temporary Result Rows in Memory</b>
 </p>
 <div class="table-contents">
-<table summary="Internal Backup of the .data File" cellspacing="0" width="100%" style="border-collapse: collapse;border-top: 0.5pt solid ; border-bottom: 0.5pt solid ; border-left: 0.5pt solid ; border-right: 0.5pt solid ; ">
+<table summary="Temporary Result Rows in Memory" cellspacing="0" width="100%" style="border-collapse: collapse;border-top: 0.5pt solid ; border-bottom: 0.5pt solid ; border-left: 0.5pt solid ; border-right: 0.5pt solid ; ">
 <colgroup>
 <col width="6.5cm" align="left" class="c1">
 <col width="1.5cm" align="left" class="c2">
@@ -2675,22 +2392,18 @@
 </thead>
 <tbody valign="top">
 <tr>
-<td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left" valign="top"><span class="property">hsqldb.inc_backup</span></td><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left" valign="top"><code class="literal">true</code></td><td style="border-bottom: 0.5pt solid ; " align="left" valign="top">incremental backup of data file - NOW OBSOLETE</td>
+<td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left" valign="top"><span class="property">hsqldb.result_max_memory_rows</span></td><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left" valign="top"><code class="literal">0</code></td><td style="border-bottom: 0.5pt solid ; " align="left" valign="top">storage of temporary results and tables in memory or on
+              disk</td>
 </tr>
 <tr>
 <td style="" colspan="3" align="left" valign="top">
-<p>As the contents of the
-              .data file are modified during database operation, the original
-              contents are backed up gradually. This allows fast checkpoint
-              and shutdown.</p>
-<p>With HSQLDB up to version 2.5 it was
-              possible to set the property false in order to have the .data
-              file backed up entirely at the time of checkpoint and
-              shutdown.</p>
-<p>From version 2.5.1, this property has no
-              effect and backup is always
-              incremental.</p>
-<pre class="programlisting">SET FILES BACKUP INCREMENT { TRUE | FALSE }</pre>
+<p>This property can be set
+              to specify how many rows of each results or temporary table are
+              stored in memory before the table is written to disk. The
+              default is zero and means data is always stored in memory. If
+              this setting is used, it should be set above
+              1000.</p>
+<pre class="programlisting">SET DATABASE DEFAULT RESULT MEMORY ROWS &lt;numeric value&gt;</pre>
 </td>
 </tr>
 </tbody>
@@ -2699,9 +2412,9 @@
 </div>
 <br class="table-break">
 <div class="table">
-<a name="N16CEA"></a>
+<a name="N169D2"></a>
 <p class="title">
-<b>Table&nbsp;14.59.&nbsp;Unused Space Recovery</b>
+<b>Table&nbsp;14.52.&nbsp;Unused Space Recovery</b>
 </p>
 <div class="table-contents">
 <table summary="Unused Space Recovery" cellspacing="0" width="100%" style="border-collapse: collapse;border-top: 0.5pt solid ; border-bottom: 0.5pt solid ; border-left: 0.5pt solid ; border-right: 0.5pt solid ; ">
@@ -2731,10 +2444,6 @@
               are deleted, the smaller recovered spaces are lost and the
               largest ones are retained for later use. Normally there is no
               need to set this property.</p>
-<p>When table space
-              management is turned on (see hsqldb.files_space property) this
-              property has little effect as unused spaces are always
-              recovered.</p>
 <pre class="programlisting">this property cannot be set with an SQL statement</pre>
 </td>
 </tr>
@@ -2744,9 +2453,9 @@
 </div>
 <br class="table-break">
 <div class="table">
-<a name="N16D1E"></a>
+<a name="N16A04"></a>
 <p class="title">
-<b>Table&nbsp;14.60.&nbsp;Rows Cached In Memory</b>
+<b>Table&nbsp;14.53.&nbsp;Rows Cached In Memory</b>
 </p>
 <div class="table-contents">
 <table summary="Rows Cached In Memory" cellspacing="0" width="100%" style="border-collapse: collapse;border-top: 0.5pt solid ; border-bottom: 0.5pt solid ; border-left: 0.5pt solid ; border-right: 0.5pt solid ; ">
@@ -2782,9 +2491,9 @@
 </div>
 <br class="table-break">
 <div class="table">
-<a name="N16D4D"></a>
+<a name="N16A33"></a>
 <p class="title">
-<b>Table&nbsp;14.61.&nbsp;Size of Rows Cached in Memory</b>
+<b>Table&nbsp;14.54.&nbsp;Size of Rows Cached in Memory</b>
 </p>
 <div class="table-contents">
 <table summary="Size of Rows Cached in Memory" cellspacing="0" width="100%" style="border-collapse: collapse;border-top: 0.5pt solid ; border-bottom: 0.5pt solid ; border-left: 0.5pt solid ; border-right: 0.5pt solid ; ">
@@ -2827,9 +2536,9 @@
 </div>
 <br class="table-break">
 <div class="table">
-<a name="N16D7C"></a>
+<a name="N16A62"></a>
 <p class="title">
-<b>Table&nbsp;14.62.&nbsp;Size Scale of Disk Table Storage</b>
+<b>Table&nbsp;14.55.&nbsp;Size Scale of Disk Table Storage</b>
 </p>
 <div class="table-contents">
 <table summary="Size Scale of Disk Table Storage" cellspacing="0" width="100%" style="border-collapse: collapse;border-top: 0.5pt solid ; border-bottom: 0.5pt solid ; border-left: 0.5pt solid ; border-right: 0.5pt solid ; ">
@@ -2863,9 +2572,9 @@
 </div>
 <br class="table-break">
 <div class="table">
-<a name="N16DA9"></a>
+<a name="N16A8F"></a>
 <p class="title">
-<b>Table&nbsp;14.63.&nbsp;Size Scale of LOB Storage</b>
+<b>Table&nbsp;14.56.&nbsp;Size Scale of LOB Storage</b>
 </p>
 <div class="table-contents">
 <table summary="Size Scale of LOB Storage" cellspacing="0" width="100%" style="border-collapse: collapse;border-top: 0.5pt solid ; border-bottom: 0.5pt solid ; border-left: 0.5pt solid ; border-right: 0.5pt solid ; ">
@@ -2899,9 +2608,9 @@
 </div>
 <br class="table-break">
 <div class="table">
-<a name="N16DD6"></a>
+<a name="N16ABC"></a>
 <p class="title">
-<b>Table&nbsp;14.64.&nbsp;Compression of BLOB and CLOB data</b>
+<b>Table&nbsp;14.57.&nbsp;Compression of BLOB and CLOB data</b>
 </p>
 <div class="table-contents">
 <table summary="Compression of BLOB and CLOB data" cellspacing="0" width="100%" style="border-collapse: collapse;border-top: 0.5pt solid ; border-bottom: 0.5pt solid ; border-left: 0.5pt solid ; border-right: 0.5pt solid ; ">
@@ -2934,9 +2643,51 @@
 </div>
 <br class="table-break">
 <div class="table">
-<a name="N16E03"></a>
+<a name="N16AE9"></a>
 <p class="title">
-<b>Table&nbsp;14.65.&nbsp;Use of Lock File</b>
+<b>Table&nbsp;14.58.&nbsp;Internal Backup of Database Files</b>
+</p>
+<div class="table-contents">
+<table summary="Internal Backup of Database Files" cellspacing="0" width="100%" style="border-collapse: collapse;border-top: 0.5pt solid ; border-bottom: 0.5pt solid ; border-left: 0.5pt solid ; border-right: 0.5pt solid ; ">
+<colgroup>
+<col width="6.5cm" align="left" class="c1">
+<col width="1.5cm" align="left" class="c2">
+<col align="left" class="c3">
+</colgroup>
+<thead>
+<tr>
+<th style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left">Name</th><th style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left">Default</th><th style="border-bottom: 0.5pt solid ; " align="left">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr>
+<td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left" valign="top"><span class="property">hsqldb.inc_backup</span></td><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left" valign="top"><code class="literal">true</code></td><td style="border-bottom: 0.5pt solid ; " align="left" valign="top">incremental backup of data file</td>
+</tr>
+<tr>
+<td style="" colspan="3" align="left" valign="top">
+<p>As the contents of the
+              .data file are modified during database operation, the original
+              contents are backed up gradually. This allows fast checkpoint
+              and shutdown.</p>
+<p>With HSQLDB up to version 2.5.0 it was
+              possible to set the property false in order to have the .data
+              file backed up entirely at the time of checkpoint and
+              shutdown.</p>
+<p>From version 2.5.1, this property has no
+              effect and backup is always
+              incremental.</p>
+<pre class="programlisting">SET FILES BACKUP INCREMENT { TRUE | FALSE }</pre>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<br class="table-break">
+<div class="table">
+<a name="N16B1A"></a>
+<p class="title">
+<b>Table&nbsp;14.59.&nbsp;Use of Lock File</b>
 </p>
 <div class="table-contents">
 <table summary="Use of Lock File" cellspacing="0" width="100%" style="border-collapse: collapse;border-top: 0.5pt solid ; border-bottom: 0.5pt solid ; border-left: 0.5pt solid ; border-right: 0.5pt solid ; ">
@@ -2973,9 +2724,9 @@
 </div>
 <br class="table-break">
 <div class="table">
-<a name="N16E33"></a>
+<a name="N16B4A"></a>
 <p class="title">
-<b>Table&nbsp;14.66.&nbsp;Logging Data Change Statements</b>
+<b>Table&nbsp;14.60.&nbsp;Logging Data Change Statements</b>
 </p>
 <div class="table-contents">
 <table summary="Logging Data Change Statements" cellspacing="0" width="100%" style="border-collapse: collapse;border-top: 0.5pt solid ; border-bottom: 0.5pt solid ; border-left: 0.5pt solid ; border-right: 0.5pt solid ; ">
@@ -2999,10 +2750,11 @@
               to <code class="literal">false</code> when database recovery in the event
               of an unexpected crash is not necessary. A database that is used
               as a temporary cache is an example. Regardless of the value of
-              this property, a checkpoint or shutdown still writes the
-              <code class="literal">.script</code> file and saves the
-              <code class="literal">.data</code> file in full, therefore persisting all
-              the changes.</p>
+              this property, if there is a proper shutdown of the database,
+              all the changed data is stored. A checkpoint or shutdown still
+              rewrites the <code class="literal">.script</code> file and saves the
+              <code class="literal">.backup</code> file according to the other
+              settings.</p>
 <pre class="programlisting">SET FILES LOG  { TRUE | FALSE }</pre>
 </td>
 </tr>
@@ -3012,9 +2764,9 @@
 </div>
 <br class="table-break">
 <div class="table">
-<a name="N16E69"></a>
+<a name="N16B80"></a>
 <p class="title">
-<b>Table&nbsp;14.67.&nbsp;Automatic Checkpoint Frequency</b>
+<b>Table&nbsp;14.61.&nbsp;Automatic Checkpoint Frequency</b>
 </p>
 <div class="table-contents">
 <table summary="Automatic Checkpoint Frequency" cellspacing="0" width="100%" style="border-collapse: collapse;border-top: 0.5pt solid ; border-bottom: 0.5pt solid ; border-left: 0.5pt solid ; border-right: 0.5pt solid ; ">
@@ -3048,9 +2800,9 @@
 </div>
 <br class="table-break">
 <div class="table">
-<a name="N16E9F"></a>
+<a name="N16BB6"></a>
 <p class="title">
-<b>Table&nbsp;14.68.&nbsp;Automatic Defrag at Checkpoint</b>
+<b>Table&nbsp;14.62.&nbsp;Automatic Defrag at Checkpoint</b>
 </p>
 <div class="table-contents">
 <table summary="Automatic Defrag at Checkpoint" cellspacing="0" width="100%" style="border-collapse: collapse;border-top: 0.5pt solid ; border-bottom: 0.5pt solid ; border-left: 0.5pt solid ; border-right: 0.5pt solid ; ">
@@ -3088,9 +2840,9 @@
 </div>
 <br class="table-break">
 <div class="table">
-<a name="N16ECC"></a>
+<a name="N16BE3"></a>
 <p class="title">
-<b>Table&nbsp;14.69.&nbsp;Compression of the .script file</b>
+<b>Table&nbsp;14.63.&nbsp;Compression of the .script file</b>
 </p>
 <div class="table-contents">
 <table summary="Compression of the .script file" cellspacing="0" width="100%" style="border-collapse: collapse;border-top: 0.5pt solid ; border-bottom: 0.5pt solid ; border-left: 0.5pt solid ; border-right: 0.5pt solid ; ">
@@ -3125,9 +2877,9 @@
 </div>
 <br class="table-break">
 <div class="table">
-<a name="N16EFC"></a>
+<a name="N16C13"></a>
 <p class="title">
-<b>Table&nbsp;14.70.&nbsp;Logging Data Change Statements Frequency</b>
+<b>Table&nbsp;14.64.&nbsp;Logging Data Change Statements Frequency</b>
 </p>
 <div class="table-contents">
 <table summary="Logging Data Change Statements Frequency" cellspacing="0" width="100%" style="border-collapse: collapse;border-top: 0.5pt solid ; border-bottom: 0.5pt solid ; border-left: 0.5pt solid ; border-right: 0.5pt solid ; ">
@@ -3164,9 +2916,9 @@
 </div>
 <br class="table-break">
 <div class="table">
-<a name="N16F29"></a>
+<a name="N16C40"></a>
 <p class="title">
-<b>Table&nbsp;14.71.&nbsp;Logging Data Change Statements Frequency</b>
+<b>Table&nbsp;14.65.&nbsp;Logging Data Change Statements Frequency</b>
 </p>
 <div class="table-contents">
 <table summary="Logging Data Change Statements Frequency" cellspacing="0" width="100%" style="border-collapse: collapse;border-top: 0.5pt solid ; border-bottom: 0.5pt solid ; border-left: 0.5pt solid ; border-right: 0.5pt solid ; ">
@@ -3202,9 +2954,86 @@
 </div>
 <br class="table-break">
 <div class="table">
-<a name="N16F56"></a>
+<a name="N16C6D"></a>
 <p class="title">
-<b>Table&nbsp;14.72.&nbsp;Recovery Log Processing</b>
+<b>Table&nbsp;14.66.&nbsp;Use of NIO for Disk Table Storage</b>
+</p>
+<div class="table-contents">
+<table summary="Use of NIO for Disk Table Storage" cellspacing="0" width="100%" style="border-collapse: collapse;border-top: 0.5pt solid ; border-bottom: 0.5pt solid ; border-left: 0.5pt solid ; border-right: 0.5pt solid ; ">
+<colgroup>
+<col width="6.5cm" align="left" class="c1">
+<col width="1.5cm" align="left" class="c2">
+<col align="left" class="c3">
+</colgroup>
+<thead>
+<tr>
+<th style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left">Name</th><th style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left">Default</th><th style="border-bottom: 0.5pt solid ; " align="left">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr>
+<td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left" valign="top"><span class="property">hsqldb.nio_data_file</span></td><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left" valign="top"><code class="literal">true</code></td><td style="border-bottom: 0.5pt solid ; " align="left" valign="top">use of nio access methods for the .data file</td>
+</tr>
+<tr>
+<td style="" colspan="3" align="left" valign="top">
+<p>Setting this property to
+              <code class="literal">false</code> will avoid the use of nio access
+              methods, resulting in somewhat reduced speed. If the data file
+              is larger than <code class="literal">hsqldb.nio_max_size</code> (default
+              256MB) when it is first opened (or when its size is increased),
+              nio access methods are not used. Also, if the file gets larger
+              than the amount of available computer memory that needs to be
+              allocated for nio access, non-nio access methods are
+              used.</p>
+<pre class="programlisting">SET FILES NIO { TRUE | FALSE }</pre>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<br class="table-break">
+<div class="table">
+<a name="N16CA0"></a>
+<p class="title">
+<b>Table&nbsp;14.67.&nbsp;Use of NIO for Disk Table Storage</b>
+</p>
+<div class="table-contents">
+<table summary="Use of NIO for Disk Table Storage" cellspacing="0" width="100%" style="border-collapse: collapse;border-top: 0.5pt solid ; border-bottom: 0.5pt solid ; border-left: 0.5pt solid ; border-right: 0.5pt solid ; ">
+<colgroup>
+<col width="6.5cm" align="left" class="c1">
+<col width="1.5cm" align="left" class="c2">
+<col align="left" class="c3">
+</colgroup>
+<thead>
+<tr>
+<th style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left">Name</th><th style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left">Default</th><th style="border-bottom: 0.5pt solid ; " align="left">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr>
+<td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left" valign="top"><span class="property">hsqldb.nio_max_size</span></td><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left" valign="top"><code class="literal">256</code></td><td style="border-bottom: 0.5pt solid ; " align="left" valign="top">nio buffer size limit</td>
+</tr>
+<tr>
+<td style="" colspan="3" align="left" valign="top">
+<p>The maximum size of .data
+              file in mega bytes that can use the nio access method. When the
+              file gets larger than this limit, non-nio access methods are
+              used. Values 64, 128, 256, 512, 1024, and larger multiples of
+              512 can be used. The default is
+              256MB.</p>
+<pre class="programlisting">SET FILES NIO SIZE &lt;numeric value&gt;</pre>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<br class="table-break">
+<div class="table">
+<a name="N16CCD"></a>
+<p class="title">
+<b>Table&nbsp;14.68.&nbsp;Recovery Log Processing</b>
 </p>
 <div class="table-contents">
 <table summary="Recovery Log Processing" cellspacing="0" width="100%" style="border-collapse: collapse;border-top: 0.5pt solid ; border-bottom: 0.5pt solid ; border-left: 0.5pt solid ; border-right: 0.5pt solid ; ">
@@ -3242,9 +3071,9 @@
 </div>
 <br class="table-break">
 <div class="table">
-<a name="N16F83"></a>
+<a name="N16CFA"></a>
 <p class="title">
-<b>Table&nbsp;14.73.&nbsp;Default Properties for TEXT Tables</b>
+<b>Table&nbsp;14.69.&nbsp;Default Properties for TEXT Tables</b>
 </p>
 <div class="table-contents">
 <table summary="Default Properties for TEXT Tables" cellspacing="0" width="100%" style="border-collapse: collapse;border-top: 0.5pt solid ; border-bottom: 0.5pt solid ; border-left: 0.5pt solid ; border-right: 0.5pt solid ; ">
@@ -3279,9 +3108,9 @@
 </div>
 <br class="table-break">
 <div class="table">
-<a name="N16FB7"></a>
+<a name="N16D2E"></a>
 <p class="title">
-<b>Table&nbsp;14.74.&nbsp;Forcing Garbage Collection</b>
+<b>Table&nbsp;14.70.&nbsp;Forcing Garbage Collection</b>
 </p>
 <div class="table-contents">
 <table summary="Forcing Garbage Collection" cellspacing="0" width="100%" style="border-collapse: collapse;border-top: 0.5pt solid ; border-bottom: 0.5pt solid ; border-left: 0.5pt solid ; border-right: 0.5pt solid ; ">
@@ -3297,14 +3126,14 @@
 </thead>
 <tbody valign="top">
 <tr>
-<td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left" valign="top"><span class="property">runtime.gc_interval</span></td><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left" valign="top"><code class="literal">0</code></td><td style="border-bottom: 0.5pt solid ; " align="left" valign="top">forced garbage collection - NOW OBSOLETE</td>
+<td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left" valign="top"><span class="property">runtime.gc_interval</span></td><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; " align="left" valign="top"><code class="literal">0</code></td><td style="border-bottom: 0.5pt solid ; " align="left" valign="top">forced garbage collection</td>
 </tr>
 <tr>
 <td style="" colspan="3" align="left" valign="top">
 <p>No-op setting previously
               used to forces garbage collection each time a set number of
               result set row or cache row objects are created. This setting
-              has no effect in version 2.5 or
+              has no effect in version 2.5.0 or
               later,</p>
 <pre class="programlisting">SET DATABASE GC &lt;numeric value&gt;</pre>
 </td>
@@ -3325,9 +3154,9 @@
 </div>
 </div>
 <div class="table">
-<a name="N16FE8"></a>
+<a name="N16D5F"></a>
 <p class="title">
-<b>Table&nbsp;14.75.&nbsp;Crypt Property For LOBs</b>
+<b>Table&nbsp;14.71.&nbsp;Crypt Property For LOBs</b>
 </p>
 <div class="table-contents">
 <table summary="Crypt Property For LOBs" cellspacing="0" width="100%" style="border-collapse: collapse;border-top: 0.5pt solid ; border-bottom: 0.5pt solid ; border-left: 0.5pt solid ; border-right: 0.5pt solid ; ">
@@ -3362,9 +3191,9 @@
 </div>
 <br class="table-break">
 <div class="table">
-<a name="N17015"></a>
+<a name="N16D8C"></a>
 <p class="title">
-<b>Table&nbsp;14.76.&nbsp;Cipher Key for Encrypted Database</b>
+<b>Table&nbsp;14.72.&nbsp;Cipher Key for Encrypted Database</b>
 </p>
 <div class="table-contents">
 <table summary="Cipher Key for Encrypted Database" cellspacing="0" width="100%" style="border-collapse: collapse;border-top: 0.5pt solid ; border-bottom: 0.5pt solid ; border-left: 0.5pt solid ; border-right: 0.5pt solid ; ">
@@ -3395,9 +3224,9 @@
 </div>
 <br class="table-break">
 <div class="table">
-<a name="N17042"></a>
+<a name="N16DB9"></a>
 <p class="title">
-<b>Table&nbsp;14.77.&nbsp;Cipher Initialization Vector for Encrypted Database</b>
+<b>Table&nbsp;14.73.&nbsp;Cipher Initialization Vector for Encrypted Database</b>
 </p>
 <div class="table-contents">
 <table summary="Cipher Initialization Vector for Encrypted Database" cellspacing="0" width="100%" style="border-collapse: collapse;border-top: 0.5pt solid ; border-bottom: 0.5pt solid ; border-left: 0.5pt solid ; border-right: 0.5pt solid ; ">
@@ -3429,9 +3258,9 @@
 </div>
 <br class="table-break">
 <div class="table">
-<a name="N1706F"></a>
+<a name="N16DE6"></a>
 <p class="title">
-<b>Table&nbsp;14.78.&nbsp;Crypt Provider Encrypted Database</b>
+<b>Table&nbsp;14.74.&nbsp;Crypt Provider Encrypted Database</b>
 </p>
 <div class="table-contents">
 <table summary="Crypt Provider Encrypted Database" cellspacing="0" width="100%" style="border-collapse: collapse;border-top: 0.5pt solid ; border-bottom: 0.5pt solid ; border-left: 0.5pt solid ; border-right: 0.5pt solid ; ">
@@ -3463,9 +3292,9 @@
 </div>
 <br class="table-break">
 <div class="table">
-<a name="N1709C"></a>
+<a name="N16E13"></a>
 <p class="title">
-<b>Table&nbsp;14.79.&nbsp;Cipher Specification for Encrypted Database</b>
+<b>Table&nbsp;14.75.&nbsp;Cipher Specification for Encrypted Database</b>
 </p>
 <div class="table-contents">
 <table summary="Cipher Specification for Encrypted Database" cellspacing="0" width="100%" style="border-collapse: collapse;border-top: 0.5pt solid ; border-bottom: 0.5pt solid ; border-left: 0.5pt solid ; border-right: 0.5pt solid ; ">
@@ -3495,6 +3324,15 @@
 </div>
 </div>
 <br class="table-break">
+<p>When connecting to an <em class="glossterm">in-process</em> database
+      creates a new database, or opens an existing database (i.e. it is the
+      first connection made to the database by the application), all the
+      user-defined database properties listed in this section can be specified
+      as URL properties.</p>
+<p>When HyperSQL is used with OpenOffice.org as an external
+      database, the property "default_schema=true" must be set on the URL,
+      otherwise the program will not operate correctly as it does with its
+      built-in hsqldb instance.</p>
 </div>
 </div>
 <div class="section">
@@ -3510,9 +3348,9 @@
     Java command line or by calling System.setProperty() from the user's
     program. They are not valid as URL or connection properties.</p>
 <div class="table">
-<a name="N170CF"></a>
+<a name="N16E4D"></a>
 <p class="title">
-<b>Table&nbsp;14.80.&nbsp;Logging Framework</b>
+<b>Table&nbsp;14.76.&nbsp;Logging Framework</b>
 </p>
 <div class="table-contents">
 <table summary="Logging Framework" cellspacing="0" width="100%" style="border-collapse: collapse;border-top: 0.5pt solid ; border-bottom: 0.5pt solid ; border-left: 0.5pt solid ; border-right: 0.5pt solid ; ">
@@ -3544,9 +3382,9 @@
 </div>
 <br class="table-break">
 <div class="table">
-<a name="N170F9"></a>
+<a name="N16E77"></a>
 <p class="title">
-<b>Table&nbsp;14.81.&nbsp;Text Tables</b>
+<b>Table&nbsp;14.77.&nbsp;Text Tables</b>
 </p>
 <div class="table-contents">
 <table summary="Text Tables" cellspacing="0" width="100%" style="border-collapse: collapse;border-top: 0.5pt solid ; border-bottom: 0.5pt solid ; border-left: 0.5pt solid ; border-right: 0.5pt solid ; ">
@@ -3580,9 +3418,9 @@
 </div>
 <br class="table-break">
 <div class="table">
-<a name="N17126"></a>
+<a name="N16EA4"></a>
 <p class="title">
-<b>Table&nbsp;14.82.&nbsp;Java Functions</b>
+<b>Table&nbsp;14.78.&nbsp;Java Functions</b>
 </p>
 <div class="table-contents">
 <table summary="Java Functions" cellspacing="0" width="100%" style="border-collapse: collapse;border-top: 0.5pt solid ; border-bottom: 0.5pt solid ; border-left: 0.5pt solid ; border-right: 0.5pt solid ; ">
@@ -3616,7 +3454,7 @@
 </div>
 </div>
 <HR xmlns:xi="http://www.w3.org/2001/XInclude">
-<P xmlns:xi="http://www.w3.org/2001/XInclude" class="svnrev">$Revision: 6645 $</P>
+<P xmlns:xi="http://www.w3.org/2001/XInclude" class="svnrev">$Revision: 6369 $</P>
 <div class="navfooter">
 <hr>
 <table summary="Navigation footer" width="100%">

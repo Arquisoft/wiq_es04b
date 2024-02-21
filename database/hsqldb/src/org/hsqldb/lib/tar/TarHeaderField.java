@@ -108,8 +108,7 @@ public enum TarHeaderField {
         this.start = start;
         this.stop = stop;
     }
-    private final int start;
-    private final int stop;
+    private int start, stop;
 
     // The getters below throw RuntimExceptions instead of
     // TarMalformatExceptions because these errors indicate a dev problem,

@@ -1,4 +1,4 @@
-/* Copyright (c) 2001-2022, The HSQL Development Group
+/* Copyright (c) 2001-2021, The HSQL Development Group
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -37,7 +37,7 @@ import org.hsqldb.persist.PersistentStore;
  * Manages rows involved in transactions
  *
  * @author Fred Toussi (fredt@users dot sourceforge.net)
- * @version 2.7.0
+ * @version 2.5.1
  * @since 2.0.0
  */
 public interface TransactionManager {
@@ -60,11 +60,11 @@ public interface TransactionManager {
     int resetSessionStatement = 5;
     int resetSessionClose     = 6;
 
-    long getSystemChangeNumber();
+    long getGlobalChangeTimestamp();
 
-    long getNextSystemChangeNumber();
+    long getNextGlobalChangeTimestamp();
 
-    void setSystemChangeNumber(long ts);
+    void setGlobalChangeTimestamp(long ts);
 
     RowAction addDeleteAction(Session session, Table table,
                               PersistentStore store, Row row,

@@ -1,4 +1,4 @@
-/* Copyright (c) 2001-2022, The HSQL Development Group
+/* Copyright (c) 2001-2021, The HSQL Development Group
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -59,11 +59,11 @@ import org.hsqldb.rowio.RowInputInterface;
 import org.hsqldb.types.LobData;
 import org.hsqldb.types.Type;
 
-/**
+/*
  * Base implementation of PersistentStore for different table types.
  *
  * @author Fred Toussi (fredt@users dot sourceforge.net)
- * @version 2.7.0
+ * @version 2.6.0
  * @since 1.9.0
  */
 public abstract class RowStoreAVL implements PersistentStore {
@@ -634,7 +634,7 @@ public abstract class RowStoreAVL implements PersistentStore {
                 }
             }
         } catch (OutOfMemoryError e) {
-            throw Error.error(ErrorCode.OUT_OF_MEMORY, e);
+            throw Error.error(ErrorCode.OUT_OF_MEMORY);
         }
     }
 
@@ -741,7 +741,7 @@ public abstract class RowStoreAVL implements PersistentStore {
 
                 return true;
             } catch (OutOfMemoryError e) {
-                error = Error.error(ErrorCode.OUT_OF_MEMORY, e);
+                error = Error.error(ErrorCode.OUT_OF_MEMORY);
             } catch (HsqlException e) {
                 error = e;
             }

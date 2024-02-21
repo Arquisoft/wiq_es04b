@@ -1,4 +1,4 @@
-/* Copyright (c) 2001-2022, The HSQL Development Group
+/* Copyright (c) 2001-2021, The HSQL Development Group
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -39,7 +39,7 @@ import java.io.OutputStream;
  * Interface for abstraction of file access.
  *
  * @author  Ocke Janssen oj@openoffice.org
- * @version 2.7.0
+ * @version 2.5.1
  * @since 1.8.0
  */
 public interface FileAccess {
@@ -65,8 +65,7 @@ public interface FileAccess {
 
     boolean renameElement(String oldName, String newName);
 
-    boolean renameElementOrCopy(String oldName, String newName,
-                                EventLogInterface logger);
+    boolean renameElementOrCopy(String oldName, String newName);
 
     interface FileSync {
         void sync() throws IOException;

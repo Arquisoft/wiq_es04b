@@ -48,8 +48,8 @@
 </div>
 <div>
 <div class="legalnotice">
-<a name="N14140"></a>
-<p>Copyright 2010-2022 Fred Toussi. Permission is granted to
+<a name="N14029"></a>
+<p>Copyright 2010-2021 Fred Toussi. Permission is granted to
       distribute this document without any alteration under the terms of the
       HSQLDB license. Additional permission is granted to the HSQL Development
       Group to distribute this document with or without alterations under the
@@ -57,7 +57,7 @@
 </div>
 </div>
 <div>
-<p class="pubdate">2023-05-29</p>
+<p class="pubdate">2021-10-21</p>
 </div>
 </div>
 </div>
@@ -84,9 +84,6 @@
 <span class="section"><a href="accesscontrol-chapt.html#acc_access_rights">Access Rights</a></span>
 </dt>
 <dt>
-<span class="section"><a href="accesscontrol-chapt.html#N1425C">Simple Access Control</a></span>
-</dt>
-<dt>
 <span class="section"><a href="accesscontrol-chapt.html#acc_fine_grained_access">Fine-Grained Data Access Control</a></span>
 </dt>
 </dl>
@@ -106,27 +103,24 @@
 </div>
 </div>
 </div>
-<p>This chapter is about controlling access to database objects such as
-    tables and routines. Other topics related to security include user
-    authentication, password complexity and secure connections. These topics
+<p>This chapter is about access control to database objects such as
+    tables, inside the database engine. Other issues related to security
+    include user authentication, password complexity and secure connections
     are covered in the <a class="link" href="management-chapt.html" title="Chapter&nbsp;11.&nbsp;System Management">System Management</a> chapter and the <a class="link" href="listeners-chapt.html" title="Chapter&nbsp;15.&nbsp;HyperSQL Network Listeners (Servers)">HyperSQL Network Listeners
     (Servers)</a> chapter.</p>
 <p>Apart from schemas and their object, each HyperSQL catalog has USER
     and ROLE objects. These objects are collectively called
     <span class="emphasis"><em>authorizations</em></span>. Each AUTHORIZATION has some access
-    rights on some of the schemas and the database objects such as tables and
-    routines contained in those schemas.</p>
-<p>Authorization names are stored in the database in case-normal form.
-    When a user is created with the CREATE USER statement, if the user name is
-    enclosed in double quotes, the exact name is used as the case-normal form.
-    But if it is not enclosed in double quotes, the name is converted to
-    uppercase and this uppercase version is stored in the database as the
-    case-normal form. When connecting to a database via JDBC, the user name
-    and password must match the case of the stored form.</p>
-<p>Each database has at least one admin user. When the first connection
-    to a non-existent database is made, the admin user is created with the the
-    user name for the connection. The user name <code class="literal">SA</code> is
-    suggested in the documentation but you can use any name.</p>
+    rights on some of the schemas or the objects they contain. The persistent
+    elements of an SQL environment are database objects</p>
+<p>Authorization names are stored in the database in the case-normal
+    form. When connecting to a database via JDBC, the user name and password
+    must match the case of this case-normal form.</p>
+<p>When a user is created with the CREATE USER statement, if the user
+    name is enclosed in double quotes, the exact name is used as the
+    case-normal form. But if it is not enclosed in double quotes, the name is
+    converted to uppercase and this uppercase version is stored in the
+    database as the case-normal form.</p>
 </div>
 <div class="section">
 <div class="titlepage">
@@ -137,45 +131,41 @@
 </div>
 </div>
 </div>
-<a name="N14162" class="indexterm"></a>
 <p>In general, ROLE and USER objects simply control access to schema
-    objects. There is the built-in DBA role that allows full access to all
-    possible operations on the database, including the creation of USER and
-    ROLE objects and schemas. There are other built-in roles that allow some
-    special operations on the database as a whole. Admin users have the DBA
-    role.</p>
+    objects. This is the scope of the SQL Standard. However, there are special
+    roles that allow the creation of USER and ROLE objects and also allow some
+    special operations on the database as a whole. These roles are not defined
+    by the Standard, which has left it to implementers to define such roles as
+    they are needed for the particular SQL implementation.</p>
 <p>A ROLE has a name, a collection of zero or more other roles, plus
     some privileges (access rights). A USER has a name and a password. It
     similarly has a collection of zero or more roles plus some
     privileges.</p>
-<p>USER objects existed in SQL-92, but ROLE objects were introduced in
-    SQL:1999. The co-existence of ROLE and USER objects results in complexity.
-    With the addition of ROLE objects, there is no rationale, other than
-    legacy support, for granting privileges to USER objects directly. It is
-    better to create roles and grant privileges to them, then grant the roles
-    to USER objects.</p>
+<p>USER objects existed in the SQL-92, but ROLE objects were introduced
+    in SQL:1999. Originally it was intended that USER objects would normally
+    be the same as the operating system USER objects and their authentication
+    would be handled outside the SQL environment. The co-existence of ROLE and
+    USER objects results in complexity. With the addition of ROLE objects,
+    there is no rationale, other than legacy support, for granting privileges
+    to USER objects directly. It is better to create roles and grant
+    privileges to them, then grant the roles to USER objects.</p>
 <p>The Standard effectively defines a special ROLE, named PUBLIC. All
     authorizations have the PUBLIC role, which cannot be removed from them.
     Therefore, any access right assigned to the PUBLIC role applies to all
     authorizations in the database. For many simple databases, it is adequate
-    to create one or more non-admin user, then assign access rights to the
-    tables and sequences to the PUBLIC role.</p>
-<p>The PUBLIC role is separate from the default PUBLIC schema. The
-    contents of this schema is not visible to non-admin users unless access is
-    granted by the DBA role.</p>
-<p>Access to INFORMATION_SCHEMA views is automatically granted to
+    to create a single, non-admin user, then assign access rights to the
+    pre-existing PUBLIC role. Access to INFORMATION_SCHEMA views is granted to
     PUBLIC; therefore these views are accessible to all. However, the contents
     of each view depend on the ROLE or USER (AUTHORIZATION) that is in force
-    while accessing the view. This means a user cannot even see the existence
-    of tables and other objects when it has no access rights on those
-    objects.</p>
+    while accessing the view.</p>
 <p>Each schema has a single AUTHORIZATION. This is commonly known as
     the <span class="emphasis"><em>owner</em></span> of the schema. All the objects in the
     schema inherit the schema owner. The schema owner can add objects to the
-    schema, drop them or alter them. By default, the objects in a schema can
-    only be accessed by the schema owner. The schema owner can grant access
-    rights on the objects to other users or roles.</p>
-<a name="N14178" class="indexterm"></a>
+    schema, drop them or alter them.</p>
+<p>By default, the objects in a schema can only be accessed by the
+    schema owner. The schema owner can grant access rights on the objects to
+    other users or roles.</p>
+<a name="N14057" class="indexterm"></a>
 <p>
 <span class="bold"><strong>authorization
     identifier</strong></span>
@@ -198,31 +188,29 @@
 </div>
 </div>
 </div>
-<a name="N1418D" class="indexterm"></a>
 <p>There are some pre-defined roles in each database; some defined by
       the SQL Standard, some by HyperSQL. These roles can be assigned to users
       (directly or via other, user-defined roles). In addition, there is the
-      initial admin user created with each new database. The initial user name
+      initial SYS user created with each new database. The initial user name
       and password is defined in the connection properties when the first
       connection to the database is made. In older versions of HSQLDB, this
       name was always SA. But in the latest version, the name can be defined
       as a different string.</p>
-<a name="N14194" class="indexterm"></a>
+<a name="N1406E" class="indexterm"></a>
 <p>
-<span class="bold"><strong>Admin User</strong></span>
+<span class="bold"><strong>SYS User</strong></span>
 </p>
 <p>
-<span class="emphasis"><em>the Admin user
-      (HyperSQL-specific)</em></span>
+<span class="emphasis"><em>the SYS user (HyperSQL-specific)</em></span>
 </p>
 <p>This user is automatically created with a new database and has
       the DBA role. This user name and its password are defined in the
       connection properties when connecting to the new database to create the
-      database. This user can change the password, create other users and
-      create new schemas and other objects. The initial admin user can be
+      database. As this user, it is possible to change the password, create
+      other users and created new schema objects. The initial SYS user can be
       dropped by another user that has the DBA role. As a result, there is
-      always at least one admin user in the database.</p>
-<a name="N141A2" class="indexterm"></a>
+      always at least one SYS user in the database.</p>
+<a name="N1407C" class="indexterm"></a>
 <p>
 <span class="bold"><strong>PUBLIC</strong></span>
 </p>
@@ -234,7 +222,7 @@
       the INFORMATION_SCHEMA with limited visibility. Any roles or rights
       granted to this role, are in effect granted to all users of the
       database.</p>
-<a name="N141B0" class="indexterm"></a>
+<a name="N1408A" class="indexterm"></a>
 <p>
 <span class="bold"><strong>_SYSTEM</strong></span>
 </p>
@@ -244,7 +232,7 @@
 <p>This role is the authorization for the pre-defined (system)
       objects in the database, including the INFORMATION_SCHEMA. This role
       cannot be assigned to any authorization (user or role).</p>
-<a name="N141BE" class="indexterm"></a>
+<a name="N14098" class="indexterm"></a>
 <p>
 <span class="bold"><strong>DBA</strong></span>
 </p>
@@ -256,9 +244,8 @@
       role can also act as a proxy for all the roles and users in the
       database. This means it can do everything the authorization for a schema
       can do, including dropping the schema or its objects, or granting rights
-      on the schema objects to a grantee. All admin users have this
-      role.</p>
-<a name="N141CC" class="indexterm"></a>
+      on the schema objects to a grantee.</p>
+<a name="N140A6" class="indexterm"></a>
 <p>
 <span class="bold"><strong>CREATE_SCHEMA</strong></span>
 </p>
@@ -269,7 +256,7 @@
 <p>An authorization that has this role, can create schemas. The
       DBA authorization has this role and can grant it to other
       authorizations.</p>
-<a name="N141DA" class="indexterm"></a>
+<a name="N140B4" class="indexterm"></a>
 <p>
 <span class="bold"><strong>CHANGE_AUTHORIZATION</strong></span>
 </p>
@@ -282,7 +269,7 @@
       (otherwise, the original user would gain DBA privileges). The DBA
       authorization has this role and can grant it to other
       authorizations.</p>
-<a name="N141E8" class="indexterm"></a>
+<a name="N140C2" class="indexterm"></a>
 <p>
 <span class="bold"><strong>SCRIPT_OPS</strong></span>
 </p>
@@ -303,10 +290,8 @@
 </div>
 </div>
 </div>
-<a name="N141FA" class="indexterm"></a>
 <p>Tables in the INFORMATION_SCHEMA contain the list of users and
-      roles for the database. Only admin users can see the full contents of
-      these tables.</p>
+      roles for the database.</p>
 <p>The SYSTEM_USERS tables contains the list of users, with some
       extra settings for each user. The AUTHORIZATIONS table contains a list
       of both users and roles.</p>
@@ -329,19 +314,10 @@
 </div>
 </div>
 </div>
-<a name="N14211" class="indexterm"></a>
-<p>The create schema statements has an optional AUTHORIZATION clause:
-      For example:</p>
-<div class="informalexample">
-<pre class="programlisting"> CREATE SCHEMA mySchema AUTHORIZATION aUserOrRole
-</pre>
-</div>
-<p>If the authorization is not specified, the DBA role becomes the
-      authorization. This authorization is the owner of the schema. By
-      default, the objects in a schema can only be accessed by the schema
-      owner. But the schema owner can grant privileges (access rights) on the
-      objects to other users or roles.</p>
-<p>Things can get far more complex because the grant of privileges
+<p>By default, the objects in a schema can only be accessed by the
+      schema owner. But the schema owner can grant privileges (access rights)
+      on the objects to other users or roles.</p>
+<p>Things can get far more complex, because the grant of privileges
       can be made WITH GRANT OPTION. In this case, the role or user that has
       been granted the privilege can grant the privilege to other roles and
       users.</p>
@@ -349,9 +325,9 @@
 <p>The statements for granting and revoking privileges normally
       specify which privileges are granted or revoked. However, there is a
       shortcut, ALL PRIVILEGES, which means all the privileges that the
-      <code class="literal">&lt;grantor&gt;</code> has on the specified schema object.
-      The <code class="literal">&lt;grantor&gt;</code> is normally the CURRENT_USER of
-      the session that issues the statement.</p>
+      <code class="literal">&lt;grantor&gt;</code> has on the schema object. The
+      <code class="literal">&lt;grantor&gt;</code> is normally the CURRENT_USER of the
+      session that issues the statement.</p>
 <p>The user or role that is granted privileges is referred to as
       <code class="literal">&lt;grantee&gt;</code> for the granted privileges.</p>
 <p>
@@ -409,75 +385,16 @@
 <div>
 <div>
 <h3 class="title">
-<a name="N1425C"></a>Simple Access Control</h3>
-</div>
-</div>
-</div>
-<a name="N1425F" class="indexterm"></a>
-<p>The simplest form of access control is when the DBA user creates a
-      single non-admin user, then creates the tables and other objects in the
-      PUBLIC schema, and grants access to the objects to PUBLIC. A grant to
-      PUBLIC applies to all non-admin users, including any users that are
-      created later.</p>
-<div class="informalexample">
-<pre class="programlisting">CREATE USER generalUser PASSWORD 'aPassword'
-
--- the objects are created one by one in the PUBLIC schema 
-SET SCHEMA PUBLIC
-CREATE TABLE aTable ...
-CREATE TABLE anotherTable ...
-...
-CREATE SEQUENCE aSequence ...
-CREATE PROCECURE aProc ...
-'''
-
--- access rights are granted to PUBLIC, which includes the generalUser
-GRANT ALL ON ALL TABLES IN SCHEMA public TO PUBLIC
-GRANT ALL ON ALL SEQUENCES IN SCHEMA public TO PUBLIC
-GRANT ALL ON ALL ROUTINES IN SCHEMA public TO PUBLIC
-</pre>
-</div>
-<p>When different users need to have different levels of access, the
-      privileges are granted to individual users as opposed to PUBLIC. In the
-      example below there are 2 users with different access rights to the
-      objects in the schema.</p>
-<div class="informalexample">
-<pre class="programlisting">-- two users are created first
-CREATE USER generalUser PASSWORD 'aPassword'
-CREATE USER auditUser PASSWORD 'anotherPassword'
-
--- the schema and its objects are created with a single compound statement 
-CREATE SCHEMA mySchema AUTHORIZATION DBA
-    CREATE TABLE aTable ...
-    CREATE TABLE anotherTable ...
-    ...
-    CREATE SEQUENCE aSequence ...
-    CREATE PROCECURE aProc ...
-    ''';
-
--- different access rights are granted to the users
-GRANT ALL ON ALL TABLES IN SCHEMA mySchema TO generalUser
-GRANT USAGE ON ALL SEQUENCES IN SCHEMA mySchema TO generalUser
-GRANT EXECUTE ON ALL ROUTINES IN SCHEMA mySchema TO generalUser
-GRANT SELECT ON ALL TABLES IN SCHEMA mySchema TO auditUser;
-</pre>
-</div>
-</div>
-<div class="section">
-<div class="titlepage">
-<div>
-<div>
-<h3 class="title">
 <a name="acc_fine_grained_access"></a>Fine-Grained Data Access Control</h3>
 </div>
 </div>
 </div>
-<a name="N14272" class="indexterm"></a>
-<p>A USER or ROLE that does not own a schema can be granted access to
-      individual columns of a table in the schema. HyperSQL adds a feature
-      that is not part of the SQL Standard to allow access to be granted to a
-      ROLE only for certain rows of a table, based on a FILTER
-      condition.</p>
+<a name="N1412B" class="indexterm"></a>
+<p>As mentioned above, a USER or ROLE that does not own a schema can
+      be granted access to individual columns of a table in the schema.
+      HyperSQL adds a feature that is not part of the SQL Standard to allow
+      this access to be granted to a ROLE only for certain rows of a table,
+      based on a FILTER condition.</p>
 <p>When the GRANT statement contains a FILTER condition, the
       condition is applied to each row of the table that a SELECT, INSERT,
       UPDATE, DELETE or MERGE statement tries to access. Only the rows that
@@ -490,7 +407,7 @@ GRANT SELECT ON ALL TABLES IN SCHEMA mySchema TO auditUser;
       A group of ordinary users with the <code class="literal">eu_admin</code> role is
       only allowed to access the data for a certain region. Another group with
       the <code class="literal">eu_user</code> role is only allowed to access the rows
-      before the expiration date.</p>
+      before the expiration date. </p>
 <div class="informalexample">
 <pre class="programlisting">CREATE TABLE info(id INT PRIMARY KEY, info VARCHAR(100), region VARCHAR(32) NOT NULL, expires DATE NOT NULL)
 -- there is also a foreign key constraint on the REGION column to reference a list of valid region names.
@@ -513,11 +430,11 @@ GRANT eu_user TO emma, john
       rows they cannot access.</p>
 <p>The <code class="literal">&lt;filter clause&gt;</code> can be used for other
       forms of fine-grained access control. In the example below, the
-      COMMON_ROLE role is defined and granted access during office hours
+      COMMON_USER role is defined and granted access during office hours
       only.</p>
 <div class="informalexample">
-<pre class="programlisting">CREATE ROLE common_role
-GRANT SELECT FILTER (WHERE EXTRACT(HOUR FROM CURRENT_TIMESTAMP) BETWEEN 9 AND 17) ON TABLE info TO common_role
+<pre class="programlisting">CREATE ROLE common_user
+GRANT SELECT FILTER (WHERE EXTRACT(HOUR FROM CURRENT_TIMESTAMP) BETWEEN 9 AND 17) ON TABLE info TO common_user
 </pre>
 </div>
 <p>Fine-grained data access control can also be used to implement
@@ -550,7 +467,7 @@ GRANT SELECT FILTER (WHERE EXTRACT(HOUR FROM CURRENT_TIMESTAMP) BETWEEN 9 AND 17
     assigned to other roles or to users. The same statements are also used in
     a different form to assign privileges on schema objects to users and
     roles.</p>
-<a name="N142A1" class="indexterm"></a>
+<a name="N1415A" class="indexterm"></a>
 <p>
 <a name="create_user-sql"></a><span class="bold"><strong>CREATE
     USER</strong></span>
@@ -569,7 +486,7 @@ GRANT SELECT FILTER (WHERE EXTRACT(HOUR FROM CURRENT_TIMESTAMP) BETWEEN 9 AND 17
     characters and is case-sensitive. If <code class="literal">ADMIN</code> is
     specified, the DBA role is granted to the new user. Only a user with the
     DBA role can execute this statement.</p>
-<a name="N142BC" class="indexterm"></a>
+<a name="N14175" class="indexterm"></a>
 <p>
 <span class="bold"><strong>DROP USER</strong></span>
 </p>
@@ -584,7 +501,7 @@ GRANT SELECT FILTER (WHERE EXTRACT(HOUR FROM CURRENT_TIMESTAMP) BETWEEN 9 AND 17
     authorization for a schema, the schema is destroyed.</p>
 <p>Only a user with the DBA role can execute this
     statement.</p>
-<a name="N142CF" class="indexterm"></a>
+<a name="N14188" class="indexterm"></a>
 <p>
 <span class="bold"><strong>ALTER USER ... SET
     PASSWORD</strong></span>
@@ -603,7 +520,7 @@ GRANT SELECT FILTER (WHERE EXTRACT(HOUR FROM CURRENT_TIMESTAMP) BETWEEN 9 AND 17
     <code class="literal">&lt;password&gt;</code> is a string enclosed with single quote
     characters and is case-sensitive.</p>
 <p>Only a user with the DBA role can execute this command.</p>
-<a name="N142E8" class="indexterm"></a>
+<a name="N141A1" class="indexterm"></a>
 <p>
 <span class="bold"><strong>ALTER USER ... SET INITIAL
     SCHEMA</strong></span>
@@ -625,7 +542,7 @@ GRANT SELECT FILTER (WHERE EXTRACT(HOUR FROM CURRENT_TIMESTAMP) BETWEEN 9 AND 17
     session.</p>
 <p>Only a user with the DBA role can execute this
     statement.</p>
-<a name="N142FE" class="indexterm"></a>
+<a name="N141B7" class="indexterm"></a>
 <p>
 <span class="bold"><strong>ALTER USER ... SET
     LOCAL</strong></span>
@@ -646,7 +563,7 @@ GRANT SELECT FILTER (WHERE EXTRACT(HOUR FROM CURRENT_TIMESTAMP) BETWEEN 9 AND 17
     authentication for a specific user.</p>
 <p>Only a user with the DBA role can execute this
     statement.</p>
-<a name="N14311" class="indexterm"></a>
+<a name="N141CA" class="indexterm"></a>
 <p>
 <a name="set_password-sql"></a><span class="bold"><strong>SET
     PASSWORD</strong></span>
@@ -661,7 +578,7 @@ GRANT SELECT FILTER (WHERE EXTRACT(HOUR FROM CURRENT_TIMESTAMP) BETWEEN 9 AND 17
 <p>Set the password for the current user.
     <code class="literal">&lt;password&gt;</code> is a string enclosed with single quote
     characters and is case-sensitive.</p>
-<a name="N14326" class="indexterm"></a>
+<a name="N141DF" class="indexterm"></a>
 <p>
 <span class="bold"><strong>SET INITIAL SCHEMA</strong></span>
 </p>
@@ -679,7 +596,7 @@ GRANT SELECT FILTER (WHERE EXTRACT(HOUR FROM CURRENT_TIMESTAMP) BETWEEN 9 AND 17
     for all users is used as the initial schema for the current user. The
     separate SET SCHEMA command allows the user to change the schema for the
     duration of the session. See also the <a class="link" href="sessions-chapt.html" title="Chapter&nbsp;6.&nbsp;Sessions and Transactions">Sessions and Transactions</a> chapter.</p>
-<a name="N1433F" class="indexterm"></a>
+<a name="N141F8" class="indexterm"></a>
 <p>
 <span class="bold"><strong>SET DATABASE DEFAULT INITIAL
     SCHEMA</strong></span>
@@ -696,7 +613,7 @@ GRANT SELECT FILTER (WHERE EXTRACT(HOUR FROM CURRENT_TIMESTAMP) BETWEEN 9 AND 17
 <p>Sets the initial schema for new users. This schema can later be
     changed with the <code class="literal">&lt;set initial schema statement&gt;</code>
     command.</p>
-<a name="N14353" class="indexterm"></a>
+<a name="N1420C" class="indexterm"></a>
 <p>
 <span class="bold"><strong>CREATE ROLE</strong></span>
 </p>
@@ -710,7 +627,7 @@ GRANT SELECT FILTER (WHERE EXTRACT(HOUR FROM CURRENT_TIMESTAMP) BETWEEN 9 AND 17
 <p>Defines a new role. Initially the role has no rights, except
     those of the PUBLIC role. Only a user with the DBA role can execute this
     command.</p>
-<a name="N14364" class="indexterm"></a>
+<a name="N1421D" class="indexterm"></a>
 <p>
 <span class="bold"><strong>DROP ROLE</strong></span>
 </p>
@@ -724,7 +641,7 @@ GRANT SELECT FILTER (WHERE EXTRACT(HOUR FROM CURRENT_TIMESTAMP) BETWEEN 9 AND 17
 <p>Drop (destroy) a role. If the specified role is the authorization
     for a schema, the schema is destroyed. Only a user with the DBA role can
     execute this statement.</p>
-<a name="N14375" class="indexterm"></a>
+<a name="N1422E" class="indexterm"></a>
 <p>
 <span class="bold"><strong>GRANTED BY</strong></span>
 </p>
@@ -743,7 +660,7 @@ GRANT SELECT FILTER (WHERE EXTRACT(HOUR FROM CURRENT_TIMESTAMP) BETWEEN 9 AND 17
     clause can be used in various statements that perform GRANT or REVOKE
     actions. If the clause is not used, the authorization is CURRENT_USER.
     Otherwise, it is the specified authorization.</p>
-<a name="N1438C" class="indexterm"></a>
+<a name="N14245" class="indexterm"></a>
 <p>
 <span class="bold"><strong>GRANT</strong></span>
 </p>
@@ -780,21 +697,13 @@ GRANT SELECT FILTER (WHERE EXTRACT(HOUR FROM CURRENT_TIMESTAMP) BETWEEN 9 AND 17
     EXECUTE</code>
 </p>
 <p>
-<code class="literal">&lt;object name&gt; ::= { &lt;single object name&gt; |
-    &lt;schema object set name&gt; }</code>
-</p>
-<p>
-<code class="literal">&lt;simple object name&gt; ::= [ TABLE ] &lt;table
-    name&gt; | DOMAIN &lt;domain name&gt; | COLLATION &lt;collation name&gt; |
-    CHARACTER SET &lt;character set name&gt; | TRANSLATION &lt;transliteration
-    name&gt; | TYPE &lt;user-defined type name&gt; | SEQUENCE &lt;sequence
-    generator name&gt; | &lt;specific routine designator&gt; | ROUTINE
-    &lt;routine name&gt; | FUNCTION &lt;function name&gt; | PROCEDURE
-    &lt;procedure name&gt;</code>
-</p>
-<p>
-<code class="literal">&lt;schema object set name&gt; ::= ALL { TABLES |
-    SEQUENCES | ROUTINES } IN SCHEMA &lt;schema name&gt;</code>
+<code class="literal">&lt;object name&gt; ::= [ TABLE ] &lt;table name&gt; |
+    DOMAIN &lt;domain name&gt; | COLLATION &lt;collation name&gt; | CHARACTER
+    SET &lt;character set name&gt; | TRANSLATION &lt;transliteration name&gt;
+    | TYPE &lt;user-defined type name&gt; | SEQUENCE &lt;sequence generator
+    name&gt; | &lt;specific routine designator&gt; | ROUTINE &lt;routine
+    name&gt; | FUNCTION &lt;function name&gt; | PROCEDURE &lt;procedure
+    name&gt;</code>
 </p>
 <p>
 <code class="literal">&lt;privilege column list&gt; ::= &lt;column name
@@ -813,33 +722,27 @@ GRANT SELECT FILTER (WHERE EXTRACT(HOUR FROM CURRENT_TIMESTAMP) BETWEEN 9 AND 17
     are discussed in the previous section. For a table or view, if
     <code class="literal">&lt;privilege column list&gt;</code> is not specified, then
     the privilege is granted on the table, which includes all of its columns
-    and any column that may be added to it in the future.</p>
-<p>For routines, the name of the routine can be specified in two
-    ways, either as the generic name, or as the specific name for a signature.
-    HyperSQL allows referencing the generic name which covers all overloaded
-    versions of a routine at the same time. This is an extension to the SQL
-    Standard, which requires the use of <code class="literal">&lt;specific routine
-    designator&gt;</code> to grant privileges separately on each different
-    signature of the routine.</p>
-<p>HyperSQL also adds the <code class="literal">&lt;schema object set
-    name&gt;</code> option as an extension to the SQL Standard. This form
-    grants the privileges to all the tables of the schema with a single GRANT
-    statement.</p>
+    and any column that may be added to it in the future. For routines, the
+    name of the routine can be specified in two ways, either as the generic
+    name, or as the specific name for a signature. HyperSQL allows referencing
+    the generic name which covers all overloaded versions of a routine at the
+    same time. This is an extension to the SQL Standard which requires the use
+    of <code class="literal">&lt;specific routine designator&gt;</code> to grant
+    privileges separately on each different signature of the
+    routine.</p>
 <p>The <code class="literal">&lt;filter clause&gt;</code> can be specified
     after the <code class="literal">&lt;object name&gt;</code> to limit access for all
-    the granted privileges, or it can be used after individual
-    privileges.</p>
+    the granted privileges, or it can be used after individual privileges.
+    </p>
 <p>Each <code class="literal">&lt;grantee&gt;</code> is the name of a role or
     a user. Examples of GRANT statement are given below:</p>
 <div class="informalexample">
 <pre class="programlisting"> GRANT ALL ON SEQUENCE aSequence TO roleOrUser 
- GRANT SELECT ON aTable TO roleOrUser
- GRANT SELECT(col3, col5) ON aTable TO aRole  
+ GRANT SELECT ON aTable TO roleOrUser  
  GRANT SELECT, UPDATE FILTER(WHERE aColumn &gt; 2) ON aTABLE TO role1 -- filter only for update
  GRANT SELECT, UPDATE ON aTable FILTER(WHERE aColumn &gt; 2) TO role2 -- filter for both select and update
  GRANT SELECT(columnA, columnB), UPDATE(columnA, columnB) ON TABLE aTable TO user1, role1, role2
  GRANT EXECUTE ON SPECIFIC ROUTINE aroutine_1234 TO roleOrUser
- GRANT SELECT ON ALL TABLES IN SCHEMA mySchema TO PUBLIC
 </pre>
 </div>
 <p>As mentioned in the general discussion, it is better to define a
@@ -848,7 +751,7 @@ GRANT SELECT FILTER (WHERE EXTRACT(HOUR FROM CURRENT_TIMESTAMP) BETWEEN 9 AND 17
     privileges of this role, they are automatically reflected in all the users
     that have the role. Fine-grained privileges (those with a FILTER clause)
     can be granted to roles only.</p>
-<a name="N143EB" class="indexterm"></a>
+<a name="N14297" class="indexterm"></a>
 <p>
 <span class="bold"><strong>GRANT</strong></span>
 </p>
@@ -877,7 +780,7 @@ GRANT SELECT FILTER (WHERE EXTRACT(HOUR FROM CURRENT_TIMESTAMP) BETWEEN 9 AND 17
  GRANT EXECUTE ON ROUTINE aroutine TO approle
 </pre>
 </div>
-<a name="N1440B" class="indexterm"></a>
+<a name="N142B7" class="indexterm"></a>
 <p>
 <span class="bold"><strong>REVOKE privilege</strong></span>
 </p>
@@ -890,9 +793,8 @@ GRANT SELECT FILTER (WHERE EXTRACT(HOUR FROM CURRENT_TIMESTAMP) BETWEEN 9 AND 17
     &lt;grantee&gt; }... ] [ GRANTED BY &lt;grantor&gt; ] RESTRICT |
     CASCADE</code>
 </p>
-<p>Revoke privileges from a user or role. The syntax elements are
-    similar to the GRANT statements.</p>
-<a name="N1441C" class="indexterm"></a>
+<p>Revoke privileges from a user or role.</p>
+<a name="N142C8" class="indexterm"></a>
 <p>
 <span class="bold"><strong>REVOKE role</strong></span>
 </p>
@@ -913,7 +815,7 @@ GRANT SELECT FILTER (WHERE EXTRACT(HOUR FROM CURRENT_TIMESTAMP) BETWEEN 9 AND 17
 </div>
 </div>
 <HR xmlns:xi="http://www.w3.org/2001/XInclude">
-<P xmlns:xi="http://www.w3.org/2001/XInclude" class="svnrev">$Revision: 6645 $</P>
+<P xmlns:xi="http://www.w3.org/2001/XInclude" class="svnrev">$Revision: 6369 $</P>
 <div class="navfooter">
 <hr>
 <table summary="Navigation footer" width="100%">

@@ -73,12 +73,8 @@ implements DataOutput {
 
     /**
      * Constructor from an InputStream limits size to the length argument.
-     * Throws if the actual length of the InputStream is smaller than length
-     * value.
-     *
-     * @param input InputStream
-     * @param length int
-     * @throws IOException if an error occurs
+     * Throws if the actual length of the InputStream is smaller than
+     * length value.
      */
     public HsqlByteArrayOutputStream(InputStream input,
                                      int length) throws IOException {
@@ -415,8 +411,6 @@ implements DataOutput {
 
     /**
      * size must fit in buffer
-     *
-     * @param size int
      */
     public void setSize(int size) {
         count = size;

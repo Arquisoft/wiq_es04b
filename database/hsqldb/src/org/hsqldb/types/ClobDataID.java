@@ -1,4 +1,4 @@
-/* Copyright (c) 2001-2022, The HSQL Development Group
+/* Copyright (c) 2001-2021, The HSQL Development Group
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -100,6 +100,7 @@ public class ClobDataID implements ClobData {
         if (pos + length >= clobLength) {
             length = (int) (clobLength - pos);
         }
+
 
         char[] chars = getChars(session, pos, length);
 

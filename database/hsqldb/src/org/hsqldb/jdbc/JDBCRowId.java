@@ -1,4 +1,4 @@
-/* Copyright (c) 2001-2022, The HSQL Development Group
+/* Copyright (c) 2001-2021, The HSQL Development Group
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -39,7 +39,7 @@ import java.sql.RowId;
 import java.sql.SQLException;
 import java.util.Arrays;
 
-/* $Id: JDBCRowId.java 6492 2022-04-21 07:30:40Z fredt $ */
+/* $Id: JDBCRowId.java 6266 2021-01-25 16:08:06Z fredt $ */
 
 //campbell-burnet@users 20060522 - doc 1.8.1 full synch up to Mustang Build 84
 
@@ -108,7 +108,7 @@ public final class JDBCRowId implements RowId {
     }
 
     /**
-     * Constructs a new JDBCRowId instance whose internal octet sequence
+     * Constructs a new JDBCRowId instance whose internal octet sequence is
      * is a copy of the octet sequence of the given RowId object. <p>
      *
      * @param id the octet sequence representing the Rowid value
@@ -119,7 +119,7 @@ public final class JDBCRowId implements RowId {
     }
 
     /**
-     * Constructs a new JDBCRowId instance whose internal octet sequence
+     * Constructs a new JDBCRowId instance whose internal octet sequence is
      * is that represented by the given hexadecimal character sequence. <p>
      * @param hex the hexadecimal character sequence from which to derive
      *        the internal octet sequence

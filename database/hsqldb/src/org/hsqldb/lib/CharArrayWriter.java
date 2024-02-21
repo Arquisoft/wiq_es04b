@@ -63,8 +63,13 @@ public class CharArrayWriter {
             int read = reader.read(buffer, count, left);
 
             if (read == -1) {
-                reader.close();
-                throw new EOFException();
+                if (left > 0) {
+                    reader.close();
+
+                    throw new EOFException();
+                }
+
+                break;
             }
 
             left  -= read;

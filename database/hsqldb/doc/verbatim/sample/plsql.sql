@@ -1,5 +1,5 @@
 /*
- * $Id: plsql.sql 6375 2021-11-07 17:44:56Z unsaved $
+ * $Id: plsql.sql 610 2008-12-22 15:54:18Z unsaved $
  *
  * This example is copied from the "Simple Programs in PL/SQL"
  * example by Yu-May Chang, Jeff Ullman, Prof. Jennifer Widom at
@@ -27,12 +27,19 @@ INSERT INTO T1 VALUES(2, 4);
 
 /* Above is plain SQL; below is the PL/SQL program. */
 DECLARE
+
     a NUMBER;
+
     b NUMBER;
+
 BEGIN
+
     SELECT e,f INTO a,b FROM T1 WHERE e>1;
+
     INSERT INTO T1 VALUES(b,a);
+
 END;
+
 .;
 /** The statement on the previous line, ".;" is SqlTool specific.
  *  This command says to save the input up to this point to the

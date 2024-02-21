@@ -1,4 +1,4 @@
-/* Copyright (c) 2001-2022, The HSQL Development Group
+/* Copyright (c) 2001-2021, The HSQL Development Group
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -34,7 +34,7 @@ package org.hsqldb.cmdline;
 import org.hsqldb.cmdline.libclone.RefCapableRBInterface;
 import org.hsqldb.cmdline.libclone.ValidatingResourceBundle;
 
-/* $Id: SqltoolRB.java 6520 2022-05-21 11:33:38Z fredt $ */
+/* $Id: SqltoolRB.java 6266 2021-01-25 16:08:06Z fredt $ */
 
 /**
  * Resource Bundle for SqlTool and associated classes.
@@ -270,7 +270,7 @@ public enum SqltoolRB implements RefCapableRBInterface {
     desturl_nowrite
     ;
 
-    private static final ValidatingResourceBundle vrb =
+    private static ValidatingResourceBundle vrb =
             new ValidatingResourceBundle(
                     SqltoolRB.class.getPackage().getName() + ".sqltool",
                     SqltoolRB.class);

@@ -44,12 +44,12 @@
 </div>
 </div>
 <div>
-<p class="releaseinfo">$Revision: 6634 $</p>
+<p class="releaseinfo">$Revision: 6366 $</p>
 </div>
 <div>
 <div class="legalnotice">
-<a name="N14DE9"></a>
-<p>Copyright 2002-2022 Fred Toussi. Permission is granted to
+<a name="N14C95"></a>
+<p>Copyright 2002-2021 Fred Toussi. Permission is granted to
       distribute this document without any alteration under the terms of the
       HSQLDB license. Additional permission is granted to the HSQL Development
       Group to distribute this document with or without alterations under the
@@ -57,7 +57,7 @@
 </div>
 </div>
 <div>
-<p class="pubdate">2023-05-29</p>
+<p class="pubdate">2021-10-21</p>
 </div>
 </div>
 </div>
@@ -480,7 +480,7 @@
       becomes an issue, you can change one or all LOB schema tables to CACHED
       tables. See statements below:</p>
 <div class="example">
-<a name="N14EB8"></a>
+<a name="N14D64"></a>
 <p class="title">
 <b>Example&nbsp;11.1.&nbsp;Using CACHED tables for the LOB schema</b>
 </p>
@@ -550,14 +550,14 @@
     and FOREIGN KEY constraints: a unique index is created for each PRIMARY
     KEY or UNIQUE constraint; a non-unique index is created for each FOREIGN
     KEY constraint.</p>
-<p>From version 2.6, you can extend the non-unique index for a FORIEGN
-    KEY constraint to cover extra columns. For example, if you have a FOREIGN
-    KEY constraint defined on <code class="literal">INVOICES(CUSTOMER_ID)</code>, you
-    can add an extra column such as <code class="literal">INVOICE_DATE</code> to the
-    FOREIGN KEY index. This speeds up queries with conditions such as:
-    <code class="literal">WHERE customer_id = 456 and invoice_date =
-    '2020-02-02'</code>. See the ALTER CONSTRAINT statement for
-    syntax.</p>
+<p>From version 2.6.0, you can extend the non-unique index for a
+    FORIEGN KEY constraint to cover extra columns. For example, if you have a
+    FOREIGN KEY constraint defined on
+    <code class="literal">INVOICES(CUSTOMER_ID)</code>, you can add an extra column such
+    as <code class="literal">INVOICE_DATE</code> to the FOREIGN KEY index. This speeds
+    up queries with conditions such as: <code class="literal">WHERE customer_id = 456 and
+    invoice_date = '2020-02-02</code>. See the ALTER CONSTRAINT statement
+    for syntax.</p>
 <p>HyperSQL allows you to define indexes on single or multiple columns
     with the CREATE INDEX statement. You should not create duplicate indexes
     on the same column sets covered by constraints. This will result in
@@ -932,7 +932,7 @@
 </div>
 </div>
 </div>
-<a name="N15003" class="indexterm"></a>
+<a name="N14EAF" class="indexterm"></a>
 <p>HyperSQL 2.5 and later allows you to store data in temporal
     system-versioned tables. The additional syntax elements for CREATE TABLE
     and ALTER TABLE allow creating system-versioned tables and adding system
@@ -973,7 +973,7 @@
     chapter.</p>
 <p>An example of a system-versioned table follows:</p>
 <div class="example">
-<a name="N1502B"></a>
+<a name="N14ED7"></a>
 <p class="title">
 <b>Example&nbsp;11.2.&nbsp;Creating a system-versioned table</b>
 </p>
@@ -1000,7 +1000,7 @@
 </div>
 </div>
 </div>
-<a name="N15034" class="indexterm"></a>
+<a name="N14EE0" class="indexterm"></a>
 <p>Replicated databases are databases with multiple copies in different
     locations that contain the same table structure and data. With
     system-versioned tables, a set of replicas can be synchronized.</p>
@@ -1016,7 +1016,7 @@
     longer to import.</p>
 <div class="informalexample">
 <pre class="programlisting"> -- on one replica, the changes from the given UTC timestamp are exported to a file 
- PERFORM EXPORT SCRIPT FOR DATABASE VERSIONING DATA FROM '2022-03-21 08:00:00' TO '/data/diff_file'
+ PERFORM EXPORT SCRIPT FOR DATABASE VERSIONING DATA FROM '2021-03-21 08:00:00' TO '/data/diff_file'
   
  -- on another replica, the diff file is imported and the changes are merged into the database
  PERFORM IMPORT SCRIPT VERSIONING DATA FROM '/data/diff_file'
@@ -1041,7 +1041,7 @@
 </div>
 </div>
 </div>
-<a name="N15048" class="indexterm"></a>
+<a name="N14EF4" class="indexterm"></a>
 <p>Data for all CACHED tables is stored in the <code class="literal">.data</code>
     file. With a new recommended setting, HyperSQL 2.5 and later allocates
     separate blocks of the data file to different CACHED tables. This is
@@ -1068,12 +1068,6 @@
     spaces for the whole database:</p>
 <p>
 <code class="literal">SET FILES SPACE TRUE </code>
-</p>
-<p>The alternative is to include the corresponding connection property
-    on the JDBC connection URL that creates the database. For example:</p>
-<p>
-<code class="literal">jdbc:hsqldb:file:&lt;database
-    path&gt;;hsqldb.files_space=true</code>
 </p>
 <p>Then the statement below should be executed for each CACHED table
     that will have its own space:</p>
@@ -1108,12 +1102,12 @@
     the <code class="code">SET FILES SPACE TRUE</code> command is executed when there are
     already some rows in any CACHED table, the change does not happen
     immediately. In this case, the table spaces are created only when
-    CHECKPOINT DEFRAG, SHUTDOWN COMPACT, or SHUTDOWN SCRIPT is executed. Among
+    CHCKPOINT DEFRAG, SHUTDOWN COMPACT or SHUTDOWN SCRIPT is executed. Among
     these commands, CHECKPOINT DEFRAG will also automatically allocate a
     separate space to each table that is larger than a certain size.</p>
-<p>In a database with table spaces enabled, the <code class="code">SET TABLE
-    &lt;table name&gt; NEW SPACE</code> command immediately applies a separate
-    space to the table, whether it is empty or has data..</p>
+<p>In a database with table spaces, the <code class="code">SET TABLE &lt;table
+    name&gt; NEW SPACE</code> command immediately applies a separate space to
+    the table.</p>
 </div>
 <div class="section">
 <div class="titlepage">
@@ -1125,11 +1119,11 @@
 </div>
 </div>
 <p>
-<a name="N15092" class="indexterm"></a>
+<a name="N14F39" class="indexterm"></a>
 </p>
-<p>The integrity of the indexes and table data can be checked with a
-    statement. This applies to CACHED tables only. Individual tables or all
-    tables can be checked.</p>
+<p>From version 2.5.1, the integrity of the indexes and table data can
+    be checked with a command. This applies to CACHED tables only. Individual
+    tables or all tables can be checked.</p>
 <div class="informalexample">
 <pre class="programlisting"> PERFORM CHECK TABLE PUBLIC.CUSTOMER INDEX [ AND FIX ]</pre>
 </div>
@@ -1155,7 +1149,7 @@
 </div>
 </div>
 </div>
-<a name="N150A9" class="indexterm"></a>
+<a name="N14F50" class="indexterm"></a>
 <p>The database engine saves the files containing all the data in a
     file catalog when a shutdown takes place. It automatically recovers from
     an abnormal termination and preserves the data when the catalog is opened
@@ -1225,7 +1219,7 @@
       command-line to make offline backups and to restore backups. Here is how
       to see all options for <code class="classname">DbBackup</code>. </p>
 <div class="example">
-<a name="N150ED"></a>
+<a name="N14F94"></a>
 <p class="title">
 <b>Example&nbsp;11.3.&nbsp;Displaying DbBackup Syntax</b>
 </p>
@@ -1251,7 +1245,7 @@
       database is named dbname and is in the dbdir directory. The backup is
       saved to a file named backup.tar in the tardir directory.</p>
 <div class="example">
-<a name="N150F8"></a>
+<a name="N14F9F"></a>
 <p class="title">
 <b>Example&nbsp;11.4.&nbsp;Offline Backup Example</b>
 </p>
@@ -1281,7 +1275,7 @@
       or with any Pax-compliant tar or pax client (this includes GNU tar),
       </p>
 <div class="example">
-<a name="N15119"></a>
+<a name="N14FC0"></a>
 <p class="title">
 <b>Example&nbsp;11.5.&nbsp;Listing a Backup with DbBackup</b>
 </p>
@@ -1311,7 +1305,7 @@
 <p>You use <code class="classname">DbBackup</code> on your operating system
       command line to restore a catalog from a backup. </p>
 <div class="example">
-<a name="N15130"></a>
+<a name="N14FD7"></a>
 <p class="title">
 <b>Example&nbsp;11.6.&nbsp;Restoring a Backup with DbBackup</b>
 </p>
@@ -1407,8 +1401,8 @@
       production. Create your own random values.</p>
 <p>The files that are encrypted include the
       <code class="literal">.script</code>, <code class="literal">.data</code>,
-      <code class="literal">.backup</code> and <code class="literal">.log</code> files. From
-      version 2.5, the <code class="literal">.lobs</code> file is also encrypted by
+      <code class="literal">.backup</code> and <code class="literal">.log</code> files. In version
+      2.5 and later, the <code class="literal">.lobs</code> file is also encrypted by
       default and the blobs and clobs are both compressed and encrypted. You
       can override this with the property <code class="literal">crypt_lobs=false</code>
       on the URL. Earlier versions of HSQLDB did not support encrypted lobs,
@@ -1521,7 +1515,7 @@
       be enabled with the <code class="literal">SET DATABASE EVENT LOG SQL LEVEL</code>
       statement, described in this chapter. As all the executed statements are
       logged, there is a small impact on speed. So you should only use this
-      for debugging. Four levels of SQL logging are supported.</p>
+      for debugging. Two levels of SQL logging are supported.</p>
 </div>
 <div class="section">
 <div class="titlepage">
@@ -1563,14 +1557,11 @@
       the unique id (a 16 character string) of the database that generated the
       message, so they can be identified in a multi-database server
       context.</p>
-<p>The extent of logged messages is controlled with the <code class="literal">SET
-      DATABASE EXTERNAL EVENT LOG LEVEL</code> statement, described in this
-      chapter.</p>
 <p>As the default JDK logging framework has several shortcomings,
-      HyperSQL can configure this logging framework for better operation. If
-      you want HyperSQL to configure the JDK logging framework, you should
+      HyperSQL configures this logging framework for better operation. If you
+      do not want HyperSQL to configure the JDK logging framework, you should
       include the system level property
-      <code class="literal">hsqldb.reconfig_logging=true</code> in your
+      <code class="literal">hsqldb.reconfig_logging=false</code> in your
       environment.</p>
 </div>
 <div class="section">
@@ -1608,11 +1599,10 @@
         chapter.</p>
 </li>
 <li class="listitem">
-<p>You can define a system property to allow the database engine
-        access to a limited set of Java static methods that are on the
-        classpath, This is only necessary if you want to use those Java static
-        methods as SQL routines See Securing Access to Classes in the <a class="link" href="sqlroutines-chapt.html" title="Chapter&nbsp;9.&nbsp;SQL-Invoked Routines">SQL-Invoked Routines</a>
-        chapter.</p>
+<p>You can define a system property to stop the database engine
+        accessing the Java static functions that are on the classpath, apart
+        from a limited set that you allow. See Securing Access to Classes in
+        the <a class="link" href="sqlroutines-chapt.html" title="Chapter&nbsp;9.&nbsp;SQL-Invoked Routines">SQL-Invoked Routines</a> chapter.</p>
 </li>
 <li class="listitem">
 <p>You can define a system property to allow access to files on the
@@ -1749,7 +1739,7 @@
       password authentication. Each user is created with a password, which is
       stored as a hash in the database and checked each time a new database
       connection is created.</p>
-<a name="N1523B" class="indexterm"></a>
+<a name="N150DD" class="indexterm"></a>
 <p>
 <span class="bold"><strong>Password Complexity
       Check</strong></span>
@@ -1759,7 +1749,7 @@
       the database. Each time a user connects, the user's name and password
       are checked against the stored list of users and passwords. The
       connection attempt is rejected if there is no match.</p>
-<a name="N15246" class="indexterm"></a>
+<a name="N150E8" class="indexterm"></a>
 <p>
 <span class="bold"><strong>External
       Authentication</strong></span>
@@ -1798,7 +1788,7 @@
 </div>
 </div>
 <p>These statements perform a system level action.</p>
-<a name="N15263" class="indexterm"></a>
+<a name="N15105" class="indexterm"></a>
 <p>
 <span class="bold"><strong>SHUTDOWN</strong></span>
 </p>
@@ -1882,7 +1872,7 @@
 </div>
 <p>Only a user with the DBA role can execute this
       statement.</p>
-<a name="N152A3" class="indexterm"></a>
+<a name="N15145" class="indexterm"></a>
 <p>
 <span class="bold"><strong>BACKUP DATABASE</strong></span>
 </p>
@@ -1940,7 +1930,7 @@
       chapter under Backing up Database Catalogs.</p>
 <p>Only a user with the DBA role can execute this
       statement.</p>
-<a name="N152E3" class="indexterm"></a>
+<a name="N15185" class="indexterm"></a>
 <p>
 <span class="bold"><strong>CHECKPOINT</strong></span>
 </p>
@@ -1963,7 +1953,7 @@
       sessions.</p>
 <p>Only a user with the DBA role can execute this
       statement.</p>
-<a name="N15303" class="indexterm"></a>
+<a name="N151A5" class="indexterm"></a>
 <p>
 <span class="bold"><strong>SCRIPT</strong></span>
 </p>
@@ -1998,7 +1988,7 @@
 <p>These statements allow data to be transferred in bulk from one
       database to another using files formatted in the same manner as the
       <code class="literal">.script</code> files.</p>
-<a name="N15325" class="indexterm"></a>
+<a name="N151C7" class="indexterm"></a>
 <p>
 <span class="bold"><strong>EXPORT SCRIPT</strong></span>
 </p>
@@ -2042,26 +2032,7 @@
       to allow synchronization across time zones.</p>
 <p>Only a user with the SCRIPT_OPS role can execute this
       statement.</p>
-<a name="N1534A" class="indexterm"></a>
-<p>
-<span class="bold"><strong>EXPORT DSV</strong></span>
-</p>
-<p>
-<span class="emphasis"><em>export DSV statement</em></span>
-</p>
-<p>
-<code class="literal">&lt;export DSV statement&gt; ::= PERFORM EXPORT DATA
-      FROM TABLE &lt;table name&gt; TO &lt;single-quouted text file source
-      string&gt;</code>
-</p>
-<p>Writes the contents of a table as a DSV file, for example as a
-      Comma-Seperated Values (CSV).</p>
-<p>The destination is defined as a file path together with
-      optional setting as defined for a TEXT table. See the Text Tables
-      chapter for the properties.</p>
-<p>Only a user with the SCRIPT_OPS role can execute this
-      statement.</p>
-<a name="N1535F" class="indexterm"></a>
+<a name="N151EC" class="indexterm"></a>
 <p>
 <span class="bold"><strong>IMPORT SCRIPT</strong></span>
 </p>
@@ -2102,37 +2073,7 @@
       the <code class="literal">.reject</code> file.</p>
 <p>Only a user with the SCRIPT_OPS role can execute this
       statement.</p>
-<a name="N1537F" class="indexterm"></a>
-<p>
-<span class="bold"><strong>IMPORT DSV</strong></span>
-</p>
-<p>
-<span class="emphasis"><em>import DSV statement</em></span>
-</p>
-<p>
-<code class="literal">&lt;import DSV statement&gt; ::= PERFORM IMPORT DATA
-      INTO &lt;table name&gt; FROM &lt;single-quoted file path&gt; { CONTINUE
-      | STOP | CHECK } ON ERROR</code>
-</p>
-<p>Imports data from a DSV file into a table. The file to be
-      imported may be a file exported with the EXPORT DSV statement listed
-      above, or a file from another source. The source is defined as a file
-      path together with optional setting as defined for a TEXT table. See the
-      Text Tables chapter for the properties.</p>
-<p>The { CONTINUE | STOP | CHECK } ON ERROR clause determines the
-      action when an error occurs due to constraint violation. The CHECK
-      option does not insert the data, but checks each line of data in the DSV
-      file for type constraints such as string size limit or row constraints
-      such as NOT NULL. It cannot check for UNIQUE constraints. The STOP
-      option stops the import at the first error. The CONTINUE option writes
-      the rows that cannot be imported, to a file in the same location as the
-      imported script, with the file suffix <code class="literal">.reject</code> and the
-      timestamp of the import, then continues the import. If there is a
-      malformed line in the DSV file, the import is aborted with an error
-      message, regardless of the ON ERROR option.</p>
-<p>Only a user with the SCRIPT_OPS role can execute this
-      statement.</p>
-<a name="N15397" class="indexterm"></a>
+<a name="N1520C" class="indexterm"></a>
 <p>
 <span class="bold"><strong>CHECK INDEX</strong></span>
 </p>
@@ -2174,7 +2115,7 @@
 </div>
 </div>
 <p>These statements change the database settings.</p>
-<a name="N153B8" class="indexterm"></a>
+<a name="N1522D" class="indexterm"></a>
 <p>
 <span class="bold"><strong>SET DATABASE
       COLLATION</strong></span>
@@ -2213,7 +2154,7 @@
  -- this collation is case-sensitive French
  SET DATABASE COLLATION "French 2"  </pre>
 </div>
-<a name="N153E5" class="indexterm"></a>
+<a name="N1525A" class="indexterm"></a>
 <p>
 <span class="bold"><strong>SET DATABASE DEFAULT RESULT MEMORY
       ROWS</strong></span>
@@ -2239,7 +2180,7 @@
       statement.</p>
 <p>This is equivalent to the connection property
       <code class="literal">hsqldb.result_max_memory_rows</code>.</p>
-<a name="N15407" class="indexterm"></a>
+<a name="N1527C" class="indexterm"></a>
 <p>
 <span class="bold"><strong>SET DATABASE DEFAULT TABLE
       TYPE</strong></span>
@@ -2258,7 +2199,7 @@
       statement.</p>
 <p>This is equivalent to the connection property
       <code class="literal">hsqldb.default_table_type</code>.</p>
-<a name="N15421" class="indexterm"></a>
+<a name="N15296" class="indexterm"></a>
 <p>
 <span class="bold"><strong>SET DATABASE EVENT LOG
       LEVEL</strong></span>
@@ -2269,41 +2210,30 @@
 </p>
 <p>
 <code class="literal">&lt;set database event log level&gt; ::= SET DATABASE
-      [EXTERNAL] EVENT LOG [ SQL ] LEVEL { 0 | 1 | 2 | 3 |
-      4}</code>
+      EVENT LOG [ SQL ] LEVEL { 0 | 1 | 2 | 3 }</code>
 </p>
-<p>This statement has 3 different purposes and can be used up to
-      three times with different options to configure various event logging
-      operations.</p>
-<p>When the EXTERNAL and SQL options are not used, this statement
-      sets the amount of information logged in the internal, database-specific
-      event log. Level 0 means no log. Level 1 means only important (error)
-      events. Level 2 means warning events as well. Level 3 means more events,
-      including both important and less important (normal) events. Level 4
-      includes even more details.</p>
+<p>When the SQL option is not used, this statement sets the amount
+      of information logged in the internal, database-specific event log.
+      Level 0 means no log. Level 1 means only important (error) events. Level
+      2 means more events, including both important and less important
+      (normal) events. Level 3 includes even more details. For readonly and
+      <em class="glossterm">mem:</em> databases, if the level is set above 0, the
+      log messages are directed to stderr.</p>
 <p>The events are logged in a file with the extension
-      <code class="literal">.app.log</code> alongside the main database files. For
-      readonly and <em class="glossterm">mem:</em> databases, if the level is set
-      above 0, the log messages are directed to stderr, but these databases do
-      not generate many log messages.</p>
-<p>This command is equivalent to the connection property
+      <code class="literal">.app.log</code> alongside the main database files.</p>
+<p>This is equivalent to the connection property
       <code class="literal">hsqldb.applog</code>.</p>
-<p>When the EXTERNAL option is used (the SQL option is not allowed
-      in this case), the statement configures the level of events that are
-      logged to the JDK or Log4J logger. For example, LEVEL 2 indicates error
-      and warning events (levels 1 and 2) are logged.</p>
 <p>When the SQL option is used, this statement logs the SQL
       statements as they are executed. Each log line contains the timestamp
       and the session number, followed by the SQL statement and JDBC arguments
       if any.</p>
-<p>Levels 1, 2, 3 and 4 are supported. Level 1 only logs commits
-      and rollbacks. Level 2 and above log all statements. Level 2 truncates
+<p>Levels 1, 2 and 3 are supported. Level 1 only logs commits and
+      rollbacks, while Level 2 and 3 log all statements. Level 2 truncates
       long statements, while level 3 reports the full statement and parameter
-      values. Level 4 add the update count or the size of the returned result
-      set.</p>
+      values.</p>
 <p>The logged lines are stored in a file with the extension
       <code class="literal">.sql.log</code> alongside the main database files.</p>
-<p>This command is equivalent to the connection property
+<p>This is equivalent to the connection property
       <code class="literal">hsqldb.sqllog</code>.</p>
 <p>Only a user with the DBA role can execute this
       statement.</p>
@@ -2316,12 +2246,12 @@
       number. The values for prepared statement parameters are shown in
       parentheses at the end of the statement.</p>
 <div class="example">
-<a name="N1545D"></a>
+<a name="N152CE"></a>
 <p class="title">
 <b>Example&nbsp;11.7.&nbsp;SQL Log Example</b>
 </p>
 <div class="example-contents">
-<pre class="screen"> 2012-11-29 10:40:40.250 10 INSERT INTO TEST_CLOB VALUES (1,'Ut enim ad minima veniam, quis nostrum exercitationem ...') 
+<pre class="screen"> 2012-11-29 10:40:40.250 10 INSERT INTO TEST_CLOB VALUES (1,'Ut wisi enim ad minim veniam, quis nostrud exerci') 
  2012-11-29 10:40:40.250 1 INSERT INTO SYSTEM_LOBS.LOB_IDS VALUES(?, ?, ?, ?) (1,49,0,40)
  2012-11-29 10:40:40.250 1 COMMIT 
  2012-11-29 10:40:40.265 1 CALL SYSTEM_LOBS.ALLOC_BLOCKS(?, ?, ?) (1,0,1)
@@ -2330,7 +2260,7 @@
 </div>
 </div>
 <br class="example-break">
-<a name="N15462" class="indexterm"></a>
+<a name="N152D3" class="indexterm"></a>
 <p>
 <span class="bold"><strong>SET DATABASE GC</strong></span>
 </p>
@@ -2341,12 +2271,12 @@
 <code class="literal">&lt;set database gc statement&gt; ::= SET DATABASE GC
       &lt;unsigned integer literal&gt;</code>
 </p>
-<p>In previous versions, an optional property which forced calls
-      to <code class="literal">System.gc() </code>after the specified number of row
-      operations. This has no effect from version 2.5.</p>
+<p>In previous versions an optional property which forced calls to
+      <code class="literal">System.gc() </code>after the specified number of row
+      operations. This has no effect from version 2.5.0.</p>
 <p>Only a user with the DBA role can execute this
       statement.</p>
-<a name="N15478" class="indexterm"></a>
+<a name="N152E9" class="indexterm"></a>
 <p>
 <span class="bold"><strong>SET DATABASE TEXT TABLE
       DEFAULTS</strong></span>
@@ -2367,7 +2297,7 @@
       chapter.</p>
 <p>Only a user with the DBA role can execute this
       statement.</p>
-<a name="N1548F" class="indexterm"></a>
+<a name="N15300" class="indexterm"></a>
 <p>
 <span class="bold"><strong>SET DATABASE TRANSACTION
       CONTROL</strong></span>
@@ -2388,7 +2318,7 @@
       statement.</p>
 <p>This is equivalent to the connection property
       <code class="literal">hsqldb.tx</code>.</p>
-<a name="N154AB" class="indexterm"></a>
+<a name="N1531C" class="indexterm"></a>
 <p>
 <span class="bold"><strong>SET DATABASE TRANSACTION ROLLBACK ON
       CONFLICT</strong></span>
@@ -2415,7 +2345,7 @@
       statement.</p>
 <p>This is equivalent to the connection property
       <code class="literal">hsqldb.tx_conflict_rollback</code>.</p>
-<a name="N154C7" class="indexterm"></a>
+<a name="N15338" class="indexterm"></a>
 <p>
 <span class="bold"><strong>SET DATABASE TRANSACTION ROLLBACK ON
       INTERRUPT</strong></span>
@@ -2438,7 +2368,7 @@
       statement.</p>
 <p>This is equivalent to the connection property
       <code class="literal">hsqldb.tx_conflict_rollback</code>.</p>
-<a name="N154E3" class="indexterm"></a>
+<a name="N15354" class="indexterm"></a>
 <p>
 <span class="bold"><strong>SET DATABASE DEFAULT ISOLATION
       LEVEL</strong></span>
@@ -2459,7 +2389,7 @@
       statement.</p>
 <p>This is equivalent to the connection property
       <code class="literal">hsqldb.tx_level</code>.</p>
-<a name="N154FD" class="indexterm"></a>
+<a name="N1536E" class="indexterm"></a>
 <p>
 <span class="bold"><strong>SET DATABASE UNIQUE
       NAME</strong></span>
@@ -2480,7 +2410,7 @@
       spaces.</p>
 <p>Only a user with the DBA role can execute this
       statement.</p>
-<a name="N15512" class="indexterm"></a>
+<a name="N15383" class="indexterm"></a>
 <p>
 <span class="bold"><strong>SET TABLE TYPE</strong></span>
 </p>
@@ -2516,7 +2446,7 @@
       as it is practical, it is best to set the non-conforming defaults to
       TRUE in order to improve the quality of the database
       application.</p>
-<a name="N1552B" class="indexterm"></a>
+<a name="N1539C" class="indexterm"></a>
 <p>
 <span class="bold"><strong>SET DATABASE SQL RESTRICT
       EXEC</strong></span>
@@ -2541,7 +2471,7 @@
       statement.</p>
 <p>This is equivalent to the connection property
       <code class="literal">sql.restrict_exec</code>.</p>
-<a name="N1554B" class="indexterm"></a>
+<a name="N153BC" class="indexterm"></a>
 <p>
 <span class="bold"><strong>SET DATABASE SQL
       SIZE</strong></span>
@@ -2562,7 +2492,7 @@
       statement.</p>
 <p>This is equivalent to the connection property
       <code class="literal">sql.enforce_size</code>.</p>
-<a name="N1556B" class="indexterm"></a>
+<a name="N153DC" class="indexterm"></a>
 <p>
 <span class="bold"><strong>SET DATABASE SQL
       NAMES</strong></span>
@@ -2586,7 +2516,7 @@
       statement.</p>
 <p>This is equivalent to the connection property
       <code class="literal">sql.enforce_names</code>.</p>
-<a name="N1558A" class="indexterm"></a>
+<a name="N153FB" class="indexterm"></a>
 <p>
 <span class="bold"><strong>SET DATABASE SQL REGULAR
       NAMES</strong></span>
@@ -2612,7 +2542,7 @@
       statement.</p>
 <p>This is equivalent to the connection property
       <code class="literal">sql.regular_names</code>.</p>
-<a name="N155A7" class="indexterm"></a>
+<a name="N15418" class="indexterm"></a>
 <p>
 <span class="bold"><strong>SET DATABASE SQL
       REFERENCES</strong></span>
@@ -2639,7 +2569,7 @@
       statement.</p>
 <p>This is equivalent to the connection property
       <code class="literal">sql.enforce_refs</code>.</p>
-<a name="N155C9" class="indexterm"></a>
+<a name="N1543A" class="indexterm"></a>
 <p>
 <span class="bold"><strong>SET DATABASE SQL
       TYPES</strong></span>
@@ -2666,7 +2596,7 @@
       statement.</p>
 <p>This is equivalent to the connection property
       <code class="literal">sql.enforce_type</code>.</p>
-<a name="N155ED" class="indexterm"></a>
+<a name="N1545E" class="indexterm"></a>
 <p>
 <span class="bold"><strong>SET DATABASE SQL TDC
       DELETE</strong></span>
@@ -2694,7 +2624,7 @@
       statement.</p>
 <p>This is equivalent to the connection property
       <code class="literal">sql.enforce_tdc_delete</code>.</p>
-<a name="N1560E" class="indexterm"></a>
+<a name="N1547F" class="indexterm"></a>
 <p>
 <span class="bold"><strong>SET DATABASE SQL TDC
       UPDATE</strong></span>
@@ -2722,7 +2652,7 @@
       statement.</p>
 <p>This is equivalent to the connection property
       <code class="literal">sql.enforce_tdc_update</code>.</p>
-<a name="N15630" class="indexterm"></a>
+<a name="N154A1" class="indexterm"></a>
 <p>
 <span class="bold"><strong>SET DATABASE SQL TRANSLATE TTI
       TYPES</strong></span>
@@ -2753,7 +2683,7 @@
       statement.</p>
 <p>This is equivalent to the connection property
       <code class="literal">jdbc.translate_tti_types</code>.</p>
-<a name="N15658" class="indexterm"></a>
+<a name="N154C9" class="indexterm"></a>
 <p>
 <span class="bold"><strong>SET DATABASE SQL CHARACTER
       LITERAL</strong></span>
@@ -2781,34 +2711,7 @@
       statement.</p>
 <p>This is equivalent to the connection property
       <code class="literal">sql.char_literal</code>.</p>
-<a name="N1568E" class="indexterm"></a>
-<p>
-<span class="bold"><strong>SET DATABASE SQL TRUNCATE
-      TRAILING</strong></span>
-</p>
-<p>
-<span class="emphasis"><em>set database sql truncate
-      trailing</em></span>
-</p>
-<p>
-<code class="literal">&lt;set database sql truncate trailing&gt; ::= SET
-      DATABASE SQL TRUNCATE TRAILING { TRUE | FALSE }</code>
-</p>
-<p>By default, this property is <code class="literal">TRUE</code>, Whan a
-      string that is longer than the maximum size of a column is inserted,
-      spaces at the end are removed to reduce the length of the string to the
-      maximum size of the column. If this is not possible, an exception is
-      raised.</p>
-<p>When the property is set to <code class="literal">FALSE</code>, no
-      truncation take place and an exception is always raised. This behaviour
-      is common to some other database engines.</p>
-<p>SQL Standard requires the default behaviour.</p>
-<p>The property is <code class="literal">TRUE</code> by default.</p>
-<p>Only a user with the DBA role can execute this
-      statement.</p>
-<p>This is equivalent to the connection property
-      <code class="literal">sql.truncate_trailing</code>.</p>
-<a name="N156B5" class="indexterm"></a>
+<a name="N154FF" class="indexterm"></a>
 <p>
 <span class="bold"><strong>SET DATABASE SQL CONCAT
       NULLS</strong></span>
@@ -2833,7 +2736,7 @@
       statement.</p>
 <p>This is equivalent to the connection property
       <code class="literal">sql.concat_nulls</code>.</p>
-<a name="N156DF" class="indexterm"></a>
+<a name="N15529" class="indexterm"></a>
 <p>
 <span class="bold"><strong>SET DATABASE SQL UNIQUE
       NULLS</strong></span>
@@ -2863,7 +2766,7 @@
       statement.</p>
 <p>This is equivalent to the connection property
       <code class="literal">sql.unique_nulls</code>.</p>
-<a name="N1570F" class="indexterm"></a>
+<a name="N15559" class="indexterm"></a>
 <p>
 <span class="bold"><strong>SET DATABASE SQL CONVERT
       TRUNCATE</strong></span>
@@ -2891,7 +2794,7 @@
       statement.</p>
 <p>This is equivalent to the connection property
       <code class="literal">sql.convert_trunc</code>.</p>
-<a name="N15737" class="indexterm"></a>
+<a name="N15581" class="indexterm"></a>
 <p>
 <span class="bold"><strong>SET DATABASE SQL AVG
       SCALE</strong></span>
@@ -2917,7 +2820,7 @@
       statement.</p>
 <p>This is equivalent to the connection property
       <code class="literal">sql.avg_scale</code>.</p>
-<a name="N15756" class="indexterm"></a>
+<a name="N155A0" class="indexterm"></a>
 <p>
 <span class="bold"><strong>SET DATABASE SQL DOUBLE
       NAN</strong></span>
@@ -2940,7 +2843,7 @@
       statement.</p>
 <p>This is equivalent to the connection property
       <code class="literal">sql.double_nan</code>.</p>
-<a name="N15784" class="indexterm"></a>
+<a name="N155CE" class="indexterm"></a>
 <p>
 <span class="bold"><strong>SET DATABASE SQL NULLS
       FIRST</strong></span>
@@ -2961,7 +2864,7 @@
       statement.</p>
 <p>This is equivalent to the connection property
       <code class="literal">sql.nulls_first</code>.</p>
-<a name="N157A4" class="indexterm"></a>
+<a name="N155EE" class="indexterm"></a>
 <p>
 <span class="bold"><strong>SET DATABASE SQL NULLS
       ORDER</strong></span>
@@ -2988,7 +2891,7 @@
       statement.</p>
 <p>This is equivalent to the connection property
       <code class="literal">sql.nulls_order</code>.</p>
-<a name="N157CB" class="indexterm"></a>
+<a name="N15615" class="indexterm"></a>
 <p>
 <span class="bold"><strong>SET DATABASE SQL
       IGNORECASE</strong></span>
@@ -3014,7 +2917,7 @@
       statement.</p>
 <p>This is equivalent to the connection property
       <code class="literal">sql.ignore_case</code>.</p>
-<a name="N157F9" class="indexterm"></a>
+<a name="N15643" class="indexterm"></a>
 <p>
 <span class="bold"><strong>SET DATABASE SQL LOWER CASE
       IDENTIFIER</strong></span>
@@ -3029,10 +2932,10 @@
 </p>
 <p>This property is <code class="literal">FALSE</code> by default and should
       only be used in special circumstances where additional compatibility
-      with MySQL or PostgreSQL is required.</p>
+      MySQL or PostgreSQL is required.</p>
 <p>When the property is <code class="literal">TRUE</code>, the names of
       column, tables and schemas are returned from JDBC ResultSetMetaData
-      methods in lowercase instead of uppercase if the database objects were
+      methods in lowercase instead of uppercase if the database objects where
       created as unquoted identifiers. Quoted identifier names are still
       returned in the original case.</p>
 <p>The property is <code class="literal">FALSE</code> by default.</p>
@@ -3040,7 +2943,7 @@
       statement.</p>
 <p>This is equivalent to the connection property
       <code class="literal">sql.lowercase_ident</code>.</p>
-<a name="N1581E" class="indexterm"></a>
+<a name="N15668" class="indexterm"></a>
 <p>
 <span class="bold"><strong>SET DATABASE SQL LIVE
       OBJECT</strong></span>
@@ -3060,7 +2963,7 @@
       all.</p>
 <p>This is equivalent to the connection property
       <code class="literal">sql.live_object</code>.</p>
-<a name="N15845" class="indexterm"></a>
+<a name="N1568F" class="indexterm"></a>
 <p>
 <span class="bold"><strong>SET DATABASE SQL SYS INDEX
       NAMES</strong></span>
@@ -3086,7 +2989,7 @@
       statement.</p>
 <p>This is equivalent to the connection property
       <code class="literal">sql.sys_index_names</code>.</p>
-<a name="N15864" class="indexterm"></a>
+<a name="N156AE" class="indexterm"></a>
 <p>
 <span class="bold"><strong>SET DATABASE SQL SYNTAX
       DB2</strong></span>
@@ -3111,7 +3014,7 @@
       statement.</p>
 <p>This is equivalent to the connection property
       <code class="literal">sql.syntax_db2</code>.</p>
-<a name="N15887" class="indexterm"></a>
+<a name="N156D1" class="indexterm"></a>
 <p>
 <span class="bold"><strong>SET DATABASE SQL SYNTAX
       MSS</strong></span>
@@ -3134,7 +3037,7 @@
       statement.</p>
 <p>This is equivalent to the connection property
       <code class="literal">sql.syntax_mss</code>.</p>
-<a name="N158AA" class="indexterm"></a>
+<a name="N156F4" class="indexterm"></a>
 <p>
 <span class="bold"><strong>SET DATABASE SQL SYNTAX
       MYS</strong></span>
@@ -3162,7 +3065,7 @@
       statement.</p>
 <p>This is equivalent to the connection property
       <code class="literal">sql.syntax_mys</code>.</p>
-<a name="N158D1" class="indexterm"></a>
+<a name="N1571B" class="indexterm"></a>
 <p>
 <span class="bold"><strong>SET DATABASE SQL SYNTAX
       ORA</strong></span>
@@ -3188,7 +3091,7 @@
       statement.</p>
 <p>This is equivalent to the connection property
       <code class="literal">sql.syntax_ora</code>.</p>
-<a name="N158F0" class="indexterm"></a>
+<a name="N1573A" class="indexterm"></a>
 <p>
 <span class="bold"><strong>SET DATABASE SQL SYNTAX
       PGS</strong></span>
@@ -3217,7 +3120,7 @@
       statement.</p>
 <p>This is equivalent to the connection property
       <code class="literal">sql.syntax_pgs</code>.</p>
-<a name="N15920" class="indexterm"></a>
+<a name="N1576A" class="indexterm"></a>
 <p>
 <span class="bold"><strong>SET DATABASE REFERENTIAL
       INTEGRITY</strong></span>
@@ -3245,7 +3148,7 @@
 <p>A query example to return the rows in a foreign key table that
       have no parent is given below:</p>
 <div class="example">
-<a name="N15937"></a>
+<a name="N15781"></a>
 <p class="title">
 <b>Example&nbsp;11.8.&nbsp;Finding foreign key rows with no parents after a bulk
         import</b>
@@ -3270,7 +3173,7 @@
 </div>
 <p>These statements control the memory and other settings for
       database persistence.</p>
-<a name="N15944" class="indexterm"></a>
+<a name="N1578E" class="indexterm"></a>
 <p>
 <span class="bold"><strong>SET FILES BACKUP INCREMENT
       </strong></span>
@@ -3295,7 +3198,7 @@
       statement.</p>
 <p>This is equivalent to the connection property
       <code class="literal">hsqldb.inc_backup</code>.</p>
-<a name="N15967" class="indexterm"></a>
+<a name="N157B1" class="indexterm"></a>
 <p>
 <span class="bold"><strong>SET FILES CACHE ROWS</strong></span>
 </p>
@@ -3313,7 +3216,7 @@
       statement.</p>
 <p>This is equivalent to the connection property
       <code class="literal">hsqldb.cache_rows</code>.</p>
-<a name="N15981" class="indexterm"></a>
+<a name="N157CB" class="indexterm"></a>
 <p>
 <span class="bold"><strong>SET FILES CACHE SIZE</strong></span>
 </p>
@@ -3333,7 +3236,7 @@
       statement.</p>
 <p>This is equivalent to the connection property
       <code class="literal">hsqldb.cache_size</code>.</p>
-<a name="N1599B" class="indexterm"></a>
+<a name="N157E5" class="indexterm"></a>
 <p>
 <span class="bold"><strong>SET FILES DEFRAG</strong></span>
 </p>
@@ -3362,7 +3265,7 @@
       statement.</p>
 <p>This is equivalent to the connection property
       <code class="literal">hsqldb.defrag_limit</code>.</p>
-<a name="N159C1" class="indexterm"></a>
+<a name="N1580B" class="indexterm"></a>
 <p>
 <span class="bold"><strong>SET FILES LOG</strong></span>
 </p>
@@ -3380,7 +3283,7 @@
       statement.</p>
 <p>This is equivalent to the connection property
       <code class="literal">hsqldb.log_data</code>.</p>
-<a name="N159D9" class="indexterm"></a>
+<a name="N15823" class="indexterm"></a>
 <p>
 <span class="bold"><strong>SET FILES LOG SIZE</strong></span>
 </p>
@@ -3400,7 +3303,7 @@
       statement.</p>
 <p>This is equivalent to the connection property
       <code class="literal">hsqldb.log_size</code>.</p>
-<a name="N159F7" class="indexterm"></a>
+<a name="N15841" class="indexterm"></a>
 <p>
 <span class="bold"><strong>SET FILES NIO</strong></span>
 </p>
@@ -3418,7 +3321,7 @@
       statement.</p>
 <p>This is equivalent to the connection property
       <code class="literal">hsqldb.nio_data_file</code>.</p>
-<a name="N15A12" class="indexterm"></a>
+<a name="N1585C" class="indexterm"></a>
 <p>
 <span class="bold"><strong>SET FILES NIO SIZE</strong></span>
 </p>
@@ -3437,7 +3340,7 @@
       statement.</p>
 <p>This is equivalent to the connection property
       <code class="literal">hsqldb.nio_max_size</code>.</p>
-<a name="N15A2A" class="indexterm"></a>
+<a name="N15874" class="indexterm"></a>
 <p>
 <span class="bold"><strong>SET FILES WRITE
       DELAY</strong></span>
@@ -3470,7 +3373,7 @@
 <p>This is equivalent to the connection properties
       <code class="literal">hsqldb.write_delay</code> and
       <code class="literal">hsqldb.write_delay_millis</code>.</p>
-<a name="N15A4D" class="indexterm"></a>
+<a name="N15897" class="indexterm"></a>
 <p>
 <span class="bold"><strong>SET FILES SCALE</strong></span>
 </p>
@@ -3502,7 +3405,7 @@
       statement.</p>
 <p>This is equivalent to the connection property
       <code class="literal">hsqldb.cache_file_scale</code>.</p>
-<a name="N15A71" class="indexterm"></a>
+<a name="N158BB" class="indexterm"></a>
 <p>
 <span class="bold"><strong>SET FILES LOB SCALE</strong></span>
 </p>
@@ -3528,7 +3431,7 @@
       statement.</p>
 <p>This is equivalent to the connection property
       <code class="literal">hsqldb.lob_file_scale</code>.</p>
-<a name="N15A8E" class="indexterm"></a>
+<a name="N158D8" class="indexterm"></a>
 <p>
 <span class="bold"><strong>SET FILES LOB
       COMPRESSED</strong></span>
@@ -3550,7 +3453,7 @@
       statement.</p>
 <p>This is equivalent to the connection property
       <code class="literal">hsqldb.lob_compressed</code>.</p>
-<a name="N15AAB" class="indexterm"></a>
+<a name="N158F5" class="indexterm"></a>
 <p>
 <span class="bold"><strong>SET FILES SCRIPT
       FORMAT</strong></span>
@@ -3568,7 +3471,7 @@
       command causes a CHECKPOINT.</p>
 <p>Only a user with the DBA role can execute this
       statement.</p>
-<a name="N15AC1" class="indexterm"></a>
+<a name="N1590B" class="indexterm"></a>
 <p>
 <span class="bold"><strong>SET FILES SPACE</strong></span>
 </p>
@@ -3586,7 +3489,7 @@
       statement below.</p>
 <p>Only a user with the DBA role can execute this
       statement.</p>
-<a name="N15AD4" class="indexterm"></a>
+<a name="N1591E" class="indexterm"></a>
 <p>
 <span class="bold"><strong>SET TABLE NEW SPACE</strong></span>
 </p>
@@ -3616,7 +3519,7 @@
 <p>Two settings are available for authentication control.</p>
 <p>When the default password authentication is used, the passwords
       can be checked for complexity according to administrative rules</p>
-<a name="N15AF2" class="indexterm"></a>
+<a name="N1593C" class="indexterm"></a>
 <p>
 <span class="bold"><strong>SET DATABASE PASSWORD CHECK
       FUNCTION</strong></span>
@@ -3666,7 +3569,7 @@
       completely with a function that uses external authentication servers,
       such as LDAP. This function is called each time a user connects to the
       database.</p>
-<a name="N15B20" class="indexterm"></a>
+<a name="N1596A" class="indexterm"></a>
 <p>
 <span class="bold"><strong>SET DATABASE AUTHENTICATION
       FUNCTION</strong></span>
@@ -3717,7 +3620,7 @@
 </div>
 </div>
 <HR xmlns:xi="http://www.w3.org/2001/XInclude">
-<P xmlns:xi="http://www.w3.org/2001/XInclude" class="svnrev">$Revision: 6645 $</P>
+<P xmlns:xi="http://www.w3.org/2001/XInclude" class="svnrev">$Revision: 6369 $</P>
 <div class="navfooter">
 <hr>
 <table summary="Navigation footer" width="100%">

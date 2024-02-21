@@ -1,4 +1,4 @@
-/* Copyright (c) 2001-2022, The HSQL Development Group
+/* Copyright (c) 2001-2021, The HSQL Development Group
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -43,7 +43,7 @@ import org.hsqldb.types.Types;
  *
  * @author Campbell Burnet (campbell-burnet@users dot sourceforge.net)
  * @author Fred Toussi (fredt@users dot sourceforge.net)
- * @version 2.7.0
+ * @version 2.4.0
  * @since 1.9.0
  */
 public class ExpressionArithmetic extends Expression {
@@ -231,10 +231,8 @@ public class ExpressionArithmetic extends Expression {
     }
 
     public List resolveColumnReferences(Session session,
-                                        RangeGroup rangeGroup, int rangeCount,
-                                        RangeGroup[] rangeGroups,
-                                        List unresolvedSet,
-                                        boolean acceptsSequences) {
+            RangeGroup rangeGroup, int rangeCount, RangeGroup[] rangeGroups,
+            List unresolvedSet, boolean acceptsSequences) {
 
         if (opType == OpTypes.VALUE) {
             return unresolvedSet;
@@ -284,11 +282,6 @@ public class ExpressionArithmetic extends Expression {
                 break;
 
             case OpTypes.ADD :
-                if (session.database.sqlSyntaxOra) {
-                    resolveTypesForArithmetic(session, parent);
-
-                    break;
-                }
 
                 // special case for concat using +
                 if ((nodes[LEFT].dataType != null && nodes[LEFT].dataType
@@ -510,14 +503,6 @@ public class ExpressionArithmetic extends Expression {
                 }
             }
         } else {
-            if (session.database.sqlSyntaxOra) {
-                if (nodes[LEFT].dataType.isNumberType()
-                        && nodes[RIGHT].dataType.isCharacterType()) {
-                    nodes[RIGHT] = new ExpressionOp(nodes[RIGHT],
-                                                    nodes[LEFT].dataType);
-                }
-            }
-
             dataType = nodes[LEFT].dataType.getCombinedType(session,
                     nodes[RIGHT].dataType, opType);
 

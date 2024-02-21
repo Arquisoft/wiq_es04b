@@ -1,4 +1,4 @@
-/* Copyright (c) 2001-2022, The HSQL Development Group
+/* Copyright (c) 2001-2021, The HSQL Development Group
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -149,7 +149,7 @@ import javax.swing.tree.TreePath;
  *
  * @author dmarshall@users
  * @author Bob Preston (sqlbob@users dot sourceforge.net)
- * @version 2.7.0
+ * @version 2.6.0
  * @since 1.7.0
  */
 public class DatabaseManagerSwing extends JFrame
@@ -195,14 +195,14 @@ implements ActionListener, WindowListener, KeyListener, MouseListener {
         "See the HSQLDB Utilities Guide, forums and mailing lists \n"
         + "at http://hsqldb.org.\n\n"
         + "Please paste the following version identifier with any\n"
-        + "problem reports or help requests:  $Revision: 6544 $"
+        + "problem reports or help requests:  $Revision: 6271 $"
         + (TT_AVAILABLE ? ""
                         : ("\n\nTransferTool classes are not in CLASSPATH.\n"
                            + "To enable the Tools menu, add 'transfer.jar' "
                            + "to your class path."));
     private static final String ABOUT_TEXT =
-        "$Revision: 6544 $ of DatabaseManagerSwing\n\n"
-        + "Copyright (c) 2001-2022, The HSQL Development Group.\n"
+        "$Revision: 6271 $ of DatabaseManagerSwing\n\n"
+        + "Copyright (c) 2001-2021, The HSQL Development Group.\n"
         + "http://hsqldb.org  (Utilities Guide available at this site).\n\n\n"
         + "You may use and redistribute according to the HSQLDB\n"
         + "license documented in the source code and at the web\n"
@@ -329,7 +329,6 @@ implements ActionListener, WindowListener, KeyListener, MouseListener {
     /**
      * Run with --help switch for usage instructions.
      *
-     * @param arg arguments
      * @throws IllegalArgumentException for the obvious reason
      */
     public static void main(String[] arg) {
@@ -462,11 +461,9 @@ implements ActionListener, WindowListener, KeyListener, MouseListener {
     }
 
     /**
-     * This stuff is all quick, except for the refreshTree(). This unit can be
-     * kicked off in main Gui thread. The refreshTree will be backgrounded and
-     * this method will return.
-     *
-     * @param c Connection
+     * This stuff is all quick, except for the refreshTree().
+     * This unit can be kicked off in main Gui thread.  The refreshTree
+     * will be backgrounded and this method will return.
      */
     public void connect(Connection c) {
 
@@ -2002,7 +1999,7 @@ implements ActionListener, WindowListener, KeyListener, MouseListener {
                         result    += " WHERE " + quoteObjectName(column);
 
                         if (isChar) {
-                            result += " LIKE '%%'";
+                            result += " LIKE \'%%\'";
                         } else {
                             result += " = ";
                         }
@@ -2040,7 +2037,7 @@ implements ActionListener, WindowListener, KeyListener, MouseListener {
                         result    += " WHERE " + quoteObjectName(column);
 
                         if (isChar) {
-                            result += " LIKE '%%'";
+                            result += " LIKE \'%%\'";
                         } else {
                             result += " = ";
                         }
@@ -2090,7 +2087,7 @@ implements ActionListener, WindowListener, KeyListener, MouseListener {
                     // in the string.  Makes is more obvious to the user when
                     // they need to use a string
                     if (childName.contains("CHAR")) {
-                        quote = "''";
+                        quote = "\'\'";
                     } else {
                         quote = "";
                     }
@@ -2824,7 +2821,7 @@ implements ActionListener, WindowListener, KeyListener, MouseListener {
                 } catch (IOException ioe) {
                     throw new IOException("Failed to read preferences file '"
                                           + prefsFile + "':  "
-                                          + ioe.getMessage(), ioe);
+                                          + ioe.getMessage());
                 }
 
                 tmpString = props.getProperty("autoRefresh");

@@ -1,4 +1,4 @@
-/* Copyright (c) 2001-2022, The HSQL Development Group
+/* Copyright (c) 2001-2021, The HSQL Development Group
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -31,8 +31,6 @@
 
 package org.hsqldb;
 
-import java.util.TimeZone;
-
 import org.hsqldb.HsqlNameManager.HsqlName;
 import org.hsqldb.Session.TimeoutManager;
 import org.hsqldb.dbinfo.DatabaseInformation;
@@ -63,7 +61,7 @@ import org.hsqldb.types.Collation;
  * It holds the data structures that form an HSQLDB database instance.
  *
  * @author Fred Toussi (fredt@users dot sourceforge.net)
- * @version 2.7.0
+ * @version 2.6.1
  * @since 1.9.0
  */
 public class Database {
@@ -112,20 +110,18 @@ public class Database {
     public boolean                sqlIgnoreCase          = false;
     public boolean                sqlLiveObject          = false;
     public boolean                sqlLongvarIsLob        = false;
-    public boolean                sqlLowerCaseIdentifier = false;
     public boolean                sqlNullsFirst          = true;
     public boolean                sqlNullsOrder          = true;
-    public int                    sqlMaxRecursive        = 256;
+    public boolean                sqlSysIndexNames       = false;
     public boolean                sqlRegularNames        = true;
+    public boolean                sqlTranslateTTI        = true;
+    public boolean                sqlUniqueNulls         = true;
+    public boolean                sqlLowerCaseIdentifier = false;
     public boolean                sqlSyntaxDb2           = false;
     public boolean                sqlSyntaxMss           = false;
     public boolean                sqlSyntaxMys           = false;
     public boolean                sqlSyntaxOra           = false;
     public boolean                sqlSyntaxPgs           = false;
-    public boolean                sqlSysIndexNames       = false;
-    public boolean                sqlTranslateTTI        = true;
-    public boolean                sqlTruncateTrailing    = true;
-    public boolean                sqlUniqueNulls         = true;
     public int                    recoveryMode           = 0;
     private boolean               isReferentialIntegrity = true;
     public HsqlDatabaseProperties databaseProperties;
@@ -393,7 +389,7 @@ public class Database {
      * Throws if username or password is invalid.
      */
     synchronized Session connect(String username, String password,
-                                 TimeZone zone) {
+                                 String zoneString, int timeZoneSeconds) {
 
         if (getState() != DATABASE_ONLINE) {
             throw Error.error(ErrorCode.X_08001);
@@ -405,7 +401,7 @@ public class Database {
 
         User user = userManager.getUser(username, password);
         Session session = sessionManager.newSession(this, user,
-            databaseReadOnly, true, zone);
+            databaseReadOnly, true, zoneString, timeZoneSeconds);
 
         return session;
     }
@@ -548,20 +544,12 @@ public class Database {
         sqlConvertTruncate = mode;
     }
 
-    public void setTruncateTrailing(boolean mode) {
-        sqlTruncateTrailing = mode;
-    }
-
     public void setDoubleNaN(boolean mode) {
         sqlDoubleNaN = mode;
     }
 
     public void setAvgScale(int scale) {
         sqlAvgScale = scale;
-    }
-
-    public void setMaxRecursive(int value) {
-        sqlMaxRecursive = value;
     }
 
     public void setLongVarIsLob(boolean mode) {
@@ -614,7 +602,7 @@ public class Database {
     }
 
     /**
-     *  Closes this Database using the specified mode.
+     *  Closes this Database using the specified mode. <p>
      *
      * <ol>
      *  <LI> closemode -1 performs SHUTDOWN IMMEDIATELY, equivalent
@@ -662,8 +650,8 @@ public class Database {
             if (result && closemode == CLOSEMODE_COMPACT) {
                 clearStructures();
                 reopen();
-                txManager.setSystemChangeNumber(
-                    txManager.getSystemChangeNumber() + 1);
+                txManager.setGlobalChangeTimestamp(
+                    txManager.getGlobalChangeTimestamp() + 1);
                 setState(DATABASE_CLOSING);
                 sessionManager.closeAllSessions();
                 logger.close(CLOSEMODE_NORMAL);
@@ -899,7 +887,7 @@ public class Database {
      *
      * The runner is called at second intervals. It handles the countdown for
      * each session currently running a statement with timeout. If timeout
-     * is reached, the runner aborts the statement.
+     * is reached, the runner aborts the statement.<p>
      */
     static class TimeoutRunner implements Runnable {
 
@@ -911,8 +899,6 @@ public class Database {
 
             try {
                 synchronized (this) {
-                    long systemMillis = System.currentTimeMillis();
-
                     for (int i = 0; i < timeoutList.size(); i++) {
                         TimeoutManager timeOut =
                             (TimeoutManager) timeoutList.get(i);
@@ -925,7 +911,7 @@ public class Database {
                             continue;
                         }
 
-                        boolean result = timeOut.checkTimeout(systemMillis);
+                        boolean result = timeOut.checkTimeout();
 
                         if (result) {
                             abortCount++;

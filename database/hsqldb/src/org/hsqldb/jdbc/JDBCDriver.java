@@ -1,4 +1,4 @@
-/* Copyright (c) 2001-2022, The HSQL Development Group
+/* Copyright (c) 2001-2021, The HSQL Development Group
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -107,7 +107,7 @@ import org.hsqldb.persist.HsqlProperties;
  * <hr>
  * @author Campbell Burnet (campbell-burnet@users dot sourceforge.net)
  * @author Fred Toussi (fredt@users dot sourceforge.net)
- * @version 2.7.0
+ * @version 2.4.0
  * @since HSQLDB 1.9.0
  * </div> <!-- end release-specific documentation -->
  *
@@ -115,11 +115,6 @@ import org.hsqldb.persist.HsqlProperties;
  */
 public class JDBCDriver implements Driver {
 
-
-    /**
-     * name of loginTimeout property, can not change
-     */
-    static final String conn_loginTimeout = "loginTimeout";
     /**
      * Default constructor
      */
@@ -223,6 +218,10 @@ public class JDBCDriver implements Driver {
                               DatabaseURL.S_URL_INTERNAL.length())) {
             JDBCConnection conn = threadConnection.get();
 
+            if (conn == null) {
+                return null;
+            }
+
             return conn;
         }
 
@@ -260,7 +259,7 @@ public class JDBCDriver implements Driver {
         long timeout = 0;
 
         if (info != null) {
-            timeout = HsqlProperties.getIntegerProperty(info, conn_loginTimeout, 0);
+            timeout = HsqlProperties.getIntegerProperty(info, "loginTimeout", 0);
         }
 
         props.addProperties(info);
@@ -509,7 +508,8 @@ public class JDBCDriver implements Driver {
     /**
      * As a separate instance of this class is registered with DriverManager
      * for each class loader, the threadConnection is not declared as static.
-     * The registered instance is kept to allow access to its threadConnection.
+     * The registered instance is kept to allow access to the its
+     * threadConnection.
      *
      */
 
