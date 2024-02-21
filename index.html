@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="generator" content="Asciidoctor 2.0.20">
+<meta name="generator" content="Asciidoctor 2.0.21">
 <title>Template</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
@@ -140,7 +140,7 @@ p a>code:hover{color:rgba(0,0,0,.9)}
 #content::before{content:none}
 #header>h1:first-child{color:rgba(0,0,0,.85);margin-top:2.25rem;margin-bottom:0}
 #header>h1:first-child+#toc{margin-top:8px;border-top:1px solid #dddddf}
-#header>h1:only-child,body.toc2 #header>h1:nth-last-child(2){border-bottom:1px solid #dddddf;padding-bottom:8px}
+#header>h1:only-child{border-bottom:1px solid #dddddf;padding-bottom:8px}
 #header .details{border-bottom:1px solid #dddddf;line-height:1.45;padding-top:.25em;padding-bottom:.25em;padding-left:.25em;color:rgba(0,0,0,.6);display:flex;flex-flow:row wrap}
 #header .details span:first-child{margin-left:-.125em}
 #header .details span.email a{color:rgba(0,0,0,.85)}
@@ -162,6 +162,7 @@ p a>code:hover{color:rgba(0,0,0,.9)}
 #toctitle{color:#7a2518;font-size:1.2em}
 @media screen and (min-width:768px){#toctitle{font-size:1.375em}
 body.toc2{padding-left:15em;padding-right:0}
+body.toc2 #header>h1:nth-last-child(2){border-bottom:1px solid #dddddf;padding-bottom:8px}
 #toc.toc2{margin-top:0!important;background:#f8f8f7;position:fixed;width:15em;left:0;top:0;border-right:1px solid #e7e7e9;border-top-width:0!important;border-bottom-width:0!important;z-index:1000;padding:1.25em 1em;height:100%;overflow:auto}
 #toc.toc2 #toctitle{margin-top:0;margin-bottom:.8rem;font-size:1.2em}
 #toc.toc2>ul{font-size:.9em;margin-bottom:0}
@@ -327,7 +328,7 @@ a.image{text-decoration:none;display:inline-block}
 a.image object{pointer-events:none}
 sup.footnote,sup.footnoteref{font-size:.875em;position:static;vertical-align:super}
 sup.footnote a,sup.footnoteref a{text-decoration:none}
-sup.footnote a:active,sup.footnoteref a:active{text-decoration:underline}
+sup.footnote a:active,sup.footnoteref a:active,#footnotes .footnote a:first-of-type:active{text-decoration:underline}
 #footnotes{padding-top:.75em;padding-bottom:.75em;margin-bottom:.625em}
 #footnotes hr{width:20%;min-width:6.25em;margin:-.25em 0 .75em;border-width:1px 0 0}
 #footnotes .footnote{padding:0 .375em 0 .225em;line-height:1.3334;font-size:.875em;margin-left:1.2em;margin-bottom:.2em}
@@ -509,7 +510,6 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </ul>
 </li>
 <li><a href="#section-technical-risks">11. Risks and Technical Debts</a></li>
-<li><a href="#section-glossary">12. Glossary</a></li>
 </ul>
 </div>
 </div>
@@ -1658,10 +1658,6 @@ The infrastructure features a single Docker container that hosts the Java Spring
 <div class="paragraph">
 <p>The domain model for our game includes entities such as <code>Question</code>, <code>Category</code>, <code>Player</code>, and <code>GameSession</code>. These are crucial for representing the game&#8217;s data and logic. The model serves as the basis for interactions within the application and between the application and the database.</p>
 </div>
-<div class="paragraph">
-<div class="title">Explanation:</div>
-<p>The <code>Question</code> entity encapsulates details of the trivia questions. <code>Category</code> classifies these questions into various topics. <code>Player</code> represents users and their interactions with the game, while <code>GameSession</code> maintains the state of play, including scores and progress.</p>
-</div>
 </div>
 <div class="sect2">
 <h3 id="_hexagonal_architecture">8.2. Hexagonal Architecture</h3>
@@ -2030,7 +2026,7 @@ more precisely down to a level of scenarios that can be discussed and evaluated.
 <thead>
 <tr>
 <th class="tableblock halign-left valign-top">Priority</th>
-<th class="tableblock halign-left valign-top">Risk/Debt</th>
+<th class="tableblock halign-left valign-top">Risk</th>
 <th class="tableblock halign-left valign-top">Description</th>
 </tr>
 </thead>
@@ -2063,6 +2059,22 @@ more precisely down to a level of scenarios that can be discussed and evaluated.
 <p>Know how docker works, what it is for, how it is used and what its alternatives could be.</p>
 </div></div></td>
 </tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 16.6666%;">
+<col style="width: 33.3333%;">
+<col style="width: 50.0001%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Priority</th>
+<th class="tableblock halign-left valign-top">Debt</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Low</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Microservices</p></td>
@@ -2072,81 +2084,25 @@ more precisely down to a level of scenarios that can be discussed and evaluated.
 </tr>
 </tbody>
 </table>
-<div style="page-break-after: always;"></div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="section-glossary">12. Glossary</h2>
-<div class="sectionbody">
-<div class="sidebarblock arc42help">
-<div class="content">
 <div class="paragraph">
-<div class="title">Contents</div>
-<p>The most important domain and technical terms that your stakeholders use when discussing the system.</p>
+<p>| Term | Definition</p>
 </div>
 <div class="paragraph">
-<p>You can also see the glossary as source for translations if you work in multi-language teams.</p>
+<p>|WikiData |A collaborative platform that provides structured data for Wikimedia projects, including Wikipedia.</p>
 </div>
 <div class="paragraph">
-<div class="title">Motivation</div>
-<p>You should clearly define your terms, so that all stakeholders</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>have an identical understanding of these terms</p>
-</li>
-<li>
-<p>do not use synonyms and homonyms</p>
-</li>
-</ul>
+<p>|Question | Entity that encapsulates details of the trivia questions.</p>
 </div>
 <div class="paragraph">
-<div class="title">Form</div>
-<p>A table with columns &lt;Term&gt; and &lt;Definition&gt;.</p>
+<p>|Category | Classifies questions into various topics, each question can only belong to one category.</p>
 </div>
 <div class="paragraph">
-<p>Potentially more columns in case you need translations.</p>
+<p>|Player | Represents users and their interactions with the game</p>
 </div>
 <div class="paragraph">
-<div class="title">Further Information</div>
-<p>See <a href="https://docs.arc42.org/section-12/">Glossary</a> in the arc42 documentation.</p>
-</div>
-</div>
+<p>|GameSession | Maintains the state of play, including scores and progress.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 66.6667%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Term</th>
-<th class="tableblock halign-left valign-top">Definition</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">WikiData</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">A collaborative platform that provides structured data for Wikimedia projects, including Wikipedia.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">IDE (Integrated Development Environment)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">A software application that provides comprehensive facilities to programmers for software development.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Docker</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">An open-source platform designed to automate the deployment of applications inside lightweight, portable containers.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Microservices</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">An architectural style that structures an application as a collection of small, independent services.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">API (Application Programming Interface)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">A set of protocols and tools for building software applications, allowing them to communicate with each other.</p></td>
-</tr>
-</tbody>
 </table>
 </div>
 </div>
@@ -2154,7 +2110,7 @@ more precisely down to a level of scenarios that can be discussed and evaluated.
 <div id="footer">
 <div id="footer-text">
 Version 8.2 EN<br>
-Last updated 2024-02-20 13:59:06 UTC
+Last updated 2024-02-21 20:10:47 UTC
 </div>
 </div>
 </body>
