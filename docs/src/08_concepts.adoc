@@ -9,9 +9,6 @@ The following concepts provide a foundation for the design and implementation of
 
 The domain model for our game includes entities such as `Question`, `Category`, `Player`, and `GameSession`. These are crucial for representing the game's data and logic. The model serves as the basis for interactions within the application and between the application and the database.
 
-.Explanation:
-The `Question` entity encapsulates details of the trivia questions. `Category` classifies these questions into various topics. `Player` represents users and their interactions with the game, while `GameSession` maintains the state of play, including scores and progress.
-
 === Hexagonal Architecture
 
 Our application is structured using hexagonal architecture principles, which prioritize the separation of core logic from peripheral concerns like user interface and external API interactions.
