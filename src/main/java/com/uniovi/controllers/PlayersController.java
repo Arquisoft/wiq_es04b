@@ -1,5 +1,6 @@
 package com.uniovi.controllers;
 
+import com.uniovi.configuration.SecurityConfig;
 import com.uniovi.entities.Player;
 import com.uniovi.services.PlayerService;
 import jakarta.servlet.http.HttpSession;
@@ -28,6 +29,9 @@ public class PlayersController {
 
     @GetMapping("/signup")
     public String showRegistrationForm(Model model){
+        if (SecurityConfig.isAuthenticated())
+            return "redirect:/home";
+
         if (model.containsAttribute("user")) {
             model.addAttribute("user", model.getAttribute("user"));
             return "/player/signup";
@@ -39,6 +43,9 @@ public class PlayersController {
 
     @PostMapping("/signup")
     public String registerUserAccount(@Valid @ModelAttribute("user") PlayerDto user, BindingResult result, Model model){
+        if (SecurityConfig.isAuthenticated())
+            return "redirect:/home";
+
         if(playerService.getUserByEmail(user.getEmail()).isPresent()){
             result.rejectValue("email", null,
                     "There is already an account registered with the same email");
@@ -65,6 +72,9 @@ public class PlayersController {
             model.addAttribute("error", session.getAttribute("loginErrorMessage"));
             System.out.println(session.getAttribute("loginErrorMessage"));
         }
+
+        if (SecurityConfig.isAuthenticated())
+            return "redirect:/home";
 
         return "/player/login";
     }
