@@ -3,29 +3,24 @@
 <head th:replace="~{fragments/head}"/>
 <body>
 <!-- Barra de Navegación superior -->
-<nav th:replace="fragments/nav"/>
+<nav th:replace="~{fragments/nav}"/>
 <div class="container">
     <h2>Registrate</h2>
-    <form class="form-horizontal" method="post" action="/signup">
+    <form class="form-horizontal" th:object="${user}" method="post" action="/signup">
         <div class="form-group">
-            <label class="control-label col-sm-2" for="nickname">Nombre de usuario:</label>
+            <label class="control-label col-sm-2" for="username">Nombre de usuario:</label>
             <div class="col-sm-10">
-                <input type="text" class="form-control" id="nickname" name="nickname"
+                <input type="text" class="form-control" id="username" name="username"
                        placeholder="wikiuser" required="true"/>
+                <span class="text-danger" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></span>
             </div>
         </div>
         <div class="form-group">
-            <label class="control-label col-sm-2" for="name">Nombre:</label>
+            <label class="control-label col-sm-2" for="email">Correo electrónico:</label>
             <div class="col-sm-10">
-                <input type="text" class="form-control" id="name" name="name"
-                       placeholder="Ejemplo: Juan" required="true"/>
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="control-label col-sm-2" for="lastName">Apellidos:</label>
-            <div class="col-sm-10">
-                <input type="text" class="form-control" id="lastName" name="lastName"
-                       placeholder="Ejemplo: Peréz Almonte" required="true"/>
+                <input type="text" class="form-control" id="email" name="email"
+                       placeholder="test@test.com" required="true" />
+
             </div>
         </div>
         <div class="form-group">
@@ -33,6 +28,7 @@
             <div class="col-sm-10">
                 <input type="password" id="password" class="form-control" name="password"
                        placeholder="Introduzca la contraseña" />
+                <span class="text-danger" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
             </div>
         </div>
         <div class="form-group">
@@ -40,6 +36,7 @@
             <div class="col-sm-10">
                 <input type="password" id="passwordConfirm" class="form-control" name="passwordConfirm"
                        placeholder="Repita la contraseña" />
+                <span class="text-danger" th:if="${#fields.hasErrors('passwordConfirm')}" th:errors="*{passwordConfirm}"></span>
             </div>
         </div>
         <div class="form-group">

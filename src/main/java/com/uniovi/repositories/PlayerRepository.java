@@ -5,5 +5,5 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface PlayerRepository extends CrudRepository<Player, Long> {
     Player findByEmail(String email);
-    Player findByNickname(String nickname);
+    Player findByUsername(String nickname);
 }

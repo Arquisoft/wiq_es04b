@@ -19,15 +19,7 @@ public class Player {
 
     @Column(unique = true, nullable = false)
     @NotEmpty
-    private String nickname;
-
-    @Column(nullable = false)
-    @NotEmpty
-    private String name;
-
-    @Column(nullable = false)
-    @NotEmpty
-    private String surname;
+    private String username;
 
     @Column(unique = true, nullable = false)
     private String email;
@@ -47,10 +39,8 @@ public class Player {
     @Transient
     private String passwordConfirm;
 
-    public Player(String nickname, String name, String surname, String email, String password) {
-        this.nickname = nickname;
-        this.name = name;
-        this.surname = surname;
+    public Player(String username, String email, String password) {
+        this.username = username;
         this.email = email;
         this.password = password;
     }

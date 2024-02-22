@@ -34,14 +34,12 @@ public class PlayerServiceImpl implements PlayerService {
             throw new IllegalArgumentException("Email already in use");
         }
 
-        if (playerRepository.findByNickname(dto.getNickname()) != null) {
-            throw new IllegalArgumentException("Nickname already in use");
+        if (playerRepository.findByUsername(dto.getUsername()) != null) {
+            throw new IllegalArgumentException("Username already in use");
         }
 
         Player player = new Player(
-            dto.getNickname(),
-            dto.getName(),
-            dto.getLastName(),
+            dto.getUsername(),
             dto.getEmail(),
             passwordEncoder.encode(dto.getPassword())
         );
@@ -65,5 +63,10 @@ public class PlayerServiceImpl implements PlayerService {
     @Override
     public Optional<Player> getUserByEmail(String email) {
         return Optional.ofNullable(playerRepository.findByEmail(email));
+    }
+
+    @Override
+    public Optional<Player> getUserByUsername(String username) {
+        return Optional.ofNullable(playerRepository.findByUsername(username));
     }
 }

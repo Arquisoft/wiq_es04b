@@ -39,4 +39,11 @@ public interface PlayerService {
      * @return The player with the given email
      */
     Optional<Player> getUserByEmail(String email);
+
+    /**
+     * Get a player by its username
+     * @param username The nickname of the player
+     * @return The player with the given nickname
+     */
+    Optional<Player> getUserByUsername(String username);
 }

@@ -10,10 +10,8 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PlayerDto {
-    private String nickname;
+    private String username;
     private String email;
-    private String name;
-    private String lastName;
     private String password;
     private String passwordConfirm;
     private String[] roles;
