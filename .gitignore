@@ -10,7 +10,7 @@ database/hsqldb/data/
 database/hsqldb/doc/
 database/hsqldb/lib/
 database/hsqldb/src/
-database/hsqldb/test/
+database/hsqldb/testrun/
 
 ### STS ###
 .apt_generated
