@@ -1,21 +1,17 @@
 package com.uniovi.controllers;
 
-import com.uniovi.entities.AppUser;
-import com.uniovi.services.UserService;
+import com.uniovi.services.PlayerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 @Controller
 public class HomeController{
-    private final UserService userService;
+    private final PlayerService playerService;
 
     @Autowired
-    public HomeController(UserService userService) {
-        this.userService = userService;
+    public HomeController(PlayerService playerService) {
+        this.playerService = playerService;
     }
 
     @GetMapping("/")
