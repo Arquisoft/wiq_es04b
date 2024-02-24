@@ -8,7 +8,6 @@ target/
 database/hsqldb/build/
 database/hsqldb/data/
 database/hsqldb/doc/
-database/hsqldb/lib/
 database/hsqldb/src/
 database/hsqldb/testrun/
 
