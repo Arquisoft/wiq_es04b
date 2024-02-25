@@ -12,12 +12,12 @@ services:
         MYSQL_PASSWORD: ${MYSQL_PASSWORD:-wiq_es04b}
     volumes:
       - db_data:/var/lib/mysql
+    networks:
+      - mynetwork
     restart: always
 
   wiq_es04b:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: ghcr.io/arquisoft/wiq_es04b:latest
     environment:
       MYSQL_HOST: ${MYSQL_HOST}
       MYSQL_PORT: ${MYSQL_PORT}
@@ -26,6 +26,8 @@ services:
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     ports:
       - "443:443"
+    networks:
+      - mynetwork
     depends_on:
       - db
 
