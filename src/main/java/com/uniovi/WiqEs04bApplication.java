@@ -11,7 +11,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @SpringBootApplication
 public class WiqEs04bApplication {
     public static void main(String[] args) {
-        System.out.println("test");
         SpringApplication.run(WiqEs04bApplication.class, args);
     }
 }
