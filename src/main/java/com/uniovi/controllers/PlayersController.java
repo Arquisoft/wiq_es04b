@@ -34,11 +34,11 @@ public class PlayersController {
 
         if (model.containsAttribute("user")) {
             model.addAttribute("user", model.getAttribute("user"));
-            return "/player/signup";
+            return "player/signup";
         }
 
         model.addAttribute("user", new PlayerDto());
-        return "/player/signup";
+        return "player/signup";
     }
 
     @PostMapping("/signup")
@@ -58,7 +58,7 @@ public class PlayersController {
 
         if(result.hasErrors()){
             model.addAttribute("user", user);
-            return "/player/signup";
+            return "player/signup";
         }
 
         playerService.addNewPlayer(user);
@@ -76,11 +76,11 @@ public class PlayersController {
         if (SecurityConfig.isAuthenticated())
             return "redirect:/home";
 
-        return "/player/login";
+        return "player/login";
     }
 
     @GetMapping("/home")
     public String home(Model model, Principal principal) {
-        return "/player/home";
+        return "player/home";
     }
 }
