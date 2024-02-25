@@ -9,5 +9,5 @@ RUN mvn clean package -DskipTests
 # Run stage with JDK 17
 FROM openjdk:17-slim
 COPY --from=build /app/target/*.jar app.jar
-ENTRYPOINT ["java","-Dspring.profiles.active=prod","-jar","/app.jar"]
+ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-Dspring.profiles.active=prod","-jar","/app.jar"]
 EXPOSE 443
