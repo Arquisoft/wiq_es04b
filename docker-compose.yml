@@ -34,7 +34,7 @@ services:
     restart:
       always
     volumes:
-      - ${KEYSTORE_PATH}:/app/keystore.p12
+      - ${KEYSTORE_PATH}:/certs/keystore.p12
 
 volumes:
   db_data:
