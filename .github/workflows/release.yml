@@ -42,7 +42,7 @@ jobs:
           username: ${{ secrets.DEPLOY_USER }}
           key: ${{ secrets.DEPLOY_KEY }}
           script: |
-            wget https://raw.githubusercontent.com/${{ github.repository }}/master/docker-compose.yml -O docker-compose.yml
-            wget https://raw.githubusercontent.com/${{ github.repository }}/master/.env -O .env
+            wget https://raw.githubusercontent.com/${{ github.repository }}/${{ github.ref_name }}/docker-compose.yml -O docker-compose.yml
+            wget https://raw.githubusercontent.com/${{ github.repository }}/${{ github.ref_name }}/.env -O .env
             docker-compose down
             docker-compose up -d
