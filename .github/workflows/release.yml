@@ -42,8 +42,6 @@ jobs:
           username: ${{ secrets.DEPLOY_USER }}
           key: ${{ secrets.DEPLOY_KEY }}
           script: |
-            cd ~/app
-            # Or use cd $HOME/app if preferred
             wget https://raw.githubusercontent.com/${{ github.repository }}/master/docker-compose.yml -O docker-compose.yml
             wget https://raw.githubusercontent.com/${{ github.repository }}/master/.env -O .env
             docker-compose down
