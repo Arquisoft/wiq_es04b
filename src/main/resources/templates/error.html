@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head}"></head>
+<body>
+<nav th:replace="~{fragments/nav}"></nav>
+
+<div class="container mt-5">
+    <h2 class="text-danger">Error!</h2>
+    <div class="alert alert-danger" role="alert">
+        Estado: <strong th:text="${status}"></strong>
+    </div>
+    <div class="alert alert-warning" role="alert">
+        Error: <strong th:text="${error}"></strong>
+    </div>
+    <div class="alert alert-info" role="alert">
+        Mensaje de error: <strong th:text="${message}"></strong>
+    </div>
+</div>
+
+<footer th:replace="~{fragments/footer}"></footer>
+
+</body>
+</html>

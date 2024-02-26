@@ -1,0 +1,50 @@
+<!-- nav.html -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extrasspringsecurity5">
+    <a class="navbar-brand" href="#"></a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#myNavbar"
+            aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="my-navbarColor02">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item ">
+                <a class="nav-link" href="/">Home<span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item dropdown active">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+                   aria-haspopup="true" aria-expanded="false"> Jugar
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="/">Juego 1</a>
+                    <a class="dropdown-item" href="/">Juego 2</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="/">Historial</a>
+                </div>
+            </li>
+        </ul>
+        <ul class="navbar-nav justify-content-end">
+            <!-- Botones para cuando el usuario no está en sesión -->
+            <li class="nav-item" sec:authorize="!isAuthenticated()">
+                <a class="nav-link" href="/signup">
+                    <i class='fas fa-user-alt' style='font-size:16px'></i>
+                    Registrate</a>
+            </li>
+            <li class="nav-item" sec:authorize="!isAuthenticated()">
+                <a class="nav-link" href="/login">
+                <i class='fas fa-sign-in-alt' style='font-size:16px'></i>
+                Identifícate</a></li>
+
+            <!-- Botones para cuando el usuario ESTÁ autenticado -->
+            <li class="nav-item" sec:authorize="isAuthenticated()">
+                <a class="nav-link" href="/home" sec:authentication="principal.username">
+                    <i class='fas fa-user' style='font-size:16px'></i>
+                </a>
+            </li>
+            <li class="nav-item" sec:authorize="isAuthenticated()">
+                <a class="nav-link" href="/logout">
+                    <i class='fas fa-user-alt' style='font-size:16px'></i>
+                    Cerrar sesión</a>
+            </li>
+        </ul>
+    </div>
+</nav>

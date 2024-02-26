@@ -31,17 +31,19 @@ See https://docs.arc42.org/section-4/[Solution Strategy] in the arc42 documentat
 
 ****
 
+There are some placeholders for the decisions yet to be taken.
+
 === Technological Decisions
-Programming Language: [Language] will be used for system development due to [reasons].
-Frontend Framework: [Framework] will be adopted for frontend development due to [reasons].
-Database: [Database] was selected as the storage engine due to [reasons].
+* Programming Language: Java will be used for system development because all team members are familiar with it, and we believe we can perform better using this language.
+* Frontend Framework: SpringBoot will be adopted for frontend development because it allows us to deploy a web application using Java and provides numerous functionalities that greatly facilitate the implementation of project requirements, such as user authentication.
+* Database: [Database] was selected as the storage engine due to [reasons].
 
 === System Decomposition
 The [pattern] architecture pattern will be followed for structuring the system, dividing it into modules/classes responsible for [responsibilities].
 
 === Quality Goals
-Performance: A quick system response will be sought, especially during question generation and gameplay.
-Security: Security measures will be implemented to protect user information and ensure the integrity of generated questions.
+* Performance: A quick system response will be sought, especially during question generation and gameplay.
+* Security: Security measures will be implemented to protect user information and ensure the integrity of generated questions.
 
 === Organizational Decisions
-Development Methodology: [Methodology] will be adopted for project management, facilitating collaboration and iterative delivery.
+Development Methodology: GitFlow will be adopted for project management, facilitating collaboration and iterative delivery.
