@@ -11,15 +11,15 @@ Our application is containerized using Docker, enabling us to deploy the entire 
 _**Overview Diagram:**_
 The infrastructure features a single Docker container that hosts the Java Spring Boot application. This container communicates with external services, such as the Wikidata API, to fetch data in real-time and generate game questions.
 
-.Motivation::
+.Motivation
 The primary motivation behind using Docker for deployment is to streamline the development and deployment processes. By containerizing the application, we reduce discrepancies between environments, making it easier to develop, test, and deploy with confidence.
 
-.Quality and/or Performance Features::
+.Quality and/or Performance Features
 - **Portability:** Docker containers can run on any system that has Docker installed, reducing environment-specific bugs.
 - **Scalability:** While we start with a single container, the setup can be easily scaled using Docker Compose or Docker Swarm if the need arises.
 - **Efficiency:** Docker utilizes resources more efficiently than traditional VMs, allowing for faster startup times and lower overhead.
 
-.Mapping of Building Blocks to Infrastructure::
+.Mapping of Building Blocks to Infrastructure
 - **Web Server/Application (.jar file):** Packaged within a Docker container, it includes all necessary dependencies to run independently across any Docker-supported platform.
 - **External APIs (e.g., Wikidata API):** Accessed over the network, these APIs provide dynamic content for the game.
 
@@ -29,23 +29,35 @@ At this level, we describe the Docker container configuration that encapsulates 
 
 ==== _Docker Container_
 
-Our Docker container is built from a Java base image, which is then layered with our application’s `.jar` file. This setup encapsulates the entire runtime environment required for our application.
+Our app's Docker container is built from a Java base image, which is then layered with our application’s `.jar` file.
 
-.Diagram: Docker Container Setup::
+In addition to the Spring boot standalone file, we also use the official `MySQL` server docker container image brought by DockerHub. This is our database server and it is used to store the game data, such as user scores, questions, etc. and all the other persistent data.
+
+This setup encapsulates the entire runtime environment required for our application, and does not require extensive configuration.
+
+.Diagram: Docker Container Setup
 [plantuml,"Docker Container Setup",png]
 ----
 @startuml
-rectangle "Docker Container" {
-    node "Java Spring Boot App (.jar)" as App
-    database "Web Server (Embedded)" as WebServer
+rectangle "Docker compose" {
+    rectangle "App's Docker Container"  {
+        node "Java Spring Boot App (.jar)" as App
+        database "Web Server (Embedded)" as WebServer
+    }
+
+    rectangle "MySQL Server Container" {
+        database "MySQL Server" as MySQL
+    }
 }
 
 cloud "Wikidata API" as API
 
+App --> MySQL : Store game data
+MySQL --> App : Fetch game data
 App --> API : Fetch questions
 App ..> WebServer : Server application
 @enduml
 ----
 
-.Explanation:_
-This diagram illustrates the internal structure of our Docker container. It shows the Java Spring Boot application, including the embedded web server, packaged as a `.jar` file. The application interacts with external APIs, like the Wikidata API, to retrieve data necessary for generating game questions. The containerized approach ensures that the application can be deployed consistently across any environment that supports Docker.
+.Explanation:
+This diagram illustrates the internal structure of our Docker containers structure. It shows the Java Spring Boot application, including the embedded web server, packaged as a `.jar` file and the MySQL server. The application interacts with external APIs, like the Wikidata API, to retrieve data necessary for generating game questions. The containerized approach ensures that the application can be deployed consistently across any environment that supports Docker.
