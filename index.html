@@ -495,7 +495,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_domain_model">8.1. Domain Model</a></li>
 <li><a href="#_hexagonal_architecture">8.2. Hexagonal Architecture</a></li>
 <li><a href="#_java_persistence_api_jpa_for_data_management">8.3. Java Persistence API (JPA) for Data Management</a></li>
-<li><a href="#_logging_with_log4j_and_system_out">8.4. Logging with Log4j and System.out</a></li>
+<li><a href="#_logging_with_slf4j_and_system_out">8.4. Logging with Slf4j and System.out</a></li>
 <li><a href="#_security">8.5. Security</a></li>
 <li><a href="#_performance_optimization">8.6. Performance Optimization</a></li>
 <li><a href="#_continuous_integration_and_continuous_deployment_cicd">8.7. Continuous Integration and Continuous Deployment (CI/CD)</a></li>
@@ -1585,11 +1585,11 @@ You will mainly capture scenarios in your documentation to communicate your arch
 The infrastructure features a single Docker container that hosts the Java Spring Boot application. This container communicates with external services, such as the Wikidata API, to fetch data in real-time and generate game questions.</p>
 </div>
 <div class="paragraph">
-<div class="title">Motivation::</div>
+<div class="title">Motivation</div>
 <p>The primary motivation behind using Docker for deployment is to streamline the development and deployment processes. By containerizing the application, we reduce discrepancies between environments, making it easier to develop, test, and deploy with confidence.</p>
 </div>
 <div class="ulist">
-<div class="title">Quality and/or Performance Features::</div>
+<div class="title">Quality and/or Performance Features</div>
 <ul>
 <li>
 <p><strong>Portability:</strong> Docker containers can run on any system that has Docker installed, reducing environment-specific bugs.</p>
@@ -1600,6 +1600,11 @@ The infrastructure features a single Docker container that hosts the Java Spring
 <li>
 <p><strong>Efficiency:</strong> Docker utilizes resources more efficiently than traditional VMs, allowing for faster startup times and lower overhead.</p>
 </li>
+</ul>
+</div>
+<div class="ulist">
+<div class="title">Mapping of Building Blocks to Infrastructure</div>
+<ul>
 <li>
 <p><strong>Web Server/Application (.jar file):</strong> Packaged within a Docker container, it includes all necessary dependencies to run independently across any Docker-supported platform.</p>
 </li>
@@ -1617,17 +1622,23 @@ The infrastructure features a single Docker container that hosts the Java Spring
 <div class="sect3">
 <h4 id="_docker_container">7.2.1. <em>Docker Container</em></h4>
 <div class="paragraph">
-<p>Our Docker container is built from a Java base image, which is then layered with our application’s <code>.jar</code> file. This setup encapsulates the entire runtime environment required for our application.</p>
+<p>Our app&#8217;s Docker container is built from a Java base image, which is then layered with our application’s <code>.jar</code> file.</p>
+</div>
+<div class="paragraph">
+<p>In addition to the Spring boot standalone file, we also use the official <code>MySQL</code> server docker container image brought by DockerHub. This is our database server and it is used to store the game data, such as user scores, questions, etc. and all the other persistent data.</p>
+</div>
+<div class="paragraph">
+<p>This setup encapsulates the entire runtime environment required for our application, and does not require extensive configuration.</p>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="./images/Docker%20Container%20Setup.png" alt="Docker Container Setup" width="394" height="231">
+<img src="./images/Docker%20Container%20Setup.png" alt="Docker Container Setup" width="675" height="319">
 </div>
-<div class="title">Figure 1. Diagram: Docker Container Setup::</div>
+<div class="title">Figure 1. Diagram: Docker Container Setup</div>
 </div>
 <div class="paragraph">
-<div class="title">Explanation:_</div>
-<p>This diagram illustrates the internal structure of our Docker container. It shows the Java Spring Boot application, including the embedded web server, packaged as a <code>.jar</code> file. The application interacts with external APIs, like the Wikidata API, to retrieve data necessary for generating game questions. The containerized approach ensures that the application can be deployed consistently across any environment that supports Docker.</p>
+<div class="title">Explanation:</div>
+<p>This diagram illustrates the internal structure of our Docker containers structure. It shows the Java Spring Boot application, including the embedded web server, packaged as a <code>.jar</code> file and the MySQL server. The application interacts with external APIs, like the Wikidata API, to retrieve data necessary for generating game questions. The containerized approach ensures that the application can be deployed consistently across any environment that supports Docker.</p>
 </div>
 <div style="page-break-after: always;"></div>
 </div>
@@ -1643,7 +1654,17 @@ The infrastructure features a single Docker container that hosts the Java Spring
 <div class="sect2">
 <h3 id="_domain_model">8.1. Domain Model</h3>
 <div class="paragraph">
-<p>The domain model for our game includes entities such as <code>Question</code>, <code>Category</code>, <code>Player</code>, and <code>GameSession</code>. These are crucial for representing the game&#8217;s data and logic. The model serves as the basis for interactions within the application and between the application and the database.</p>
+<p>The domain model for our game includes entities such as <code>Question</code>, <code>Category</code>, <code>Player</code>, <code>Role</code>, and <code>GameSession</code>. These are crucial for representing the game&#8217;s data and logic. The model serves as the basis for interactions within the application and between the application and the database.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="./images/domain-model.svg" alt="domain model" width="2082" height="1102">
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="./images/domain-model-2.svg" alt="domain model 2" width="2017" height="251">
+</div>
 </div>
 </div>
 <div class="sect2">
@@ -1667,19 +1688,19 @@ The infrastructure features a single Docker container that hosts the Java Spring
 </div>
 </div>
 <div class="sect2">
-<h3 id="_logging_with_log4j_and_system_out">8.4. Logging with Log4j and System.out</h3>
+<h3 id="_logging_with_slf4j_and_system_out">8.4. Logging with Slf4j and System.out</h3>
 <div class="paragraph">
-<p>For monitoring runtime behavior and troubleshooting, the project utilizes Log4j and System.out for logging. While Log4j offers more sophisticated logging capabilities, System.out is used for straightforward, immediate console output.</p>
+<p>For monitoring runtime behavior and troubleshooting, the project utilizes Slf4j, bundled with Sprint Boot, and System.out for logging. While Slf4j offers more sophisticated logging capabilities, System.out is used for straightforward, immediate console output.</p>
 </div>
 <div class="paragraph">
 <div class="title">Explanation:</div>
-<p>Log4j is configured to capture various levels of output, which can be directed to multiple destinations such as console, files, or even remote logging servers. For simplicity and immediacy during development or less complex deployment scenarios, System.out is employed for logging output directly to the console.</p>
+<p>Slf4j is configured to capture various levels of output, which can be directed to multiple destinations such as console, files, or even remote logging servers. For simplicity and immediacy during development or less complex deployment scenarios, System.out is employed for logging output directly to the console.</p>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_security">8.5. Security</h3>
 <div class="paragraph">
-<p>Security is a key concern, ensuring that user data and game integrity are protected. We implement standard security practices at various levels within the application.</p>
+<p>Security is a key concern, ensuring that user data and game integrity are protected. We implement standard security practices at various levels within the application</p>
 </div>
 <div class="paragraph">
 <div class="title">Explanation:</div>
@@ -1709,11 +1730,9 @@ The infrastructure features a single Docker container that hosts the Java Spring
 <div class="sect2">
 <h3 id="_scalability">8.8. Scalability</h3>
 <div class="paragraph">
-<p>Designing for scalability, the application can accommodate an increasing number of users and interactions without performance degradation.</p>
-</div>
-<div class="paragraph">
-<div class="title">Explanation:</div>
-<p>Scalable solutions such as Docker containers allow the application to be deployed in a distributed environment, where resources can be adjusted based on demand.</p>
+<p>Designing for scalability, the application can accommodate an increasing number of users and interactions without performance degradation.
+.Explanation:
+Scalable solutions such as Docker containers allow the application to be deployed in a distributed environment, where resources can be adjusted based on demand.</p>
 </div>
 <div style="page-break-after: always;"></div>
 </div>
@@ -2097,7 +2116,7 @@ more precisely down to a level of scenarios that can be discussed and evaluated.
 <div id="footer">
 <div id="footer-text">
 Version 8.2 EN<br>
-Last updated 2024-02-26 21:05:17 UTC
+Last updated 2024-02-26 23:46:54 UTC
 </div>
 </div>
 </body>
