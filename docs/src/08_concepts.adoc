@@ -93,10 +93,6 @@ class Role {
     + setName(name: String): void
 }
 
-class WiqEs04bApplication {
-    + main(args: String[]): void
-}
-
 interface PlayerService {
     + addNewPlayer(playerDto: PlayerDto): Player
     + getUsers(): List<Player>
@@ -155,6 +151,28 @@ class RoleDto {
     + name: String
 }
 
+Question "1" *- "1" Category
+GameSession "*" *-- "1" Player
+Role "*" - "*" Player
+PlayerService <|.. PlayerServiceImpl
+RoleService <|.. RoleServiceImpl
+PlayerService ..> Player
+RoleService ..> Role
+PlayerService ..> PlayerDto
+PlayerServiceImpl ..> PlayerRepository
+RoleServiceImpl .> RoleRepository
+RoleService ..> RoleDto
+PlayerRepository --|> CrudRepository
+RoleRepository -|> CrudRepository
+@enduml
+----
+
+[plantuml, domain-model-2, svg]
+----
+@startuml
+class WiqEs04bApplication {
+    + main(args: String[]): void
+}
 class CustomErrorController {
    + error(model: Model, webRequest: HttpServletRequest): String
 }
@@ -181,22 +199,8 @@ class CustomAuthenticationFailureHandler {
     + onAuthenticationFailure(request: HttpServletRequest, response: HttpServletResponse, exception: AuthenticationException): void
 }
 
-Question "1" *- "1" Category
-GameSession "*" *-- "1" Player
-Role "*" - "*" Player
-PlayerService <|.. PlayerServiceImpl
-RoleService <|.. RoleServiceImpl
-PlayerService ..> Player
-RoleService ..> Role
-PlayerService ..> PlayerDto
-PlayerServiceImpl ..> PlayerRepository
-RoleServiceImpl .> RoleRepository
-RoleService ..> RoleDto
-PlayerRepository --|> CrudRepository
-RoleRepository -|> CrudRepository
 @enduml
 ----
-
 
 === Hexagonal Architecture
 
