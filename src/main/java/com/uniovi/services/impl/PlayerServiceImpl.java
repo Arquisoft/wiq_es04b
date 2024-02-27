@@ -46,6 +46,9 @@ public class PlayerServiceImpl implements PlayerService {
             passwordEncoder.encode(dto.getPassword())
         );
 
+        if (dto.getRoles() == null)
+            dto.setRoles(new String[] {"ROLE_USER"} );
+
         for (String roleStr : dto.getRoles()) {
             Role r = roleService.getRole(roleStr);
             if (r != null)

@@ -3,12 +3,21 @@ package com.uniovi.controllers;
 import com.uniovi.configuration.SecurityConfig;
 import com.uniovi.entities.Player;
 import com.uniovi.services.PlayerService;
+import com.uniovi.validators.SignUpValidator;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import com.uniovi.dto.PlayerDto;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -21,10 +30,12 @@ import java.util.Optional;
 @Controller
 public class PlayersController {
     private final PlayerService playerService;
+    private final SignUpValidator signUpValidator;
 
     @Autowired
-    public PlayersController(PlayerService playerService) {
+    public PlayersController(PlayerService playerService, SignUpValidator signUpValidator) {
         this.playerService = playerService;
+        this.signUpValidator =  signUpValidator;
     }
 
     @GetMapping("/signup")
@@ -42,27 +53,25 @@ public class PlayersController {
     }
 
     @PostMapping("/signup")
-    public String registerUserAccount(@Valid @ModelAttribute("user") PlayerDto user, BindingResult result, Model model){
+    public String registerUserAccount(HttpServletRequest request, @Validated @ModelAttribute("user") PlayerDto user, BindingResult result, Model model){
         if (SecurityConfig.isAuthenticated())
             return "redirect:/home";
 
-        if(playerService.getUserByEmail(user.getEmail()).isPresent()){
-            result.rejectValue("email", null,
-                    "There is already an account registered with the same email");
-        }
+        signUpValidator.validate(user, result);
 
-        if (playerService.getUserByUsername(user.getUsername()).isPresent()) {
-            result.rejectValue("username", null,
-                    "There is already an account registered with the same username");
-        }
-
-        if(result.hasErrors()){
+        if(result.hasErrors()) {
             model.addAttribute("user", user);
             return "player/signup";
         }
 
         playerService.addNewPlayer(user);
-        return "redirect:/";
+
+        try {
+            request.login(user.getUsername(), user.getPassword());
+        } catch (ServletException e) {
+            return "redirect:/signup";
+        }
+        return "redirect:/home";
     }
 
     @GetMapping("/login")
