@@ -50,46 +50,46 @@ _Nota: Los puntos (1), (2), (3) de la siguiente tabla repiten los requisitos de 
 
 [cols="4", options="header"]
 |===
-|Categoría de calidad |Calidad |Descripción |Escenario
+|Quality category |Quality |Description |Scenario
 
-|Usabilidad
-|Facilidad de uso
-|La aplicación deberá ser fácil de usar por parte del usuario, con funcionalidad intuitiva.
+|Usability
+|Ease of use
+|The application shall be easy to use by the user, with intuitive functionality.
 |SC1
 
 |
-|Familiaridad del entorno (2)
-|La aplicación deberá ser atractiva para todo público fan del programa original además de aportar una gran variedad en las preguntas.
+|Familiarity of the environment (2)
+|The application should appeal to all fans of the original programme and provide a wide variety of questions.
 |
 
-|Rendimiento
-|Precisión
-|Las preguntas de la aplicación deben de ser precisas, tanto la pregunta como la respuesta correcta.
-|
-
-|
-|Eficiencia (1)
-|El acceso, creación de preguntas y desplazamiento entre ellas deberá ser rápido para garantizar satisfacción del usuario.
+|Performance
+|Accuracy
+|The questions in the application must be accurate, both the question and the correct answer.
 |
 
 |
-|Robustez
-|El sistema debe funcionar de manera confiable en todos los entornos y condiciones de operación especificados.
+|Efficiency (1)
+|Accessing, creating questions and moving between questions should be fast to ensure user satisfaction.
+|
+
+|
+|Robustness
+|The system shall function reliably in all specified environments and operating conditions.
 |SC2
 
-|Seguridad
-|Integridad
-|La aplicación deberá ser fácil de usar por parte del usuario, con funcionalidad intuitiva.
+|Safety
+|Integrity
+|The application shall be user-friendly, with intuitive functionality.
 |
 
-|Mantenibilidad y soporte
-|Mantenimiento (2)
-|La aplicación deberá garantizar su fácil ampliación y modificación para otorgar nuevas características a los usuarios.
+|Maintainability and support
+|Maintenance (2)
+|The application shall ensure that it can be easily extended and modified to provide new features to users.
 |
 
-|Culturales y Regionales
-|Multilingüe
-|Los textos de la interfaz de usuario deben poder ser convertidos por un archivo de traducción a diferentes idiomas con un conjunto de caracteres ASCII.
+|Cultural and Regional
+|Multilingual
+|The user interface texts must be able to be converted by a translation file into different languages with an ASCII character set.
 |SC3
 |===
 
@@ -121,14 +121,14 @@ Tabular or free form text.
 
 [cols="2", options="header"]
 |===
-|Identificación |Escenario
+|Identification |Scenario
 
 |SC1
-|Un usuario que no conozca la aplicación, sabrá utilizarla al cabo de minutos siguiendo unas instrucciones.
+|A user who is not familiar with the application will know how to use it after a few minutes of instruction.
 
 |SC2
-|La aplicación deberá de poder ser ejecutada desde cualquier dispositivo, desde un ordenador a un teléfono móvil, sin perder el formato.
+|The application should be able to be run from any device, from a computer to a mobile phone, without losing formatting.
 
-|SC3
-|Con los archivos de traducción apropiados reemplazando el idioma predeterminado (inglés), todos los textos mostrados e impresos ahora aparecen en este idioma.
+|CS3
+|With the appropriate translation files replacing the default language (English), all displayed and printed texts now appear in this language.
 |===
