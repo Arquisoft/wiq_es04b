@@ -8,6 +8,7 @@ import org.springframework.util.Assert;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -19,6 +20,7 @@ public class Question {
     @GeneratedValue
     private Long id;
 
+    @Column(unique = true)
     private String statement;
 
     @OneToMany(mappedBy = "question")
@@ -46,8 +48,8 @@ public class Question {
         options.remove(option);
     }
 
-    public void getOption(int index){
-        options.get(index);
+    public Answer getOption(int index){
+        return options.get(index);
     }
 
     public Answer getOptions(String answer){
@@ -67,4 +69,16 @@ public class Question {
         Collections.shuffle(options);
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Question question = (Question) o;
+        return Objects.equals(id, question.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 }
