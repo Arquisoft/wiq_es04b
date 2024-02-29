@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.uniovi.entities.Answer;
 import com.uniovi.entities.Category;
 import com.uniovi.entities.Question;
+import com.uniovi.services.CategoryService;
 
 import java.net.URI;
 import java.net.URLEncoder;
@@ -18,8 +19,13 @@ import java.util.List;
 public abstract class AbstractQuestionGenerator implements QuestionGenerator{
 
     private List<Question> questions = new ArrayList<>();
+    protected final CategoryService categoryService;
     private String query;
     protected String statement;
+
+    protected AbstractQuestionGenerator(CategoryService categoryService) {
+        this.categoryService = categoryService;
+    }
 
     public void questionGenerator(String statement, List<String> options, String correctAnswer, Category category){
         List<Answer> answers = new ArrayList<>();

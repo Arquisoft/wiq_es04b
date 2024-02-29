@@ -1,26 +1,29 @@
 package com.uniovi.components.generators.geography;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.uniovi.services.CategoryService;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 public class CapitalQuestionGenerator extends AbstractGeographyGenerator{
 
-    public CapitalQuestionGenerator() {
+    public CapitalQuestionGenerator(CategoryService categoryService) {
+        super(categoryService);
         this.statement = "What is the capital of ";
     }
 
     @Override
     public String getQuery() {
         return "SELECT DISTINCT ?country ?countryLabel ?capital ?capitalLabel\n" +
-                "WHERE {\n" +
-                "  ?country wdt:P31 wd:Q3624078 .\n" +
-                "  FILTER NOT EXISTS {?country wdt:P31 wd:Q3024240}\n" +
-                "  FILTER NOT EXISTS {?country wdt:P31 wd:Q28171280}\n" +
-                "  OPTIONAL { ?country wdt:P36 ?capital } .\n" +
-                "  SERVICE wikibase:label { bd:serviceParam wikibase:language \"[AUTO_LANGUAGE],en\" }\n" +
-                "}\n" +
+                "WHERE {" +
+                "  ?country wdt:P31 wd:Q3624078 ." +
+                "  FILTER NOT EXISTS {?country wdt:P31 wd:Q3024240}" +
+                "  FILTER NOT EXISTS {?country wdt:P31 wd:Q28171280}" +
+                "  OPTIONAL { ?country wdt:P36 ?capital } ." +
+                "  SERVICE wikibase:label { bd:serviceParam wikibase:language \"[AUTO_LANGUAGE],en\" }" +
+                "}" +
                 "ORDER BY ?countryLabel";
     }
 

@@ -1,6 +1,7 @@
 package com.uniovi.components.generators.geography;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.uniovi.services.CategoryService;
 
 import java.util.*;
 
@@ -8,7 +9,8 @@ public class BorderQuestionGenerator extends AbstractGeographyGenerator{
 
     private Set<String> usedCountries = new HashSet<>();
 
-    public BorderQuestionGenerator() {
+    public BorderQuestionGenerator(CategoryService categoryService) {
+        super(categoryService);
         this.statement = "Which countries share a border with ";
     }
 

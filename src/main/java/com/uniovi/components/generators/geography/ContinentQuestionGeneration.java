@@ -1,13 +1,15 @@
 package com.uniovi.components.generators.geography;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.uniovi.services.CategoryService;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 public class ContinentQuestionGeneration extends AbstractGeographyGenerator{
-    public ContinentQuestionGeneration() {
+    public ContinentQuestionGeneration(CategoryService categoryService) {
+        super(categoryService);
         this.statement = "In which continent is ";
     }
 
