@@ -7,7 +7,200 @@ The following concepts provide a foundation for the design and implementation of
 
 === Domain Model
 
-The domain model for our game includes entities such as `Question`, `Category`, `Player`, and `GameSession`. These are crucial for representing the game's data and logic. The model serves as the basis for interactions within the application and between the application and the database.
+The domain model for our game includes entities such as `Question`, `Category`, `Player`, `Role`, and `GameSession`. These are crucial for representing the game's data and logic. The model serves as the basis for interactions within the application and between the application and the database.
+
+
+[plantuml, domain-model, svg, subs="attributes", subs="methods"]
+----
+@startuml
+class Question {
+  - id: Long
+  - question: String
+  - correctAnswer: String
+  - incorrectAnswers: List<String>
+  - category: Category
+  - difficulty: String
+  - type: String
+  - updatedAt: LocalDateTime
+  + getId(): Long
+  + getQuestion(): String
+  + getCorrectAnswer(): String
+  + getIncorrectAnswers(): List<String>
+  + getCategory(): Category
+  + getDifficulty(): String
+  + getType(): String
+  + getUpdatedAt(): LocalDateTime
+}
+
+class Category {
+  - id: Long
+  - name: String
+  + getName(): String
+  + getId(): Long
+  + setName(name: String): void
+  + setId(id: Long): void
+}
+
+class Player {
+  - id: Long
+  - username: String
+  - email: String
+  - password: String
+  - passwordConfirm : String
+  - roles: Set<Role>
+  + getId(): Long
+  + getUsername(): String
+  + getEmail(): String
+  + getPassword(): String
+  + getPasswordConfirm(): String
+  + getRoles(): Set<Role>
+  + setUsername(username: String): void
+  + setEmail(email: String): void
+  + setPassword(password: String): void
+  + setPasswordConfirm(passwordConfirm: String): void
+  + setRoles(roles: Set<Role>): void
+  + setId(id: Long): void
+}
+
+class GameSession {
+  - id: Long
+  - player: Player
+  - correctQuestions: Integer
+  - totalQuestions: Integer
+  - createdAt: LocalDateTime
+  - updatedAt: LocalDateTime
+  + getPlayer(): Player
+  + getScore(): Integer
+  + getCreatedAt(): LocalDateTime
+  + getUpdatedAt(): LocalDateTime
+  + getCorrectQuestions(): Integer
+  + getTotalQuestions(): Integer
+  + addQuestion(correct: boolean): void
+  + setPlayer(player: Player): void
+  + setScore(score: Integer): void
+  + setCreatedAt(createdAt: LocalDateTime): void
+  + setUpdatedAt(updatedAt: LocalDateTime): void
+  + setCorrectQuestions(correctQuestions: Integer): void
+  + setTotalQuestions(totalQuestions: Integer): void
+}
+
+class Role {
+    - id: Long
+    - name: String
+    + getId(): Long
+    + getName(): String
+    + setId(id: Long): void
+    + setName(name: String): void
+}
+
+interface PlayerService {
+    + addNewPlayer(playerDto: PlayerDto): Player
+    + getUsers(): List<Player>
+    + getUser(id: Long): Optional<Player>
+    + getUserByUsername(username: String): Optional<Player>
+    + getUserByEmail(email: String): Optional<Player>
+}
+
+interface RoleService {
+    + addRole(roleDto: RoleDto): Role
+    + getRoles(): List<Role>
+    + getRole(name: String): Role
+}
+
+class PlayerServiceImpl {
+    - playerRepository: PlayerRepository
+    - roleService: RoleService
+    + addNewPlayer(playerDto: PlayerDto): Player
+    + getUsers(): List<Player>
+    + getUser(id: Long): Optional<Player>
+    + getUserByUsername(username: String): Optional<Player>
+    + getUserByEmail(email: String): Optional<Player>
+}
+
+class RoleServiceImpl {
+    - roleRepository: RoleRepository
+    + addRole(roleDto: RoleDto): Role
+    + getRoles(): List<Role>
+    + getRole(name: String): Role
+}
+
+interface CrudRepository {
+    + save(entity: T): T
+    + findById(id: ID): Optional<T>
+    + findAll(): List<T>
+}
+
+interface PlayerRepository {
+    + findByUsername(username: String): Optional<Player>
+    + findByEmail(email: String): Optional<Player>
+}
+
+interface RoleRepository {
+    + findByName(name: String): Role
+}
+
+class PlayerDto {
+    + username: String
+    + email: String
+    + password: String
+    + passwordConfirm: String
+    + roles: String[]
+}
+
+class RoleDto {
+    + name: String
+}
+
+Question "1" *- "1" Category
+GameSession "*" *-- "1" Player
+Role "*" - "*" Player
+PlayerService <|.. PlayerServiceImpl
+RoleService <|.. RoleServiceImpl
+PlayerService ..> Player
+RoleService ..> Role
+PlayerService ..> PlayerDto
+PlayerServiceImpl ..> PlayerRepository
+RoleServiceImpl .> RoleRepository
+RoleService ..> RoleDto
+PlayerRepository --|> CrudRepository
+RoleRepository -|> CrudRepository
+@enduml
+----
+
+[plantuml, domain-model-2, svg]
+----
+@startuml
+class WiqEs04bApplication {
+    + main(args: String[]): void
+}
+class CustomErrorController {
+   + error(model: Model, webRequest: HttpServletRequest): String
+}
+
+class HomeController {
+    + home(model: Model): String
+}
+
+class PlayersController {
+    + showRegistrationForm(model: Model): String
+    + registerUserAccount(user: PlayerDto, result: BindingResult, model: Model): String
+    + showLoginForm(model: Model, error: String, session: HttpSession): String
+    + home(model: Model, principal: Principal): String
+}
+
+class SecurityConfig {
+    + passwordEncoder(): PasswordEncoder
+    + filterChain(http: HttpSecurity): SecurityFilterChain
+    + configureGlobal(auth: AuthenticationManagerBuilder): void
+    + isAuthenticated(): boolean
+}
+
+class CustomAuthenticationFailureHandler {
+    + onAuthenticationFailure(request: HttpServletRequest, response: HttpServletResponse, exception: AuthenticationException): void
+}
+
+@enduml
+----
 
 === Hexagonal Architecture
 
@@ -23,16 +216,16 @@ We use JPA for data persistence to abstract and handle all database operations, 
 .Explanation:
 JPA enables us to map our domain objects to the database schema with ease, providing a clear layer of abstraction that simplifies data persistence and retrieval while ensuring our application remains agnostic of the underlying database technology.
 
-=== Logging with Log4j and System.out
+=== Logging with Slf4j and System.out
 
-For monitoring runtime behavior and troubleshooting, the project utilizes Log4j and System.out for logging. While Log4j offers more sophisticated logging capabilities, System.out is used for straightforward, immediate console output.
+For monitoring runtime behavior and troubleshooting, the project utilizes Slf4j, bundled with Sprint Boot, and System.out for logging. While Slf4j offers more sophisticated logging capabilities, System.out is used for straightforward, immediate console output.
 
 .Explanation:
-Log4j is configured to capture various levels of output, which can be directed to multiple destinations such as console, files, or even remote logging servers. For simplicity and immediacy during development or less complex deployment scenarios, System.out is employed for logging output directly to the console.
+Slf4j is configured to capture various levels of output, which can be directed to multiple destinations such as console, files, or even remote logging servers. For simplicity and immediacy during development or less complex deployment scenarios, System.out is employed for logging output directly to the console.
 
 === Security
 
-Security is a key concern, ensuring that user data and game integrity are protected. We implement standard security practices at various levels within the application.
+Security is a key concern, ensuring that user data and game integrity are protected. We implement standard security practices at various levels within the application
 
 .Explanation:
 This includes securing the web layer with Spring Security, encrypting sensitive data, and protecting against common web vulnerabilities.
@@ -54,6 +247,5 @@ Our CI/CD pipeline automates the process of integrating code changes, building t
 === Scalability
 
 Designing for scalability, the application can accommodate an increasing number of users and interactions without performance degradation.
-
 .Explanation:
 Scalable solutions such as Docker containers allow the application to be deployed in a distributed environment, where resources can be adjusted based on demand.

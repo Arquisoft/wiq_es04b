@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:latest
+    ports:
+      - "3306:3306"
+    environment:
+        MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root}
+        MYSQL_DATABASE: ${MYSQL_DATABASE:-wiq_es04b}
+        MYSQL_USER: ${MYSQL_USER:-wiq_es04b}
+        MYSQL_PASSWORD: ${MYSQL_PASSWORD:-wiq_es04b}
+        MYSQL_PORT: ${MYSQL_PORT:-3306}
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - mynetwork
+    restart: always
+
+  wiq_es04b:
+    image: ghcr.io/arquisoft/wiq_es04b:latest
+    environment:
+      MYSQL_HOST: ${MYSQL_HOST}
+      MYSQL_PORT: ${MYSQL_PORT}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      KEYSTORE_PATH: ${KEYSTORE_PATH}
+      KEYSTORE_PASSWORD: ${KEYSTORE_PASSWORD}
+    ports:
+      - "443:443"
+    networks:
+      - mynetwork
+    depends_on:
+      - db
+    restart:
+      always
+    volumes:
+      - ${KEYSTORE_PATH}:/certs/keystore.p12
+
+volumes:
+  db_data:
+
+networks:
+  mynetwork:
+    driver: bridge

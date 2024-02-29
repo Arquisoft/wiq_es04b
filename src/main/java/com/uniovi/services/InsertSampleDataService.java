@@ -15,14 +15,14 @@ public class InsertSampleDataService {
 
     @PostConstruct
     public void init() {
-        if (playerService.getUserByEmail("test@test.com").isPresent())
-            return;
+        //if (playerService.getUserByEmail("test@test.com").isPresent())
+        //    return;
 
-        PlayerDto player = new PlayerDto();
-        player.setEmail("test@test.com");
-        player.setUsername("test");
-        player.setPassword("test");
-        player.setRoles(new String[]{"ROLE_USER"});
-        playerService.addNewPlayer(player);
+        //PlayerDto player = new PlayerDto();
+        //player.setEmail("test@test.com");
+        //player.setUsername("test");
+        //player.setPassword("test");
+        //player.setRoles(new String[]{"ROLE_USER"});
+        //playerService.addNewPlayer(player);
     }
 }

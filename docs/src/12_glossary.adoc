@@ -42,5 +42,5 @@ See https://docs.arc42.org/section-12/[Glossary] in the arc42 documentation.
 
 |Player | Represents users and their interactions with the game
 
-|GameSession | Maintains the state of play, including scores and progress.
+|GameSession  | Maintains the state of play, including scores and progress.
 |===

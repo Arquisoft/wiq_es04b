@@ -2,6 +2,7 @@ package com.uniovi.services.impl;
 
 import com.uniovi.dto.PlayerDto;
 import com.uniovi.dto.RoleDto;
+import com.uniovi.entities.Associations;
 import com.uniovi.entities.Player;
 import com.uniovi.repositories.PlayerRepository;
 import com.uniovi.repositories.RoleRepository;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import com.uniovi.entities.Role;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -43,6 +45,19 @@ public class PlayerServiceImpl implements PlayerService {
             dto.getEmail(),
             passwordEncoder.encode(dto.getPassword())
         );
+
+        if (dto.getRoles() == null)
+            dto.setRoles(new String[] {"ROLE_USER"} );
+
+        for (String roleStr : dto.getRoles()) {
+            Role r = roleService.getRole(roleStr);
+            if (r != null)
+                Associations.PlayerRole.addRole(player, r);
+            else {
+                r = roleService.addRole(new RoleDto(roleStr));
+                Associations.PlayerRole.addRole(player, r);
+            }
+        }
 
         playerRepository.save(player);
         return player;
