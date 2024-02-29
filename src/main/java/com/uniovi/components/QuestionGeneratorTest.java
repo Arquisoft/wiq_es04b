@@ -1,14 +1,19 @@
 package com.uniovi.components;
 
 import com.uniovi.components.generators.geography.CapitalQuestionGenerator;
+import com.uniovi.entities.Question;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
-public class QuestionGenerator {
+public class QuestionGeneratorTest {
 
     public static void main(String[] args) {
         com.uniovi.components.generators.QuestionGenerator qgen =  new CapitalQuestionGenerator();
-        System.out.println(qgen.getQuestions());
+        List<Question> q = qgen.getQuestions();
+        for(Question question : q){
+            System.out.println(question);
+        }
     }
-
 }

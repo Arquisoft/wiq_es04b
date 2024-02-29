@@ -24,7 +24,7 @@ public class CapitalQuestionGenerator extends AbstractGeographyGenerator{
                 "ORDER BY ?countryLabel";
     }
 
-    private List<String> getAllCapitals(JsonNode resultsNode, String countryLabel, String correctCapital) {
+    private List<String> getAllCapitals(JsonNode resultsNode, String correctCapital) {
         // Obtener todas las capitales del JSON (distintas a la capital correcta)
         List<String> allCapitals = new ArrayList<>();
         for (JsonNode result : resultsNode) {
@@ -51,9 +51,8 @@ public class CapitalQuestionGenerator extends AbstractGeographyGenerator{
 
     @Override
     protected List<String> generateOptions(JsonNode results, JsonNode result) {
-        String countryLabel = result.path("countryLabel").path("value").asText();
         String capitalLabel = result.path("capitalLabel").path("value").asText();
-        return selectRandomIncorrectCapitals(getAllCapitals(results, countryLabel, capitalLabel), capitalLabel, 3);
+        return selectRandomIncorrectCapitals(getAllCapitals(results, capitalLabel), capitalLabel, 3);
     }
 
     @Override

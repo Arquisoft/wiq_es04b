@@ -34,7 +34,6 @@ public abstract class AbstractQuestionGenerator implements QuestionGenerator{
 
         Question question = new Question(statement, answers, correct, category);
         question.scrambleOptions();
-        System.out.println(question);
         questions.add(question);
     }
 
