@@ -89,33 +89,21 @@ together with a mapping table showing the relationships between channels and inp
 ----
 
   actor user
-  actor developer
+  person developer
   database Database
+  cloud WikiData
 
-  node "Question Generation"{
-    [WikiData]
-  }
 
-  node "User Agent" {
-    [Web / Mobile]
-  }
+  node "User Agent"
   
-  node "QuestionGame server" {
-    [Frontend]
-    [QuestionGame]
-    [User's API]
-    [Question's API]
-  }
+  node "QuestionGame server"
   
-  user --> [Web / Mobile]
-  [Web / Mobile] --> (Frontend): HTTPS
-  [Frontend] --> (QuestionGame): To decide
-  [QuestionGame] --> Database: Specific driver
-  [QuestionGame] --> WikiData: HTTP
-  [QuestionGame] <-- (User's API): To decide
-  [QuestionGame] <-- (Question's API): To decide
-  developer --> (User's API) : HTTPS
-  developer --> (Question's API) : HTTPS
+  user --> [User Agent]
+  [User Agent] --> [QuestionGame server]: HTTPS
+
+  [QuestionGame server] --> Database: Specific driver
+  [QuestionGame server] --> WikiData: HTTP
+  developer --> [QuestionGame server] : HTTPS
 ----
 
 * **User Agent:** Represents the web or mobile interface used by users.
