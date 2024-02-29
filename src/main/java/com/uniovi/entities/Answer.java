@@ -26,4 +26,8 @@ public class Answer {
         this.correct = correct;
     }
 
+    public String toString() {
+        return text;
+    }
+
 }

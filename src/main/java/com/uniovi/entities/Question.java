@@ -81,4 +81,14 @@ public class Question {
     public int hashCode() {
         return Objects.hash(id);
     }
+
+    @Override
+    public String toString() {
+        return "Question{" +
+                "statement='" + statement + '\'' +
+                ", options=" + options.toString() +
+                ", correctAnswer=" + correctAnswer.toString() +
+                ", category=" + category +
+                '}';
+    }
 }
