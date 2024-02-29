@@ -2,11 +2,13 @@ package com.uniovi.components.generators.geography;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.uniovi.services.CategoryService;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+@Component
 public class CapitalQuestionGenerator extends AbstractGeographyGenerator{
 
     public CapitalQuestionGenerator(CategoryService categoryService) {

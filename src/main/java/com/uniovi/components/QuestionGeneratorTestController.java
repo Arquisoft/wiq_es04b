@@ -1,18 +1,18 @@
 package com.uniovi.components;
 
-import com.uniovi.components.generators.QuestionGenerator;
+import com.uniovi.components.generators.geography.CapitalQuestionGenerator;
 import com.uniovi.entities.Question;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@Controller
-public class QuestionGeneratorTest {
+@RestController
+public class QuestionGeneratorTestController {
 
     @Autowired
-    QuestionGenerator qgen;
+    CapitalQuestionGenerator qgen;
 
     @RequestMapping("/test")
     public void test() {
