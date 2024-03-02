@@ -1,0 +1,26 @@
+/* footer.css */
+
+/* Estilo para el pie de página */
+.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 60px;
+    margin: 0; /* Eliminar margen */
+    background: linear-gradient(45deg, #283048, #586776); /* Gradiente de fondo */
+    color: #fff; /* Texto blanco */
+    padding: 0; /* Eliminar relleno */
+    text-align: center; /* Alineación del texto */
+    display: flex; /* Usar flexbox para centrar verticalmente */
+    align-items: center; /* Centrar verticalmente */
+}
+
+/* Estilo para el texto del pie de página */
+.footer .container {
+    max-width: 960px; /* Ancho máximo del contenido */
+    margin: 0 auto; /* Centrar el contenido */
+}
+
+.bg-primary {
+    background-color: transparent !important;
+}
