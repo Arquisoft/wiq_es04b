@@ -35,6 +35,9 @@ public class Player {
             inverseJoinColumns={@JoinColumn(name="ROLE_ID", referencedColumnName="NAME")})
     private Set<Role> roles = new HashSet<>();
 
+    @OneToMany(mappedBy = "player")
+    private Set<GameSession> gameSessions = new HashSet<>();
+
     // Transient: no se almacena en la base de datos
     @Transient
     private String passwordConfirm;
