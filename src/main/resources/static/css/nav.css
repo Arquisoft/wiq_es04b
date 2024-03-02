@@ -3,7 +3,7 @@
 /* Estilo para el menú de navegación */
 .navbar {
     background: linear-gradient(45deg, #283048, #586776); /* Gradiente de fondo */
-    border-bottom: 1px solid #333; /* Borde inferior */
+   /* border-bottom: 1px solid #333; /* Borde inferior */
 }
 
 /* Estilo para el botón del menú desplegable */
