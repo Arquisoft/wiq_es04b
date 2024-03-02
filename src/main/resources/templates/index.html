@@ -4,8 +4,8 @@
 <body>
 <nav th:replace="~{fragments/nav}"></nav>
 <div class="container" style="text-align: center">
-    <h2>Bienvenidos a la página principal</h2>
-    <p>En desarrollo</p>
+    <h2 th:text="#{index.heading}" ></h2>
+    <p th:text="#{index.development}"></p>
 </div>
 <footer th:replace="~{fragments/footer}"></footer>
 </body>

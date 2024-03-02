@@ -1,5 +1,6 @@
 <!-- nav.html -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extrasspringsecurity5">
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extrasspringsecurity5"
+     xmlns:th="http://www.thymeleaf.org">
     <a class="navbar-brand" href="#"></a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#myNavbar"
             aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
@@ -8,17 +9,42 @@
     <div class="collapse navbar-collapse" id="my-navbarColor02">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item ">
-                <a class="nav-link" href="/">Home<span class="sr-only">(current)</span></a>
+                <a class="nav-link" href="/">
+                    <i class='fas fa-user' style='font-size:16px'></i>
+                    <span th:text="#{navbar.home}"></span>
+                </a>
             </li>
             <li class="nav-item dropdown active">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
-                   aria-haspopup="true" aria-expanded="false"> Jugar
+                   aria-haspopup="true" aria-expanded="false">
+                    <span th:text="#{navbar.play}"></span>
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item" href="/">Juego 1</a>
-                    <a class="dropdown-item" href="/">Juego 2</a>
+                    <a class="dropdown-item" href="/" th:text="#{navbar.game1}"></a>
+                    <a class="dropdown-item" href="/" th:text="#{navbar.game2}"></a>
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="/">Historial</a>
+                    <a class="dropdown-item" href="/" th:text="#{navbar.history}"></a>
+                </div>
+            </li>
+        </ul>
+        <ul class="navbar-nav justify-content-end">
+            <!-- Botones para cambiar de idioma -->
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="btnLanguage" role="button" data-toggle="dropdown"
+                   aria-haspopup="true" aria-expanded="false">
+                    <span th:text="#{navbar.changeLanguage}"></span>
+                </a>
+                <div id="languageDropdownMenuButton" class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <!-- Botón para cambiar a inglés -->
+                    <a class="dropdown-item" id="btnEnglish" value="EN">
+                        <img th:src="@{/images/if_uk_flag.png}" style="border: 0; float: left; margin-right: 15px"/>
+                        <span th:text="#{navbar.toEnglish}"></span>
+                    </a>
+                    <!-- Botón para cambiar a español -->
+                    <a class="dropdown-item" id="btnSpanish" value="ES">
+                        <img th:src="@{/images/if_spain_flag.png}" style="border: 0; float: left; margin-right: 15px"/>
+                        <span th:text="#{navbar.toSpanish}"></span>
+                    </a>
                 </div>
             </li>
         </ul>
@@ -27,23 +53,28 @@
             <li class="nav-item" sec:authorize="!isAuthenticated()">
                 <a class="nav-link" href="/signup">
                     <i class='fas fa-user-alt' style='font-size:16px'></i>
-                    Registrate</a>
+                    <span th:text="#{navbar.signup}"></span>
+                </a>
             </li>
             <li class="nav-item" sec:authorize="!isAuthenticated()">
                 <a class="nav-link" href="/login">
-                <i class='fas fa-sign-in-alt' style='font-size:16px'></i>
-                Identifícate</a></li>
+                    <i class='fas fa-sign-in-alt' style='font-size:16px'></i>
+                    <span th:text="#{navbar.login}"></span>
+                </a>
+            </li>
 
             <!-- Botones para cuando el usuario ESTÁ autenticado -->
             <li class="nav-item" sec:authorize="isAuthenticated()">
                 <a class="nav-link" href="/home" sec:authentication="principal.username">
                     <i class='fas fa-user' style='font-size:16px'></i>
+                    <span th:text="#{navbar.profile}"></span>
                 </a>
             </li>
             <li class="nav-item" sec:authorize="isAuthenticated()">
                 <a class="nav-link" href="/logout">
                     <i class='fas fa-user-alt' style='font-size:16px'></i>
-                    Cerrar sesión</a>
+                    <span th:text="#{navbar.logout}"></span>
+                </a>
             </li>
         </ul>
     </div>
