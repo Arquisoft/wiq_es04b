@@ -34,7 +34,7 @@ public class Associations {
          * @param apiKey The API key
          */
         public static void addApiKey(Player player, ApiKey apiKey) {
-            apiKey.setUser(player);
+            apiKey.setPlayer(player);
             player.setApiKey(apiKey);
         }
 
@@ -45,7 +45,7 @@ public class Associations {
          * @param apiKey The API key
          */
         public static void removeApiKey(Player player, ApiKey apiKey) {
-            apiKey.setUser(null);
+            apiKey.setPlayer(null);
             player.setApiKey(null);
         }
     }
