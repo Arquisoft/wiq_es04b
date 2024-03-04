@@ -59,3 +59,29 @@ p span {
     background-color: #1c2530; /* Color de fondo azul más oscuro */
     border-color: #1c2530; /* Color del borde más oscuro */
 }
+
+/* Clase para el ranking */
+.ranking-table {
+    width: 100%;
+    margin-top: 20px;
+    border-collapse: collapse;
+}
+
+.ranking-table th, .ranking-table td {
+    border: 1px solid #ced4da; /* Borde gris */
+    padding: 10px; /* Agregar relleno */
+    text-align: left;
+}
+
+.ranking-table th {
+    background-color: #283048; /* Color de fondo azul oscuro */
+    color: #fff; /* Texto blanco */
+}
+
+.ranking-table tr:nth-child(even) {
+    background-color: #f2f2f2; /* Fondo gris claro para filas pares */
+}
+
+.ranking-table tr:hover {
+    background-color: #ddd; /* Fondo gris más oscuro al pasar el ratón */
+}
