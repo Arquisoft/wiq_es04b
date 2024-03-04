@@ -10,6 +10,6 @@ import java.util.List;
 public interface RestApiLogRepository extends CrudRepository<RestApiAccessLog, Long> {
     List<RestApiAccessLog> findByApiKey(ApiKey apiKey);
 
-    @Query("SELECT r FROM RestApiAccessLog r WHERE r.apiKey.user = ?1")
+    @Query("SELECT r FROM RestApiAccessLog r WHERE r.apiKey.player = ?1")
     List<RestApiAccessLog> findByUser(Player user);
 }

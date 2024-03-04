@@ -19,7 +19,7 @@ public class ApiKey {
     private Long id;
 
     @Column(unique = true)
-    private String key = UUID.randomUUID().toString();
+    private String keyToken = UUID.randomUUID().toString();
 
     @OneToOne
     private Player player;

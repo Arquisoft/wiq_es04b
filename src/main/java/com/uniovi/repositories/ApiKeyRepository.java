@@ -4,5 +4,5 @@ import com.uniovi.entities.ApiKey;
 import org.springframework.data.repository.CrudRepository;
 
 public interface ApiKeyRepository extends CrudRepository<ApiKey, Long> {
-    ApiKey findByKey(String key);
+    ApiKey findByKeyToken(String key);
 }

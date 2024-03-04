@@ -99,7 +99,7 @@ public class PlayerServiceImpl implements PlayerService {
     public void generateApiKey(Player player) {
         ApiKey apiKey = new ApiKey();
         Associations.PlayerApiKey.addApiKey(player, apiKey);
-        System.out.println("Generated API key for " + player.getUsername() + ": " + apiKey.getKey());
+        System.out.println("Generated API key for " + player.getUsername() + ": " + apiKey.getKeyToken());
         playerRepository.save(player);
     }
 }

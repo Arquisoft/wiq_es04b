@@ -27,6 +27,6 @@ public class ApiKeyServiceImpl implements ApiKeyService {
 
     @Override
     public ApiKey getApiKey(String apiKey) {
-        return apiKeyRepository.findByKey(apiKey);
+        return apiKeyRepository.findByKeyToken(apiKey);
     }
 }
