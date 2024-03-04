@@ -25,30 +25,39 @@ public class InsertSampleDataService {
     private final QuestionService questionService;
     private final CategoryService categoryService;
     private final QuestionRepository questionRepository;
+    private final GameSessionRepository gameSessionRepository;
 
     public InsertSampleDataService(PlayerService playerService, QuestionService questionService,
-                                   CategoryService categoryService, QuestionRepository questionRepository) {
+                                   CategoryService categoryService, QuestionRepository questionRepository,
+                                   GameSessionRepository gameSessionRepository) {
         this.playerService = playerService;
         this.questionService = questionService;
         this.categoryService = categoryService;
         this.questionRepository = questionRepository;
+        this.gameSessionRepository = gameSessionRepository;
     }
 
-    @PostConstruct
-    public void init() {
-        if (playerService.getUserByEmail("test@test.com").isPresent())
-            return;
-
-        PlayerDto player = new PlayerDto();
-        player.setEmail("test@test.com");
-        player.setUsername("test");
-        player.setPassword("test");
-        player.setRoles(new String[]{"ROLE_USER"});
-        playerService.generateApiKey(playerService.addNewPlayer(player));
-    }
-
+    @Transactional
     @EventListener(ApplicationReadyEvent.class) // Uncomment this line to insert sample data on startup
     public void insertSampleQuestions() {
+        if (!playerService.getUserByEmail("test@test.com").isPresent()) {
+            PlayerDto player = new PlayerDto();
+            player.setEmail("test@test.com");
+            player.setUsername("test");
+            player.setPassword("test");
+            player.setRoles(new String[]{"ROLE_USER"});
+            playerService.generateApiKey(playerService.addNewPlayer(player));
+        }
+
+        GameSession gameSession = new GameSession();
+        gameSession.setFinishTime(LocalDateTime.now().plusMinutes(5));
+        gameSession.setCreatedAt(LocalDateTime.now());
+        gameSession.setTotalQuestions(40);
+        gameSession.setCorrectQuestions(10);
+        gameSession.setPlayer(playerService.getUserByEmail("test@test.com").get());
+        playerService.getUserByEmail("test@test.com").get().getGameSessions().add(gameSession);
+        gameSessionRepository.save(gameSession);
+
         questionRepository.deleteAll();
 
         QuestionGenerator border = new BorderQuestionGenerator(categoryService);
