@@ -21,7 +21,7 @@ public class ApiKey {
     @Column(unique = true)
     private String key = UUID.randomUUID().toString();
 
-    @OneToOne(mappedBy = "apiKey")
+    @OneToOne
     private Player player;
 
     @OneToMany(mappedBy = "apiKey")
