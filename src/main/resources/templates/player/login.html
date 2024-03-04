@@ -9,14 +9,14 @@
   <h2 th:text="#{login.title}"> </h2>
   <form class="form-horizontal" method="post" action="/login">
     <div class="form-group">
-      <label class="control-label col-sm-2" for="username" th:text="#{login.username.label}"></label>
+      <label class="control-label col-sm-10" for="username" th:text="#{login.username.label}"></label>
       <div class="col-sm-10">
         <input type="text" class="form-control" id="username" name="username"
                th:placeholder="#{login.username.placeholder}" required="true" />
       </div>
     </div>
     <div class="form-group">
-      <label class="control-label col-sm-2" for="password" th:text="#{login.password.label}"></label>
+      <label class="control-label col-sm-10" for="password" th:text="#{login.password.label}"></label>
       <div class="col-sm-10">
         <input type="password" class="form-control" id="password" name="password"
                th:placeholder="#{login.password.placeholder}" required="true" />

@@ -9,7 +9,11 @@ html {
 /* Estilo para el contenedor principal */
 .container {
     max-width: 960px; /* Ancho máximo del contenido */
-    margin: 50px auto; /* Centrar el contenido y agregar un margen superior e inferior */
+    margin: 5% auto; /* Centrar el contenido y agregar un margen superior e inferior */
+}
+
+.container-fluid {
+    margin: 5% auto; /* Centrar el contenido y agregar un margen superior e inferior */
 }
 
 /* Estilo para los títulos */

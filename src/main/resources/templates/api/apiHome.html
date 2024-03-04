@@ -2,25 +2,14 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{fragments/head}">
 <body>
-<style>
-    .api-table th, .api-table td {
-        vertical-align: top;
-        text-align: left;
-    }
-    .example-response {
-        background-color: #f0f4f8; /* Light grey-blue background for readability */
-        border-radius: 0.25rem; /* Rounded corners */
-        padding: 1rem; /* Padding inside the box */
-        border: 1px solid #d3d3d3; /* Light grey border */
-    }
-</style>
+<link rel="stylesheet" th:href="@{/css/api.css}" />
 <nav th:replace="~{fragments/nav}"></nav>
 
 <div class="container-fluid mt-5">
+    <h2 th:text="#{api.doc.title}"></h2>
     <div class="row">
         <!-- Lateral Navigation Sidebar -->
-        <div class="col-md-2">
-            <h2 th:text="#{api.doc.title}"></h2>
+        <div class="col-md-2 pr-md-3">
             <p th:text="#{api.doc.description}"></p>
             <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
                 <a class="nav-link active" id="v-pills-players-tab" data-toggle="pill" href="#v-pills-players" role="tab" aria-controls="v-pills-players" aria-selected="true">/api/players</a>
