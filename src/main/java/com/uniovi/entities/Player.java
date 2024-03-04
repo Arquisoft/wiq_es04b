@@ -39,7 +39,7 @@ public class Player implements JsonEntity {
     @OneToMany(mappedBy = "player", cascade = CascadeType.REMOVE)
     private Set<GameSession> gameSessions = new HashSet<>();
 
-    @OneToOne(cascade = CascadeType.PERSIST, mappedBy = "user")
+    @OneToOne(cascade = CascadeType.PERSIST, mappedBy = "player")
     private ApiKey apiKey;
 
     // Transient: no se almacena en la base de datos

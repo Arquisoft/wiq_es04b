@@ -22,7 +22,7 @@ public class ApiKey {
     private String key = UUID.randomUUID().toString();
 
     @OneToOne(mappedBy = "apiKey")
-    private Player user;
+    private Player player;
 
     @OneToMany(mappedBy = "apiKey")
     private Set<RestApiAccessLog> accessLogs = new HashSet<>();
