@@ -36,7 +36,7 @@ public class Player implements JsonEntity {
     @ManyToMany(cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     private Set<Role> roles = new HashSet<>();
 
-    @OneToMany(mappedBy = "player")
+    @OneToMany(mappedBy = "player", cascade = CascadeType.REMOVE)
     private Set<GameSession> gameSessions = new HashSet<>();
 
     @OneToOne(cascade = CascadeType.ALL)
@@ -58,12 +58,15 @@ public class Player implements JsonEntity {
         ArrayNode rolesArray = mapper.createArrayNode();
         roles.forEach(role -> rolesArray.add(role.getName()));
 
+        ArrayNode gameSessionsArray = mapper.createArrayNode();
+        gameSessions.forEach(gameSession -> gameSessionsArray.add(gameSession.toJson()));
+
         ObjectNode obj = mapper.createObjectNode();
-        obj
-                .put("id", id)
+        obj     .put("id", id)
                 .put("username", username)
                 .put("email", email)
                 .put("roles", rolesArray);
+        obj     .put("gameSessions", gameSessionsArray);
         return obj;
     }
 }

@@ -1,12 +1,11 @@
 package com.uniovi.services.impl;
 
-import com.uniovi.entities.ApiKey;
-import com.uniovi.entities.Associations;
-import com.uniovi.entities.Player;
-import com.uniovi.entities.RestApiAccessLog;
+import com.mysql.cj.util.StringUtils;
+import com.uniovi.entities.*;
 import com.uniovi.repositories.RestApiLogRepository;
 import com.uniovi.services.ApiKeyService;
 import com.uniovi.services.PlayerService;
+import com.uniovi.services.QuestionService;
 import com.uniovi.services.RestApiService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,11 +21,14 @@ import java.util.Optional;
 public class RestApiServiceImpl implements RestApiService {
     private final PlayerService playerService;
     private final RestApiLogRepository restApiLogRepository;
+    private final QuestionService questionService;
 
     @Autowired
-    public RestApiServiceImpl(PlayerService playerService, RestApiLogRepository restApiLogRepository) {
+    public RestApiServiceImpl(PlayerService playerService, RestApiLogRepository restApiLogRepository,
+                              QuestionService questionService) {
         this.playerService = playerService;
         this.restApiLogRepository = restApiLogRepository;
+        this.questionService = questionService;
     }
 
     @Override
@@ -52,11 +54,15 @@ public class RestApiServiceImpl implements RestApiService {
         }
 
         if (params.containsKey("id")) {
-            Optional<Player> found = playerService.getUser(Long.parseLong(params.get("id")));
-            if (found.isPresent())
-                return List.of(found.get());
-            else
+            try {
+                Optional<Player> found = playerService.getUser(Long.parseLong(params.get("id")));
+                if (found.isPresent())
+                    return List.of(found.get());
+                else
+                    return List.of();
+            } catch (NumberFormatException e) {
                 return List.of();
+            }
         }
 
         if (params.containsKey("usernames")) {
@@ -92,5 +98,40 @@ public class RestApiServiceImpl implements RestApiService {
         log.setDetails(params.toString());
         Associations.ApiKeyAccessLog.addAccessLog(apiKey, log);
         restApiLogRepository.save(log);
+    }
+
+    @Override
+    public List<Question> getQuestions(Map<String, String> params) {
+        if (params.containsKey("category")) {
+            String category = params.get("category");
+            if (StringUtils.isStrictlyNumeric(category)) {
+                return questionService.getAllQuestions().stream()
+                        .filter(q -> q.getCategory().getId() == Long.parseLong(category))
+                        .toList();
+            } else {
+                return questionService.getAllQuestions().stream()
+                        .filter(q -> q.getCategory().getName().equals(category))
+                        .toList();
+            }
+        }
+        if (params.containsKey("id")) {
+            try {
+                Optional<Question> found = questionService.getQuestion(Long.parseLong(params.get("id")));
+                if (found.isPresent())
+                    return List.of(found.get());
+                else
+                    return List.of();
+            } catch (NumberFormatException e) {
+                return List.of();
+            }
+        }
+
+        if (params.containsKey("statement")) {
+            return questionService.getAllQuestions().stream()
+                    .filter(q -> q.getStatement().contains(params.get("statement")))
+                    .toList();
+        }
+
+        return questionService.getAllQuestions();
     }
 }
