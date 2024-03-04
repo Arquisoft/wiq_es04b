@@ -13,7 +13,6 @@ import java.util.UUID;
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(name = "api_key")
 public class ApiKey {
     @Id
     @GeneratedValue
