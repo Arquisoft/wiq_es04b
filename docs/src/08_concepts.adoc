@@ -67,6 +67,15 @@ class Role {
     - players: Set<Player>
 }
 
+class Answer {
+    - id: Long
+    - text: String
+    - correct: boolean
+    - question: Question
+    + toString(): String
+    + toJson(): JsonNode
+}
+
 interface PlayerService {
     + addNewPlayer(dto: PlayerDto): Player
     + getUsers(): List<Player>
