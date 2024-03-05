@@ -2,6 +2,7 @@ package com.uniovi.controllers;
 
 import com.uniovi.configuration.SecurityConfig;
 import com.uniovi.entities.Player;
+import com.uniovi.services.GameSessionService;
 import com.uniovi.services.PlayerService;
 import com.uniovi.validators.SignUpValidator;
 import jakarta.servlet.ServletException;
@@ -32,10 +33,13 @@ public class PlayersController {
     private final PlayerService playerService;
     private final SignUpValidator signUpValidator;
 
+    private final GameSessionService gameSessionService;
+
     @Autowired
-    public PlayersController(PlayerService playerService, SignUpValidator signUpValidator) {
+    public PlayersController(PlayerService playerService, SignUpValidator signUpValidator, GameSessionService gameSessionService) {
         this.playerService = playerService;
         this.signUpValidator =  signUpValidator;
+        this.gameSessionService = gameSessionService;
     }
 
     @GetMapping("/signup")
@@ -91,5 +95,13 @@ public class PlayersController {
     @GetMapping("/home")
     public String home(Model model, Principal principal) {
         return "player/home";
+    }
+
+    @GetMapping("/ranking")
+    public String showRanking(Model model, Principal principal) {
+        Player player = playerService.getUserByUsername(principal.getName()).get();
+        model.addAttribute("ranking", gameSessionService.getGameSessionsByPlayer(player));
+
+        return "player/login";
     }
 }
