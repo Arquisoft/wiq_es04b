@@ -110,8 +110,8 @@ interface CrudRepository {
 }
 
 interface PlayerRepository {
-    + findByUsername(username: String): Optional<Player>
-    + findByEmail(email: String): Optional<Player>
+    + findByEmail(email: String): Player
+    + findByUsername(nickname: String): Player
 }
 
 interface RoleRepository {
