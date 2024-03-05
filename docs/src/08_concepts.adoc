@@ -68,11 +68,13 @@ class Role {
 }
 
 interface PlayerService {
-    + addNewPlayer(playerDto: PlayerDto): Player
+    + addNewPlayer(dto: PlayerDto): Player
     + getUsers(): List<Player>
     + getUser(id: Long): Optional<Player>
-    + getUserByUsername(username: String): Optional<Player>
     + getUserByEmail(email: String): Optional<Player>
+    + getUserByUsername(username: String): Optional<Player>
+    + getUsersByRole(role: String): List<Player>
+    + generateapiKey(player: Player): void
 }
 
 interface RoleService {
