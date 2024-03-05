@@ -56,20 +56,10 @@ class GameSession {
   - correctQuestions: Integer
   - totalQuestions: Integer
   - createdAt: LocalDateTime
-  - updatedAt: LocalDateTime
-  + getPlayer(): Player
-  + getScore(): Integer
-  + getCreatedAt(): LocalDateTime
-  + getUpdatedAt(): LocalDateTime
-  + getCorrectQuestions(): Integer
-  + getTotalQuestions(): Integer
+  - finishTime: LocalDateTime
+  - score: int
   + addQuestion(correct: boolean): void
-  + setPlayer(player: Player): void
-  + setScore(score: Integer): void
-  + setCreatedAt(createdAt: LocalDateTime): void
-  + setUpdatedAt(updatedAt: LocalDateTime): void
-  + setCorrectQuestions(correctQuestions: Integer): void
-  + setTotalQuestions(totalQuestions: Integer): void
+  + toJson(): JsonNode
 }
 
 class Role {
