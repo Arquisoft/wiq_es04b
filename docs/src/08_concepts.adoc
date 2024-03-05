@@ -45,18 +45,9 @@ class Player {
   - password: String
   - passwordConfirm : String
   - roles: Set<Role>
-  + getId(): Long
-  + getUsername(): String
-  + getEmail(): String
-  + getPassword(): String
-  + getPasswordConfirm(): String
-  + getRoles(): Set<Role>
-  + setUsername(username: String): void
-  + setEmail(email: String): void
-  + setPassword(password: String): void
-  + setPasswordConfirm(passwordConfirm: String): void
-  + setRoles(roles: Set<Role>): void
-  + setId(id: Long): void
+  - gameSessions: Set<GameSession>
+  - apiKey: ApiKey
+  + toJson(): JsonNode
 }
 
 class GameSession {
