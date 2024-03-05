@@ -139,6 +139,12 @@ interface RoleService {
     + getRoles(): List<Role>
 }
 
+interface AnswerService {
+    + addNewAnswer(answer: Answer): void
+    + getAnswerPerQuestion(question: Question): List<Answer>
+    + getAnswer(id: Long): Optional<Answer>
+}
+
 class PlayerServiceImpl {
     - playerRepository: PlayerRepository
     - roleService: RoleService
