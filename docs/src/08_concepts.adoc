@@ -83,6 +83,35 @@ class ApiKey {
     - accessLogs: Set<RestApiAccessLog>
 }
 
+class Associations {
+
+}
+
+class PlayerRole {
+    + addRole(player: Player, role: Role): void
+    + removeRole(player: Player, role: Role): void
+}
+
+class PlayerApiKey {
+    + addApiKey(player: Player, apiKey: ApiKey): void
+    + removeApiKey(player: Player, apiKey: ApiKey): void
+}
+
+class ApiKeyAccessLog {
+    + addAccessLog(apiKey: ApiKey, accessLog: RestApiAccessLog): void
+    + removeAccessLog(apiKey: ApiKey, accessLog: RestApiAccessLog): void
+}
+
+class PlayerGameSession {
+    + addGameSession(player: Player, gameSession: GameSession): void
+    + removeGameSession(player: Player, gameSession: GameSession): void
+}
+
+class QuestionAnswers {
+    + addAnswer(question: Question, answer: List<Answer>): void
+    + removeAnswer(question: Question, answer: List<Answer>): void
+}
+
 interface PlayerService {
     + addNewPlayer(dto: PlayerDto): Player
     + getUsers(): List<Player>
@@ -158,6 +187,7 @@ RoleServiceImpl .> RoleRepository
 RoleService ..> RoleDto
 PlayerRepository --|> CrudRepository
 RoleRepository -|> CrudRepository
+Associations +-- PlayerRole
 @enduml
 ----
 
