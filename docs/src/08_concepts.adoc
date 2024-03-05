@@ -157,6 +157,12 @@ interface CategoryService {
     + getCategoryByName(geography: String): Category
 }
 
+interface QuestionService {
+    + addNewQuestion(question: Question): void
+    + getAllQuestions(): List<Question>
+    + getQuestion(id: Long): Optional<Question>
+}
+
 class PlayerServiceImpl {
     - playerRepository: PlayerRepository
     - roleService: RoleService
