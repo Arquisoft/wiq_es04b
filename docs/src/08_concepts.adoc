@@ -115,7 +115,6 @@ interface PlayerRepository {
 }
 
 interface RoleRepository {
-    + findByName(name: String): Role
 }
 
 class PlayerDto {
