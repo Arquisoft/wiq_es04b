@@ -112,6 +112,13 @@ class QuestionAnswers {
     + removeAnswer(question: Question, answer: List<Answer>): void
 }
 
+class RestApiAccessLog {
+    - id: Long
+    - apiKey: ApiKey
+    - path: String
+    - details: String
+}
+
 interface PlayerService {
     + addNewPlayer(dto: PlayerDto): Player
     + getUsers(): List<Player>
