@@ -119,6 +119,10 @@ class RestApiAccessLog {
     - details: String
 }
 
+interface JsonEntity {
+    + toJson(): JsonNode
+}
+
 interface PlayerService {
     + addNewPlayer(dto: PlayerDto): Player
     + getUsers(): List<Player>
