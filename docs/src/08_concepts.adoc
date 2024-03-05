@@ -145,6 +145,11 @@ interface AnswerService {
     + getAnswer(id: Long): Optional<Answer>
 }
 
+interface ApiKeyService {
+    + createApiKey(forPlayer: Player): ApiKey
+    + getApiKey(apiKey: String): ApiKey
+}
+
 class PlayerServiceImpl {
     - playerRepository: PlayerRepository
     - roleService: RoleService
