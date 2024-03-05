@@ -33,10 +33,9 @@ class Question {
 class Category {
   - id: Long
   - name: String
-  + getName(): String
-  + getId(): Long
-  + setName(name: String): void
-  + setId(id: Long): void
+  - questions: Set<Question>
+  + toString(): String
+  + toJson(): JsonNode
 }
 
 class Player {
