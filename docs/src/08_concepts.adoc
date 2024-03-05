@@ -150,6 +150,13 @@ interface ApiKeyService {
     + getApiKey(apiKey: String): ApiKey
 }
 
+interface CategoryService {
+    + addNewCategory(category: Category): void
+    + getAllCategories(): List<Category>
+    + getCategory(id: Long): Optional<Category>
+    + getCategoryByName(geography: String): Category
+}
+
 class PlayerServiceImpl {
     - playerRepository: PlayerRepository
     - roleService: RoleService
