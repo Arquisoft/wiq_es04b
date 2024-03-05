@@ -76,6 +76,13 @@ class Answer {
     + toJson(): JsonNode
 }
 
+class ApiKey {
+    - id: Long
+    - keyToken: String
+    - player: Player
+    - accessLogs: Set<RestApiAccessLog>
+}
+
 interface PlayerService {
     + addNewPlayer(dto: PlayerDto): Player
     + getUsers(): List<Player>
