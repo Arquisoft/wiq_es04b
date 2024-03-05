@@ -78,9 +78,9 @@ interface PlayerService {
 }
 
 interface RoleService {
-    + addRole(roleDto: RoleDto): Role
-    + getRoles(): List<Role>
+    + addRole(role: RoleDto): Role
     + getRole(name: String): Role
+    + getRoles(): List<Role>
 }
 
 class PlayerServiceImpl {
