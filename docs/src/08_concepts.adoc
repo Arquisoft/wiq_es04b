@@ -63,12 +63,8 @@ class GameSession {
 }
 
 class Role {
-    - id: Long
     - name: String
-    + getId(): Long
-    + getName(): String
-    + setId(id: Long): void
-    + setName(name: String): void
+    - players: Set<Player>
 }
 
 interface PlayerService {
