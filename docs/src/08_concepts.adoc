@@ -86,11 +86,14 @@ interface RoleService {
 class PlayerServiceImpl {
     - playerRepository: PlayerRepository
     - roleService: RoleService
-    + addNewPlayer(playerDto: PlayerDto): Player
+    - passwordEncoder: PasswordEncoder
+    + addNewPlayer(dto: PlayerDto): Player
     + getUsers(): List<Player>
     + getUser(id: Long): Optional<Player>
-    + getUserByUsername(username: String): Optional<Player>
     + getUserByEmail(email: String): Optional<Player>
+    + getUserByUsername(username: String): Optional<Player>
+    + getUsersByRole(role: String): List<Player>
+    + generateApiKey(player: Player): void
 }
 
 class RoleServiceImpl {
