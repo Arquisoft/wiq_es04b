@@ -15,21 +15,19 @@ The domain model for our game includes entities such as `Question`, `Category`, 
 @startuml
 class Question {
   - id: Long
-  - question: String
-  - correctAnswer: String
-  - incorrectAnswers: List<String>
+  - statement: String
+  - options: List<Answer>
+  - correctAnswer: Answer
   - category: Category
-  - difficulty: String
-  - type: String
-  - updatedAt: LocalDateTime
-  + getId(): Long
-  + getQuestion(): String
-  + getCorrectAnswer(): String
-  + getIncorrectAnswers(): List<String>
-  + getCategory(): Category
-  + getDifficulty(): String
-  + getType(): String
-  + getUpdatedAt(): LocalDateTime
+  + addOption(option: Answer): void
+  + removeOption(option: Answer): void
+  + getOption(index: int): Answer
+  + isCorrectAnswer(answer: Answer): boolean
+  + scrambleOptions(): void
+  + equals(o: Object): boolean
+  + hashCode(): int
+  + toString(): String
+  + toJson(): JsonNode
 }
 
 class Category {
