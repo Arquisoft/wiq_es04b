@@ -3,15 +3,17 @@
     <thead>
     <tr>
         <th th:text="#{ranking.position}">Posición</th>
+        <th th:text="#{ranking.player}">Jugador</th>
         <th th:text="#{ranking.score}">Puntuación</th>
-        <th th:text="#{ranking.date}">Fecha</th>
     </tr>
     </thead>
     <tbody>
-    <tr th:each="game, iterStat : ${ranking}">
+
+    <!-- Now iterate through the playerScores map to display the final rankings -->
+    <tr th:each="player, iertStat : ${ranking}">
         <td th:text="${iterStat.count}"></td>
-        <td th:text="${game.score}"></td>
-        <td th:text="${#dates.format(game.createdAt, 'dd-MM-yyyy HH:mm:ss')}"></td>
+        <td th:text="${player.key.getUsername()}"></td>
+        <td th:text="${player.value}"></td>
     </tr>
     </tbody>
 </table>

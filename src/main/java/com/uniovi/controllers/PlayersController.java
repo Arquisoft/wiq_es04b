@@ -97,11 +97,16 @@ public class PlayersController {
         return "player/home";
     }
 
-    @GetMapping("/ranking")
+    @GetMapping("/playerRanking")
     public String showRanking(Model model, Principal principal) {
         Player player = playerService.getUserByUsername(principal.getName()).get();
         model.addAttribute("ranking", gameSessionService.getGameSessionsByPlayer(player));
+        return "fragments/playerRanking";
+    }
 
-        return "player/login";
+    @GetMapping("/globalRanking")
+    public String showGlobalRanking(Model model) {
+        model.addAttribute("ranking", gameSessionService.getSortedPlayersScores());
+        return "fragments/globalRanking";
     }
 }

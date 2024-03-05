@@ -2,9 +2,11 @@ package com.uniovi.services;
 
 import com.uniovi.entities.GameSession;
 import com.uniovi.entities.Player;
+import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
-
+@Service
 public interface GameSessionService {
 
     /**
@@ -20,5 +22,7 @@ public interface GameSessionService {
      * @return the list of GameSessions by player
      */
     List<GameSession> getGameSessionsByPlayer(Player player);
+
+    HashMap<Player,Integer> getSortedPlayersScores();
 
 }

@@ -27,6 +27,8 @@ public class GameSession {
     private LocalDateTime createdAt;
     private LocalDateTime updateAt;
 
+    private int score;
+
     public void addQuestion(boolean correct) {
         if(correct)
             correctQuestions++;
