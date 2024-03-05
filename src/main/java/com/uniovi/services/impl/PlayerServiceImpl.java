@@ -2,6 +2,7 @@ package com.uniovi.services.impl;
 
 import com.uniovi.dto.PlayerDto;
 import com.uniovi.dto.RoleDto;
+import com.uniovi.entities.ApiKey;
 import com.uniovi.entities.Associations;
 import com.uniovi.entities.Player;
 import com.uniovi.repositories.PlayerRepository;
@@ -83,5 +84,22 @@ public class PlayerServiceImpl implements PlayerService {
     @Override
     public Optional<Player> getUserByUsername(String username) {
         return Optional.ofNullable(playerRepository.findByUsername(username));
+    }
+
+    @Override
+    public List<Player> getUsersByRole(String role) {
+        Role r = roleService.getRole(role);
+        if (r == null)
+            return new ArrayList<>();
+
+        return new ArrayList<>(r.getPlayers());
+    }
+
+    @Override
+    public void generateApiKey(Player player) {
+        ApiKey apiKey = new ApiKey();
+        Associations.PlayerApiKey.addApiKey(player, apiKey);
+        System.out.println("Generated API key for " + player.getUsername() + ": " + apiKey.getKeyToken());
+        playerRepository.save(player);
     }
 }

@@ -1,5 +1,8 @@
 package com.uniovi.entities;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.uniovi.interfaces.JsonEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,7 +15,7 @@ import java.util.Set;
 @Setter
 @Entity
 @NoArgsConstructor
-public class Category {
+public class Category implements JsonEntity {
 
     @Id
     @GeneratedValue
@@ -28,5 +31,19 @@ public class Category {
     public Category(String name, String description) {
         this.name = name;
         this.description = description;
+    }
+
+    @Override
+    public String toString() {
+        return name;
+    }
+
+    @Override
+    public JsonNode toJson() {
+        ObjectMapper mapper = new ObjectMapper();
+        return mapper.createObjectNode()
+                .put("id", id)
+                .put("name", name)
+                .put("description", description);
     }
 }

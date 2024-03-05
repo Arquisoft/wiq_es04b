@@ -1,11 +1,17 @@
 package com.uniovi.entities;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.uniovi.interfaces.JsonEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.util.Assert;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -14,8 +20,7 @@ import java.util.Objects;
 @Setter
 @Entity
 @NoArgsConstructor
-public class Question {
-
+public class Question implements JsonEntity {
     @Id
     @GeneratedValue
     private Long id;
@@ -23,8 +28,8 @@ public class Question {
     @Column(unique = true)
     private String statement;
 
-    @OneToMany(mappedBy = "question")
-    private List<Answer> options;
+    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Answer> options = new ArrayList<>();
 
     @OneToOne
     private Answer correctAnswer;
@@ -35,7 +40,7 @@ public class Question {
     public Question(String statement, List<Answer> options, Answer correctAnswer, Category category) {
         Assert.isTrue(options.contains(correctAnswer), "Correct answer must be one of the options");
         this.statement = statement;
-        this.options = options;
+        Associations.QuestionAnswers.addAnswer(this, options);
         this.correctAnswer = correctAnswer;
         this.category = category;
     }
@@ -90,5 +95,19 @@ public class Question {
                 ", correctAnswer=" + correctAnswer.toString() +
                 ", category=" + category +
                 '}';
+    }
+
+    @Override
+    public JsonNode toJson() {
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode
+                obj = mapper.createObjectNode()
+                    .put("id", id)
+                    .put("statement", statement);
+                obj .put("category", category.toJson());
+        ArrayNode optionsArray = mapper.createArrayNode();
+        options.forEach(option -> optionsArray.add(option.toJson()));
+        obj         .put("options", optionsArray);
+        return obj;
     }
 }

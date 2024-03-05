@@ -46,4 +46,17 @@ public interface PlayerService {
      * @return The player with the given nickname
      */
     Optional<Player> getUserByUsername(String username);
+
+    /**
+     * Get all the players with a given role
+     * @param role The role to filter the players
+     * @return A list with all the players with the given role
+     */
+    List<Player> getUsersByRole(String role);
+
+    /**
+     * Generate an API key for a player
+     * @param player The player to generate the API key for
+     */
+    void generateApiKey(Player player);
 }
