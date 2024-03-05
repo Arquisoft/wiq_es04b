@@ -98,9 +98,9 @@ class PlayerServiceImpl {
 
 class RoleServiceImpl {
     - roleRepository: RoleRepository
-    + addRole(roleDto: RoleDto): Role
-    + getRoles(): List<Role>
+    + addRole(role: RoleDto): Role
     + getRole(name: String): Role
+    + getRoles(): List<Role>
 }
 
 interface CrudRepository {
