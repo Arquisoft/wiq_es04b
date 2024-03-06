@@ -260,6 +260,11 @@ interface QuestionRepository {
     + findByStatement(statement: String): Question
 }
 
+interface RestApiLogRepository {
+    + findByApiKey(apiKey: ApiKey): List<RestApiAccessLog>
+    + findByUser(user: Player): List<RestApiAccessLog>
+}
+
 class PlayerDto {
     + username: String
     + email: String
