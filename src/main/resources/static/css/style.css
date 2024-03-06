@@ -59,3 +59,22 @@ p span {
     background-color: #1c2530; /* Color de fondo azul más oscuro */
     border-color: #1c2530; /* Color del borde más oscuro */
 }
+
+.stopwatch-container {
+    position: relative;
+    text-align: center;
+    width: 200px;
+    margin: auto;
+}
+.countdown {
+    position: absolute;
+    top: 53%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 3em;
+    color: black;
+}
+.stopwatch-img {
+    width: 100%;
+    height: auto;
+}
