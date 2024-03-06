@@ -189,6 +189,13 @@ class RoleServiceImpl {
     + getRoles(): List<Role>
 }
 
+class AnswerServiceImpl {
+    - answerRepository: AnswerRepository
+    + addNewAnswer(answer: Answer): void
+    + getAnswersPerQuestion(question: Question): List<Answer>
+    + getAnswer(id: Long): Optional<Answer>
+}
+
 interface CrudRepository {
     + save(entity: T): T
     + findById(id: ID): Optional<T>
