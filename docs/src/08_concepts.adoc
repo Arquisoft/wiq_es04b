@@ -241,6 +241,10 @@ interface PlayerRepository {
 interface RoleRepository {
 }
 
+interface AnswerRepository {
+    + findByQuestion(question: Question): List<Answer>
+}
+
 class PlayerDto {
     + username: String
     + email: String
