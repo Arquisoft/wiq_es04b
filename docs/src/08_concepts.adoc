@@ -256,6 +256,10 @@ interface CategoryRepository {
 interface GameSessionRepository {
 }
 
+interface QuestionRepository {
+    + findByStatement(statement: String): Question
+}
+
 class PlayerDto {
     + username: String
     + email: String
