@@ -249,6 +249,10 @@ interface ApiKeyRepository {
     + findByKeyToken(key: String): ApiKey
 }
 
+interface CategoryRepository {
+    + findByName(name: String): Category
+}
+
 class PlayerDto {
     + username: String
     + email: String
