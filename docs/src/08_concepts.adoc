@@ -175,6 +175,15 @@ class CustomUserDetailsService {
     + mapRolesToAuthorities(roles: Collection<Role>): Collection< ? extends GrantedAuthority>
 }
 
+class InsertSampleDataService {
+    - playerService: PlayerService
+    - questionService: QuestionService
+    - categoryService: CategoryService
+    - questionRepository: QuestionRepository
+    - gameSessionRepository: GameSessionRepository
+    + insertSampleQuestions(): void
+}
+
 class PlayerServiceImpl {
     - playerRepository: PlayerRepository
     - roleService: RoleService
