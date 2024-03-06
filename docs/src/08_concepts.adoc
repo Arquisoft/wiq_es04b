@@ -280,7 +280,14 @@ class RoleDto {
 class AnswerDto {
     - id: Long
     - text: String
-    - correct: boolean¡
+    - correct: boolean
+}
+
+class CategoryDto {
+    - id: Long
+    - name: String
+    - description: String
+    - questions: List<QuestionDto>
 }
 
 Question "1" *- "1" Category
