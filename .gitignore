@@ -92,3 +92,6 @@ target/classes/templates/fragments/footer.html
 target/classes/templates/fragments/head.html
 target/classes/templates/fragments/nav.html
 target/classes/templates/index.html
+/database/hsqldb/bin/test.log
+/database/hsqldb/bin/test.properties
+/database/hsqldb/bin/test.script

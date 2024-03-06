@@ -3,11 +3,8 @@
 <head th:replace="~{fragments/head}"></head>
 <body>
 <nav th:replace="~{fragments/nav}"></nav>
-<div class="container" style="text-align: center">
-    <h2 th:text="#{index.heading}" ></h2>
-    <p th:text="#{index.subtitle}"></p>
-    <a class="btn btn-primary" href="/game" th:text="#{index.button}"></a>
-</div>
+<div th:replace="~{fragments/gameFrame}">
+<div th:replace="~{fragments/gameFrame}"></div>
 <footer th:replace="~{fragments/footer}"></footer>
 </body>
 </html>

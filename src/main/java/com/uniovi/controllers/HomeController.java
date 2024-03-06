@@ -12,17 +12,14 @@ import java.util.Random;
 @Controller
 public class HomeController{
     private final PlayerService playerService;
-    private final QuestionService questionService;
 
     @Autowired
-    public HomeController(PlayerService playerService, QuestionService questionService) {
+    public HomeController(PlayerService playerService) {
         this.playerService = playerService;
-        this.questionService = questionService;
     }
 
     @GetMapping("/")
-    public String home(Model model){
-        model.addAttribute("question", questionService.getAllQuestions().get(new Random().nextInt(questionService.getAllQuestions().size())));
+    public String home(){
         return "index";
     }
 

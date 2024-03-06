@@ -10,6 +10,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -34,10 +36,21 @@ public class GameSession implements JsonEntity {
 
     private int score;
 
+    @Transient
+    private List<Question> answeredQuestions = new ArrayList<>();
+
     public void addQuestion(boolean correct) {
         if(correct)
             correctQuestions++;
         totalQuestions++;
+    }
+
+    public void addAnsweredQuestion(Question question) {
+        answeredQuestions.add(question);
+    }
+
+    public boolean isAnswered(Question question) {
+        return answeredQuestions.contains(question);
     }
 
     @Override
