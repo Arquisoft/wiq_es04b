@@ -1,23 +1,23 @@
 <div class="text-center">
     <div class="stopwatch-container">
         <img src="images/stopwatch.png" class="stopwatch-img" alt="Stopwatch">
-        <div class="countdown" id="stopwatch" th:text="${countdown}"></div>
+        <div class="countdown" id="stopwatch">24</div>
     </div>
 </div>
 
 <script th:inline="javascript">
     /*<![CDATA[*/
-    let countdown = [[${countdown}]];
-    const display = document.getElementById('stopwatch');
+    function initStopwatch(timer) {
+        let countdown = timer - 1;
+        const display = document.getElementById('stopwatch');
 
-    const timer = setInterval(() => {
-        countdown -= 1;
-        display.textContent = countdown;
-
-        if (countdown <= 0) {
-            clearInterval(timer);
-            window.location.reload(); // Refresh the page on countdown end
-        }
-    }, 1000);
+        setInterval(() => {
+            countdown -= 1;
+            if (countdown < 0) {
+                countdown = 0;
+            }
+            display.textContent = countdown;
+        }, 1000);
+    }
     /*]]>*/
 </script>

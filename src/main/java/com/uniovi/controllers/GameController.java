@@ -1,6 +1,8 @@
 package com.uniovi.controllers;
 
+import com.uniovi.entities.GameSession;
 import com.uniovi.services.QuestionService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -8,7 +10,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 @Controller
 public class GameController {
-
     private final QuestionService questionService;
 
     public GameController(QuestionService questionService) {
@@ -22,8 +23,13 @@ public class GameController {
      * @return The view to be shown
      */
     @GetMapping("/game")
-    public String getGame(Model model) {
+    public String getGame(HttpSession session, Model model) {
+        if (session.getAttribute("gameSession") == null) {
+            session.setAttribute("gameSession", new GameSession());
+        }
+
         model.addAttribute("question", questionService.getRandomQuestion().get());
+        model.addAttribute("questionDuration", QuestionService.SECONDS_PER_QUESTION);
         return "game/basicGame";
     }
 
@@ -41,19 +47,25 @@ public class GameController {
     public String getCheckResult(@PathVariable Long idQuestion, @PathVariable Long idAnswer, Model model) {
         if(idAnswer == -1) {
             model.addAttribute("correctAnswer", questionService.getQuestion(idQuestion).get().getCorrectAnswer());
-            return "game/fragments/timeRunOut";
+            model.addAttribute("messageKey", "timeRunOut.result");
+            model.addAttribute("logoImage", "/images/logo_incorrect.png");
         }
         else if(questionService.checkAnswer(idQuestion, idAnswer)) {
-            return "game/fragments/correctAnswer";
+            model.addAttribute("messageKey", "correctAnswer.result");
+            model.addAttribute("logoImage", "/images/logo_correct.png");
         } else {
             model.addAttribute("correctAnswer", questionService.getQuestion(idQuestion).get().getCorrectAnswer());
-            return "game/fragments/failedAnswer";
+            model.addAttribute("messageKey", "failedAnswer.result");
+            model.addAttribute("logoImage", "/images/logo_incorrect.png");
         }
+
+        return "game/fragments/questionResult";
     }
 
     @GetMapping("/game/update")
     public String updateGame(Model model) {
         model.addAttribute("question", questionService.getRandomQuestion().get());
+        model.addAttribute("questionDuration", QuestionService.SECONDS_PER_QUESTION);
         return "game/fragments/gameFrame";
     }
 }

@@ -1,0 +1,33 @@
+.stopwatch-container {
+    position: relative;
+    text-align: center;
+    width: 200px;
+    margin: auto;
+}
+.countdown {
+    position: absolute;
+    top: 53%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 3em;
+    color: black;
+}
+.stopwatch-img {
+    width: 100%;
+    height: auto;
+}
+
+.game-logo {
+    margin-top: 10%;
+    width: 35%;
+    height: auto;
+}
+
+#bottomGamePart {
+    margin-bottom: 10%;
+}
+
+.points {
+    font-size: 2em;
+    color: black;
+}
