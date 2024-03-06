@@ -196,6 +196,12 @@ class AnswerServiceImpl {
     + getAnswer(id: Long): Optional<Answer>
 }
 
+class AnswerServiceImpl {
+    - apiKeyRepository: ApiKeyRepository
+    + createApiKey(forPlayer: Player): ApiKey
+    + getApiKey(apiKey: String): ApiKey
+}
+
 interface CrudRepository {
     + save(entity: T): T
     + findById(id: ID): Optional<T>
