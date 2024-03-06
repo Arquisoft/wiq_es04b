@@ -290,6 +290,14 @@ class CategoryDto {
     - questions: List<QuestionDto>
 }
 
+class QuestionDto {
+    - id: Long
+    - statement: String
+    - options: List<AnswerDto>
+    - correctAnswer: AnswerDto
+    - category: CategoryDto
+}
+
 Question "1" *- "1" Category
 GameSession "*" *-- "1" Player
 Role "*" - "*" Player
