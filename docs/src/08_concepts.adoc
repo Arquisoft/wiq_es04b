@@ -211,6 +211,13 @@ class CategoryServiceImpl {
     + init(): void
 }
 
+class QuestionServiceImpl {
+    - questionRepository: QuestionRepository
+    + addNewQuestion(question: Question): void
+    + getAllQuestions(): List<Question>
+    + getQuestion(id: Long): Optional<Question>
+}
+
 interface CrudRepository {
     + save(entity: T): T
     + findById(id: ID): Optional<T>
