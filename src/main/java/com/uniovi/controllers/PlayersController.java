@@ -1,6 +1,7 @@
 package com.uniovi.controllers;
 
 import com.uniovi.configuration.SecurityConfig;
+import com.uniovi.entities.GameSession;
 import com.uniovi.entities.Player;
 import com.uniovi.services.GameSessionService;
 import com.uniovi.services.PlayerService;
@@ -9,6 +10,8 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -90,16 +93,26 @@ public class PlayersController {
         return "player/home";
     }
 
+
+    @GetMapping("/ranking/globalRanking")
+    public String showGlobalRanking(Pageable pageable, Model model) {
+        Page<Object[]> ranking = gameSessionService.getGlobalRanking(pageable);
+
+        model.addAttribute("ranking", ranking.getContent());
+        model.addAttribute("page", ranking);
+
+        return "/ranking/globalRanking";
+    }
+
     @GetMapping("/ranking/playerRanking")
-    public String showRanking(Model model, Principal principal) {
+    public String showPlayerRanking(Pageable pageable, Model model, Principal principal) {
         Player player = playerService.getUserByUsername(principal.getName()).get();
-        model.addAttribute("ranking", gameSessionService.getGameSessionsByPlayer(player));
+        Page<GameSession> ranking = gameSessionService.getPlayerRanking(pageable, player);
+
+        model.addAttribute("ranking", ranking.getContent());
+        model.addAttribute("page", ranking);
+
         return "/ranking/playerRanking";
     }
 
-    @GetMapping("/ranking/globalRanking")
-    public String showGlobalRanking(Model model) {
-        model.addAttribute("ranking", gameSessionService.getSortedPlayersScores());
-        return "/ranking/globalRanking";
-    }
 }

@@ -4,25 +4,13 @@
 <body>
 <nav th:replace="~{fragments/nav}"/>
 <div class="container">
-    <h2 th:text="#{ranking.title}">Ranking</h2>
-    <table class="ranking-table">
-        <thead>
-        <tr>
-            <th scope="col" th:text="#{ranking.position}">Posición</th>
-            <th scope="col" th:text="#{ranking.player}">Jugador</th>
-            <th scope="col" th:text="#{ranking.score}">Puntuación</th>
-        </tr>
-        </thead>
-        <tbody>
-
-        <!-- Now iterate through the playerScores map to display the final rankings -->
-        <tr th:each="player, iertStat : ${ranking}">
-            <td th:text="${iterStat.count}"></td>
-            <td th:text="${player.key.getUsername()}"></td>
-            <td th:text="${player.value}"></td>
-        </tr>
-        </tbody>
-    </table>
+    <div class="table-responsive">
+        <h2 th:text="#{ranking.title}">Ranking</h2>
+        <div class="table-responsive">
+            <table class="table table-hover" th:fragment="globalRankingTable" id="globalRankingTable" th:replace="ranking/globalRanking_table"/>
+            <footer th:replace="fragments/pagination"/>
+        </div>
+    </div>
 </div>
 <footer th:replace="~{fragments/footer}"/>
 </body>
