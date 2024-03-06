@@ -8,13 +8,7 @@ import com.uniovi.validators.SignUpValidator;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -26,7 +20,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.security.Principal;
-import java.util.Optional;
 
 @Controller
 public class PlayersController {
@@ -97,16 +90,16 @@ public class PlayersController {
         return "player/home";
     }
 
-    @GetMapping("/playerRanking")
+    @GetMapping("/ranking/playerRanking")
     public String showRanking(Model model, Principal principal) {
         Player player = playerService.getUserByUsername(principal.getName()).get();
         model.addAttribute("ranking", gameSessionService.getGameSessionsByPlayer(player));
-        return "fragments/playerRanking";
+        return "/ranking/playerRanking";
     }
 
-    @GetMapping("/globalRanking")
+    @GetMapping("/ranking/globalRanking")
     public String showGlobalRanking(Model model) {
         model.addAttribute("ranking", gameSessionService.getSortedPlayersScores());
-        return "fragments/globalRanking";
+        return "/ranking/globalRanking";
     }
 }

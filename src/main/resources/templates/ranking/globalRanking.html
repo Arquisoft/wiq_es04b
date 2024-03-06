@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://thymeleaf.org">
+<head th:replace="~{fragments/head}"/>
+<body>
+<nav th:replace="~{fragments/nav}"/>
+<div class="container">
+    <h2 th:text="#{ranking.title}">Ranking</h2>
+    <table class="ranking-table">
+        <thead>
+        <tr>
+            <th scope="col" th:text="#{ranking.position}">Posición</th>
+            <th scope="col" th:text="#{ranking.player}">Jugador</th>
+            <th scope="col" th:text="#{ranking.score}">Puntuación</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        <!-- Now iterate through the playerScores map to display the final rankings -->
+        <tr th:each="player, iertStat : ${ranking}">
+            <td th:text="${iterStat.count}"></td>
+            <td th:text="${player.key.getUsername()}"></td>
+            <td th:text="${player.value}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<footer th:replace="~{fragments/footer}"/>
+</body>
+</html>
