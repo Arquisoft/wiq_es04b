@@ -253,6 +253,9 @@ interface CategoryRepository {
     + findByName(name: String): Category
 }
 
+interface GameSessionRepository {
+}
+
 class PlayerDto {
     + username: String
     + email: String
