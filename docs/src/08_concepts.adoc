@@ -163,6 +163,12 @@ interface QuestionService {
     + getQuestion(id: Long): Optional<Question>
 }
 
+interface RestApiService {
+    + getPlayers(params: Map<String, String>): List<Player>
+    + logAccess(apiKey: ApiKey, path: String, params: Map<String, String>): void
+    + getQuestions(params: Map<String, String>): List<Question>
+}
+
 class PlayerServiceImpl {
     - playerRepository: PlayerRepository
     - roleService: RoleService
