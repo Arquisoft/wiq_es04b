@@ -31,4 +31,13 @@ public interface QuestionService {
      * @return The question with the given id
      */
     Optional<Question> getQuestion(Long id);
+
+    /**
+     * Get a random question
+     *
+     * @return The question selected
+     */
+    Optional<Question> getRandomQuestion();
+
+    boolean checkAnswer(Long idquestion, Long idanswer);
 }

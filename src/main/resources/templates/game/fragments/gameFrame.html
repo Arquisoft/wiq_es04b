@@ -1,0 +1,22 @@
+<!-- question_fragment.html -->
+<div class="container mx-auto" id="gameFrame">
+    <h1 class="text-center" th:text="${question.statement}"></h1>
+
+    <div class="container">
+        <div class="btn-group align-self-center">
+            <!-- Utiliza un btn-group para agrupar los botones de respuesta -->
+            <button th:id="${'btn' + answer.id}" class="btn btn-primary flex-item m-2 rounded" th:each="answer : ${question.options}" th:value="${answer}" th:text="${answer.text}"></button>
+            <script th:inline="javascript" th:each="answer : ${question.options}">
+                /*<![CDATA[*/
+                $("#btn" + "[[${answer.id}]]").click(function () {
+                    $("#gameFrame").load("/game/[[${question.id}]]/[[${answer.id}]]");
+                    setTimeout(function () {
+                        let urlUpdate = '/game/update';
+                        $("#gameFrame").load(urlUpdate);
+                    }, 8000);
+                });
+                /*]]>*/
+            </script>
+        </div>
+    </div>
+</div>
