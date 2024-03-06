@@ -245,6 +245,10 @@ interface AnswerRepository {
     + findByQuestion(question: Question): List<Answer>
 }
 
+interface ApiKeyRepository {
+    + findByKeyToken(key: String): ApiKey
+}
+
 class PlayerDto {
     + username: String
     + email: String
