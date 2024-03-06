@@ -169,6 +169,12 @@ interface RestApiService {
     + getQuestions(params: Map<String, String>): List<Question>
 }
 
+class CustomUserDetailsService {
+    - playerRepository: PlayerRepository
+    + loadUserByUsername(username: String): UserDetails
+    + mapRolesToAuthorities(roles: Collection<Role>): Collection< ? extends GrantedAuthority>
+}
+
 class PlayerServiceImpl {
     - playerRepository: PlayerRepository
     - roleService: RoleService
