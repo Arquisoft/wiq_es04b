@@ -313,20 +313,41 @@ class QuestionDto {
     - category: CategoryDto
 }
 
+JsonEntity <|.. Answer
+JsonEntity <|.. Category
+JsonEntity <|.. GameSession
+JsonEntity <|.. Player
+JsonEntity <|.. Question
+AnswerRepository --|> CrudRepository
+ApiKeyRepository --|> CrudRepository
+CategoryRepository --|> CrudRepository
+GameSessionRepository --|> CrudRepository
+PlayerRepository --|> CrudRepository
+QuestionRepository --|> CrudRepository
+RestApiLogRepository --|> CrudRepository
+RoleRepository --|> CrudRepository
+AnswerService <|.. AnswerServiceImpl
+ApiKeyService <|.. ApiKeyServiceImpl
+CategoryService <|.. CategoryServiceImpl
+PlayerService <|.. PlayerServiceImpl
+QuestionService <|.. QuestionServiceImpl
+RestApiService <|.. RestApiServiceImpl
+RoleService <|.. RoleServiceImpl
+Associations +-- PlayerRole
+Associations +-- PlayerApiKey
+Associations +-- ApiKeyAccessLog
+Associations +-- PlayerGameSession
+Associations +-- QuestionAnswers
+
 Question "1" *- "1" Category
 GameSession "*" *-- "1" Player
 Role "*" - "*" Player
-PlayerService <|.. PlayerServiceImpl
-RoleService <|.. RoleServiceImpl
 PlayerService ..> Player
 RoleService ..> Role
 PlayerService ..> PlayerDto
 PlayerServiceImpl ..> PlayerRepository
 RoleServiceImpl .> RoleRepository
 RoleService ..> RoleDto
-PlayerRepository --|> CrudRepository
-RoleRepository -|> CrudRepository
-Associations +-- PlayerRole
 @enduml
 ----
 
