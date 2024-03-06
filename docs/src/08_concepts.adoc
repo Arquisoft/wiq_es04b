@@ -196,10 +196,19 @@ class AnswerServiceImpl {
     + getAnswer(id: Long): Optional<Answer>
 }
 
-class AnswerServiceImpl {
+class ApiKeyServiceImpl {
     - apiKeyRepository: ApiKeyRepository
     + createApiKey(forPlayer: Player): ApiKey
     + getApiKey(apiKey: String): ApiKey
+}
+
+class CategoryServiceImpl {
+    - categoryRepository: CategoryRepository
+    + addNewCategory(category: Category): void
+    + getAllCategories(): List<Category>
+    + getCategory(id: Long): Optional<Category>
+    + getCategoryByName(name: String): Category
+    + init(): void
 }
 
 interface CrudRepository {
