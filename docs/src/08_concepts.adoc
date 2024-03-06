@@ -266,15 +266,21 @@ interface RestApiLogRepository {
 }
 
 class PlayerDto {
-    + username: String
-    + email: String
-    + password: String
-    + passwordConfirm: String
-    + roles: String[]
+    - username: String
+    - email: String
+    - password: String
+    - passwordConfirm: String
+    - roles: String[]
 }
 
 class RoleDto {
-    + name: String
+    - name: String
+}
+
+class AnswerDto {
+    - id: Long
+    - text: String
+    - correct: boolean¡
 }
 
 Question "1" *- "1" Category
