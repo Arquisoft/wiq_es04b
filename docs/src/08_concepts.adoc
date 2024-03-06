@@ -218,6 +218,15 @@ class QuestionServiceImpl {
     + getQuestion(id: Long): Optional<Question>
 }
 
+class RestApiServiceImpl {
+    - playerService: PlayerService
+    - restApiLogRepository: RestApiLogRepository
+    - questionService: QuestionService
+    + getPlayers(params: Map<String, String>): List<Player>
+    + logAccess(apiKey: ApiKey, path: String, params: Map<String, String>): void
+    + getQuestions(params: Map<String, String>): List<Question>
+}
+
 interface CrudRepository {
     + save(entity: T): T
     + findById(id: ID): Optional<T>
