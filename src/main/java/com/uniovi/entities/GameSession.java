@@ -34,6 +34,8 @@ public class GameSession implements JsonEntity {
 
     private int score;
 
+    private int score;
+
     public void addQuestion(boolean correct) {
         if(correct)
             correctQuestions++;

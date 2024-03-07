@@ -1,19 +1,17 @@
 package com.uniovi.controllers;
 
 import com.uniovi.configuration.SecurityConfig;
+import com.uniovi.entities.GameSession;
 import com.uniovi.entities.Player;
+import com.uniovi.services.GameSessionService;
 import com.uniovi.services.PlayerService;
 import com.uniovi.validators.SignUpValidator;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.WebAuthenticationDetails;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -25,17 +23,19 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.security.Principal;
-import java.util.Optional;
 
 @Controller
 public class PlayersController {
     private final PlayerService playerService;
     private final SignUpValidator signUpValidator;
 
+    private final GameSessionService gameSessionService;
+
     @Autowired
-    public PlayersController(PlayerService playerService, SignUpValidator signUpValidator) {
+    public PlayersController(PlayerService playerService, SignUpValidator signUpValidator, GameSessionService gameSessionService) {
         this.playerService = playerService;
         this.signUpValidator =  signUpValidator;
+        this.gameSessionService = gameSessionService;
     }
 
     @GetMapping("/signup")
@@ -92,4 +92,27 @@ public class PlayersController {
     public String home(Model model, Principal principal) {
         return "player/home";
     }
+
+
+    @GetMapping("/ranking/globalRanking")
+    public String showGlobalRanking(Pageable pageable, Model model) {
+        Page<Object[]> ranking = gameSessionService.getGlobalRanking(pageable);
+
+        model.addAttribute("ranking", ranking.getContent());
+        model.addAttribute("page", ranking);
+
+        return "/ranking/globalRanking";
+    }
+
+    @GetMapping("/ranking/playerRanking")
+    public String showPlayerRanking(Pageable pageable, Model model, Principal principal) {
+        Player player = playerService.getUserByUsername(principal.getName()).get();
+        Page<GameSession> ranking = gameSessionService.getPlayerRanking(pageable, player);
+
+        model.addAttribute("ranking", ranking.getContent());
+        model.addAttribute("page", ranking);
+
+        return "/ranking/playerRanking";
+    }
+
 }
