@@ -22,11 +22,14 @@ import java.util.Objects;
 @Entity
 @NoArgsConstructor
 public class Question implements JsonEntity {
+    public static final String ENGLISH = "en";
+    public static final String SPANISH = "es";
+
     @Id
     @GeneratedValue
     private Long id;
 
-    @Column(unique = true)
+    @Column(unique = false)
     private String statement;
 
     @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -38,12 +41,15 @@ public class Question implements JsonEntity {
     @ManyToOne
     private Category category;
 
-    public Question(String statement, List<Answer> options, Answer correctAnswer, Category category) {
+    private String language;
+
+    public Question(String statement, List<Answer> options, Answer correctAnswer, Category category, String language) {
         Assert.isTrue(options.contains(correctAnswer), "Correct answer must be one of the options");
         this.statement = statement;
         Associations.QuestionAnswers.addAnswer(this, options);
         this.correctAnswer = correctAnswer;
         this.category = category;
+        this.language = language;
     }
 
     public void addOption(Answer option) {

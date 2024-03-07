@@ -11,14 +11,11 @@ import java.util.List;
 @RestController
 public class QuestionGeneratorTestController {
 
-    @Autowired
-    CapitalQuestionGenerator qgen;
-
-    @RequestMapping("/test")
+    /*@RequestMapping("/test")
     public void test() {
         List<Question> q = qgen.getQuestions();
         for(Question question : q){
             System.out.println(question);
         }
-    }
+    }*/
 }

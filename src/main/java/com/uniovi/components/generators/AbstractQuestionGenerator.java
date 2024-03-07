@@ -6,6 +6,9 @@ import com.uniovi.entities.Answer;
 import com.uniovi.entities.Category;
 import com.uniovi.entities.Question;
 import com.uniovi.services.CategoryService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
+import org.springframework.stereotype.Component;
 
 import java.net.URI;
 import java.net.URLEncoder;
@@ -17,11 +20,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class AbstractQuestionGenerator implements QuestionGenerator{
-
     private List<Question> questions = new ArrayList<>();
     protected final CategoryService categoryService;
     private String query;
     protected String statement;
+    protected String language;
 
     protected AbstractQuestionGenerator(CategoryService categoryService) {
         this.categoryService = categoryService;
@@ -38,7 +41,7 @@ public abstract class AbstractQuestionGenerator implements QuestionGenerator{
         Answer correct = new Answer(correctAnswer, true);
         answers.add(correct);
 
-        Question question = new Question(statement, answers, correct, category);
+        Question question = new Question(statement, answers, correct, category, language);
         question.scrambleOptions();
         questions.add(question);
     }
@@ -84,5 +87,4 @@ public abstract class AbstractQuestionGenerator implements QuestionGenerator{
     protected abstract String generateCorrectAnswer(JsonNode result);
 
     protected abstract String getQuestionSubject(JsonNode result);
-
 }
