@@ -22,5 +22,4 @@ public interface GameSessionRepository extends CrudRepository<GameSession, Long>
     @Query("SELECT gs.player, SUM(gs.score) FROM GameSession gs GROUP BY gs.player ORDER BY SUM(gs.score) DESC")
     Page<Object[]> findTotalScoresByPlayer(Pageable pageable);
     Page<GameSession> findAllByPlayerOrderByScoreDesc(Pageable pageable, Player player);
-
 }

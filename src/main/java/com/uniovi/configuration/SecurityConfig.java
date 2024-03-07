@@ -43,6 +43,7 @@ public class SecurityConfig {
                                 .requestMatchers("/css/**", "/img/**", "/script/**").permitAll()
                                 .requestMatchers("/home").authenticated()
                                 .requestMatchers("/signup/**").permitAll()
+                                .requestMatchers("/api/**").permitAll()
                                 .requestMatchers("/**").permitAll()
                 ).formLogin(
                         form -> form

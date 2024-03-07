@@ -1,6 +1,22 @@
 <!-- footer.html -->
 <footer class="footer bg-primary">
   <div class="container">
-    <span class="text-white bg-primary">&copy; ASW - Grupo 04 B</span>
+    <!-- Navigation Menu to the left -->
+    <div class="row">
+      <div class="col-md-4">
+        <nav class="nav flex-column">
+          <a class="nav-link text-white" href="/api">API docs</a>
+        </nav>
+      </div>
+
+      <!-- Centered Copyright Notice -->
+      <div class="col-md-4 text-center">
+        <span class="text-white" th:text="#{footer.copyright}"></span>
+      </div>
+
+      <div class="col-md-4"></div>
+    </div>
   </div>
 </footer>
+
+

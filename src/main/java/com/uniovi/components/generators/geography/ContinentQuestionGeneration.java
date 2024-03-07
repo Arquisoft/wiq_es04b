@@ -2,6 +2,7 @@ package com.uniovi.components.generators.geography;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.uniovi.services.CategoryService;
+import org.springframework.scheduling.annotation.Scheduled;
 
 import java.util.ArrayList;
 import java.util.List;
