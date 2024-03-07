@@ -6,9 +6,23 @@
 <nav th:replace="~{fragments/nav}"></nav>
 <p class="points text-right mr-3">
     <span class="" th:text="#{game.points}"></span>
-    <b class="" th:inline="text" th:text="${session.gameSession.score}"></b>
+    <b id="gamePoints" th:inline="text" th:text="${session.gameSession.score}"></b>
 </p>
 <div id="gameFrame" th:replace="~{/game/fragments/gameFrame}"></div>
 <footer th:replace="~{fragments/footer}"></footer>
+<script>
+    function updatePoints() {
+        $.ajax({
+            type: "GET",
+            url: "/game/points",
+            success: function (response) {
+                if (!isNaN(response))
+                    $("#gamePoints").text(response);
+            }
+        });
+    }
+
+    setInterval(updatePoints, 1000);
+</script>
 </body>
 </html>

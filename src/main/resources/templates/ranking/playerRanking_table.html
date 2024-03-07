@@ -10,7 +10,7 @@
     <tr th:each="game, iterStat : ${ranking}">
         <td th:text="${iterStat.count}"></td>
         <td th:text="${game.score}"></td>
-        <td th:text="${#dates.format(game.createdAt, 'dd-MM-yyyy HH:mm:ss')}"></td>
+        <td th:text="${#temporals.format(game.createdAt, 'dd-MM-yyyy HH:mm:ss')}"></td>
     </tr>
     </tbody>
 </table>

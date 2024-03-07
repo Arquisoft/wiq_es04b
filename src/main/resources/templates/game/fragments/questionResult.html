@@ -7,7 +7,7 @@
     <img class="game-logo d-block mx-auto" th:src="${logoImage}">
     <div>
         <button id="continueBtn" class="btn btn-primary flex-item m-2 rounded d-block mx-auto" th:text="#{game.continue}"></button>
-        <script th:inline="javascript" >
+        <script th:inline="javascript">
             /*<![CDATA[*/
             function initiateTimeout() {
                 let timeoutPeriod = 8000; // Timeout period in milliseconds (e.g., 8000ms for 8 seconds)

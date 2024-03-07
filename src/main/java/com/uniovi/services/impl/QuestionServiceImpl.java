@@ -51,6 +51,18 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
+    public List<Question> getRandomQuestions(int num) {
+        List<Question> allQuestions = questionRepository.findAll().stream()
+                .filter(question -> question.getLanguage().equals(LocaleContextHolder.getLocale().getLanguage())).toList();
+        List<Question> res = new ArrayList<>();
+        for (int i = 0; i < num; i++) {
+            int idx = (int) (Math.random() * allQuestions.size());
+            res.add(allQuestions.get(idx));
+        }
+        return res;
+    }
+
+    @Override
     public boolean checkAnswer(Long idquestion, Long idanswer) {
         Optional<Question> q = questionRepository.findById(idquestion);
         if (q.isPresent()) {

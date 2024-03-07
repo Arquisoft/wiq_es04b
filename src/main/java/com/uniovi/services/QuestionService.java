@@ -39,5 +39,19 @@ public interface QuestionService {
      */
     Optional<Question> getRandomQuestion();
 
+    /**
+     * Get a random question from any category
+     *
+     * @param num The number of questions to get
+     * @return The questions selected
+     */
+    List<Question> getRandomQuestions(int num);
+
+    /**
+     * Check if the answer is correct
+     * @param idquestion The id of the question
+     * @param idanswer The id of the answer
+     * @return True if the answer is correct, false otherwise
+     */
     boolean checkAnswer(Long idquestion, Long idanswer);
 }

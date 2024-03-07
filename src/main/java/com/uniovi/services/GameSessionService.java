@@ -2,13 +2,14 @@ package com.uniovi.services;
 
 import com.uniovi.entities.GameSession;
 import com.uniovi.entities.Player;
+import com.uniovi.services.impl.GameSessionImpl;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.List;
-@Service
+
 public interface GameSessionService {
 
     /**
@@ -18,17 +19,23 @@ public interface GameSessionService {
      */
     List<GameSession> getGameSessions();
 
-//    /**
-//     * Return the list of GameSessions by player
-//     *
-//     * @return the list of GameSessions by player
-//     */
-//    List<GameSession> getGameSessionsByPlayer(Player player);
-//
-//    HashMap<Player,Integer> getSortedPlayersScores();
+    /**
+     * Return the global ranking
+     *
+     * @param pageable the pageable
+     * @return the global ranking
+     */
+    Page<Object[]> getGlobalRanking(Pageable pageable);
 
+    /**
+     * Return the player ranking
+     *
+     * @param pageable the pageable
+     * @param player the player
+     * @return the player ranking
+     */
+    Page<GameSession> getPlayerRanking(Pageable pageable, Player player);
 
-    public Page<Object[]> getGlobalRanking(Pageable pageable);
-    public Page<GameSession> getPlayerRanking(Pageable pageable, Player player);
-
+    GameSession startNewGame(Player player);
+    void endGame(GameSession gameSession);
 }
