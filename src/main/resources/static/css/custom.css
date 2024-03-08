@@ -6,6 +6,7 @@ html {
 body {
     /* Margin bottom by footer height */
     margin-bottom: 60px;
+    color: #fff;
 }
 footer {
     position: absolute;
@@ -18,4 +19,22 @@ footer {
 
 .bg-primary {
     background-color: rgb(1, 85, 20) !important;
+}
+
+
+/* Estilo personalizado para el botón */
+.btn-custom, .page-link {
+    color: #fff;
+    background-color: transparent;
+    border: 2px solid #fff;
+}
+
+.btn-custom:hover, .page-link:hover {
+    background-color: #fff;
+    color: #000;
+}
+
+.table-hover {
+    color: #ffffff;
+    text-align:center;
 }

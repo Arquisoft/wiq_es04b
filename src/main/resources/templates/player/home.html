@@ -3,6 +3,10 @@
 <head th:replace="~{fragments/head}"></head>
 <body>
 <nav th:replace="~{fragments/nav}"></nav>
+
+<canvas id="particle-canvas"></canvas>
+<script src="/script/background.js"> </script>
+
 <div class="container" style="text-align: center">
     <h2 th:text="#{home.heading}"></h2>
     <h3 th:text="#{home.private_zone}"></h3>

@@ -4,6 +4,9 @@
 <body>
 <nav th:replace="~{fragments/nav}"></nav>
 
+<canvas id="particle-canvas"></canvas>
+<script src="/script/background.js"> </script>
+
 <div class="container mt-5">
     <h2 class="text-danger" th:text="#{error.page.title}"></h2>
     <div class="alert alert-danger" role="alert">
