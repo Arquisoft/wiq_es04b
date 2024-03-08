@@ -83,35 +83,6 @@ class ApiKey {
     - accessLogs: Set<RestApiAccessLog>
 }
 
-class Associations {
-
-}
-
-class PlayerRole {
-    + addRole(player: Player, role: Role): void
-    + removeRole(player: Player, role: Role): void
-}
-
-class PlayerApiKey {
-    + addApiKey(player: Player, apiKey: ApiKey): void
-    + removeApiKey(player: Player, apiKey: ApiKey): void
-}
-
-class ApiKeyAccessLog {
-    + addAccessLog(apiKey: ApiKey, accessLog: RestApiAccessLog): void
-    + removeAccessLog(apiKey: ApiKey, accessLog: RestApiAccessLog): void
-}
-
-class PlayerGameSession {
-    + addGameSession(player: Player, gameSession: GameSession): void
-    + removeGameSession(player: Player, gameSession: GameSession): void
-}
-
-class QuestionAnswers {
-    + addAnswer(question: Question, answer: List<Answer>): void
-    + removeAnswer(question: Question, answer: List<Answer>): void
-}
-
 class RestApiAccessLog {
     - id: Long
     - apiKey: ApiKey
@@ -396,11 +367,6 @@ PlayerService <|.. PlayerServiceImpl
 QuestionService <|.. QuestionServiceImpl
 RestApiService <|.. RestApiServiceImpl
 RoleService <|.. RoleServiceImpl
-Associations +-- PlayerRole
-Associations +-- PlayerApiKey
-Associations +-- ApiKeyAccessLog
-Associations +-- PlayerGameSession
-Associations +-- QuestionAnswers
 AbstractGeographyGenerator --|> AbstractQuestionGenerator
 BorderQuestionGenerator --|> AbstractGeographyGenerator
 CapitalQuestionGenerator --|> AbstractGeographyGenerator
@@ -429,19 +395,16 @@ InsertSampleDataService ..> GameSession
 InsertSampleDataService ..> QuestionGenerator
 AnswerServiceImpl "1" *- "1" AnswerRepository
 ApiKeyServiceImpl "1" *- "1" ApiKeyRepository
-ApiKeyServiceImpl ..> Associations
 CategoryServiceImpl "1" *- "1" CategoryRepository
 PlayerServiceImpl "1" *- "1" PlayerRepository
 PlayerServiceImpl "1" *- "1" RoleService
 PlayerServiceImpl "1" *- "1" PasswordEncoder
-PlayerServiceImpl ..> Associations
 PlayerServiceImpl ..> Role
 QuestionServiceImpl "1" *- "1" QuestionRepository
 RestApiServiceImpl "1" *- "1" PlayerService
 RestApiServiceImpl "1" *- "1" RestApiLogRepository
 RestApiServiceImpl "1" *- "1" QuestionService
 RestApiServiceImpl ..> Player
-RestApiServiceImpl ..> Associations
 RestApiServiceImpl ..> Question
 RoleServiceImpl "1" *- "1" RoleRepository
 RestApiServiceImpl ..> Role
@@ -451,16 +414,6 @@ RestApiLogRepository ..> Player
 Answer "*" - "1" Question
 ApiKey "1" - "1" Player
 ApiKey "1" - "*" RestApiAccessLog
-PlayerRole ..> Player
-PlayerRole ..> Role
-PlayerApiKey ..> Player
-PlayerApiKey ..> ApiKey
-ApiKeyAccessLog ..> RestApiAccessLog
-ApiKeyAccessLog ..> ApiKey
-PlayerGameSession ..> Player
-PlayerGameSession ..> GameSession
-QuestionAnswers ..> Question
-QuestionAnswers ..> Answer
 Category "1" - "*" Question
 Player "1" - "*" GameSession
 HomeController "1" *- "1" PlayerService
