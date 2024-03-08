@@ -406,6 +406,14 @@ class PlayersController {
     + home(model: Model, principal: Principal): String
 }
 
+class RestApiController {
+    - apiKeyService: ApiKeyService
+    - restApiService: RestApiService
+    + getPlayers(response: HttpServletResponse, params: Map<String, String>): String
+    + getQuestions(response: HttpServletResponse, params: Map<String, String>): String
+    + getApiKeyFromParams(params: Map<String, String>): String
+}
+
 JsonEntity <|.. Answer
 JsonEntity <|.. Category
 JsonEntity <|.. GameSession
