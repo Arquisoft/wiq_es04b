@@ -1,26 +1,39 @@
-/* footer.css */
-
-/* Estilo para el pie de página */
+/* Estilo del footer */
 .footer {
     position: absolute;
     bottom: 0;
     min-height: 75px;
     width: 100%;
     margin-top: 10%; /* Eliminar margen */
-    background: linear-gradient(45deg, #283048, #586776); /* Gradiente de fondo */
-    color: #fff; /* Texto blanco */
     padding: 0; /* Eliminar relleno */
     text-align: center; /* Alineación del texto */
     display: flex; /* Usar flexbox para centrar verticalmente */
     align-items: center; /* Centrar verticalmente */
+
+    background-color: transparent !important; /* Hace que el footer sea transparente */
 }
 
-/* Estilo para el texto del pie de página */
 .footer .container {
     max-width: 960px; /* Ancho máximo del contenido */
     margin: 0 auto; /* Centrar el contenido */
 }
 
-.bg-primary {
-    background-color: transparent !important;
+/* Estilo para los enlaces del footer */
+.footer .nav-link {
+    color: white !important; /* Cambia el color del texto del enlace a blanco */
 }
+
+.footer .nav-link:hover {
+    color: rgba(255, 255, 255, 0.7) !important; /* Cambia el color del texto del enlace cuando se pasa el mouse */
+}
+
+/* Estilo para el texto centrado del footer */
+.footer .text-center {
+    color: white !important; /* Cambia el color del texto a blanco */
+}
+
+.footer .nav-link:hover {
+    color: rgba(255, 255, 255, 0.7) !important; /* Cambia el color del texto del enlace cuando se pasa el mouse */
+}
+
+

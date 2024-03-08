@@ -3,6 +3,10 @@
 <head th:replace="~{fragments/head}"/>
 <body>
 <nav th:replace="~{fragments/nav}"/>
+
+<canvas id="particle-canvas"></canvas>
+<script src="/script/background.js"> </script>
+
 <div class="container">
     <div class="table-responsive">
         <h2 th:text="#{ranking.title}">Ranking</h2>
