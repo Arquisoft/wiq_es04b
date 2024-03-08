@@ -292,27 +292,6 @@ class RoleDto {
     - name: String
 }
 
-class AnswerDto {
-    - id: Long
-    - text: String
-    - correct: boolean
-}
-
-class CategoryDto {
-    - id: Long
-    - name: String
-    - description: String
-    - questions: List<QuestionDto>
-}
-
-class QuestionDto {
-    - id: Long
-    - statement: String
-    - options: List<AnswerDto>
-    - correctAnswer: AnswerDto
-    - category: CategoryDto
-}
-
 class AbstractGeographyGenerator {
     + getCategory(): Category
 }
@@ -363,32 +342,9 @@ interface QuestionGenerator {
     + getCategory(): Category
 }
 
-class CustomAuthenticationFailureHandler {
-    + onAuthenticationFailure(request: HttpServletRequest, responde: HttpServletResponse, exception: AuthenticationException): void
-}
-
 class QuestionGeneratorTestController {
     + qgen: CapitalQuestionGenerator
     + test(): void
-}
-
-class CustomConfiguration {
-    + localeResolver(): LocaleResolver
-    + localeChangeInterceptor(): LocaleChangeInterceptor
-    + addInterceptors(registry: InterceptorRegistry): void
-}
-
-class SecurityConfig {
-    - userDetailsService: UserDetailsService
-    - customAuthenticationFailureHandler: CustomAuthenticationFailureHandler
-    + passwordEncoder(): PasswordEncoder
-    + filterChain(http: HttpSecurity): SecurityFilterChain
-    + configureGlobal(auth: AuthenticationManagerBuilder): void
-    + isAuthenticated(): boolean
-}
-
-class CustomErrorController {
-    + error(model: Model, webRequest: HttpServletRequest): String
 }
 
 class HomeController {
@@ -418,10 +374,6 @@ class SignUpValidator {
     - playerService: PlayerService
     + supports(clazz: Class<?>): boolean
     + validate(target: Object, errors: Errors): void
-}
-
-class WiqEs04bApplication {
-    + main(args: String[]): void
 }
 
 JsonEntity <|.. Answer
@@ -454,9 +406,6 @@ BorderQuestionGenerator --|> AbstractGeographyGenerator
 CapitalQuestionGenerator --|> AbstractGeographyGenerator
 ContinentQuestionGeneration --|> AbstractGeographyGenerator
 QuestionGenerator <|.. AbstractQuestionGenerator
-CustomAuthenticationFailureHandler --|> SimpleUrlAuthenticationFailureHandler
-WebMvcConfigurer <|.. CustomConfiguration
-CustomErrorController --|> BasicErrorController
 RoleService ..> RoleDto
 Role "*" - "*" Player
 AnswerService ..> Answer
@@ -514,8 +463,6 @@ QuestionAnswers ..> Question
 QuestionAnswers ..> Answer
 Category "1" - "*" Question
 Player "1" - "*" GameSession
-CategoryDto "1" - "*" QuestionDto
-QuestionDto "1" *- "*" AnswerDto
 HomeController "1" *- "1" PlayerService
 PlayersController "1" *- "1" PlayerService
 PlayersController "1" *- "1" SignUpValidator
@@ -525,8 +472,6 @@ RestApiController "1" *- "1" RestApiService
 RestApiController ..> ApiKey
 RestApiController ..> Player
 RestApiController ..> Question
-SecurityConfig "1" *- "1" UserDetailsService
-SecurityConfig "1" *- "1" CustomAuthenticationFailureHandler
 QuestionGeneratorTestController "1" *- "1" CapitalQuestionGenerator
 QuestionGeneratorTestController ..> Question
 AbstractQuestionGenerator "1" - "*" Question
@@ -542,25 +487,31 @@ SignUpValidator ..> PlayerDto
 [plantuml, domain-model-2, svg]
 ----
 @startuml
-class WiqEs04bApplication {
-    + main(args: String[]): void
-}
-class CustomErrorController {
-   + error(model: Model, webRequest: HttpServletRequest): String
+
+class AnswerDto {
+    - id: Long
+    - text: String
+    - correct: boolean
 }
 
-class HomeController {
-    + home(model: Model): String
+class CategoryDto {
+    - id: Long
+    - name: String
+    - description: String
+    - questions: List<QuestionDto>
 }
 
-class PlayersController {
-    + showRegistrationForm(model: Model): String
-    + registerUserAccount(user: PlayerDto, result: BindingResult, model: Model): String
-    + showLoginForm(model: Model, error: String, session: HttpSession): String
-    + home(model: Model, principal: Principal): String
+class QuestionDto {
+    - id: Long
+    - statement: String
+    - options: List<AnswerDto>
+    - correctAnswer: AnswerDto
+    - category: CategoryDto
 }
 
 class SecurityConfig {
+    - userDetailsService: UserDetailsService
+    - customAuthenticationFailureHandler: CustomAuthenticationFailureHandler
     + passwordEncoder(): PasswordEncoder
     + filterChain(http: HttpSecurity): SecurityFilterChain
     + configureGlobal(auth: AuthenticationManagerBuilder): void
@@ -568,8 +519,30 @@ class SecurityConfig {
 }
 
 class CustomAuthenticationFailureHandler {
-    + onAuthenticationFailure(request: HttpServletRequest, response: HttpServletResponse, exception: AuthenticationException): void
+    + onAuthenticationFailure(request: HttpServletRequest, responde: HttpServletResponse, exception: AuthenticationException): void
 }
+
+class CustomConfiguration {
+    + localeResolver(): LocaleResolver
+    + localeChangeInterceptor(): LocaleChangeInterceptor
+    + addInterceptors(registry: InterceptorRegistry): void
+}
+
+class CustomErrorController {
+    + error(model: Model, webRequest: HttpServletRequest): String
+}
+
+class WiqEs04bApplication {
+    + main(args: String[]): void
+}
+
+CategoryDto "1" - "*" QuestionDto
+QuestionDto "1" *- "*" AnswerDto
+SecurityConfig "1" *- "1" UserDetailsService
+SecurityConfig "1" *- "1" CustomAuthenticationFailureHandler
+CustomAuthenticationFailureHandler --|> SimpleUrlAuthenticationFailureHandler
+WebMvcConfigurer <|.. CustomConfiguration
+CustomErrorController --|> BasicErrorController
 
 @enduml
 ----
