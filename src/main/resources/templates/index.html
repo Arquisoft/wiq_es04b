@@ -3,8 +3,9 @@
 <head th:replace="~{fragments/head}"></head>
 <body>
 <nav th:replace="~{fragments/nav}"></nav>
-<canvas id="particle-canvas"></canvas>
-<script src="/script/background.js"> </script>
+
+<canvas th:replace="~{fragments/background}"></canvas>
+
 <div class="container-fluid d-flex justify-content-center align-items-center text-center text-white" style="height: 80vh;">
     <div class="row">
         <div class="col-md-12">

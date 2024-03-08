@@ -41,7 +41,7 @@ public class GameController {
         GameSession gameSession = (GameSession) session.getAttribute("gameSession");
         if (gameSession != null) {
             if (checkUpdateGameSession(gameSession, session)) {
-                return "game/gameFinished";
+                return "game/fragments/gameFinished";
             }
         } else {
             gameSession = gameSessionService.startNewGame(getLoggedInPlayer(principal));
@@ -69,8 +69,6 @@ public class GameController {
         if (gameSession == null) {
             return "redirect:/game";
         }
-
-        boolean currentQuestionNull = gameSession.getCurrentQuestion() == null;
 
         if (!gameSession.hasQuestionId(idQuestion)) {
             model.addAttribute("score", gameSession.getScore());

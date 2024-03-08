@@ -3,6 +3,7 @@
 <head th:replace="~{fragments/head}"></head>
 <body>
 <link th:href="@{/css/game.css}" rel="stylesheet" type="text/css"/>
+<canvas th:replace="~{fragments/background}"></canvas>
 <nav th:replace="~{fragments/nav}"></nav>
 <p class="points text-right mr-3">
     <span class="" th:text="#{game.points}"></span>

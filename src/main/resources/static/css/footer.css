@@ -2,10 +2,10 @@
 .footer {
     position: absolute;
     bottom: 0;
-    min-height: 75px;
+    min-height: 150px;
     width: 100%;
-    margin-top: 10%; /* Eliminar margen */
-    padding: 0; /* Eliminar relleno */
+    padding-top: 10%; /* Eliminar margen */
+    /*padding: 0; /* Eliminar relleno */
     text-align: center; /* Alineación del texto */
     display: flex; /* Usar flexbox para centrar verticalmente */
     align-items: center; /* Centrar verticalmente */

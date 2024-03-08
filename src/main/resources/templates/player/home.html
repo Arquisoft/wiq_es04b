@@ -4,8 +4,7 @@
 <body>
 <nav th:replace="~{fragments/nav}"></nav>
 
-<canvas id="particle-canvas"></canvas>
-<script src="/script/background.js"> </script>
+<canvas th:replace="~{fragments/background}"></canvas>
 
 <div class="container" style="text-align: center">
     <h2 th:text="#{home.heading}"></h2>

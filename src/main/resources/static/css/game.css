@@ -19,7 +19,7 @@
 
 .game-logo {
     margin-top: 10%;
-    width: 35%;
+    width: 25%;
     height: auto;
 }
 
@@ -29,5 +29,5 @@
 
 .points {
     font-size: 2em;
-    color: black;
+    color: white;
 }

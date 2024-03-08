@@ -11,10 +11,6 @@
     color: rgba(255, 255, 255, 0.7) !important; /* Cambia el color del texto del enlace cuando se pasa el mouse */
 }
 
-.navbar-toggler-icon {
-    background-color: white !important; /* Cambia el color del icono del toggler a blanco */
-}
-
 .navbar-toggler {
     border-color: white !important; /* Cambia el color del borde del toggler a blanco */
 }
@@ -22,7 +18,7 @@
 /* Estilo para los desplegables */
 .dropdown-menu {
     color: #fff;
-    background-color: transparent;
+    background-color: black;
     border: 2px solid #fff;
 }
 
