@@ -319,12 +319,21 @@ class AbstractGeographyGenerator {
 
 class BorderQuestionGenerator {
     - usedCountries: Set<String>
-    + getAllBorderingCountries(resultsNode: JsonNode, correctCountry: String): List<Player>
+    + getAllBorderingCountries(resultsNode: JsonNode, correctCountry: String): List<String>
     + selectRandomIncorrectBorderingCountries(allBorderingCountries: List<String>, correctCountry: String, count: int): List<String>
     + generateOptions(results: JsonNode, result: JsonNode): List<String>
     + generateCorrectAnswer(result: JsonNode): String
     + getQuestionSubject(result: JsonNode): String
     + getQuery(): String
+}
+
+class CapitalQuestionGenerator {
+    + getQuery(): String
+    + getAllCapitals(resultsNode: JsonNode, correctCapital: String): List<String>
+    + selectRandomIncorrectCapitals(allCapitals: List<String>, correctCapital: String, count: int): List<String>
+    + generateOptions(results: JsonNode, result: JsonNode): List<String>
+    + generateCorrectAnswer(result: JsonNode): String
+    + getQuestionSubject(result: JsonNode): String
 }
 
 JsonEntity <|.. Answer
