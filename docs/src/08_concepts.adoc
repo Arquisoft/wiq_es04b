@@ -414,6 +414,10 @@ class RestApiController {
     + getApiKeyFromParams(params: Map<String, String>): String
 }
 
+class WiqEs04bApplication {
+    + main(args: String[]): void
+}
+
 JsonEntity <|.. Answer
 JsonEntity <|.. Category
 JsonEntity <|.. GameSession
