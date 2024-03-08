@@ -367,6 +367,11 @@ class CustomAuthenticationFailureHandler {
     + onAuthenticationFailure(request: HttpServletRequest, responde: HttpServletResponse, exception: AuthenticationException): void
 }
 
+class QuestionGeneratorTestController {
+    + qgen: CapitalQuestionGenerator
+    + test(): void
+}
+
 JsonEntity <|.. Answer
 JsonEntity <|.. Category
 JsonEntity <|.. GameSession
