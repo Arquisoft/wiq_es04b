@@ -313,6 +313,10 @@ class QuestionDto {
     - category: CategoryDto
 }
 
+class AbstractGeographyGenerator {
+    + getCategory(): Category
+}
+
 JsonEntity <|.. Answer
 JsonEntity <|.. Category
 JsonEntity <|.. GameSession
