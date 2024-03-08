@@ -363,6 +363,10 @@ interface QuestionGenerator {
     + getCategory(): Category
 }
 
+class CustomAuthenticationFailureHandler {
+    + onAuthenticationFailure(request: HttpServletRequest, responde: HttpServletResponse, exception: AuthenticationException): void
+}
+
 JsonEntity <|.. Answer
 JsonEntity <|.. Category
 JsonEntity <|.. GameSession
