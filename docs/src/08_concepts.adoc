@@ -412,6 +412,13 @@ Associations +-- PlayerApiKey
 Associations +-- ApiKeyAccessLog
 Associations +-- PlayerGameSession
 Associations +-- QuestionAnswers
+AbstractGeographyGenerator --|> AbstractQuestionGenerator
+BorderQuestionGenerator --|> AbstractGeographyGenerator
+CapitalQuestionGenerator --|> AbstractGeographyGenerator
+ContinentQuestionGeneration --|> AbstractGeographyGenerator
+QuestionGenerator <|.. AbstractQuestionGenerator
+CustomAuthenticationFailureHandler --|> SimpleUrlAuthenticationFailureHandler
+WebMvcConfigurer <|.. CustomConfiguration
 
 Question "1" *- "1" Category
 GameSession "*" *-- "1" Player
