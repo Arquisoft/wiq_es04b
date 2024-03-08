@@ -317,6 +317,16 @@ class AbstractGeographyGenerator {
     + getCategory(): Category
 }
 
+class BorderQuestionGenerator {
+    - usedCountries: Set<String>
+    + getAllBorderingCountries(resultsNode: JsonNode, correctCountry: String): List<Player>
+    + selectRandomIncorrectBorderingCountries(allBorderingCountries: List<String>, correctCountry: String, count: int): List<String>
+    + generateOptions(results: JsonNode, result: JsonNode): List<String>
+    + generateCorrectAnswer(result: JsonNode): String
+    + getQuestionSubject(result: JsonNode): String
+    + getQuery(): String
+}
+
 JsonEntity <|.. Answer
 JsonEntity <|.. Category
 JsonEntity <|.. GameSession
