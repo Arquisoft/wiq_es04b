@@ -1,11 +1,13 @@
 <div class="container mx-auto" id="gameFrame">
-    <h1 class="text-center" th:text="#{${messageKey}}"></h1>
+    <h1 class="text-center" th:text="#{${messageKey}}" style="font-size: 2em;"></h1>
     <p th:if="${correctAnswer}" class="text-center">
         <span class="text-center" th:text="#{answer.correct}"></span>
         <b th:inline="text" th:text="${correctAnswer.getText()}"></b>
     </p>
-    <img class="game-logo d-block mx-auto" th:src="${logoImage}">
-    <div>
+    <div class="container mb-3">
+        <img class="game-logo d-block mx-auto" th:src="${logoImage}">
+    </div>
+    <div class="container">
         <button id="continueBtn" class="btn btn-primary flex-item m-2 rounded d-block mx-auto" th:text="#{game.continue}"></button>
         <script th:inline="javascript">
             /*<![CDATA[*/
