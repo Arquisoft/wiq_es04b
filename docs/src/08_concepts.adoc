@@ -387,6 +387,10 @@ class SecurityConfig {
     + isAuthenticated(): boolean
 }
 
+class CustomErrorController {
+    + error(model: Model, webRequest: HttpServletRequest): String
+}
+
 JsonEntity <|.. Answer
 JsonEntity <|.. Category
 JsonEntity <|.. GameSession
