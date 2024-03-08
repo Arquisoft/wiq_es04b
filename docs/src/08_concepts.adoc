@@ -378,6 +378,15 @@ class CustomConfiguration {
     + addInterceptors(registry: InterceptorRegistry): void
 }
 
+class SecurityConfig {
+    - userDetailsService: UserDetailsService
+    - customAuthenticationFailureHandler: CustomAuthenticationFailureHandler
+    + passwordEncoder(): PasswordEncoder
+    + filterChain(http: HttpSecurity): SecurityFilterChain
+    + configureGlobal(auth: AuthenticationManagerBuilder): void
+    + isAuthenticated(): boolean
+}
+
 JsonEntity <|.. Answer
 JsonEntity <|.. Category
 JsonEntity <|.. GameSession
