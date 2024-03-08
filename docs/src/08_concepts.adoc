@@ -372,6 +372,12 @@ class QuestionGeneratorTestController {
     + test(): void
 }
 
+class CustomConfiguration {
+    + localeResolver(): LocaleResolver
+    + localeChangeInterceptor(): LocaleChangeInterceptor
+    + addInterceptors(registry: InterceptorRegistry): void
+}
+
 JsonEntity <|.. Answer
 JsonEntity <|.. Category
 JsonEntity <|.. GameSession
