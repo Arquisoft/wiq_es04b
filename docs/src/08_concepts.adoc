@@ -345,6 +345,18 @@ class ContinentQuestionGeneration {
     + getQuery(): String
 }
 
+class AbstractQuestionGenerator {
+    - questions: List<Question>
+    - categoryService: CategoryService
+    - query: String
+    - statement: String
+    + questionGenerator(statement: String, options: List<String>, correctAnswer: String, category: Category): void
+    + getQuestions(): List<Question>
+    + generateOptions(results: JsonNode, result: JsonNode): List<String>
+    + generateCorrectAnswer(result: JsonNode): String
+    + getQuestionSubject(result: JsonNode): String
+}
+
 JsonEntity <|.. Answer
 JsonEntity <|.. Category
 JsonEntity <|.. GameSession
