@@ -357,6 +357,12 @@ class AbstractQuestionGenerator {
     + getQuestionSubject(result: JsonNode): String
 }
 
+interface QuestionGenerator {
+    + getQuery(): String
+    + getQuestions(): List<Question>
+    + getCategory(): Category
+}
+
 JsonEntity <|.. Answer
 JsonEntity <|.. Category
 JsonEntity <|.. GameSession
