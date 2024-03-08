@@ -336,6 +336,15 @@ class CapitalQuestionGenerator {
     + getQuestionSubject(result: JsonNode): String
 }
 
+class ContinentQuestionGeneration {
+    + getAllContinents(resultsNode: JsonNode, correctContinent: String): List<String>
+    + selectRandomIncorrectContinents(allContinents: List<String>, correctContinent: String, count: int): List<String>
+    + generateOptions(results: JsonNode, result: JsonNode): List<String>
+    + generateCorrectAnswer(result: JsonNode): String
+    + getQuestionSubject(result: JsonNode): String
+    + getQuery(): String
+}
+
 JsonEntity <|.. Answer
 JsonEntity <|.. Category
 JsonEntity <|.. GameSession
