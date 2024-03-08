@@ -450,6 +450,7 @@ ContinentQuestionGeneration --|> AbstractGeographyGenerator
 QuestionGenerator <|.. AbstractQuestionGenerator
 CustomAuthenticationFailureHandler --|> SimpleUrlAuthenticationFailureHandler
 WebMvcConfigurer <|.. CustomConfiguration
+CustomErrorController --|> BasicErrorController
 
 Question "1" *- "1" Category
 GameSession "*" *-- "1" Player
