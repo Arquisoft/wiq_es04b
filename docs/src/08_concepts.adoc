@@ -391,6 +391,12 @@ class CustomErrorController {
     + error(model: Model, webRequest: HttpServletRequest): String
 }
 
+class HomeController {
+    - playerService: PlayerService
+    + home(): String
+    + apiHome(): String
+}
+
 JsonEntity <|.. Answer
 JsonEntity <|.. Category
 JsonEntity <|.. GameSession
