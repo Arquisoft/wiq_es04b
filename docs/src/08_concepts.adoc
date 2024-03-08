@@ -414,6 +414,12 @@ class RestApiController {
     + getApiKeyFromParams(params: Map<String, String>): String
 }
 
+class SignUpValidator {
+    - playerService: PlayerService
+    + supports(clazz: Class<?>): boolean
+    + validate(target: Object, errors: Errors): void
+}
+
 class WiqEs04bApplication {
     + main(args: String[]): void
 }
@@ -451,16 +457,85 @@ QuestionGenerator <|.. AbstractQuestionGenerator
 CustomAuthenticationFailureHandler --|> SimpleUrlAuthenticationFailureHandler
 WebMvcConfigurer <|.. CustomConfiguration
 CustomErrorController --|> BasicErrorController
-
-Question "1" *- "1" Category
-GameSession "*" *-- "1" Player
-Role "*" - "*" Player
-PlayerService ..> Player
-RoleService ..> Role
-PlayerService ..> PlayerDto
-PlayerServiceImpl ..> PlayerRepository
-RoleServiceImpl .> RoleRepository
 RoleService ..> RoleDto
+Role "*" - "*" Player
+AnswerService ..> Answer
+AnswerService ..> Question
+ApiKeyService ..> Player
+CategoryService ..> Category
+PlayerService ..> PlayerDto
+PlayerService ..> Player
+QuestionService ..> Question
+RestApiService ..> ApiKey
+CustomUserDetailsService "1" *- "1" PlayerRepository
+CustomUserDetailsService ..> Player
+CustomUserDetailsService ..> Role
+InsertSampleDataService "1" *- "1" PlayerService
+InsertSampleDataService "1" *- "1" QuestionService
+InsertSampleDataService "1" *- "1" CategoryService
+InsertSampleDataService "1" *- "1" QuestionRepository
+InsertSampleDataService "1" *- "1" GameSessionRepository
+InsertSampleDataService ..> PlayerDto
+InsertSampleDataService ..> GameSession
+InsertSampleDataService ..> QuestionGenerator
+AnswerServiceImpl "1" *- "1" AnswerRepository
+ApiKeyServiceImpl "1" *- "1" ApiKeyRepository
+ApiKeyServiceImpl ..> Associations
+CategoryServiceImpl "1" *- "1" CategoryRepository
+PlayerServiceImpl "1" *- "1" PlayerRepository
+PlayerServiceImpl "1" *- "1" RoleService
+PlayerServiceImpl "1" *- "1" PasswordEncoder
+PlayerServiceImpl ..> Associations
+PlayerServiceImpl ..> Role
+QuestionServiceImpl "1" *- "1" QuestionRepository
+RestApiServiceImpl "1" *- "1" PlayerService
+RestApiServiceImpl "1" *- "1" RestApiLogRepository
+RestApiServiceImpl "1" *- "1" QuestionService
+RestApiServiceImpl ..> Player
+RestApiServiceImpl ..> Associations
+RestApiServiceImpl ..> Question
+RoleServiceImpl "1" *- "1" RoleRepository
+RestApiServiceImpl ..> Role
+AnswerRepository ..> Question
+RestApiLogRepository ..> ApiKey
+RestApiLogRepository ..> Player
+Answer "*" - "1" Question
+ApiKey "1" - "1" Player
+ApiKey "1" - "*" RestApiAccessLog
+PlayerRole ..> Player
+PlayerRole ..> Role
+PlayerApiKey ..> Player
+PlayerApiKey ..> ApiKey
+ApiKeyAccessLog ..> RestApiAccessLog
+ApiKeyAccessLog ..> ApiKey
+PlayerGameSession ..> Player
+PlayerGameSession ..> GameSession
+QuestionAnswers ..> Question
+QuestionAnswers ..> Answer
+Category "1" - "*" Question
+Player "1" - "*" GameSession
+CategoryDto "1" - "*" QuestionDto
+QuestionDto "1" *- "*" AnswerDto
+HomeController "1" *- "1" PlayerService
+PlayersController "1" *- "1" PlayerService
+PlayersController "1" *- "1" SignUpValidator
+PlayersController ..> PlayerDto
+RestApiController "1" *- "1" ApiKeyService
+RestApiController "1" *- "1" RestApiService
+RestApiController ..> ApiKey
+RestApiController ..> Player
+RestApiController ..> Question
+SecurityConfig "1" *- "1" UserDetailsService
+SecurityConfig "1" *- "1" CustomAuthenticationFailureHandler
+QuestionGeneratorTestController "1" *- "1" CapitalQuestionGenerator
+QuestionGeneratorTestController ..> Question
+AbstractQuestionGenerator "1" - "*" Question
+AbstractQuestionGenerator "1" - "1" CategoryService
+AbstractQuestionGenerator ..> Category
+Validator <|.. SignUpValidator
+SignUpValidator "1" - "1" PlayerService
+SignUpValidator ..> PlayerDto
+
 @enduml
 ----
 
