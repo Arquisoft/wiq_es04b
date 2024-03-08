@@ -397,6 +397,15 @@ class HomeController {
     + apiHome(): String
 }
 
+class PlayersController {
+    - playerService: PlayerService
+    - signUpValidator: SignUpValidator
+    + showRegistrationForm(model: Model): String
+    + registerUserAccount(request: HttpServletRequest, user: PlayerDto, result: BindingResult, model: Model): String
+    + showLoginForm(model: Model, error: String, session: HttpSession): String
+    + home(model: Model, principal: Principal): String
+}
+
 JsonEntity <|.. Answer
 JsonEntity <|.. Category
 JsonEntity <|.. GameSession
