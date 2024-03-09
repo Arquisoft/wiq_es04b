@@ -1,4 +1,5 @@
 package com.uniovi.entities;
+
 import java.util.*;
 
 public class Associations {
@@ -81,6 +82,7 @@ public class Associations {
          * @param player      The player
          * @param gameSession The game session
          */
+
         public static void addGameSession(Player player, GameSession gameSession) {
             gameSession.setPlayer(player);
             player.getGameSessions().add(gameSession);

@@ -1,71 +1,35 @@
 package com.uniovi.services.impl;
 
+import com.uniovi.entities.Associations;
 import com.uniovi.entities.Player;
 import com.uniovi.repositories.GameSessionRepository;
 import com.uniovi.entities.GameSession;
 import com.uniovi.services.GameSessionService;
+import com.uniovi.services.QuestionService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
 public class GameSessionImpl implements GameSessionService {
+    public static final Integer NORMAL_GAME_QUESTION_NUM = 20;
 
     private final GameSessionRepository gameSessionRepository;
+    private final QuestionService questionService;
 
-    public GameSessionImpl(GameSessionRepository gameSessionRepository) {
+    public GameSessionImpl(GameSessionRepository gameSessionRepository, QuestionService questionService) {
         this.gameSessionRepository = gameSessionRepository;
+        this.questionService = questionService;
     }
 
     @Override
     public List<GameSession> getGameSessions() {
         return gameSessionRepository.findAll();
     }
-
-//    @Override
-//    public List<GameSession> getGameSessionsByPlayer(Player player) {
-//        return gameSessionRepository.findAllByPlayer(player);
-//    }
-//
-//    @Override
-//    public HashMap<Player, Integer> getSortedPlayersScores() {
-//        List<GameSession> gameSessions = gameSessionRepository.findAll();
-//        HashMap<Player, Integer> ranking = getRanking(gameSessions);
-//        // Ordenar las entradas del ranking por puntuación
-//        List<Map.Entry<Player, Integer>> sortedEntries = new ArrayList<>(ranking.entrySet());
-//        sortedEntries.sort(Map.Entry.comparingByValue(Comparator.reverseOrder()));
-//
-//        // Crear un LinkedHashMap para mantener el orden de inserción
-//        LinkedHashMap<Player, Integer> sortedRanking = new LinkedHashMap<>();
-//        for (Map.Entry<Player, Integer> entry : sortedEntries) {
-//            sortedRanking.put(entry.getKey(), entry.getValue());
-//        }
-//
-//        return sortedRanking;
-//    }
-//
-//    private static HashMap<Player, Integer> getRanking(List<GameSession> gameSessions) {
-//        HashMap<Player, Integer> ranking = new HashMap<>();
-//
-//        // Iterar a través de las sesiones de juego
-//        for (GameSession gameSession : gameSessions) {
-//            Player player = gameSession.getPlayer();
-//            int score = gameSession.getScore();
-//
-//            // Si el jugador ya está en el ranking, sumar la puntuación, de lo contrario, agregarlo al ranking
-//            if (ranking.containsKey(player)) {
-//                int currentScore = ranking.get(player) + score;
-//                ranking.put(player, currentScore);
-//            } else {
-//                ranking.put(player, score);
-//            }
-//        }
-//        return ranking;
-//    }
-
 
     @Override
     public Page<Object[]> getGlobalRanking(Pageable pageable) {
@@ -77,5 +41,15 @@ public class GameSessionImpl implements GameSessionService {
         return gameSessionRepository.findAllByPlayerOrderByScoreDesc(pageable, player);
     }
 
+    @Override
+    public GameSession startNewGame(Player player) {
+        return new GameSession(player, questionService.getRandomQuestions(NORMAL_GAME_QUESTION_NUM));
+    }
 
+    @Override
+    public void endGame(GameSession gameSession) {
+        Associations.PlayerGameSession.addGameSession(gameSession.getPlayer(), gameSession);
+        gameSession.setFinishTime(LocalDateTime.now());
+        gameSessionRepository.save(gameSession);
+    }
 }

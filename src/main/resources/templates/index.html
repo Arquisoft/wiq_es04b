@@ -3,17 +3,21 @@
 <head th:replace="~{fragments/head}"></head>
 <body>
 <nav th:replace="~{fragments/nav}"></nav>
-<canvas id="particle-canvas"></canvas>
-<script src="/script/background.js"> </script>
+<canvas th:replace="~{fragments/background}"></canvas>
 <div class="container-fluid d-flex justify-content-center align-items-center text-center text-white" style="height: 80vh;">
     <div class="row">
         <div class="col-md-12">
             <h2 class="display-4 mb-4" th:text="#{index.heading}"></h2>
             <p class="lead mb-4" th:text="#{index.subtitle}"></p>
-            <button type="button" class="btn btn-custom" th:text="#{index.button}"></button>
+            <button id="gameBtn" type="button" class="btn btn-custom" th:text="#{index.button}"></button>
         </div>
     </div>
 </div>
+<script>
+    $("#gameBtn").click(function () {
+        window.location.href = "/game";
+    });
+</script>
 <footer th:replace="~{fragments/footer}"></footer>
 </body>
 </html>

@@ -9,26 +9,25 @@
     <div class="collapse navbar-collapse" id="navbarColor02">
 
     <ul class="navbar-nav mr-auto">
-            <li class="nav-item ">
+            <li class="nav-item">
                 <a class="nav-link" href="/">
                     <img src="/images/logo.png" width="30" height="30" class="d-inline-block align-top" alt=""
                          loading="lazy">
                     <span th:text="#{navbar.home}"></span>
                 </a>
             </li>
-            <li class="nav-item dropdown active">
+            <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
                    aria-haspopup="true" aria-expanded="false">
                     <span th:text="#{navbar.play}"></span>
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item" href="/" th:text="#{navbar.game1}"></a>
-                    <a class="dropdown-item" href="/" th:text="#{navbar.game2}"></a>
+                    <a class="dropdown-item" href="/game" th:text="#{navbar.game1}"></a>
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item" href="/" th:text="#{navbar.history}"></a>
                 </div>
             </li>
-            <li class="nav-item dropdown active">
+            <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown2" role="button" data-toggle="dropdown"
                    aria-haspopup="true" aria-expanded="false">
                     <span th:text="#{navbar.ranking}"></span>
@@ -76,11 +75,19 @@
             </li>
 
             <!-- Botones para cuando el usuario ESTÁ autenticado -->
-            <li class="nav-item" sec:authorize="isAuthenticated()">
-                <a class="nav-link" href="/home" sec:authentication="principal.username">
-                    <i class='fas fa-user' style='font-size:16px'></i>
-                    <span th:text="#{navbar.profile}"></span>
+            <li class="nav-item dropdown" sec:authorize="isAuthenticated()">
+                <a class="nav-link dropdown-toggle" href="#" sec:authentication="principal.username"
+                   id="btnUser" role="button" data-toggle="dropdown"
+                   aria-haspopup="true" aria-expanded="false">
                 </a>
+                <div id="userZoneDropdownMenuButton" class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" id="btnUserProfile" href="/home">
+                        <span th:text="#{navbar.profile}"></span>
+                    </a>
+                    <a class="dropdown-item" id="btnUserApiKey" href="/home/apikey">
+                        <span th:text="#{navbar.profile.apikey}"></span>
+                    </a>
+                </div>
             </li>
             <li class="nav-item" sec:authorize="isAuthenticated()">
                 <a class="nav-link" href="/logout">

@@ -35,6 +35,10 @@ footer {
 }
 
 .table-hover {
-    color: #ffffff;
+    color: white;
     text-align:center;
+}
+
+.table-hover tbody tr:hover td {
+    background: white;
 }

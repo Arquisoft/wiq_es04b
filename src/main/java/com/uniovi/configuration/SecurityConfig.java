@@ -41,9 +41,11 @@ public class SecurityConfig {
                 .authorizeHttpRequests((authorize) ->
                         authorize
                                 .requestMatchers("/css/**", "/img/**", "/script/**").permitAll()
-                                .requestMatchers("/home").authenticated()
+                                .requestMatchers("/home/**").authenticated()
                                 .requestMatchers("/signup/**").permitAll()
                                 .requestMatchers("/api/**").permitAll()
+                                .requestMatchers("/game/**").authenticated()
+                                .requestMatchers("/ranking/playerRanking").authenticated()
                                 .requestMatchers("/**").permitAll()
                 ).formLogin(
                         form -> form
@@ -69,7 +71,6 @@ public class SecurityConfig {
 
     /**
      * Method to check if the user is authenticated
-     * @param request HttpServletRequest
      * @return boolean
      */
     public static boolean isAuthenticated() {

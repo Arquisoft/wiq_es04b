@@ -5,8 +5,7 @@
 <!-- Barra de Navegación superior -->
 <nav th:replace="~{fragments/nav}"/>
 
-<canvas id="particle-canvas"></canvas>
-<script src="/script/background.js"> </script>
+<canvas th:replace="~{fragments/background}"></canvas>
 
 <div class="container">
     <h2 th:text="#{signup.title}"></h2>

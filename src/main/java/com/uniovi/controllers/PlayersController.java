@@ -101,7 +101,7 @@ public class PlayersController {
         model.addAttribute("ranking", ranking.getContent());
         model.addAttribute("page", ranking);
 
-        return "/ranking/globalRanking";
+        return "ranking/globalRanking";
     }
 
     @GetMapping("/ranking/playerRanking")
@@ -112,7 +112,7 @@ public class PlayersController {
         model.addAttribute("ranking", ranking.getContent());
         model.addAttribute("page", ranking);
 
-        return "/ranking/playerRanking";
+        return "ranking/playerRanking";
     }
 
 }

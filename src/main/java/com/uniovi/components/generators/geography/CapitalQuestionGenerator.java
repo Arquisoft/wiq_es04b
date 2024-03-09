@@ -2,18 +2,23 @@ package com.uniovi.components.generators.geography;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.uniovi.services.CategoryService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
-@Component
 public class CapitalQuestionGenerator extends AbstractGeographyGenerator{
+    private static final Map<String, String> STATEMENTS = new HashMap<>() {
+        {
+            put("en", "What is the capital of ");
+            put("es", "¿Cuál es la capital de ");
+        }
+    };
 
-    public CapitalQuestionGenerator(CategoryService categoryService) {
+    public CapitalQuestionGenerator(CategoryService categoryService, String language) {
         super(categoryService);
-        this.statement = "What is the capital of ";
+        this.statement = STATEMENTS.get(language);
+        this.language = language;
     }
 
     @Override
@@ -24,7 +29,7 @@ public class CapitalQuestionGenerator extends AbstractGeographyGenerator{
                 "  FILTER NOT EXISTS {?country wdt:P31 wd:Q3024240}" +
                 "  FILTER NOT EXISTS {?country wdt:P31 wd:Q28171280}" +
                 "  OPTIONAL { ?country wdt:P36 ?capital } ." +
-                "  SERVICE wikibase:label { bd:serviceParam wikibase:language \"[AUTO_LANGUAGE],en\" }" +
+                "  SERVICE wikibase:label { bd:serviceParam wikibase:language \"[AUTO_LANGUAGE]," + language + "\" }" +
                 "}" +
                 "ORDER BY ?countryLabel";
     }

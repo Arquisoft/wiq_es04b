@@ -36,7 +36,7 @@ public class Player implements JsonEntity {
     @ManyToMany(cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     private Set<Role> roles = new HashSet<>();
 
-    @OneToMany(mappedBy = "player", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "player", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<GameSession> gameSessions = new HashSet<>();
 
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "player")

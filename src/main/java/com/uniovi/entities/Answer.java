@@ -1,5 +1,7 @@
 package com.uniovi.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -19,9 +21,13 @@ public class Answer implements JsonEntity {
     @GeneratedValue
     private Long id;
 
+    @JsonIgnore
     private String text;
+
+    @JsonIgnore
     private boolean correct;
 
+    @JsonIgnore
     @ManyToOne
     private Question question;
 

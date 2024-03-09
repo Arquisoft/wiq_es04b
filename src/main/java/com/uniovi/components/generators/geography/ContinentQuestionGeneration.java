@@ -4,14 +4,20 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.uniovi.services.CategoryService;
 import org.springframework.scheduling.annotation.Scheduled;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class ContinentQuestionGeneration extends AbstractGeographyGenerator{
-    public ContinentQuestionGeneration(CategoryService categoryService) {
+    private static final Map<String, String> STATEMENTS = new HashMap<>() {
+        {
+            put("en", "In which continent is ");
+            put("es", "¿En qué continente se encuentra ");
+        }
+    };
+
+    public ContinentQuestionGeneration(CategoryService categoryService, String language) {
         super(categoryService);
-        this.statement = "In which continent is ";
+        this.statement = STATEMENTS.get(language);
+        this.language = language;
     }
 
     private List<String> getAllContinents(JsonNode resultsNode, String correctContinent) {
@@ -63,7 +69,7 @@ public class ContinentQuestionGeneration extends AbstractGeographyGenerator{
                 "  FILTER NOT EXISTS {?country wdt:P31 wd:Q3024240}" +
                 "  FILTER NOT EXISTS {?country wdt:P31 wd:Q28171280}" +
                 "  OPTIONAL { ?country wdt:P30 ?continent } ." +
-                "  SERVICE wikibase:label { bd:serviceParam wikibase:language \"[AUTO_LANGUAGE],en\" }" +
+                "  SERVICE wikibase:label { bd:serviceParam wikibase:language \"[AUTO_LANGUAGE]," + language + "\" }" +
                 "}" +
                 "ORDER BY ?countryLabel";
     }

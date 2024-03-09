@@ -4,15 +4,14 @@
 <body>
 <nav th:replace="~{fragments/nav}"/>
 
-<canvas id="particle-canvas"></canvas>
-<script src="/script/background.js"> </script>
+<canvas th:replace="~{fragments/background}"></canvas>
 
 <div class="container">
     <div class="table-responsive">
         <h2 th:text="#{ranking.title}">Ranking</h2>
         <div class="table-responsive">
             <table class="table table-hover" th:fragment="globalRankingTable" id="globalRankingTable" th:replace="ranking/globalRanking_table"/>
-            <footer th:replace="fragments/pagination"/>
+            <footer th:replace="~{fragments/pagination}"/>
         </div>
     </div>
 </div>

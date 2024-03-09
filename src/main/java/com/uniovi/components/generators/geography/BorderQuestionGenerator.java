@@ -6,12 +6,18 @@ import com.uniovi.services.CategoryService;
 import java.util.*;
 
 public class BorderQuestionGenerator extends AbstractGeographyGenerator{
-
+    private static final Map<String, String> STATEMENTS = new HashMap<>() {
+        {
+            put("en", "Which countries share a border with ");
+            put("es", "¿Con qué países comparte frontera ");
+        }
+    };
     private Set<String> usedCountries = new HashSet<>();
 
-    public BorderQuestionGenerator(CategoryService categoryService) {
+    public BorderQuestionGenerator(CategoryService categoryService, String language) {
         super(categoryService);
-        this.statement = "Which countries share a border with ";
+        this.statement = STATEMENTS.get(language);
+        this.language = language;
     }
 
     private List<String> getAllBorderingCountries(JsonNode resultsNode, String correctCountry) {
@@ -64,7 +70,7 @@ public class BorderQuestionGenerator extends AbstractGeographyGenerator{
                 "  FILTER NOT EXISTS {?country wdt:P31 wd:Q3024240}" +
                 "  FILTER NOT EXISTS {?country wdt:P31 wd:Q28171280}" +
                 "  ?country wdt:P47 ?borderingCountry ." +
-                "  SERVICE wikibase:label { bd:serviceParam wikibase:language \"[AUTO_LANGUAGE],en\" }" +
+                "  SERVICE wikibase:label { bd:serviceParam wikibase:language \"[AUTO_LANGUAGE]," + language + "\" }" +
                 "}";
     }
 }
