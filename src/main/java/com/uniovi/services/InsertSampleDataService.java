@@ -56,15 +56,6 @@ public class InsertSampleDataService {
             playerService.generateApiKey(playerService.addNewPlayer(player));
         }
 
-        GameSession gameSession = new GameSession();
-        gameSession.setFinishTime(LocalDateTime.now().plusMinutes(5));
-        gameSession.setCreatedAt(LocalDateTime.now());
-        gameSession.setTotalQuestions(40);
-        gameSession.setCorrectQuestions(10);
-        gameSession.setPlayer(playerService.getUserByEmail("test@test.com").get());
-        playerService.getUserByEmail("test@test.com").get().getGameSessions().add(gameSession);
-        gameSessionRepository.save(gameSession);
-
         questionRepository.deleteAll();
 
         MultipleQuestionGenerator allQuestionGenerator = new MultipleQuestionGenerator(
