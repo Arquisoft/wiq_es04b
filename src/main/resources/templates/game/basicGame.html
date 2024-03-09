@@ -9,7 +9,8 @@
     <span class="" th:text="#{game.points}"></span>
     <b id="gamePoints" th:inline="text" th:text="${session.gameSession.score}"></b>
 </p>
-<div id="gameFrame" th:replace="~{/game/fragments/gameFrame}"></div>
+<div id="gameFrame" th:replace="~{game/fragments/gameFrame}"></div>
+
 <footer th:replace="~{fragments/footer}"></footer>
 <script>
     function updatePoints() {
