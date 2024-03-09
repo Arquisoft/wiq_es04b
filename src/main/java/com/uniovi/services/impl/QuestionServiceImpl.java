@@ -53,6 +53,9 @@ public class QuestionServiceImpl implements QuestionService {
         if (questionPage.hasContent()) {
             q = questionPage.getContent().get(0);
         }
+        while (q.hasEmptyOptions()){
+            return getRandomQuestion();
+        }
         return Optional.ofNullable(q);
     }
 
