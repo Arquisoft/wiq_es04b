@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -59,7 +60,6 @@ public class GameSession implements JsonEntity {
             correctQuestions++;
         totalQuestions++;
 
-        // TODO: Calculate score
         if (correct) {
             score += timeLeft + 10 /* magic number TBD */;
         }
@@ -108,5 +108,17 @@ public class GameSession implements JsonEntity {
                 return true;
         }
         return false;
+    }
+
+    public String getDuration() {
+        if (createdAt != null && finishTime != null) {
+            Duration duration = Duration.between(createdAt, finishTime);
+            long hours = duration.toHours();
+            long minutes = duration.toMinutes() % 60;
+            long seconds = duration.getSeconds() % 60;
+            return String.format("%02d:%02d:%02d", hours, minutes, seconds);
+        } else {
+            return "00:00:00";
+        }
     }
 }
