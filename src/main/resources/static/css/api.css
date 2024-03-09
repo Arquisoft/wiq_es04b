@@ -8,3 +8,11 @@
     padding: 1rem; /* Padding inside the box */
     border: 1px solid #d3d3d3; /* Light grey border */
 }
+
+h3 {
+    color: black;
+}
+
+td {
+    color: white;
+}

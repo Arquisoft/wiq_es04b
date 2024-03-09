@@ -1,60 +1,37 @@
-/* nav.css */
-
-/* Estilo para el menú de navegación */
+/* Estilo del navbar */
 .navbar {
-    background: linear-gradient(45deg, #283048, #586776); /* Gradiente de fondo */
-   /* border-bottom: 1px solid #333; /* Borde inferior */
+    background-color: transparent !important; /* Hace que el navbar sea transparente */
 }
 
-/* Estilo para el botón del menú desplegable */
-.navbar-toggler {
-    border: none;
-    background-color: transparent; /* Fondo transparente */
-}
-
-/* Estilo para el ícono del botón del menú desplegable */
-.navbar-toggler-icon {
-    background-image: url('data:image/svg+xml;charset=utf8,<svg viewBox="0 0 30 30" xmlns="http://www.w3.org/2000/svg"><path stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-miterlimit="10" d="M4 7h22M4 15h22M4 23h22"/></svg>'); /* Ícono blanco */
-}
-
-/* Estilo para los elementos de la barra de navegación */
 .navbar-nav .nav-link {
-    color: #fff; /* Texto blanco */
-    font-size: 16px;
-    padding: 0.5rem 1rem;
-    transition: color 0.3s ease-in-out;
+    color: white !important; /* Cambia el color del texto del enlace a blanco */
 }
 
-/* Estilo para los elementos de la barra de navegación al pasar el ratón */
 .navbar-nav .nav-link:hover {
-    color: #ccc; /* Texto gris claro al pasar el ratón */
+    color: rgba(255, 255, 255, 0.7) !important; /* Cambia el color del texto del enlace cuando se pasa el mouse */
 }
 
-/* Estilo para los menús desplegables */
+.navbar-toggler {
+    border-color: white !important; /* Cambia el color del borde del toggler a blanco */
+}
+
+/* Estilo para los desplegables */
 .dropdown-menu {
-    background-color: #1a1a1a; /* Color de fondo más oscuro */
+    color: #fff;
+    background-color: black;
+    border: 2px solid #fff;
 }
 
-/* Estilo para los elementos dentro de los menús desplegables */
 .dropdown-item {
-    color: #fff; /* Texto blanco */
-    transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+    color: white;
 }
 
-/* Estilo para los elementos dentro de los menús desplegables al pasar el ratón */
 .dropdown-item:hover {
-    background-color: #333; /* Fondo más oscuro al pasar el ratón */
+    background-color: #fff;
+    color: #000;
 }
 
-/* Animación para los menús desplegables */
-.dropdown-menu {
-    display: none;
-    opacity: 0;
-    transition: opacity 0.3s ease-in-out;
-}
 
-.dropdown:hover .dropdown-menu {
-    display: block;
-    opacity: 1;
-}
+
+
 

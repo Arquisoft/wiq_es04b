@@ -1,22 +1,74 @@
 <!-- question_fragment.html -->
 <div class="container mx-auto" id="gameFrame">
     <h1 class="text-center" th:text="${question.statement}"></h1>
-
     <div class="container">
-        <div class="btn-group align-self-center">
-            <!-- Utiliza un btn-group para agrupar los botones de respuesta -->
-            <button th:id="${'btn' + answer.id}" class="btn btn-primary flex-item m-2 rounded" th:each="answer : ${question.options}" th:value="${answer}" th:text="${answer.text}"></button>
-            <script th:inline="javascript" th:each="answer : ${question.options}">
-                /*<![CDATA[*/
-                $("#btn" + "[[${answer.id}]]").click(function () {
-                    $("#gameFrame").load("/game/[[${question.id}]]/[[${answer.id}]]");
-                    setTimeout(function () {
-                        let urlUpdate = '/game/update';
-                        $("#gameFrame").load(urlUpdate);
-                    }, 8000);
-                });
-                /*]]>*/
-            </script>
+            <div class="row">
+                <!-- Thymeleaf loop to generate buttons -->
+                <div th:each="answer, iterStat : ${question.options}" class="col-6 col-md-6 col-12">
+                    <button th:id="${'btn' + answer.id}" class="btn btn-primary btn-block m-2 rounded" th:text="${answer.text}" th:value="${answer}"></button>
+                </div>
+        </div>
+    </div>
+    <div id="bottomGamePart">
+        <div th:replace="~{game/fragments/stopwatch}"></div>
+        <script th:inline="javascript" >
+            /*<![CDATA[*/
+            function initiateGameCounters() {
+                let timeoutId = -1;
+                let interval = -1;
+
+                function setupAnswers() {
+                    let questionId = [[${question.id}]];
+                    let answers = /*[[${question.options}]]*/ [];
+
+                    answers.forEach(answer => {
+                        $("#btn" + answer.id).click(function () {
+                            clearTimeout(timeoutId);
+                            clearInterval(interval);
+                            $("#gameFrame").load("/game/" + questionId + "/" + answer.id);
+                        });
+                    });
+                }
+
+                setupAnswers();
+
+                let timeoutPeriod = [[${questionDuration}]] * 1000; // Timeout period in milliseconds (e.g., 8000ms for 8 seconds)
+                let updateInterval = 100; // How often to update the progress bar (in milliseconds)
+
+                timeoutId = setTimeout(() => {
+                    $("#gameFrame").load('/game/[[${question.id}]]/-1');
+                    clearTimeout(timeoutId);
+                }, timeoutPeriod);
+
+                initStopwatch(timeoutPeriod / 1000);
+                timeoutPeriod = timeoutPeriod - updateInterval * 2; // Adjust the timeout period to account for the update interval
+                interval = setInterval(updateProgressBar, updateInterval);
+
+                function updateProgressBar() {
+                    let progressBar = $('#progressBar');
+                    let currentTime = parseFloat(progressBar.attr('aria-valuenow'));
+                    let decrement = 100 * updateInterval / timeoutPeriod;
+                    let newTime = Math.max(0, currentTime - decrement);;
+                    // Calculate the color based on the percentage
+                    let greenValue = Math.round((newTime * 255) / 100);
+                    let redValue = 255 - greenValue;
+                    let color = 'rgb(' + redValue + ',' + greenValue + ',0)';
+
+                    progressBar.css('width', newTime + '%');
+                    progressBar.css('background-color', color); // Apply the calculated color
+                    progressBar.attr('aria-valuenow', newTime);
+
+                    if(newTime <= 0) {
+                        clearInterval(interval);
+                    }
+                }
+            }
+
+            initiateGameCounters();
+            /*]]>*/
+        </script>
+        <div class="progress" style="height: 30px;">
+            <div class="progress-bar" role="progressbar" style="width: 100%; background-color: #00bf00" id="progressBar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
         </div>
     </div>
 </div>

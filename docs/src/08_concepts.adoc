@@ -15,30 +15,27 @@ The domain model for our game includes entities such as `Question`, `Category`, 
 @startuml
 class Question {
   - id: Long
-  - question: String
-  - correctAnswer: String
-  - incorrectAnswers: List<String>
+  - statement: String
+  - options: List<Answer>
+  - correctAnswer: Answer
   - category: Category
-  - difficulty: String
-  - type: String
-  - updatedAt: LocalDateTime
-  + getId(): Long
-  + getQuestion(): String
-  + getCorrectAnswer(): String
-  + getIncorrectAnswers(): List<String>
-  + getCategory(): Category
-  + getDifficulty(): String
-  + getType(): String
-  + getUpdatedAt(): LocalDateTime
+  + addOption(option: Answer): void
+  + removeOption(option: Answer): void
+  + getOption(index: int): Answer
+  + isCorrectAnswer(answer: Answer): boolean
+  + scrambleOptions(): void
+  + equals(o: Object): boolean
+  + hashCode(): int
+  + toString(): String
+  + toJson(): JsonNode
 }
 
 class Category {
   - id: Long
   - name: String
-  + getName(): String
-  + getId(): Long
-  + setName(name: String): void
-  + setId(id: Long): void
+  - questions: Set<Question>
+  + toString(): String
+  + toJson(): JsonNode
 }
 
 class Player {
@@ -48,18 +45,9 @@ class Player {
   - password: String
   - passwordConfirm : String
   - roles: Set<Role>
-  + getId(): Long
-  + getUsername(): String
-  + getEmail(): String
-  + getPassword(): String
-  + getPasswordConfirm(): String
-  + getRoles(): Set<Role>
-  + setUsername(username: String): void
-  + setEmail(email: String): void
-  + setPassword(password: String): void
-  + setPasswordConfirm(passwordConfirm: String): void
-  + setRoles(roles: Set<Role>): void
-  + setId(id: Long): void
+  - gameSessions: Set<GameSession>
+  - apiKey: ApiKey
+  + toJson(): JsonNode
 }
 
 class GameSession {
@@ -68,60 +56,161 @@ class GameSession {
   - correctQuestions: Integer
   - totalQuestions: Integer
   - createdAt: LocalDateTime
-  - updatedAt: LocalDateTime
-  + getPlayer(): Player
-  + getScore(): Integer
-  + getCreatedAt(): LocalDateTime
-  + getUpdatedAt(): LocalDateTime
-  + getCorrectQuestions(): Integer
-  + getTotalQuestions(): Integer
+  - finishTime: LocalDateTime
+  - score: int
   + addQuestion(correct: boolean): void
-  + setPlayer(player: Player): void
-  + setScore(score: Integer): void
-  + setCreatedAt(createdAt: LocalDateTime): void
-  + setUpdatedAt(updatedAt: LocalDateTime): void
-  + setCorrectQuestions(correctQuestions: Integer): void
-  + setTotalQuestions(totalQuestions: Integer): void
+  + toJson(): JsonNode
 }
 
 class Role {
-    - id: Long
     - name: String
-    + getId(): Long
-    + getName(): String
-    + setId(id: Long): void
-    + setName(name: String): void
+    - players: Set<Player>
+}
+
+class Answer {
+    - id: Long
+    - text: String
+    - correct: boolean
+    - question: Question
+    + toString(): String
+    + toJson(): JsonNode
+}
+
+class ApiKey {
+    - id: Long
+    - keyToken: String
+    - player: Player
+    - accessLogs: Set<RestApiAccessLog>
+}
+
+class RestApiAccessLog {
+    - id: Long
+    - apiKey: ApiKey
+    - path: String
+    - details: String
+}
+
+interface JsonEntity {
+    + toJson(): JsonNode
 }
 
 interface PlayerService {
-    + addNewPlayer(playerDto: PlayerDto): Player
+    + addNewPlayer(dto: PlayerDto): Player
     + getUsers(): List<Player>
     + getUser(id: Long): Optional<Player>
-    + getUserByUsername(username: String): Optional<Player>
     + getUserByEmail(email: String): Optional<Player>
+    + getUserByUsername(username: String): Optional<Player>
+    + getUsersByRole(role: String): List<Player>
+    + generateapiKey(player: Player): void
 }
 
 interface RoleService {
-    + addRole(roleDto: RoleDto): Role
-    + getRoles(): List<Role>
+    + addRole(role: RoleDto): Role
     + getRole(name: String): Role
+    + getRoles(): List<Role>
+}
+
+interface AnswerService {
+    + addNewAnswer(answer: Answer): void
+    + getAnswerPerQuestion(question: Question): List<Answer>
+    + getAnswer(id: Long): Optional<Answer>
+}
+
+interface ApiKeyService {
+    + createApiKey(forPlayer: Player): ApiKey
+    + getApiKey(apiKey: String): ApiKey
+}
+
+interface CategoryService {
+    + addNewCategory(category: Category): void
+    + getAllCategories(): List<Category>
+    + getCategory(id: Long): Optional<Category>
+    + getCategoryByName(geography: String): Category
+}
+
+interface QuestionService {
+    + addNewQuestion(question: Question): void
+    + getAllQuestions(): List<Question>
+    + getQuestion(id: Long): Optional<Question>
+}
+
+interface RestApiService {
+    + getPlayers(params: Map<String, String>): List<Player>
+    + logAccess(apiKey: ApiKey, path: String, params: Map<String, String>): void
+    + getQuestions(params: Map<String, String>): List<Question>
+}
+
+class CustomUserDetailsService {
+    - playerRepository: PlayerRepository
+    + loadUserByUsername(username: String): UserDetails
+    + mapRolesToAuthorities(roles: Collection<Role>): Collection< ? extends GrantedAuthority>
+}
+
+class InsertSampleDataService {
+    - playerService: PlayerService
+    - questionService: QuestionService
+    - categoryService: CategoryService
+    - questionRepository: QuestionRepository
+    - gameSessionRepository: GameSessionRepository
+    + insertSampleQuestions(): void
 }
 
 class PlayerServiceImpl {
     - playerRepository: PlayerRepository
     - roleService: RoleService
-    + addNewPlayer(playerDto: PlayerDto): Player
+    - passwordEncoder: PasswordEncoder
+    + addNewPlayer(dto: PlayerDto): Player
     + getUsers(): List<Player>
     + getUser(id: Long): Optional<Player>
-    + getUserByUsername(username: String): Optional<Player>
     + getUserByEmail(email: String): Optional<Player>
+    + getUserByUsername(username: String): Optional<Player>
+    + getUsersByRole(role: String): List<Player>
+    + generateApiKey(player: Player): void
 }
 
 class RoleServiceImpl {
     - roleRepository: RoleRepository
-    + addRole(roleDto: RoleDto): Role
-    + getRoles(): List<Role>
+    + addRole(role: RoleDto): Role
     + getRole(name: String): Role
+    + getRoles(): List<Role>
+}
+
+class AnswerServiceImpl {
+    - answerRepository: AnswerRepository
+    + addNewAnswer(answer: Answer): void
+    + getAnswersPerQuestion(question: Question): List<Answer>
+    + getAnswer(id: Long): Optional<Answer>
+}
+
+class ApiKeyServiceImpl {
+    - apiKeyRepository: ApiKeyRepository
+    + createApiKey(forPlayer: Player): ApiKey
+    + getApiKey(apiKey: String): ApiKey
+}
+
+class CategoryServiceImpl {
+    - categoryRepository: CategoryRepository
+    + addNewCategory(category: Category): void
+    + getAllCategories(): List<Category>
+    + getCategory(id: Long): Optional<Category>
+    + getCategoryByName(name: String): Category
+    + init(): void
+}
+
+class QuestionServiceImpl {
+    - questionRepository: QuestionRepository
+    + addNewQuestion(question: Question): void
+    + getAllQuestions(): List<Question>
+    + getQuestion(id: Long): Optional<Question>
+}
+
+class RestApiServiceImpl {
+    - playerService: PlayerService
+    - restApiLogRepository: RestApiLogRepository
+    - questionService: QuestionService
+    + getPlayers(params: Map<String, String>): List<Player>
+    + logAccess(apiKey: ApiKey, path: String, params: Map<String, String>): void
+    + getQuestions(params: Map<String, String>): List<Question>
 }
 
 interface CrudRepository {
@@ -131,64 +220,251 @@ interface CrudRepository {
 }
 
 interface PlayerRepository {
-    + findByUsername(username: String): Optional<Player>
-    + findByEmail(email: String): Optional<Player>
+    + findByEmail(email: String): Player
+    + findByUsername(nickname: String): Player
 }
 
 interface RoleRepository {
-    + findByName(name: String): Role
+}
+
+interface AnswerRepository {
+    + findByQuestion(question: Question): List<Answer>
+}
+
+interface ApiKeyRepository {
+    + findByKeyToken(key: String): ApiKey
+}
+
+interface CategoryRepository {
+    + findByName(name: String): Category
+}
+
+interface GameSessionRepository {
+}
+
+interface QuestionRepository {
+    + findByStatement(statement: String): Question
+}
+
+interface RestApiLogRepository {
+    + findByApiKey(apiKey: ApiKey): List<RestApiAccessLog>
+    + findByUser(user: Player): List<RestApiAccessLog>
 }
 
 class PlayerDto {
-    + username: String
-    + email: String
-    + password: String
-    + passwordConfirm: String
-    + roles: String[]
+    - username: String
+    - email: String
+    - password: String
+    - passwordConfirm: String
+    - roles: String[]
 }
 
 class RoleDto {
-    + name: String
+    - name: String
 }
 
-Question "1" *- "1" Category
-GameSession "*" *-- "1" Player
-Role "*" - "*" Player
-PlayerService <|.. PlayerServiceImpl
-RoleService <|.. RoleServiceImpl
-PlayerService ..> Player
-RoleService ..> Role
-PlayerService ..> PlayerDto
-PlayerServiceImpl ..> PlayerRepository
-RoleServiceImpl .> RoleRepository
-RoleService ..> RoleDto
+class AbstractGeographyGenerator {
+    + getCategory(): Category
+}
+
+class BorderQuestionGenerator {
+    - usedCountries: Set<String>
+    + getAllBorderingCountries(resultsNode: JsonNode, correctCountry: String): List<String>
+    + selectRandomIncorrectBorderingCountries(allBorderingCountries: List<String>, correctCountry: String, count: int): List<String>
+    + generateOptions(results: JsonNode, result: JsonNode): List<String>
+    + generateCorrectAnswer(result: JsonNode): String
+    + getQuestionSubject(result: JsonNode): String
+    + getQuery(): String
+}
+
+class CapitalQuestionGenerator {
+    + getQuery(): String
+    + getAllCapitals(resultsNode: JsonNode, correctCapital: String): List<String>
+    + selectRandomIncorrectCapitals(allCapitals: List<String>, correctCapital: String, count: int): List<String>
+    + generateOptions(results: JsonNode, result: JsonNode): List<String>
+    + generateCorrectAnswer(result: JsonNode): String
+    + getQuestionSubject(result: JsonNode): String
+}
+
+class ContinentQuestionGeneration {
+    + getAllContinents(resultsNode: JsonNode, correctContinent: String): List<String>
+    + selectRandomIncorrectContinents(allContinents: List<String>, correctContinent: String, count: int): List<String>
+    + generateOptions(results: JsonNode, result: JsonNode): List<String>
+    + generateCorrectAnswer(result: JsonNode): String
+    + getQuestionSubject(result: JsonNode): String
+    + getQuery(): String
+}
+
+class AbstractQuestionGenerator {
+    - questions: List<Question>
+    - categoryService: CategoryService
+    - query: String
+    - statement: String
+    + questionGenerator(statement: String, options: List<String>, correctAnswer: String, category: Category): void
+    + getQuestions(): List<Question>
+    + generateOptions(results: JsonNode, result: JsonNode): List<String>
+    + generateCorrectAnswer(result: JsonNode): String
+    + getQuestionSubject(result: JsonNode): String
+}
+
+interface QuestionGenerator {
+    + getQuery(): String
+    + getQuestions(): List<Question>
+    + getCategory(): Category
+}
+
+class QuestionGeneratorTestController {
+    + qgen: CapitalQuestionGenerator
+    + test(): void
+}
+
+class HomeController {
+    - playerService: PlayerService
+    + home(): String
+    + apiHome(): String
+}
+
+class PlayersController {
+    - playerService: PlayerService
+    - signUpValidator: SignUpValidator
+    + showRegistrationForm(model: Model): String
+    + registerUserAccount(request: HttpServletRequest, user: PlayerDto, result: BindingResult, model: Model): String
+    + showLoginForm(model: Model, error: String, session: HttpSession): String
+    + home(model: Model, principal: Principal): String
+}
+
+class RestApiController {
+    - apiKeyService: ApiKeyService
+    - restApiService: RestApiService
+    + getPlayers(response: HttpServletResponse, params: Map<String, String>): String
+    + getQuestions(response: HttpServletResponse, params: Map<String, String>): String
+    + getApiKeyFromParams(params: Map<String, String>): String
+}
+
+class SignUpValidator {
+    - playerService: PlayerService
+    + supports(clazz: Class<?>): boolean
+    + validate(target: Object, errors: Errors): void
+}
+
+JsonEntity <|.. Answer
+JsonEntity <|.. Category
+JsonEntity <|.. GameSession
+JsonEntity <|.. Player
+JsonEntity <|.. Question
+AnswerRepository --|> CrudRepository
+ApiKeyRepository --|> CrudRepository
+CategoryRepository --|> CrudRepository
+GameSessionRepository --|> CrudRepository
 PlayerRepository --|> CrudRepository
-RoleRepository -|> CrudRepository
+QuestionRepository --|> CrudRepository
+RestApiLogRepository --|> CrudRepository
+RoleRepository --|> CrudRepository
+AnswerService <|.. AnswerServiceImpl
+ApiKeyService <|.. ApiKeyServiceImpl
+CategoryService <|.. CategoryServiceImpl
+PlayerService <|.. PlayerServiceImpl
+QuestionService <|.. QuestionServiceImpl
+RestApiService <|.. RestApiServiceImpl
+RoleService <|.. RoleServiceImpl
+AbstractGeographyGenerator --|> AbstractQuestionGenerator
+BorderQuestionGenerator --|> AbstractGeographyGenerator
+CapitalQuestionGenerator --|> AbstractGeographyGenerator
+ContinentQuestionGeneration --|> AbstractGeographyGenerator
+QuestionGenerator <|.. AbstractQuestionGenerator
+RoleService ..> RoleDto
+Role "*" - "*" Player
+AnswerService ..> Answer
+AnswerService ..> Question
+ApiKeyService ..> Player
+CategoryService ..> Category
+PlayerService ..> PlayerDto
+PlayerService ..> Player
+QuestionService ..> Question
+RestApiService ..> ApiKey
+CustomUserDetailsService "1" *- "1" PlayerRepository
+CustomUserDetailsService ..> Player
+CustomUserDetailsService ..> Role
+InsertSampleDataService "1" *- "1" PlayerService
+InsertSampleDataService "1" *- "1" QuestionService
+InsertSampleDataService "1" *- "1" CategoryService
+InsertSampleDataService "1" *- "1" QuestionRepository
+InsertSampleDataService "1" *- "1" GameSessionRepository
+InsertSampleDataService ..> PlayerDto
+InsertSampleDataService ..> GameSession
+InsertSampleDataService ..> QuestionGenerator
+AnswerServiceImpl "1" *- "1" AnswerRepository
+ApiKeyServiceImpl "1" *- "1" ApiKeyRepository
+CategoryServiceImpl "1" *- "1" CategoryRepository
+PlayerServiceImpl "1" *- "1" PlayerRepository
+PlayerServiceImpl "1" *- "1" RoleService
+PlayerServiceImpl "1" *- "1" PasswordEncoder
+PlayerServiceImpl ..> Role
+QuestionServiceImpl "1" *- "1" QuestionRepository
+RestApiServiceImpl "1" *- "1" PlayerService
+RestApiServiceImpl "1" *- "1" RestApiLogRepository
+RestApiServiceImpl "1" *- "1" QuestionService
+RestApiServiceImpl ..> Player
+RestApiServiceImpl ..> Question
+RoleServiceImpl "1" *- "1" RoleRepository
+RestApiServiceImpl ..> Role
+AnswerRepository ..> Question
+RestApiLogRepository ..> ApiKey
+RestApiLogRepository ..> Player
+Answer "*" - "1" Question
+ApiKey "1" - "1" Player
+ApiKey "1" - "*" RestApiAccessLog
+Category "1" - "*" Question
+Player "1" - "*" GameSession
+HomeController "1" *- "1" PlayerService
+PlayersController "1" *- "1" PlayerService
+PlayersController "1" *- "1" SignUpValidator
+PlayersController ..> PlayerDto
+RestApiController "1" *- "1" ApiKeyService
+RestApiController "1" *- "1" RestApiService
+RestApiController ..> ApiKey
+RestApiController ..> Player
+RestApiController ..> Question
+QuestionGeneratorTestController "1" *- "1" CapitalQuestionGenerator
+QuestionGeneratorTestController ..> Question
+AbstractQuestionGenerator "1" - "*" Question
+AbstractQuestionGenerator "1" - "1" CategoryService
+AbstractQuestionGenerator ..> Category
+Validator <|.. SignUpValidator
+SignUpValidator "1" - "1" PlayerService
+SignUpValidator ..> PlayerDto
+
 @enduml
 ----
 
 [plantuml, domain-model-2, svg]
 ----
 @startuml
-class WiqEs04bApplication {
-    + main(args: String[]): void
-}
-class CustomErrorController {
-   + error(model: Model, webRequest: HttpServletRequest): String
+
+class AnswerDto {
+    - id: Long
+    - text: String
+    - correct: boolean
 }
 
-class HomeController {
-    + home(model: Model): String
+class CategoryDto {
+    - id: Long
+    - name: String
+    - description: String
+    - questions: List<QuestionDto>
 }
 
-class PlayersController {
-    + showRegistrationForm(model: Model): String
-    + registerUserAccount(user: PlayerDto, result: BindingResult, model: Model): String
-    + showLoginForm(model: Model, error: String, session: HttpSession): String
-    + home(model: Model, principal: Principal): String
+class QuestionDto {
+    - id: Long
+    - statement: String
+    - options: List<AnswerDto>
+    - correctAnswer: AnswerDto
+    - category: CategoryDto
 }
 
 class SecurityConfig {
+    - userDetailsService: UserDetailsService
+    - customAuthenticationFailureHandler: CustomAuthenticationFailureHandler
     + passwordEncoder(): PasswordEncoder
     + filterChain(http: HttpSecurity): SecurityFilterChain
     + configureGlobal(auth: AuthenticationManagerBuilder): void
@@ -196,8 +472,30 @@ class SecurityConfig {
 }
 
 class CustomAuthenticationFailureHandler {
-    + onAuthenticationFailure(request: HttpServletRequest, response: HttpServletResponse, exception: AuthenticationException): void
+    + onAuthenticationFailure(request: HttpServletRequest, responde: HttpServletResponse, exception: AuthenticationException): void
 }
+
+class CustomConfiguration {
+    + localeResolver(): LocaleResolver
+    + localeChangeInterceptor(): LocaleChangeInterceptor
+    + addInterceptors(registry: InterceptorRegistry): void
+}
+
+class CustomErrorController {
+    + error(model: Model, webRequest: HttpServletRequest): String
+}
+
+class WiqEs04bApplication {
+    + main(args: String[]): void
+}
+
+CategoryDto "1" - "*" QuestionDto
+QuestionDto "1" *- "*" AnswerDto
+SecurityConfig "1" *- "1" UserDetailsService
+SecurityConfig "1" *- "1" CustomAuthenticationFailureHandler
+CustomAuthenticationFailureHandler --|> SimpleUrlAuthenticationFailureHandler
+WebMvcConfigurer <|.. CustomConfiguration
+CustomErrorController --|> BasicErrorController
 
 @enduml
 ----
