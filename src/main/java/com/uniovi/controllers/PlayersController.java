@@ -93,7 +93,6 @@ public class PlayersController {
         return "player/home";
     }
 
-
     @GetMapping("/ranking/globalRanking")
     public String showGlobalRanking(Pageable pageable, Model model) {
         Page<Object[]> ranking = gameSessionService.getGlobalRanking(pageable);
@@ -114,5 +113,4 @@ public class PlayersController {
 
         return "ranking/playerRanking";
     }
-
 }
