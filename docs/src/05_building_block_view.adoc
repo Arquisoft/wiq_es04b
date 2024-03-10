@@ -73,6 +73,10 @@ rectangle "WIQ" {
 rectangle "Wikidata" {
     WIQ --> Wikidata : Requests data to generate questions
 }
+
+rectangle "DataBase" {
+    WIQ --> DataBase : Saves the users and games
+}
 ----
 
 
@@ -97,6 +101,9 @@ Contained Building Blocks::
 
 | Wikidata
 | External service used by WIQ to obtain data and generate questions.
+
+| DataBase
+| The DataBase that save the accounts of the players and the games that they played.
 |===
 
 
