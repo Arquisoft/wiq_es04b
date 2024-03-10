@@ -28,7 +28,7 @@ jobs:
         run: chmod +x mvnw
       - name: Build and test
         run: |
-          ./mvnw -B clean verify sonar:sonar -Dsonar.projectKey=Arquisoft_wiq_es04b -Dsonar.branch.name=${{ github.ref }} -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=${{ secrets.SONAR_TOKEN }} -Dspring.profiles.active=test -Dspring.datasource.url=jdbc:mysql://localhost:3306/test_database -Dspring.datasource.username=root -Dspring.datasource.password=root -Dspring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+          ./mvnw -B clean verify sonar:sonar -Dsonar.projectKey=Arquisoft_wiq_es04b -Dsonar.organization=arquisoft -Dsonar.branch.name=${{ github.ref }} -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=${{ secrets.SONAR_TOKEN }} -Dspring.profiles.active=test -Dspring.datasource.url=jdbc:mysql://localhost:3306/test_database -Dspring.datasource.username=root -Dspring.datasource.password=root -Dspring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
