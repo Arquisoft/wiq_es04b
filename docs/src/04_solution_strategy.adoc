@@ -36,7 +36,7 @@ There are some placeholders for the decisions yet to be taken.
 === Technological Decisions
 * Programming Language: Java will be used for system development because all team members are familiar with it, and we believe we can perform better using this language.
 * Frontend Framework: SpringBoot will be adopted for frontend development because it allows us to deploy a web application using Java and provides numerous functionalities that greatly facilitate the implementation of project requirements, such as user authentication.
-* Database: [Database] was selected as the storage engine due to [reasons].
+* Database: HSQLDB for local tests and MySQL for production were selected as the storages engines due to Java being the chosen language.
 
 === System Decomposition
 The Model-View-Controler architecture pattern will be followed for structuring the system, dividing it into modules/classes responsible for the managment of the players, questions, answers and game, and the viiews of the frontend.
