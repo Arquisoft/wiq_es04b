@@ -20,7 +20,13 @@ public interface GameSessionService {
     List<GameSession> getGameSessions();
 
     /**
-     * Return the global ranking
+     * Return the list of GameSessions by player
+     *
+     * @return the list of GameSessions by player
+     */
+    List<GameSession> getGameSessionsByPlayer(Player player);
+
+     /* Return the global ranking
      *
      * @param pageable the pageable
      * @return the global ranking

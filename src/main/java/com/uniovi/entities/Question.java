@@ -116,4 +116,13 @@ public class Question implements JsonEntity {
         obj         .put("options", optionsArray);
         return obj;
     }
+
+    public boolean hasEmptyOptions() {
+        for(Answer a : options) {
+            if(a.getText().isEmpty() || a.getText().isBlank() || a.getText() == null) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

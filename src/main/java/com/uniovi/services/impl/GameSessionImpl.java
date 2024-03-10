@@ -32,6 +32,11 @@ public class GameSessionImpl implements GameSessionService {
     }
 
     @Override
+    public List<GameSession> getGameSessionsByPlayer(Player player) {
+
+        return gameSessionRepository.findAllByPlayer(player);
+    }
+
     public Page<Object[]> getGlobalRanking(Pageable pageable) {
         return gameSessionRepository.findTotalScoresByPlayer(pageable);
     }

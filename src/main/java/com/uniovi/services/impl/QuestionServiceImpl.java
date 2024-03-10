@@ -47,6 +47,9 @@ public class QuestionServiceImpl implements QuestionService {
                 .filter(question -> question.getLanguage().equals(LocaleContextHolder.getLocale().getLanguage())).toList();
         int idx = (int) (Math.random() * allQuestions.size());
         Question q = allQuestions.get(idx);
+        while (q.hasEmptyOptions()){
+            return getRandomQuestion();
+        }
         return Optional.ofNullable(q);
     }
 

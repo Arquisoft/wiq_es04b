@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://thymeleaf.org">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{fragments/head}"/>
 <body>
 <nav th:replace="~{fragments/nav}"/>
@@ -32,6 +32,9 @@
     </div>
     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
   </form>
+  <div>
+    <a th:href="@{/signup}" th:text="#{login.register}"></a>
+  </div>
 </div>
 <footer th:replace="~{fragments/footer}"/>
 </body>
