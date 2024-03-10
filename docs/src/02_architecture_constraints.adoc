@@ -32,14 +32,14 @@ See https://docs.arc42.org/section-2/[Architecture Constraints] in the arc42 doc
 - *Web Frontend Requirement:*
   The system must include at least one web frontend, and it is mandatory for deployment.
 
--*Users log in and game history:*
+- *Users log in and game history:*
   The users will be able to register in the system and consult their participation history in the system.
 
--*Limited time in questions:*
+- *Limited time in questions:*
   The questions must have a limited time to be responded.
 
--*Questions must have 4 posible answers*
+- *Questions must have 4 posible answers*
   Each question will have one correct answer and several incorrect or distractor answers. Both the correct and incorrect answers will be generated automatically.
 
--*System API:*
+- *System API:*
   System will allow accessing user information and the information of the generated questions through an API.
