@@ -39,7 +39,7 @@ There are some placeholders for the decisions yet to be taken.
 * Database: [Database] was selected as the storage engine due to [reasons].
 
 === System Decomposition
-The [pattern] architecture pattern will be followed for structuring the system, dividing it into modules/classes responsible for [responsibilities].
+The Model-View-Controler architecture pattern will be followed for structuring the system, dividing it into modules/classes responsible for the managment of the players, questions, answers and game, and the viiews of the frontend.
 
 === Quality Goals
 * Performance: A quick system response will be sought, especially during question generation and gameplay.
