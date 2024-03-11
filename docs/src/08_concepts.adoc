@@ -481,10 +481,6 @@ class CustomConfiguration {
     + addInterceptors(registry: InterceptorRegistry): void
 }
 
-class CustomErrorController {
-    + error(model: Model, webRequest: HttpServletRequest): String
-}
-
 class WiqEs04bApplication {
     + main(args: String[]): void
 }
@@ -495,7 +491,6 @@ SecurityConfig "1" *- "1" UserDetailsService
 SecurityConfig "1" *- "1" CustomAuthenticationFailureHandler
 CustomAuthenticationFailureHandler --|> SimpleUrlAuthenticationFailureHandler
 WebMvcConfigurer <|.. CustomConfiguration
-CustomErrorController --|> BasicErrorController
 
 @enduml
 ----
