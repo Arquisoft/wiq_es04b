@@ -318,14 +318,6 @@ class QuestionGeneratorTestController {
     + test(): void
 }
 
-class RestApiController {
-    - apiKeyService: ApiKeyService
-    - restApiService: RestApiService
-    + getPlayers(response: HttpServletResponse, params: Map<String, String>): String
-    + getQuestions(response: HttpServletResponse, params: Map<String, String>): String
-    + getApiKeyFromParams(params: Map<String, String>): String
-}
-
 class SignUpValidator {
     - playerService: PlayerService
     + supports(clazz: Class<?>): boolean
@@ -401,11 +393,6 @@ ApiKey "1" - "1" Player
 ApiKey "1" - "*" RestApiAccessLog
 Category "1" - "*" Question
 Player "1" - "*" GameSession
-RestApiController "1" *- "1" ApiKeyService
-RestApiController "1" *- "1" RestApiService
-RestApiController ..> ApiKey
-RestApiController ..> Player
-RestApiController ..> Question
 QuestionGeneratorTestController "1" *- "1" CapitalQuestionGenerator
 QuestionGeneratorTestController ..> Question
 AbstractQuestionGenerator "1" - "*" Question
