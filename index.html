@@ -436,11 +436,11 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </head>
 <body class="article">
 <div id="header">
-<h1><span class="image"><img src="./images/arc42-logo.png" alt="arc42"></span> WIQ es04b</h1>
+<h1><span class="image"><img src="./images/wiq-logo.png" alt="wiq-image"></span> WIQ es04b</h1>
 <div class="details">
-<span id="revnumber">version 8.2 EN,</span>
-<span id="revdate">January 2023</span>
-<br><span id="revremark">(based upon AsciiDoc version)</span>
+<span id="revnumber">version 2,</span>
+<span id="revdate">March 2024</span>
+<br><span id="revremark">ASW - wiq_es04b</span>
 </div>
 <div id="toc" class="toc">
 <div id="toctitle">Table of Contents</div>
@@ -463,58 +463,52 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <ul class="sectlevel2">
 <li><a href="#_technological_decisions">4.1. Technological Decisions</a></li>
 <li><a href="#_system_decomposition">4.2. System Decomposition</a></li>
-<li><a href="#_quality_goals_2">4.3. Quality Goals</a></li>
-<li><a href="#_organizational_decisions">4.4. Organizational Decisions</a></li>
+<li><a href="#_organizational_decisions">4.3. Organizational Decisions</a></li>
 </ul>
 </li>
-<li><a href="#_building_block_view">Building Block View</a>
-<ul class="sectlevel1">
-<li><a href="#_5_1_whitebox_overall_system">1. 5.1 Whitebox Overall System</a>
+<li><a href="#section-building-block-view">5. Building Block View</a>
 <ul class="sectlevel2">
-<li><a href="#_motivation">1.1. Motivation</a></li>
-<li><a href="#_contained_building_blocks">1.2. Contained Building Blocks</a></li>
+<li><a href="#_whitebox_overall_system">5.1. Whitebox Overall System</a></li>
+<li><a href="#_level_2">5.2. Level 2</a></li>
+<li><a href="#_level_3">5.3. Level 3</a></li>
 </ul>
 </li>
-<li><a href="#_5_2_level_2">2. 5.2 Level 2</a></li>
-<li><a href="#_5_3_level_3">3. 5.3 Level 3</a></li>
-<li><a href="#section-runtime-view">4. Runtime View</a>
+<li><a href="#section-runtime-view">6. Runtime View</a>
 <ul class="sectlevel2">
-<li><a href="#_user_authentication">4.1. User Authentication</a></li>
-<li><a href="#_question_generation">4.2. Question Generation</a></li>
-<li><a href="#_user_responds_to_a_question">4.3. User Responds to a Question</a></li>
-<li><a href="#_user_checks_their_history">4.4. User Checks their History</a></li>
-<li><a href="#_access_to_user_information_via_an_api">4.5. Access to User Information via an API</a></li>
-<li><a href="#_access_to_generated_questions_information_via_an_api">4.6. Access to Generated Questions Information via an API</a></li>
+<li><a href="#_user_authentication">6.1. User Authentication</a></li>
+<li><a href="#_question_generation">6.2. Question Generation</a></li>
+<li><a href="#_user_responds_to_a_question">6.3. User Responds to a Question</a></li>
+<li><a href="#_user_checks_their_history">6.4. User Checks their History</a></li>
+<li><a href="#_access_to_user_information_via_an_api">6.5. Access to User Information via an API</a></li>
+<li><a href="#_access_to_generated_questions_information_via_an_api">6.6. Access to Generated Questions Information via an API</a></li>
 </ul>
 </li>
-<li><a href="#section-deployment-view">5. Deployment View</a>
+<li><a href="#section-deployment-view">7. Deployment View</a>
 <ul class="sectlevel2">
-<li><a href="#_infrastructure_level_1">5.1. Infrastructure Level 1</a></li>
-<li><a href="#_infrastructure_level_2">5.2. Infrastructure Level 2</a></li>
+<li><a href="#_infrastructure_level_1">7.1. Infrastructure Level 1</a></li>
+<li><a href="#_infrastructure_level_2">7.2. Infrastructure Level 2</a></li>
 </ul>
 </li>
-<li><a href="#section-concepts">6. Cross-cutting Concepts</a>
+<li><a href="#section-concepts">8. Cross-cutting Concepts</a>
 <ul class="sectlevel2">
-<li><a href="#_domain_model">6.1. Domain Model</a></li>
-<li><a href="#_hexagonal_architecture">6.2. Hexagonal Architecture</a></li>
-<li><a href="#_java_persistence_api_jpa_for_data_management">6.3. Java Persistence API (JPA) for Data Management</a></li>
-<li><a href="#_logging_with_slf4j_and_system_out">6.4. Logging with Slf4j and System.out</a></li>
-<li><a href="#_security">6.5. Security</a></li>
-<li><a href="#_performance_optimization">6.6. Performance Optimization</a></li>
-<li><a href="#_continuous_integration_and_continuous_deployment_cicd">6.7. Continuous Integration and Continuous Deployment (CI/CD)</a></li>
-<li><a href="#_scalability">6.8. Scalability</a></li>
+<li><a href="#_domain_model">8.1. Domain Model</a></li>
+<li><a href="#_hexagonal_architecture">8.2. Hexagonal Architecture</a></li>
+<li><a href="#_java_persistence_api_jpa_for_data_management">8.3. Java Persistence API (JPA) for Data Management</a></li>
+<li><a href="#_logging_with_slf4j_and_system_out">8.4. Logging with Slf4j and System.out</a></li>
+<li><a href="#_security">8.5. Security</a></li>
+<li><a href="#_performance_optimization">8.6. Performance Optimization</a></li>
+<li><a href="#_continuous_integration_and_continuous_deployment_cicd">8.7. Continuous Integration and Continuous Deployment (CI/CD)</a></li>
+<li><a href="#_scalability">8.8. Scalability</a></li>
 </ul>
 </li>
-<li><a href="#section-design-decisions">7. Architecture Decisions</a></li>
-<li><a href="#section-quality-scenarios">8. Quality Requirements</a>
+<li><a href="#section-design-decisions">9. Architecture Decisions</a></li>
+<li><a href="#section-quality-scenarios">10. Quality Requirements</a>
 <ul class="sectlevel2">
-<li><a href="#_quality_tree">8.1. Quality Tree</a></li>
-<li><a href="#_quality_scenarios">8.2. Quality Scenarios</a></li>
+<li><a href="#_quality_tree">10.1. Quality Tree</a></li>
+<li><a href="#_quality_scenarios">10.2. Quality Scenarios</a></li>
 </ul>
 </li>
-<li><a href="#section-technical-risks">9. Risks and Technical Debts</a></li>
-</ul>
-</li>
+<li><a href="#section-technical-risks">11. Risks and Technical Debts</a></li>
 </ul>
 </div>
 </div>
@@ -528,6 +522,11 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 .arc42help:hover::before {content: "";}
 @media print {
 	.arc42help {display:none;}
+}
+
+img[alt="wiq-image"] {
+    width: 100px;
+    height: auto;
 }
 </style>
 <hr>
@@ -723,7 +722,7 @@ System will allow accessing user information and the information of the generate
 <h3 id="_business_context">3.1. Business Context</h3>
 <div class="imageblock">
 <div class="content">
-<img src="./images/Deployment%20diagram.png" alt="Deployment diagram" width="594" height="594">
+<img src="./images/Deployment%20diagram.png" alt="Deployment diagram" width="509" height="594">
 </div>
 </div>
 <div class="ulist">
@@ -849,29 +848,7 @@ System will allow accessing user information and the information of the generate
 </div>
 </div>
 <div class="sect2">
-<h3 id="_quality_goals_2">4.3. Quality Goals</h3>
-<div class="ulist">
-<ul>
-<li>
-<p>Performance: A quick system response will be sought, especially during question generation and gameplay.</p>
-</li>
-<li>
-<p>Security: Security measures will be implemented to protect user information and ensure the integrity of generated questions.</p>
-</li>
-<li>
-<p>Availability:</p>
-</li>
-<li>
-<p>Responsiveness:</p>
-</li>
-<li>
-<p>Usability: The system must be easy to use, with a simple and intuitive interface.</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_organizational_decisions">4.4. Organizational Decisions</h3>
+<h3 id="_organizational_decisions">4.3. Organizational Decisions</h3>
 <div class="paragraph">
 <p>Development Methodology: GitFlow will be adopted for project management, facilitating collaboration and iterative delivery.</p>
 </div>
@@ -895,13 +872,14 @@ System will allow accessing user information and the information of the generate
 </div>
 </div>
 </div>
-<h1 id="_building_block_view" class="sect0">Building Block View</h1>
+<div class="sect1">
+<h2 id="section-building-block-view">5. Building Block View</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>The Building Block View elaborates on the static structure of the system. It decomposes the system into building blocks like modules, components, subsystems, and others, detailing their responsibilities and relationships.</p>
 </div>
-<div class="sect1">
-<h2 id="_5_1_whitebox_overall_system">1. 5.1 Whitebox Overall System</h2>
-<div class="sectionbody">
+<div class="sect2">
+<h3 id="_whitebox_overall_system">5.1. Whitebox Overall System</h3>
 <div class="paragraph">
 <p>This section provides an overview of the main components of the system and their interactions. The core of the system is the WIQ (QuestionGame) component, which interfaces with Users, Wikidata for question generation, a Database for persistence, and offers a REST API for External Developers.</p>
 </div>
@@ -910,14 +888,14 @@ System will allow accessing user information and the information of the generate
 <img src="./images/Whitebox-overall.png" alt="Whitebox overall" width="830" height="433">
 </div>
 </div>
-<div class="sect2">
-<h3 id="_motivation">1.1. Motivation</h3>
+<div class="sect3">
+<h4 id="_motivation">5.1.1. Motivation</h4>
 <div class="paragraph">
 <p>The decomposition provides a clear, high-level overview of how the WIQ system interacts with users, external services (Wikidata), stores data (Database), and interfaces with external developers through the REST API. This modularity supports scalability and maintainability.</p>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_contained_building_blocks">1.2. Contained Building Blocks</h3>
+<div class="sect3">
+<h4 id="_contained_building_blocks">5.1.2. Contained Building Blocks</h4>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 50%;">
@@ -954,10 +932,8 @@ System will allow accessing user information and the information of the generate
 </table>
 </div>
 </div>
-</div>
-<div class="sect1">
-<h2 id="_5_2_level_2">2. 5.2 Level 2</h2>
-<div class="sectionbody">
+<div class="sect2">
+<h3 id="_level_2">5.2. Level 2</h3>
 <div class="paragraph">
 <p>For Level 2 of the Building Block View, the WIQ (QuestionGame) system is further decomposed into four primary components that define its operational structure. Each component is designed to fulfill specific roles within the architecture, ensuring the system&#8217;s functionality and responsiveness to user interactions.</p>
 </div>
@@ -983,10 +959,8 @@ System will allow accessing user information and the information of the generate
 </div>
 </div>
 </div>
-</div>
-<div class="sect1">
-<h2 id="_5_3_level_3">3. 5.3 Level 3</h2>
-<div class="sectionbody">
+<div class="sect2">
+<h3 id="_level_3">5.3. Level 3</h3>
 <div class="paragraph">
 <p>In Level 3, we take a closer look at the API Management component, breaking it down into two essential services: the Player Information API and the Question Information API. These services are fundamental to the system&#8217;s ability to interact with external applications, providing necessary functionalities with a focus on usability and security.</p>
 </div>
@@ -1011,11 +985,12 @@ System will allow accessing user information and the information of the generate
 <div style="page-break-after: always;"></div>
 </div>
 </div>
+</div>
 <div class="sect1">
-<h2 id="section-runtime-view">4. Runtime View</h2>
+<h2 id="section-runtime-view">6. Runtime View</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_user_authentication">4.1. User Authentication</h3>
+<h3 id="_user_authentication">6.1. User Authentication</h3>
 <div class="imageblock">
 <div class="content">
 <img src="./images/Sequence%20diagram%201.png" alt="Sequence diagram 1" width="509" height="355">
@@ -1023,7 +998,7 @@ System will allow accessing user information and the information of the generate
 </div>
 </div>
 <div class="sect2">
-<h3 id="_question_generation">4.2. Question Generation</h3>
+<h3 id="_question_generation">6.2. Question Generation</h3>
 <div class="imageblock">
 <div class="content">
 <img src="./images/Sequence%20diagram%202.png" alt="Sequence diagram 2" width="778" height="427">
@@ -1031,7 +1006,7 @@ System will allow accessing user information and the information of the generate
 </div>
 </div>
 <div class="sect2">
-<h3 id="_user_responds_to_a_question">4.3. User Responds to a Question</h3>
+<h3 id="_user_responds_to_a_question">6.3. User Responds to a Question</h3>
 <div class="imageblock">
 <div class="content">
 <img src="./images/Sequence%20diagram%203.png" alt="Sequence diagram 3" width="460" height="368">
@@ -1039,7 +1014,7 @@ System will allow accessing user information and the information of the generate
 </div>
 </div>
 <div class="sect2">
-<h3 id="_user_checks_their_history">4.4. User Checks their History</h3>
+<h3 id="_user_checks_their_history">6.4. User Checks their History</h3>
 <div class="imageblock">
 <div class="content">
 <img src="./images/Sequence%20diagram%204.png" alt="Sequence diagram 4" width="433" height="326">
@@ -1047,7 +1022,7 @@ System will allow accessing user information and the information of the generate
 </div>
 </div>
 <div class="sect2">
-<h3 id="_access_to_user_information_via_an_api">4.5. Access to User Information via an API</h3>
+<h3 id="_access_to_user_information_via_an_api">6.5. Access to User Information via an API</h3>
 <div class="imageblock">
 <div class="content">
 <img src="./images/Sequence%20diagram%205.png" alt="Sequence diagram 5" width="635" height="385">
@@ -1055,7 +1030,7 @@ System will allow accessing user information and the information of the generate
 </div>
 </div>
 <div class="sect2">
-<h3 id="_access_to_generated_questions_information_via_an_api">4.6. Access to Generated Questions Information via an API</h3>
+<h3 id="_access_to_generated_questions_information_via_an_api">6.6. Access to Generated Questions Information via an API</h3>
 <div class="imageblock">
 <div class="content">
 <img src="./images/Sequence%20diagram%206.png" alt="Sequence diagram 6" width="754" height="385">
@@ -1066,13 +1041,13 @@ System will allow accessing user information and the information of the generate
 </div>
 </div>
 <div class="sect1">
-<h2 id="section-deployment-view">5. Deployment View</h2>
+<h2 id="section-deployment-view">7. Deployment View</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>The deployment strategy for our game, which leverages the Wikidata API to dynamically generate questions, is built around a Docker-based infrastructure. This approach allows for the encapsulation of our Java Spring Boot application within a Docker container, simplifying deployments across different environments (development, testing, and production) while ensuring consistency and isolation.</p>
 </div>
 <div class="sect2">
-<h3 id="_infrastructure_level_1">5.1. Infrastructure Level 1</h3>
+<h3 id="_infrastructure_level_1">7.1. Infrastructure Level 1</h3>
 <div class="paragraph">
 <p>Our application is containerized using Docker, enabling us to deploy the entire stack as a single <code>.jar</code> file that includes the web server. This method ensures that our application can be easily moved across environments or scaled up as needed without significant changes to the infrastructure.</p>
 </div>
@@ -1111,12 +1086,12 @@ The infrastructure features a single Docker container that hosts the Java Spring
 </div>
 </div>
 <div class="sect2">
-<h3 id="_infrastructure_level_2">5.2. Infrastructure Level 2</h3>
+<h3 id="_infrastructure_level_2">7.2. Infrastructure Level 2</h3>
 <div class="paragraph">
 <p>At this level, we describe the Docker container configuration that encapsulates our application.</p>
 </div>
 <div class="sect3">
-<h4 id="_docker_container">5.2.1. <em>Docker Container</em></h4>
+<h4 id="_docker_container">7.2.1. <em>Docker Container</em></h4>
 <div class="paragraph">
 <p>Our app&#8217;s Docker container is built from a Java base image, which is then layered with our application’s <code>.jar</code> file.</p>
 </div>
@@ -1142,13 +1117,13 @@ The infrastructure features a single Docker container that hosts the Java Spring
 </div>
 </div>
 <div class="sect1">
-<h2 id="section-concepts">6. Cross-cutting Concepts</h2>
+<h2 id="section-concepts">8. Cross-cutting Concepts</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>The following concepts provide a foundation for the design and implementation of the trivia game project, which utilizes the Wikidata API for dynamic question generation and employs a hexagonal architecture for its Java Spring Boot application.</p>
 </div>
 <div class="sect2">
-<h3 id="_domain_model">6.1. Domain Model</h3>
+<h3 id="_domain_model">8.1. Domain Model</h3>
 <div class="paragraph">
 <p>The domain model for our game includes entities such as <code>Question</code>, <code>Category</code>, <code>Player</code>, <code>Role</code>, and <code>GameSession</code>. These are crucial for representing the game&#8217;s data and logic. The model serves as the basis for interactions within the application and between the application and the database.</p>
 </div>
@@ -1164,7 +1139,7 @@ The infrastructure features a single Docker container that hosts the Java Spring
 </div>
 </div>
 <div class="sect2">
-<h3 id="_hexagonal_architecture">6.2. Hexagonal Architecture</h3>
+<h3 id="_hexagonal_architecture">8.2. Hexagonal Architecture</h3>
 <div class="paragraph">
 <p>Our application is structured using hexagonal architecture principles, which prioritize the separation of core logic from peripheral concerns like user interface and external API interactions.</p>
 </div>
@@ -1174,7 +1149,7 @@ The infrastructure features a single Docker container that hosts the Java Spring
 </div>
 </div>
 <div class="sect2">
-<h3 id="_java_persistence_api_jpa_for_data_management">6.3. Java Persistence API (JPA) for Data Management</h3>
+<h3 id="_java_persistence_api_jpa_for_data_management">8.3. Java Persistence API (JPA) for Data Management</h3>
 <div class="paragraph">
 <p>We use JPA for data persistence to abstract and handle all database operations, allowing for a more streamlined and object-oriented approach to data handling.</p>
 </div>
@@ -1184,7 +1159,7 @@ The infrastructure features a single Docker container that hosts the Java Spring
 </div>
 </div>
 <div class="sect2">
-<h3 id="_logging_with_slf4j_and_system_out">6.4. Logging with Slf4j and System.out</h3>
+<h3 id="_logging_with_slf4j_and_system_out">8.4. Logging with Slf4j and System.out</h3>
 <div class="paragraph">
 <p>For monitoring runtime behavior and troubleshooting, the project utilizes Slf4j, bundled with Sprint Boot, and System.out for logging. While Slf4j offers more sophisticated logging capabilities, System.out is used for straightforward, immediate console output.</p>
 </div>
@@ -1194,7 +1169,7 @@ The infrastructure features a single Docker container that hosts the Java Spring
 </div>
 </div>
 <div class="sect2">
-<h3 id="_security">6.5. Security</h3>
+<h3 id="_security">8.5. Security</h3>
 <div class="paragraph">
 <p>Security is a key concern, ensuring that user data and game integrity are protected. We implement standard security practices at various levels within the application</p>
 </div>
@@ -1204,7 +1179,7 @@ The infrastructure features a single Docker container that hosts the Java Spring
 </div>
 </div>
 <div class="sect2">
-<h3 id="_performance_optimization">6.6. Performance Optimization</h3>
+<h3 id="_performance_optimization">8.6. Performance Optimization</h3>
 <div class="paragraph">
 <p>Performance optimization is considered in all aspects of the application, from the efficient design of the domain model to the configuration of the persistence layer.</p>
 </div>
@@ -1214,7 +1189,7 @@ The infrastructure features a single Docker container that hosts the Java Spring
 </div>
 </div>
 <div class="sect2">
-<h3 id="_continuous_integration_and_continuous_deployment_cicd">6.7. Continuous Integration and Continuous Deployment (CI/CD)</h3>
+<h3 id="_continuous_integration_and_continuous_deployment_cicd">8.7. Continuous Integration and Continuous Deployment (CI/CD)</h3>
 <div class="paragraph">
 <p>The project adheres to CI/CD practices, facilitating automated testing, building, and deployment processes which contribute to the robustness and reliability of the application.</p>
 </div>
@@ -1224,7 +1199,7 @@ The infrastructure features a single Docker container that hosts the Java Spring
 </div>
 </div>
 <div class="sect2">
-<h3 id="_scalability">6.8. Scalability</h3>
+<h3 id="_scalability">8.8. Scalability</h3>
 <div class="paragraph">
 <p>Designing for scalability, the application can accommodate an increasing number of users and interactions without performance degradation.
 .Explanation:
@@ -1235,7 +1210,7 @@ Scalable solutions such as Docker containers allow the application to be deploye
 </div>
 </div>
 <div class="sect1">
-<h2 id="section-design-decisions">7. Architecture Decisions</h2>
+<h2 id="section-design-decisions">9. Architecture Decisions</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>The purpose of this section is to create an ordered list of architectural decisions that we will make as we develop the project. This list will be ordered according to the importance of the decision.</p>
@@ -1254,10 +1229,10 @@ Scalable solutions such as Docker containers allow the application to be deploye
 </div>
 </div>
 <div class="sect1">
-<h2 id="section-quality-scenarios">8. Quality Requirements</h2>
+<h2 id="section-quality-scenarios">10. Quality Requirements</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_quality_tree">8.1. Quality Tree</h3>
+<h3 id="_quality_tree">10.1. Quality Tree</h3>
 <div class="paragraph">
 <p><em>Note: Items (1), (2), (3) in the table below repeat the higher-level quality requirements of Chapter 1.2.</em></p>
 </div>
@@ -1329,7 +1304,7 @@ Scalable solutions such as Docker containers allow the application to be deploye
 </table>
 </div>
 <div class="sect2">
-<h3 id="_quality_scenarios">8.2. Quality Scenarios</h3>
+<h3 id="_quality_scenarios">10.2. Quality Scenarios</h3>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 50%;">
@@ -1361,7 +1336,7 @@ Scalable solutions such as Docker containers allow the application to be deploye
 </div>
 </div>
 <div class="sect1">
-<h2 id="section-technical-risks">9. Risks and Technical Debts</h2>
+<h2 id="section-technical-risks">11. Risks and Technical Debts</h2>
 <div class="sectionbody">
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -1467,8 +1442,8 @@ Scalable solutions such as Docker containers allow the application to be deploye
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 8.2 EN<br>
-Last updated 2024-03-11 22:00:26 UTC
+Version 2<br>
+Last updated 2024-03-11 22:00:45 UTC
 </div>
 </div>
 </body>
