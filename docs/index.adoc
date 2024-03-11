@@ -6,10 +6,10 @@
 // configure EN settings for asciidoc
 include::src/config.adoc[]
 
-= image:arc42-logo.png[arc42] WIQ es04b
-:revnumber: 8.2 EN
-:revdate: January 2023
-:revremark: (based upon AsciiDoc version)
+= image:wiq-logo.png[wiq-image] WIQ es04b
+:revnumber: 2
+:revdate: March 2024
+:revremark: ASW - wiq_es04b
 // toc-title definition MUST follow document title without blank line!
 :toc-title: Table of Contents
 
@@ -23,6 +23,11 @@ ifdef::backend-html5[]
 .arc42help:hover::before {content: "";}
 @media print {
 	.arc42help {display:none;}
+}
+
+img[alt="wiq-image"] {
+    width: 100px;
+    height: auto;
 }
 </style>
 ++++
