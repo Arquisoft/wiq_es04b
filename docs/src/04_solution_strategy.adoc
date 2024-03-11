@@ -11,13 +11,6 @@ ifndef::imagesdir[:imagesdir: ../images]
 === System Decomposition
 The Model-View-Controler architecture pattern will be followed for structuring the system, dividing it into modules/classes responsible for the managment of the players, questions, answers and game, and the views of the frontend.
 
-=== Quality Goals
-* Performance: A quick system response will be sought, especially during question generation and gameplay.
-* Security: Security measures will be implemented to protect user information and ensure the integrity of generated questions.
-* Availability:
-* Responsiveness:
-* Usability: The system must be easy to use, with a simple and intuitive interface.
-
 === Organizational Decisions
 Development Methodology: GitFlow will be adopted for project management, facilitating collaboration and iterative delivery.
 

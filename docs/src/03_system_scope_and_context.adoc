@@ -14,12 +14,10 @@ component System [
   QuestionGame
 ]
 component WikiData as wikidata
-database Database
 
 user -down-> System : Uses
-System -right-> Database : Stores/Fetches\nData
-System -left-> wikidata : Retrieves\nInformation
-developers -down-> System : Accesses via\nREST API
+System -left-> wikidata : Retrieves\nInformation to\nform questions\nand answers
+developers -down-> System : Asks for Player\n& Question Data
 System -----> developers : Provides\nPlayer &\n Question Data
 @enduml
 

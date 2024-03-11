@@ -1,8 +1,12 @@
-= Building Block View
+ifndef::imagesdir[:imagesdir: ../images]
+
+[[section-building-block-view]]
+
+== Building Block View
 
 The Building Block View elaborates on the static structure of the system. It decomposes the system into building blocks like modules, components, subsystems, and others, detailing their responsibilities and relationships.
 
-== 5.1 Whitebox Overall System
+=== Whitebox Overall System
 
 This section provides an overview of the main components of the system and their interactions. The core of the system is the WIQ (QuestionGame) component, which interfaces with Users, Wikidata for question generation, a Database for persistence, and offers a REST API for External Developers.
 
@@ -30,11 +34,11 @@ Dev --> APIMgmt : Uses APIs
 @enduml
 ----
 
-=== Motivation
+==== Motivation
 
 The decomposition provides a clear, high-level overview of how the WIQ system interacts with users, external services (Wikidata), stores data (Database), and interfaces with external developers through the REST API. This modularity supports scalability and maintainability.
 
-=== Contained Building Blocks
+==== Contained Building Blocks
 
 [options="header"]
 |===
@@ -56,7 +60,7 @@ The decomposition provides a clear, high-level overview of how the WIQ system in
 | Developers or systems that interact with the WIQ system via the REST API to access or modify player and question data.
 |===
 
-== 5.2 Level 2
+=== Level 2
 
 For Level 2 of the Building Block View, the WIQ (QuestionGame) system is further decomposed into four primary components that define its operational structure. Each component is designed to fulfill specific roles within the architecture, ensuring the system's functionality and responsiveness to user interactions.
 
@@ -94,7 +98,7 @@ package "WIQ QuestionGame" {
 @enduml
 ----
 
-== 5.3 Level 3
+=== Level 3
 
 In Level 3, we take a closer look at the API Management component, breaking it down into two essential services: the Player Information API and the Question Information API. These services are fundamental to the system's ability to interact with external applications, providing necessary functionalities with a focus on usability and security.
 
