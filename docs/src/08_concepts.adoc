@@ -318,12 +318,6 @@ class QuestionGeneratorTestController {
     + test(): void
 }
 
-class HomeController {
-    - playerService: PlayerService
-    + home(): String
-    + apiHome(): String
-}
-
 class PlayersController {
     - playerService: PlayerService
     - signUpValidator: SignUpValidator
@@ -416,7 +410,6 @@ ApiKey "1" - "1" Player
 ApiKey "1" - "*" RestApiAccessLog
 Category "1" - "*" Question
 Player "1" - "*" GameSession
-HomeController "1" *- "1" PlayerService
 PlayersController "1" *- "1" PlayerService
 PlayersController "1" *- "1" SignUpValidator
 PlayersController ..> PlayerDto
