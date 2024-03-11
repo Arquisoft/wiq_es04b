@@ -447,8 +447,9 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <ul class="sectlevel1">
 <li><a href="#section-introduction-and-goals">1. Introduction and Goals</a>
 <ul class="sectlevel2">
-<li><a href="#_quality_goals">1.1. Quality Goals</a></li>
-<li><a href="#_stakeholders">1.2. Stakeholders</a></li>
+<li><a href="#_requirements_overview">1.1. Requirements overview</a></li>
+<li><a href="#_quality_goals">1.2. Quality Goals</a></li>
+<li><a href="#_stakeholders">1.3. Stakeholders</a></li>
 </ul>
 </li>
 <li><a href="#section-architecture-constraints">2. Architecture Constraints</a></li>
@@ -560,10 +561,25 @@ For documentation of your own system you use better the <em>plain</em> version.<
 <p>This web application, inspired by the famous Spanish TV show "Saber y ganar," consists of a mini-game of questions and answers.
 In this game, the player is asked a question and presented with four possible answers, of which only one is correct.</p>
 </div>
+<div class="paragraph">
+<p>For all those "Saber y ganar" viewers who wanted to participate in the show, this application is ideal for testing their knowledge.</p>
+</div>
+<div class="paragraph">
+<p>The application automatically generates questions with the help of Wikidata (the page that supports Wikipedia and many other wikis)
+to constantly update the questions instead of storing them in a database.</p>
+</div>
+<div class="sect2">
+<h3 id="_requirements_overview">1.1. Requirements overview</h3>
+<div class="paragraph">
+<p>The requirements of the application are as follows:</p>
+</div>
 <div class="ulist">
 <ul>
 <li>
-<p>The player must register with a name.</p>
+<p>The player must register with a name and be able to see his personal score and the ranking of the best players.</p>
+</li>
+<li>
+<p>Automatically generate questions from Wikidata.</p>
 </li>
 <li>
 <p>The player must answer the question within a time limit.</p>
@@ -577,17 +593,17 @@ In this game, the player is asked a question and presented with four possible an
 <li>
 <p>Optionally, the score can be saved in a ranking.</p>
 </li>
+<li>
+<p>Offer and API to access the questions and answers.</p>
+</li>
 </ul>
 </div>
 <div class="paragraph">
-<p>For all those "Saber y ganar" viewers who wanted to participate in the show, this application is ideal for testing their knowledge.</p>
+<p>The overall goal of the application is to provide a fun and challenging experience for the user, while also providing a way to test their knowledge.</p>
 </div>
-<div class="paragraph">
-<p>The application automatically generates questions with the help of Wikidata (the page that supports Wikipedia and many other wikis)
-to constantly update the questions instead of storing them in a database.</p>
 </div>
 <div class="sect2">
-<h3 id="_quality_goals">1.1. Quality Goals</h3>
+<h3 id="_quality_goals">1.2. Quality Goals</h3>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 20%;">
@@ -631,7 +647,7 @@ to constantly update the questions instead of storing them in a database.</p>
 </table>
 </div>
 <div class="sect2">
-<h3 id="_stakeholders">1.2. Stakeholders</h3>
+<h3 id="_stakeholders">1.3. Stakeholders</h3>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 33.3333%;">
@@ -1440,7 +1456,7 @@ Scalable solutions such as Docker containers allow the application to be deploye
 <div id="footer">
 <div id="footer-text">
 Version 8.2 EN<br>
-Last updated 2024-03-11 19:23:54 UTC
+Last updated 2024-03-11 21:59:58 UTC
 </div>
 </div>
 </body>
