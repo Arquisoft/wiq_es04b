@@ -3,29 +3,6 @@ ifndef::imagesdir[:imagesdir: ../images]
 [[section-architecture-constraints]]
 == Architecture Constraints
 
-
-[role="arc42help"]
-****
-.Contents
-Any requirement that constraints software architects in their freedom of design and implementation decisions or decision about the development process. These constraints sometimes go beyond individual systems and are valid for whole organizations and companies.
-
-.Motivation
-Architects should know exactly where they are free in their design decisions and where they must adhere to constraints.
-Constraints must always be dealt with; they may be negotiable, though.
-
-.Form
-Simple tables of constraints with explanations.
-If needed you can subdivide them into
-technical constraints, organizational and political constraints and
-conventions (e.g. programming or versioning guidelines, documentation or naming conventions)
-
-
-.Further Information
-
-See https://docs.arc42.org/section-2/[Architecture Constraints] in the arc42 documentation.
-
-****
-
 - *Mandatory Usage of WikiData API:*
   The WikiData API must be utilized as an integral part of the system, and interactions with WikiData are obligatory for data retrieval and integration.
 
@@ -39,7 +16,7 @@ See https://docs.arc42.org/section-2/[Architecture Constraints] in the arc42 doc
   The questions must have a limited time to be responded.
 
 - *Questions must have 4 posible answers*
-  Each question will have one correct answer and several incorrect or distractor answers. Both the correct and incorrect answers will be generated automatically.
+  Each question will have one correct answer and several incorrect answers. Both the correct and incorrect answers will be generated automatically.
 
 - *System API:*
   System will allow accessing user information and the information of the generated questions through an API.
