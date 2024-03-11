@@ -42,24 +42,15 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
-    public Optional<Question> getRandomQuestion() {
-        List<Question> allQuestions = questionRepository.findAll().stream()
-                .filter(question -> question.getLanguage().equals(LocaleContextHolder.getLocale().getLanguage())).toList();
-        int idx = (int) (Math.random() * allQuestions.size());
-        Question q = allQuestions.get(idx);
-        while (q.hasEmptyOptions()){
-            return getRandomQuestion();
-        }
-        return Optional.ofNullable(q);
-    }
-
-    @Override
     public List<Question> getRandomQuestions(int num) {
         List<Question> allQuestions = questionRepository.findAll().stream()
                 .filter(question -> question.getLanguage().equals(LocaleContextHolder.getLocale().getLanguage())).toList();
         List<Question> res = new ArrayList<>();
         for (int i = 0; i < num; i++) {
             int idx = (int) (Math.random() * allQuestions.size());
+            while (allQuestions.get(idx).hasEmptyOptions()){
+                idx = (int) (Math.random() * allQuestions.size());
+            }
             res.add(allQuestions.get(idx));
         }
         return res;

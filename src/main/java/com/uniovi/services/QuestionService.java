@@ -33,13 +33,6 @@ public interface QuestionService {
     Optional<Question> getQuestion(Long id);
 
     /**
-     * Get a random question
-     *
-     * @return The question selected
-     */
-    Optional<Question> getRandomQuestion();
-
-    /**
      * Get a random question from any category
      *
      * @param num The number of questions to get
