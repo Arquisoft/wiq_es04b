@@ -2,6 +2,8 @@ package com.uniovi.services;
 
 import com.uniovi.entities.GameSession;
 import com.uniovi.entities.Player;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -21,7 +23,7 @@ public interface GameSessionService {
      *
      * @return the list of GameSessions by player
      */
-    List<GameSession> getGameSessionsByPlayer(Player player);
+    Page<GameSession> getGameSessionsByPlayer(Pageable pageable,Player player);
 
     HashMap<Player,Integer> getSortedPlayersScores();
 

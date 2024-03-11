@@ -4,6 +4,8 @@ import com.uniovi.entities.Player;
 import com.uniovi.repositories.GameSessionRepository;
 import com.uniovi.entities.GameSession;
 import com.uniovi.services.GameSessionService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -23,9 +25,9 @@ public class GameSessionImpl implements GameSessionService {
     }
 
     @Override
-    public List<GameSession> getGameSessionsByPlayer(Player player) {
+    public Page<GameSession> getGameSessionsByPlayer(Pageable pageable, Player player) {
 
-        return gameSessionRepository.findAllByPlayer(player);
+        return gameSessionRepository.findAllByPlayer(pageable,player);
     }
 
     @Override

@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -98,9 +99,9 @@ public class PlayersController {
     }
 
     @GetMapping("/playerRanking")
-    public String showRanking(Model model, Principal principal) {
+    public String showRanking(Model model, Pageable pageable, Principal principal) {
         Player player = playerService.getUserByUsername(principal.getName()).get();
-        model.addAttribute("ranking", gameSessionService.getGameSessionsByPlayer(player));
+        model.addAttribute("ranking", gameSessionService.getGameSessionsByPlayer(pageable,player));
         return "fragments/playerRanking";
     }
 

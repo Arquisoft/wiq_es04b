@@ -59,3 +59,50 @@ p span {
     background-color: #1c2530; /* Color de fondo azul más oscuro */
     border-color: #1c2530; /* Color del borde más oscuro */
 }
+
+
+
+
+
+/* Agrega estilos para la clase ranking-table */
+.ranking-table {
+    width: 100%; /* Ajusta el ancho de la tabla según sea necesario */
+    border-collapse: collapse; /* Colapsar bordes de celda */
+    margin-top: 20px; /* Ajusta el margen superior según sea necesario */
+}
+
+/* Estilo para las celdas de la tabla */
+.ranking-table th, .ranking-table td {
+    border: 1px solid #ddd; /* Borde de celda */
+    padding: 8px; /* Añade relleno a las celdas */
+    text-align: left; /* Alinea el texto a la izquierda */
+}
+
+/* Estilo para el encabezado de la tabla */
+.ranking-table th {
+    background-color: #f2f2f2; /* Color de fondo gris claro para el encabezado */
+}
+
+/* Estilo para las filas impares de la tabla */
+.ranking-table tr:nth-child(odd) {
+    background-color: #f9f9f9; /* Color de fondo gris claro para filas impares */
+}
+
+/* Estilo para las filas pares de la tabla */
+.ranking-table tr:nth-child(even) {
+    background-color: #ffffff; /* Color de fondo blanco para filas pares */
+}
+
+/* Estilo para la barra de desplazamiento en Y */
+.ranking-table-wrapper {
+    max-height: 300px; /* Altura máxima para la barra de desplazamiento */
+    overflow-y: auto; /* Añade una barra de desplazamiento vertical cuando sea necesario */
+}
+
+/* Agrega un estilo para el contenedor con la barra de desplazamiento */
+.scroll-container {
+    max-height: 300px; /* Altura máxima del contenedor */
+    overflow-y: auto; /* Barra de desplazamiento vertical automática si el contenido excede la altura máxima */
+    border: 1px solid #ccc; /* Borde para mayor claridad */
+    padding: 10px; /* Agrega un espacio interno alrededor del contenido */
+}
