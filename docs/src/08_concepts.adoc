@@ -213,44 +213,6 @@ class RestApiServiceImpl {
     + getQuestions(params: Map<String, String>): List<Question>
 }
 
-interface CrudRepository {
-    + save(entity: T): T
-    + findById(id: ID): Optional<T>
-    + findAll(): List<T>
-}
-
-interface PlayerRepository {
-    + findByEmail(email: String): Player
-    + findByUsername(nickname: String): Player
-}
-
-interface RoleRepository {
-}
-
-interface AnswerRepository {
-    + findByQuestion(question: Question): List<Answer>
-}
-
-interface ApiKeyRepository {
-    + findByKeyToken(key: String): ApiKey
-}
-
-interface CategoryRepository {
-    + findByName(name: String): Category
-}
-
-interface GameSessionRepository {
-}
-
-interface QuestionRepository {
-    + findByStatement(statement: String): Question
-}
-
-interface RestApiLogRepository {
-    + findByApiKey(apiKey: ApiKey): List<RestApiAccessLog>
-    + findByUser(user: Player): List<RestApiAccessLog>
-}
-
 class PlayerDto {
     - username: String
     - email: String
@@ -329,14 +291,6 @@ JsonEntity <|.. Category
 JsonEntity <|.. GameSession
 JsonEntity <|.. Player
 JsonEntity <|.. Question
-AnswerRepository --|> CrudRepository
-ApiKeyRepository --|> CrudRepository
-CategoryRepository --|> CrudRepository
-GameSessionRepository --|> CrudRepository
-PlayerRepository --|> CrudRepository
-QuestionRepository --|> CrudRepository
-RestApiLogRepository --|> CrudRepository
-RoleRepository --|> CrudRepository
 AnswerService <|.. AnswerServiceImpl
 ApiKeyService <|.. ApiKeyServiceImpl
 CategoryService <|.. CategoryServiceImpl
@@ -359,35 +313,22 @@ PlayerService ..> PlayerDto
 PlayerService ..> Player
 QuestionService ..> Question
 RestApiService ..> ApiKey
-CustomUserDetailsService "1" *- "1" PlayerRepository
 CustomUserDetailsService ..> Player
 CustomUserDetailsService ..> Role
 InsertSampleDataService "1" *- "1" PlayerService
 InsertSampleDataService "1" *- "1" QuestionService
 InsertSampleDataService "1" *- "1" CategoryService
-InsertSampleDataService "1" *- "1" QuestionRepository
-InsertSampleDataService "1" *- "1" GameSessionRepository
 InsertSampleDataService ..> PlayerDto
 InsertSampleDataService ..> GameSession
 InsertSampleDataService ..> QuestionGenerator
-AnswerServiceImpl "1" *- "1" AnswerRepository
-ApiKeyServiceImpl "1" *- "1" ApiKeyRepository
-CategoryServiceImpl "1" *- "1" CategoryRepository
-PlayerServiceImpl "1" *- "1" PlayerRepository
 PlayerServiceImpl "1" *- "1" RoleService
 PlayerServiceImpl "1" *- "1" PasswordEncoder
 PlayerServiceImpl ..> Role
-QuestionServiceImpl "1" *- "1" QuestionRepository
 RestApiServiceImpl "1" *- "1" PlayerService
-RestApiServiceImpl "1" *- "1" RestApiLogRepository
 RestApiServiceImpl "1" *- "1" QuestionService
 RestApiServiceImpl ..> Player
 RestApiServiceImpl ..> Question
-RoleServiceImpl "1" *- "1" RoleRepository
 RestApiServiceImpl ..> Role
-AnswerRepository ..> Question
-RestApiLogRepository ..> ApiKey
-RestApiLogRepository ..> Player
 Answer "*" - "1" Question
 ApiKey "1" - "1" Player
 ApiKey "1" - "*" RestApiAccessLog
