@@ -43,14 +43,6 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Override
     public Optional<Question> getRandomQuestion() {
-        Long qty = questionRepository.count();
-        int idx = (int)(Math.random() * qty);
-        Page<Question> questionPage = questionRepository.findAll(PageRequest.of(idx, 1));
-        Question q = null;
-        if (questionPage.hasContent()) {
-            q = questionPage.getContent().get(0);
-        }
-        
         List<Question> allQuestions = questionRepository.findAll().stream()
                 .filter(question -> question.getLanguage().equals(LocaleContextHolder.getLocale().getLanguage())).toList();
         int idx = (int) (Math.random() * allQuestions.size());
