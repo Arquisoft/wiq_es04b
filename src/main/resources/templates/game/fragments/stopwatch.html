@@ -1,0 +1,23 @@
+<div class="text-center">
+    <div class="stopwatch-container">
+        <img src="images/stopwatch.png" class="stopwatch-img" alt="Stopwatch">
+        <div class="countdown" id="stopwatch" th:text="${questionDuration - 1}"></div>
+    </div>
+</div>
+
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    function initStopwatch(timer) {
+        let countdown = timer - 1;
+        const display = document.getElementById('stopwatch');
+
+        setInterval(() => {
+            countdown -= 1;
+            if (countdown < 0) {
+                countdown = 0;
+            }
+            display.textContent = countdown;
+        }, 1000);
+    }
+    /*]]>*/
+</script>

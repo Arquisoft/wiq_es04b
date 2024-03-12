@@ -3,119 +3,51 @@ ifndef::imagesdir[:imagesdir: ../images]
 [[section-system-scope-and-context]]
 == System Scope and Context
 
-
-[role="arc42help"]
-****
-.Contents
-System scope and context - as the name suggests - delimits your system (i.e. your scope) from all its communication partners
-(neighboring systems and users, i.e. the context of your system). It thereby specifies the external interfaces.
-
-If necessary, differentiate the business context (domain specific inputs and outputs) from the technical context (channels, protocols, hardware).
-
-.Motivation
-The domain interfaces and technical interfaces to communication partners are among your system's most critical aspects. Make sure that you completely understand them.
-
-.Form
-Various options:
-
-* Context diagrams
-* Lists of communication partners and their interfaces.
-
-
-.Further Information
-
-See https://docs.arc42.org/section-3/[Context and Scope] in the arc42 documentation.
-
-****
-
-
 === Business Context
-
-
-[role="arc42help"]
-****
-.Contents
-Specification of *all* communication partners (users, IT-systems, ...) with explanations of domain specific inputs and outputs or interfaces.
-Optionally you can add domain specific formats or communication protocols.
-
-.Motivation
-All stakeholders should understand which data are exchanged with the environment of the system.
-
-.Form
-All kinds of diagrams that show the system as a black box and specify the domain interfaces to communication partners.
-
-Alternatively (or additionally) you can use a table.
-The title of the table is the name of your system, the three columns contain the name of the communication partner, the inputs, and the outputs.
-
-****
-
 [plantuml,"Deployment diagram",png]
 ----
-  actor user
-  component System[        
-    <<System>>                 
-    QuestionGame
-  ]
-  component WikiData
-  database Database
+@startuml
+actor Player as user
+actor "External Developers" as developers
+component System [
+  <<System>>
+  QuestionGame
+]
+component WikiData as wikidata
 
-  user --> System
-  System --> Database
-  System --> WikiData
+user -down-> System : Uses
+System -left-> wikidata : Retrieves\nInformation to\nform questions\nand answers
+developers -down-> System : Asks for Player\n& Question Data
+System -----> developers : Provides\nPlayer &\n Question Data
+@enduml
+
 ----
-
-* **User:** Represents users who interact with the application to play games or view their history.
+* **Player:** Represents users who interact with the application to play games or view their history.
 * **System (QuestionGame):** The main system that hosts the game logic and manages user interactions.
 * **WikiData:** Component used to retrieve data from Wikidata and automatically generate questions.
 * **Database:** Stores system information, such as user data, generated questions, game history, etc.
+* **External Developers:** Represents developers who access the system's REST API to retrieve player and question data.
 
 === Technical Context
 
-[role="arc42help"]
-****
-.Contents
-Technical interfaces (channels and transmission media) linking your system to its environment. In addition a mapping of domain specific input/output to the channels, i.e. an explanation which I/O uses which channel.
-
-.Motivation
-Many stakeholders make architectural decision based on the technical interfaces between the system and its context. Especially infrastructure or hardware designers decide these technical interfaces.
-
-.Form
-E.g. UML deployment diagram describing channels to neighboring systems,
-together with a mapping table showing the relationships between channels and input/output.
-
-****
-
 [plantuml,"Technical Context Diagram",png]
 ----
-
   actor user
-  actor developer
+  person developer
   database Database
+  cloud WikiData
 
-  node "Question Generation"{
-    [WikiData]
-  }
 
-  node "User Agent" {
-    [Web / Mobile]
-  }
+  node "User Agent"
   
-  node "QuestionGame server" {
-    [Frontend]
-    [QuestionGame]
-    [User's API]
-    [Question's API]
-  }
+  node "QuestionGame server"
   
-  user --> [Web / Mobile]
-  [Web / Mobile] --> (Frontend): HTTPS
-  [Frontend] --> (QuestionGame): To decide
-  [QuestionGame] --> Database: Specific driver
-  [QuestionGame] --> WikiData: HTTP
-  [QuestionGame] <-- (User's API): To decide
-  [QuestionGame] <-- (Question's API): To decide
-  developer --> (User's API) : HTTPS
-  developer --> (Question's API) : HTTPS
+  user --> [User Agent]
+  [User Agent] --> [QuestionGame server]: HTTPS
+
+  [QuestionGame server] --> Database: Specific driver
+  [QuestionGame server] --> WikiData: HTTP
+  developer --> [QuestionGame server] : HTTPS
 ----
 
 * **User Agent:** Represents the web or mobile interface used by users.

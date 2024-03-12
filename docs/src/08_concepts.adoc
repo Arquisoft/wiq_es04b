@@ -7,10 +7,402 @@ The following concepts provide a foundation for the design and implementation of
 
 === Domain Model
 
-The domain model for our game includes entities such as `Question`, `Category`, `Player`, and `GameSession`. These are crucial for representing the game's data and logic. The model serves as the basis for interactions within the application and between the application and the database.
+The domain model for our game includes entities such as `Question`, `Category`, `Player`, `Role`, and `GameSession`. These are crucial for representing the game's data and logic. The model serves as the basis for interactions within the application and between the application and the database.
 
-.Explanation:
-The `Question` entity encapsulates details of the trivia questions. `Category` classifies these questions into various topics. `Player` represents users and their interactions with the game, while `GameSession` maintains the state of play, including scores and progress.
+
+[plantuml, domain-model, svg, subs="attributes", subs="methods"]
+----
+@startuml
+class Question {
+  - id: Long
+  - statement: String
+  - options: List<Answer>
+  - correctAnswer: Answer
+  - category: Category
+  + addOption(option: Answer): void
+  + removeOption(option: Answer): void
+  + getOption(index: int): Answer
+  + isCorrectAnswer(answer: Answer): boolean
+  + scrambleOptions(): void
+  + equals(o: Object): boolean
+  + hashCode(): int
+  + toString(): String
+  + toJson(): JsonNode
+}
+
+class Category {
+  - id: Long
+  - name: String
+  - questions: Set<Question>
+  + toString(): String
+  + toJson(): JsonNode
+}
+
+class Player {
+  - id: Long
+  - username: String
+  - email: String
+  - password: String
+  - passwordConfirm : String
+  - roles: Set<Role>
+  - gameSessions: Set<GameSession>
+  - apiKey: ApiKey
+  + toJson(): JsonNode
+}
+
+class GameSession {
+  - id: Long
+  - player: Player
+  - correctQuestions: Integer
+  - totalQuestions: Integer
+  - createdAt: LocalDateTime
+  - finishTime: LocalDateTime
+  - score: int
+  + addQuestion(correct: boolean): void
+  + toJson(): JsonNode
+}
+
+class Role {
+    - name: String
+    - players: Set<Player>
+}
+
+class Answer {
+    - id: Long
+    - text: String
+    - correct: boolean
+    - question: Question
+    + toString(): String
+    + toJson(): JsonNode
+}
+
+class ApiKey {
+    - id: Long
+    - keyToken: String
+    - player: Player
+    - accessLogs: Set<RestApiAccessLog>
+}
+
+class RestApiAccessLog {
+    - id: Long
+    - apiKey: ApiKey
+    - path: String
+    - details: String
+}
+
+interface JsonEntity {
+    + toJson(): JsonNode
+}
+
+interface PlayerService {
+    + addNewPlayer(dto: PlayerDto): Player
+    + getUsers(): List<Player>
+    + getUser(id: Long): Optional<Player>
+    + getUserByEmail(email: String): Optional<Player>
+    + getUserByUsername(username: String): Optional<Player>
+    + getUsersByRole(role: String): List<Player>
+    + generateapiKey(player: Player): void
+}
+
+interface RoleService {
+    + addRole(role: RoleDto): Role
+    + getRole(name: String): Role
+    + getRoles(): List<Role>
+}
+
+interface AnswerService {
+    + addNewAnswer(answer: Answer): void
+    + getAnswerPerQuestion(question: Question): List<Answer>
+    + getAnswer(id: Long): Optional<Answer>
+}
+
+interface ApiKeyService {
+    + createApiKey(forPlayer: Player): ApiKey
+    + getApiKey(apiKey: String): ApiKey
+}
+
+interface CategoryService {
+    + addNewCategory(category: Category): void
+    + getAllCategories(): List<Category>
+    + getCategory(id: Long): Optional<Category>
+    + getCategoryByName(geography: String): Category
+}
+
+interface QuestionService {
+    + addNewQuestion(question: Question): void
+    + getAllQuestions(): List<Question>
+    + getQuestion(id: Long): Optional<Question>
+}
+
+interface RestApiService {
+    + getPlayers(params: Map<String, String>): List<Player>
+    + logAccess(apiKey: ApiKey, path: String, params: Map<String, String>): void
+    + getQuestions(params: Map<String, String>): List<Question>
+}
+
+class CustomUserDetailsService {
+    - playerRepository: PlayerRepository
+    + loadUserByUsername(username: String): UserDetails
+    + mapRolesToAuthorities(roles: Collection<Role>): Collection< ? extends GrantedAuthority>
+}
+
+class InsertSampleDataService {
+    - playerService: PlayerService
+    - questionService: QuestionService
+    - categoryService: CategoryService
+    - questionRepository: QuestionRepository
+    - gameSessionRepository: GameSessionRepository
+    + insertSampleQuestions(): void
+}
+
+class PlayerServiceImpl {
+    - playerRepository: PlayerRepository
+    - roleService: RoleService
+    - passwordEncoder: PasswordEncoder
+    + addNewPlayer(dto: PlayerDto): Player
+    + getUsers(): List<Player>
+    + getUser(id: Long): Optional<Player>
+    + getUserByEmail(email: String): Optional<Player>
+    + getUserByUsername(username: String): Optional<Player>
+    + getUsersByRole(role: String): List<Player>
+    + generateApiKey(player: Player): void
+}
+
+class RoleServiceImpl {
+    - roleRepository: RoleRepository
+    + addRole(role: RoleDto): Role
+    + getRole(name: String): Role
+    + getRoles(): List<Role>
+}
+
+class AnswerServiceImpl {
+    - answerRepository: AnswerRepository
+    + addNewAnswer(answer: Answer): void
+    + getAnswersPerQuestion(question: Question): List<Answer>
+    + getAnswer(id: Long): Optional<Answer>
+}
+
+class ApiKeyServiceImpl {
+    - apiKeyRepository: ApiKeyRepository
+    + createApiKey(forPlayer: Player): ApiKey
+    + getApiKey(apiKey: String): ApiKey
+}
+
+class CategoryServiceImpl {
+    - categoryRepository: CategoryRepository
+    + addNewCategory(category: Category): void
+    + getAllCategories(): List<Category>
+    + getCategory(id: Long): Optional<Category>
+    + getCategoryByName(name: String): Category
+    + init(): void
+}
+
+class QuestionServiceImpl {
+    - questionRepository: QuestionRepository
+    + addNewQuestion(question: Question): void
+    + getAllQuestions(): List<Question>
+    + getQuestion(id: Long): Optional<Question>
+}
+
+class RestApiServiceImpl {
+    - playerService: PlayerService
+    - restApiLogRepository: RestApiLogRepository
+    - questionService: QuestionService
+    + getPlayers(params: Map<String, String>): List<Player>
+    + logAccess(apiKey: ApiKey, path: String, params: Map<String, String>): void
+    + getQuestions(params: Map<String, String>): List<Question>
+}
+
+class PlayerDto {
+    - username: String
+    - email: String
+    - password: String
+    - passwordConfirm: String
+    - roles: String[]
+}
+
+class RoleDto {
+    - name: String
+}
+
+class AbstractGeographyGenerator {
+    + getCategory(): Category
+}
+
+class BorderQuestionGenerator {
+    - usedCountries: Set<String>
+    + getAllBorderingCountries(resultsNode: JsonNode, correctCountry: String): List<String>
+    + selectRandomIncorrectBorderingCountries(allBorderingCountries: List<String>, correctCountry: String, count: int): List<String>
+    + generateOptions(results: JsonNode, result: JsonNode): List<String>
+    + generateCorrectAnswer(result: JsonNode): String
+    + getQuestionSubject(result: JsonNode): String
+    + getQuery(): String
+}
+
+class CapitalQuestionGenerator {
+    + getQuery(): String
+    + getAllCapitals(resultsNode: JsonNode, correctCapital: String): List<String>
+    + selectRandomIncorrectCapitals(allCapitals: List<String>, correctCapital: String, count: int): List<String>
+    + generateOptions(results: JsonNode, result: JsonNode): List<String>
+    + generateCorrectAnswer(result: JsonNode): String
+    + getQuestionSubject(result: JsonNode): String
+}
+
+class ContinentQuestionGeneration {
+    + getAllContinents(resultsNode: JsonNode, correctContinent: String): List<String>
+    + selectRandomIncorrectContinents(allContinents: List<String>, correctContinent: String, count: int): List<String>
+    + generateOptions(results: JsonNode, result: JsonNode): List<String>
+    + generateCorrectAnswer(result: JsonNode): String
+    + getQuestionSubject(result: JsonNode): String
+    + getQuery(): String
+}
+
+class AbstractQuestionGenerator {
+    - questions: List<Question>
+    - categoryService: CategoryService
+    - query: String
+    - statement: String
+    + questionGenerator(statement: String, options: List<String>, correctAnswer: String, category: Category): void
+    + getQuestions(): List<Question>
+    + generateOptions(results: JsonNode, result: JsonNode): List<String>
+    + generateCorrectAnswer(result: JsonNode): String
+    + getQuestionSubject(result: JsonNode): String
+}
+
+interface QuestionGenerator {
+    + getQuery(): String
+    + getQuestions(): List<Question>
+    + getCategory(): Category
+}
+
+class QuestionGeneratorTestController {
+    + qgen: CapitalQuestionGenerator
+    + test(): void
+}
+
+class SignUpValidator {
+    - playerService: PlayerService
+    + supports(clazz: Class<?>): boolean
+    + validate(target: Object, errors: Errors): void
+}
+
+JsonEntity <|.. Answer
+JsonEntity <|.. Category
+JsonEntity <|.. GameSession
+JsonEntity <|.. Player
+JsonEntity <|.. Question
+AnswerService <|.. AnswerServiceImpl
+ApiKeyService <|.. ApiKeyServiceImpl
+CategoryService <|.. CategoryServiceImpl
+PlayerService <|.. PlayerServiceImpl
+QuestionService <|.. QuestionServiceImpl
+RestApiService <|.. RestApiServiceImpl
+RoleService <|.. RoleServiceImpl
+AbstractGeographyGenerator --|> AbstractQuestionGenerator
+BorderQuestionGenerator --|> AbstractGeographyGenerator
+CapitalQuestionGenerator --|> AbstractGeographyGenerator
+ContinentQuestionGeneration --|> AbstractGeographyGenerator
+QuestionGenerator <|.. AbstractQuestionGenerator
+RoleService ..> RoleDto
+Role "*" - "*" Player
+AnswerService ..> Answer
+AnswerService ..> Question
+ApiKeyService ..> Player
+CategoryService ..> Category
+PlayerService ..> PlayerDto
+PlayerService ..> Player
+QuestionService ..> Question
+RestApiService ..> ApiKey
+CustomUserDetailsService ..> Player
+CustomUserDetailsService ..> Role
+InsertSampleDataService "1" *- "1" PlayerService
+InsertSampleDataService "1" *- "1" QuestionService
+InsertSampleDataService "1" *- "1" CategoryService
+InsertSampleDataService ..> PlayerDto
+InsertSampleDataService ..> GameSession
+InsertSampleDataService ..> QuestionGenerator
+PlayerServiceImpl "1" *- "1" RoleService
+PlayerServiceImpl "1" *- "1" PasswordEncoder
+PlayerServiceImpl ..> Role
+RestApiServiceImpl "1" *- "1" PlayerService
+RestApiServiceImpl "1" *- "1" QuestionService
+RestApiServiceImpl ..> Player
+RestApiServiceImpl ..> Question
+RestApiServiceImpl ..> Role
+Answer "*" - "1" Question
+ApiKey "1" - "1" Player
+ApiKey "1" - "*" RestApiAccessLog
+Category "1" - "*" Question
+Player "1" - "*" GameSession
+QuestionGeneratorTestController "1" *- "1" CapitalQuestionGenerator
+QuestionGeneratorTestController ..> Question
+AbstractQuestionGenerator "1" - "*" Question
+AbstractQuestionGenerator "1" - "1" CategoryService
+AbstractQuestionGenerator ..> Category
+Validator <|.. SignUpValidator
+SignUpValidator "1" - "1" PlayerService
+SignUpValidator ..> PlayerDto
+
+@enduml
+----
+
+[plantuml, domain-model-2, svg]
+----
+@startuml
+
+class AnswerDto {
+    - id: Long
+    - text: String
+    - correct: boolean
+}
+
+class CategoryDto {
+    - id: Long
+    - name: String
+    - description: String
+    - questions: List<QuestionDto>
+}
+
+class QuestionDto {
+    - id: Long
+    - statement: String
+    - options: List<AnswerDto>
+    - correctAnswer: AnswerDto
+    - category: CategoryDto
+}
+
+class SecurityConfig {
+    - userDetailsService: UserDetailsService
+    - customAuthenticationFailureHandler: CustomAuthenticationFailureHandler
+    + passwordEncoder(): PasswordEncoder
+    + filterChain(http: HttpSecurity): SecurityFilterChain
+    + configureGlobal(auth: AuthenticationManagerBuilder): void
+    + isAuthenticated(): boolean
+}
+
+class CustomAuthenticationFailureHandler {
+    + onAuthenticationFailure(request: HttpServletRequest, responde: HttpServletResponse, exception: AuthenticationException): void
+}
+
+class CustomConfiguration {
+    + localeResolver(): LocaleResolver
+    + localeChangeInterceptor(): LocaleChangeInterceptor
+    + addInterceptors(registry: InterceptorRegistry): void
+}
+
+class WiqEs04bApplication {
+    + main(args: String[]): void
+}
+
+CategoryDto "1" - "*" QuestionDto
+QuestionDto "1" *- "*" AnswerDto
+SecurityConfig "1" *- "1" UserDetailsService
+SecurityConfig "1" *- "1" CustomAuthenticationFailureHandler
+CustomAuthenticationFailureHandler --|> SimpleUrlAuthenticationFailureHandler
+WebMvcConfigurer <|.. CustomConfiguration
+
+@enduml
+----
 
 === Hexagonal Architecture
 
@@ -26,16 +418,16 @@ We use JPA for data persistence to abstract and handle all database operations, 
 .Explanation:
 JPA enables us to map our domain objects to the database schema with ease, providing a clear layer of abstraction that simplifies data persistence and retrieval while ensuring our application remains agnostic of the underlying database technology.
 
-=== Logging with Log4j and System.out
+=== Logging with Slf4j and System.out
 
-For monitoring runtime behavior and troubleshooting, the project utilizes Log4j and System.out for logging. While Log4j offers more sophisticated logging capabilities, System.out is used for straightforward, immediate console output.
+For monitoring runtime behavior and troubleshooting, the project utilizes Slf4j, bundled with Sprint Boot, and System.out for logging. While Slf4j offers more sophisticated logging capabilities, System.out is used for straightforward, immediate console output.
 
 .Explanation:
-Log4j is configured to capture various levels of output, which can be directed to multiple destinations such as console, files, or even remote logging servers. For simplicity and immediacy during development or less complex deployment scenarios, System.out is employed for logging output directly to the console.
+Slf4j is configured to capture various levels of output, which can be directed to multiple destinations such as console, files, or even remote logging servers. For simplicity and immediacy during development or less complex deployment scenarios, System.out is employed for logging output directly to the console.
 
 === Security
 
-Security is a key concern, ensuring that user data and game integrity are protected. We implement standard security practices at various levels within the application.
+Security is a key concern, ensuring that user data and game integrity are protected. We implement standard security practices at various levels within the application
 
 .Explanation:
 This includes securing the web layer with Spring Security, encrypting sensitive data, and protecting against common web vulnerabilities.
@@ -57,6 +449,5 @@ Our CI/CD pipeline automates the process of integrating code changes, building t
 === Scalability
 
 Designing for scalability, the application can accommodate an increasing number of users and interactions without performance degradation.
-
 .Explanation:
 Scalable solutions such as Docker containers allow the application to be deployed in a distributed environment, where resources can be adjusted based on demand.
