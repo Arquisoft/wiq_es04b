@@ -35,18 +35,20 @@
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="btnLanguage" role="button" data-toggle="dropdown"
                    aria-haspopup="true" aria-expanded="false">
-                    <span th:text="#{navbar.changeLanguage}"></span>
+                    <span th:text="#{navbar.currentLanguage}"></span>
                 </a>
                 <div id="languageDropdownMenuButton" class="dropdown-menu" aria-labelledby="navbarDropdown">
                     <!-- Botón para cambiar a inglés -->
                     <a class="dropdown-item" id="btnEnglish" value="EN">
-                        <img th:src="@{/images/if_uk_flag.png}" style="border: 0; float: left; margin-right: 15px"/>
                         <span th:text="#{navbar.toEnglish}"></span>
                     </a>
                     <!-- Botón para cambiar a español -->
                     <a class="dropdown-item" id="btnSpanish" value="ES">
-                        <img th:src="@{/images/if_spain_flag.png}" style="border: 0; float: left; margin-right: 15px"/>
                         <span th:text="#{navbar.toSpanish}"></span>
+                    </a>
+                    <!-- Botón para cambiar a francés -->
+                    <a class="dropdown-item" id="btnFrench" value="FR">
+                        <span th:text="#{navbar.toFrench}"></span>
                     </a>
                 </div>
             </li>

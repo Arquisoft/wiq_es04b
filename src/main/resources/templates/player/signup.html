@@ -14,7 +14,9 @@
             <label class="control-label col-sm-10" for="username" th:text="#{signup.username.label}"> </label>
             <div class="col-sm-10">
                 <input type="text" class="form-control" id="username" name="username"
-                       th:placeholder="#{signup.username.placeholder}" required="true"/>
+                       th:placeholder="#{signup.username.placeholder}"
+                       th:value="${user.username}"
+                       required="true"/>
                 <span class="text-danger" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></span>
             </div>
         </div>
@@ -22,7 +24,9 @@
             <label class="control-label col-sm-10" for="email" th:text="#{signup.email.label}"></label>
             <div class="col-sm-10">
                 <input type="text" class="form-control" id="email" name="email"
-                       th:placeholder="#{signup.email.placeholder}" required="true" />
+                       th:placeholder="#{signup.email.placeholder}"
+                       th:value="${user.email}"
+                       required="true" />
                 <span class="text-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
             </div>
         </div>

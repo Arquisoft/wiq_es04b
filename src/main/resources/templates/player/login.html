@@ -7,7 +7,11 @@
 <canvas th:replace="~{fragments/background}"></canvas>
 
 <div class="container">
-  <div class="alert alert-danger" th:if="${error}" th:text="#{login.error}" role="alert"></div>
+  <div class="alert alert-danger" th:if="${error}" role="alert">
+    <span th:text="#{login.error}"></span>
+    <a th:href="@{/signup}" th:text="#{login.register}"></a>
+  </div>
+
 
   <h2 th:text="#{login.title}"> </h2>
   <form class="form-horizontal" method="post" action="/login">
