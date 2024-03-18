@@ -28,10 +28,6 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: '17'
-      - name: Install Firefox
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y firefox
       - name: Add exec permission to mvnw
         run: chmod +x mvnw
       - name: Run all tests with sonar analysis
