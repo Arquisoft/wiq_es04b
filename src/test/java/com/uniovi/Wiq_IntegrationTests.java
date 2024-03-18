@@ -25,7 +25,6 @@ class Wiq_IntegrationTests {
     static public void begin() {
         WebDriverManager.firefoxdriver().setup();
         FirefoxOptions options = new FirefoxOptions();
-        options.setCapability("marionette", true);
         options.addArguments("--headless"); // Run Firefox in headless mode
         driver = new FirefoxDriver(options);
         driver.navigate().to(URL);
