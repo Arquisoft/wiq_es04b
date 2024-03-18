@@ -19,30 +19,23 @@ class Wiq_IntegrationTests {
     static final String URL = "http://localhost:3000/";
 
     static WebDriver driver;
+    static WebDriverManager manager;
 
-
-    @BeforeAll
-    static public void begin() {
-        WebDriverManager.firefoxdriver().setup();
-        FirefoxOptions options = new FirefoxOptions();
-        options.addArguments("--headless"); // Run Firefox in headless mode
-        driver = new FirefoxDriver(options);
+    @BeforeEach
+    public void begin() {
+        manager = WebDriverManager.firefoxdriver();
+        driver = manager.create();
         driver.navigate().to(URL);
     }
 
     @BeforeEach
     void setup() {
-        driver.navigate().to(URL);
+
     }
 
     @AfterEach
     void tearDown() {
         driver.manage().deleteAllCookies();
-    }
-
-    @AfterAll
-    static public void end() {
-        //Cerramos el navegador al finalizar las pruebas
         driver.quit();
     }
 
