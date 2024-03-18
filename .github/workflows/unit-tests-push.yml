@@ -62,7 +62,7 @@ jobs:
       - name: Set up Chrome
         uses: browser-actions/setup-chrome@latest
       - name: Set up ChromeDriver
-        uses: browser-actions/setup-chromedriver@latest
+        uses: nanasess/setup-chromedriver@v2
       - name: Cache Maven
         uses: actions/cache@v2
         with:
