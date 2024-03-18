@@ -3,41 +3,20 @@ ifndef::imagesdir[:imagesdir: ../images]
 [[section-architecture-constraints]]
 == Architecture Constraints
 
-
-[role="arc42help"]
-****
-.Contents
-Any requirement that constraints software architects in their freedom of design and implementation decisions or decision about the development process. These constraints sometimes go beyond individual systems and are valid for whole organizations and companies.
-
-.Motivation
-Architects should know exactly where they are free in their design decisions and where they must adhere to constraints.
-Constraints must always be dealt with; they may be negotiable, though.
-
-.Form
-Simple tables of constraints with explanations.
-If needed you can subdivide them into
-technical constraints, organizational and political constraints and
-conventions (e.g. programming or versioning guidelines, documentation or naming conventions)
-
-
-.Further Information
-
-See https://docs.arc42.org/section-2/[Architecture Constraints] in the arc42 documentation.
-
-****
-
-
-- *Programming Language Restriction:*
-  The system must be implemented using Java as the primary programming language.
-
 - *Mandatory Usage of WikiData API:*
   The WikiData API must be utilized as an integral part of the system, and interactions with WikiData are obligatory for data retrieval and integration.
 
 - *Web Frontend Requirement:*
   The system must include at least one web frontend, and it is mandatory for deployment.
 
-- *Freedom in Database Selection:*
-  There are no imposed restrictions on the choice of the database. Teams have the freedom to select a suitable database technology based on project requirements.
+- *Users log in and game history:*
+  The users will be able to register in the system and consult their participation history in the system.
 
-- *No Company Policy Constraints:*
-  There are no specific constraints or restrictions related to company policies. Teams have the flexibility to make decisions aligned with project goals.
+- *Limited time in questions:*
+  The questions must have a limited time to be responded.
+
+- *Questions must have 4 posible answers*
+  Each question will have one correct answer and several incorrect answers. Both the correct and incorrect answers will be generated automatically.
+
+- *System API:*
+  System will allow accessing user information and the information of the generated questions through an API.

@@ -2,34 +2,6 @@ ifndef::imagesdir[:imagesdir: ../images]
 
 [[section-glossary]]
 == Glossary
-
-[role="arc42help"]
-****
-.Contents
-The most important domain and technical terms that your stakeholders use when discussing the system.
-
-You can also see the glossary as source for translations if you work in multi-language teams.
-
-.Motivation
-You should clearly define your terms, so that all stakeholders
-
-* have an identical understanding of these terms
-* do not use synonyms and homonyms
-
-
-.Form
-
-A table with columns <Term> and <Definition>.
-
-Potentially more columns in case you need translations.
-
-
-.Further Information
-
-See https://docs.arc42.org/section-12/[Glossary] in the arc42 documentation.
-
-****
-
 [cols="1,2" options="header"]
 |===
 | Term | Definition
@@ -38,9 +10,17 @@ See https://docs.arc42.org/section-12/[Glossary] in the arc42 documentation.
 
 |Question | Entity that encapsulates details of the trivia questions.
 
+|Answer | This entity contains the correct answer of the questions.
+
 |Category | Classifies questions into various topics, each question can only belong to one category.
 
 |Player | Represents users and their interactions with the game
 
 |GameSession  | Maintains the state of play, including scores and progress.
+
+|ApiKey  | Contains each player's apiKey for personal security and access control.
+
+|RestApiAccessLog  | This entity is used to register the access to the application.
+
+|Associations  | Represents the associations between entities. It has internal classes for each association.
 |===

@@ -3,47 +3,18 @@ ifndef::imagesdir[:imagesdir: ../images]
 [[section-solution-strategy]]
 == Solution Strategy
 
-
-[role="arc42help"]
-****
-.Contents
-A short summary and explanation of the fundamental decisions and solution strategies, that shape system architecture. It includes
-
-* technology decisions
-* decisions about the top-level decomposition of the system, e.g. usage of an architectural pattern or design pattern
-* decisions on how to achieve key quality goals
-* relevant organizational decisions, e.g. selecting a development process or delegating certain tasks to third parties.
-
-.Motivation
-These decisions form the cornerstones for your architecture. They are the foundation for many other detailed decisions or implementation rules.
-
-.Form
-Keep the explanations of such key decisions short.
-
-Motivate what was decided and why it was decided that way,
-based upon problem statement, quality goals and key constraints.
-Refer to details in the following sections.
-
-
-.Further Information
-
-See https://docs.arc42.org/section-4/[Solution Strategy] in the arc42 documentation.
-
-****
-
-There are some placeholders for the decisions yet to be taken.
-
 === Technological Decisions
 * Programming Language: Java will be used for system development because all team members are familiar with it, and we believe we can perform better using this language.
 * Frontend Framework: SpringBoot will be adopted for frontend development because it allows us to deploy a web application using Java and provides numerous functionalities that greatly facilitate the implementation of project requirements, such as user authentication.
-* Database: [Database] was selected as the storage engine due to [reasons].
+* Database: A relational database will be used. HSQLDB for local tests and MySQL for production were selected as the storages engines due to the modeled entities having a strong, fixed structure and the multiple relationships between them. Besides that, the team has experience with these databases and will allow an easier flow of development.
 
 === System Decomposition
-The [pattern] architecture pattern will be followed for structuring the system, dividing it into modules/classes responsible for [responsibilities].
-
-=== Quality Goals
-* Performance: A quick system response will be sought, especially during question generation and gameplay.
-* Security: Security measures will be implemented to protect user information and ensure the integrity of generated questions.
+The Model-View-Controler architecture pattern will be followed for structuring the system, dividing it into modules/classes responsible for the managment of the players, questions, answers and game, and the views of the frontend.
 
 === Organizational Decisions
 Development Methodology: GitFlow will be adopted for project management, facilitating collaboration and iterative delivery.
+
+* The default branch: master. This branch will only be used to create new releases and will contain the most stable version of the system.
+* The development branch: develop. This branch will be used to integrate the features developed by the team and will be the basis for creating new releases. This will have the largest commit amount, and will also have a stable version that could be deployed at any time.
+* Feature branches: These branches will be used to develop new features, and will be created from the develop branch. After the feature is developed, it will be merged into the develop branch and branch can be deleted, although we will not usually delete branches.
+* Fix branches: These branches will be used to fix bugs, and will be created from the develop branch. After the bug is fixed, it will be merged into the develop branch and branch can be deleted, although we will not usually delete branches.
