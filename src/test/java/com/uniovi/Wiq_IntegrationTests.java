@@ -5,6 +5,7 @@ import org.junit.jupiter.api.*;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxOptions;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
@@ -19,10 +20,13 @@ class Wiq_IntegrationTests {
 
     static WebDriver driver;
 
+
     @BeforeAll
     static public void begin() {
         WebDriverManager.firefoxdriver().setup();
-        driver = new FirefoxDriver();
+        FirefoxOptions options = new FirefoxOptions();
+        options.addArguments("--headless"); // Run Firefox in headless mode
+        driver = new FirefoxDriver(options);
         driver.navigate().to(URL);
     }
 
