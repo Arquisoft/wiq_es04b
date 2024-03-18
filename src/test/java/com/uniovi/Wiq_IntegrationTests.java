@@ -19,18 +19,14 @@ class Wiq_IntegrationTests {
     static final String URL = "http://localhost:3000/";
 
     static WebDriver driver;
-    static WebDriverManager manager;
 
     @BeforeEach
     public void begin() {
-        manager = WebDriverManager.firefoxdriver();
-        driver = manager.create();
+        WebDriverManager.firefoxdriver().setup();
+        FirefoxOptions options = new FirefoxOptions();
+        options.addArguments("--headless"); // Optional: Use this if you want to run tests headlessly
+        driver = new FirefoxDriver(options); // Use the options when creating the WebDriver instance
         driver.navigate().to(URL);
-    }
-
-    @BeforeEach
-    void setup() {
-
     }
 
     @AfterEach
