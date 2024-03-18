@@ -72,7 +72,22 @@
             <artifactId>commons-validator</artifactId>
             <version>1.7</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-java</artifactId>
+            <version>4.1.0</version> <!-- Use latest version -->
+        </dependency>
+        <!-- WebDriver Manager -->
+        <dependency>
+            <groupId>io.github.bonigarcia</groupId>
+            <artifactId>webdrivermanager</artifactId>
+            <version>5.0.3</version> <!-- Use latest version -->
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents.client5</groupId>
+            <artifactId>httpclient5</artifactId>
+            <version>5.1</version> <!-- Check for the latest version -->
+        </dependency>
     </dependencies>
 
     <build>

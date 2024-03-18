@@ -1,17 +1,51 @@
 package com.uniovi;
 
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
+import io.github.bonigarcia.wdm.WebDriverManager;
+import org.junit.jupiter.api.*;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest
 @Tag("integration")
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@ActiveProfiles("test")
 class Wiq_IntegrationTests {
+    static final String URL = "http://localhost:3000/";
 
-    @Test
-    void contextLoads() {
+    static WebDriver driver;
+
+    @BeforeAll
+    static public void begin() {
+        WebDriverManager.firefoxdriver().setup();
+        driver = new FirefoxDriver();
+        driver.navigate().to(URL);
     }
 
+    @BeforeEach
+    void setup() {
+        driver.navigate().to(URL);
+    }
+
+    @AfterEach
+    void tearDown() {
+        driver.manage().deleteAllCookies();
+    }
+
+    @AfterAll
+    static public void end() {
+        //Cerramos el navegador al finalizar las pruebas
+        driver.quit();
+    }
+
+    @Test
+    @Order(1)
+    void testHome() {
+        // Check the title
+        Assertions.assertEquals("Wikigame", driver.getTitle());
+    }
 }
