@@ -29,13 +29,15 @@ class Wiq_IntegrationTests {
 
     @BeforeEach
     public void begin() {
-        WebDriverManager.firefoxdriver().setup();
-        if (env.getProperty("headless") != null && env.getProperty("headless").equals("true")) {
-            FirefoxOptions options = new FirefoxOptions();
-            options.addArguments("--headless");
-            driver = new FirefoxDriver(options);
-        } else {
-            driver = new FirefoxDriver();
+        if (driver == null) {
+            WebDriverManager.firefoxdriver().setup();
+            if (env.getProperty("headless") != null && env.getProperty("headless").equals("true")) {
+                FirefoxOptions options = new FirefoxOptions();
+                options.addArguments("--headless");
+                driver = new FirefoxDriver(options);
+            } else {
+                driver = new FirefoxDriver();
+            }
         }
         driver.navigate().to(URL);
     }
@@ -43,12 +45,23 @@ class Wiq_IntegrationTests {
     @AfterEach
     void tearDown() {
         driver.manage().deleteAllCookies();
+    }
+
+    @AfterAll
+    public static void end() {
         driver.quit();
     }
 
     @Test
     @Order(1)
     void testHome() {
+        // Check the title
+        Assertions.assertEquals("Wikigame", driver.getTitle());
+    }
+
+    @Test
+    @Order(12)
+    void testHome2() {
         // Check the title
         Assertions.assertEquals("Wikigame", driver.getTitle());
     }
