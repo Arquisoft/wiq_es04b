@@ -58,11 +58,4 @@ class Wiq_IntegrationTests {
         // Check the title
         Assertions.assertEquals("Wikigame", driver.getTitle());
     }
-
-    @Test
-    @Order(12)
-    void testHome2() {
-        // Check the title
-        Assertions.assertEquals("Wikigame", driver.getTitle());
-    }
 }
