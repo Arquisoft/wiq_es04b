@@ -12,6 +12,8 @@ import org.springframework.core.env.Environment;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 
+import static org.junit.jupiter.api.Assertions.fail;
+
 @SpringBootTest
 @Tag("integration")
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
@@ -49,5 +51,6 @@ class Wiq_IntegrationTests {
     void testHome() {
         // Check the title
         Assertions.assertEquals("Wikigame", driver.getTitle());
+        fail();
     }
 }
