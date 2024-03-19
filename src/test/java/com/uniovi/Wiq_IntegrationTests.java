@@ -24,7 +24,7 @@ class Wiq_IntegrationTests {
     public void begin() {
         WebDriverManager.firefoxdriver().setup();
         FirefoxOptions options = new FirefoxOptions();
-        options.addArguments("--headless");
+        //options.addArguments("--headless");
         driver = new FirefoxDriver(options);
         driver.navigate().to(URL);
     }
