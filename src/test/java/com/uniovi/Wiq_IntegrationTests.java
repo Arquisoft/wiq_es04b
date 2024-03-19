@@ -51,6 +51,5 @@ class Wiq_IntegrationTests {
     void testHome() {
         // Check the title
         Assertions.assertEquals("Wikigame", driver.getTitle());
-        fail();
     }
 }
