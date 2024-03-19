@@ -6,7 +6,9 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.env.Environment;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 
@@ -20,12 +22,19 @@ class Wiq_IntegrationTests {
 
     static WebDriver driver;
 
+    @Autowired
+    Environment env;
+
     @BeforeEach
     public void begin() {
         WebDriverManager.firefoxdriver().setup();
-        FirefoxOptions options = new FirefoxOptions();
-        //options.addArguments("--headless");
-        driver = new FirefoxDriver(options);
+        if (env.getProperty("headless") != null && env.getProperty("headless").equals("true")) {
+            FirefoxOptions options = new FirefoxOptions();
+            options.addArguments("--headless");
+            driver = new FirefoxDriver(options);
+        } else {
+            driver = new FirefoxDriver();
+        }
         driver.navigate().to(URL);
     }
 
