@@ -12,6 +12,7 @@ public class CapitalQuestionGenerator extends AbstractGeographyGenerator{
         {
             put("en", "What is the capital of ");
             put("es", "¿Cuál es la capital de ");
+            put("fr", "Quelle est la capitale de ");
         }
     };
 

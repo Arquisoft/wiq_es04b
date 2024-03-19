@@ -11,6 +11,7 @@ public class ContinentQuestionGeneration extends AbstractGeographyGenerator{
         {
             put("en", "In which continent is ");
             put("es", "¿En qué continente se encuentra ");
+            put("fr", "Sur quel continent est-il situé ");
         }
     };
 

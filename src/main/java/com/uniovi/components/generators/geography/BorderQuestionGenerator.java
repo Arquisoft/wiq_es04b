@@ -10,6 +10,7 @@ public class BorderQuestionGenerator extends AbstractGeographyGenerator{
         {
             put("en", "Which countries share a border with ");
             put("es", "¿Con qué países comparte frontera ");
+            put("fr", "Avec quels pays partage-t-il une frontière ");
         }
     };
     private Set<String> usedCountries = new HashSet<>();
