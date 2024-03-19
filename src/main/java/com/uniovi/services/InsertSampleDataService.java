@@ -19,6 +19,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -31,22 +32,29 @@ public class InsertSampleDataService {
     private final CategoryService categoryService;
     private final QuestionRepository questionRepository;
     private final GameSessionRepository gameSessionRepository;
+    private Environment environment;
 
     private Logger log = LoggerFactory.getLogger(InsertSampleDataService.class);;
 
     public InsertSampleDataService(PlayerService playerService, QuestionService questionService,
                                    CategoryService categoryService, QuestionRepository questionRepository,
-                                   GameSessionRepository gameSessionRepository) {
+                                   GameSessionRepository gameSessionRepository, Environment environment) {
         this.playerService = playerService;
         this.questionService = questionService;
         this.categoryService = categoryService;
         this.questionRepository = questionRepository;
         this.gameSessionRepository = gameSessionRepository;
+        this.environment = environment;
     }
 
     @Transactional
     @EventListener(ApplicationReadyEvent.class) // Uncomment this line to insert sample data on startup
     public void insertSampleQuestions() {
+        if (Arrays.stream(environment.getActiveProfiles()).anyMatch(env -> (env.equalsIgnoreCase("test")))) {
+            log.info("Test profile active, skipping sample data insertion");
+            return;
+        }
+
         if (!playerService.getUserByEmail("test@test.com").isPresent()) {
             PlayerDto player = new PlayerDto();
             player.setEmail("test@test.com");
