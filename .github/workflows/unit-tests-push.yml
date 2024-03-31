@@ -55,7 +55,7 @@ jobs:
 
       - name: Run all tests with sonar analysis
         run: |
-          ./mvnw -B verify sonar:sonar -Dsonar.projectKey=Arquisoft_wiq_es04b -Dsonar.organization=arquisoft -Dsonar.branch.name=${{ github.ref }} -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=${{ secrets.SONAR_TOKEN }} -Dspring.profiles.active=test -Dspring.datasource.url=jdbc:mysql://localhost:3306/test_database -Dspring.datasource.username=root -Dspring.datasource.password=root -Dspring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+          ./mvnw -B org.jacoco:jacoco-maven-plugin:prepare-agent verify sonar:sonar -Dsonar.projectKey=Arquisoft_wiq_es04b -Dsonar.organization=arquisoft -Dsonar.branch.name=${{ github.ref }} -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=${{ secrets.SONAR_TOKEN }} -Dspring.profiles.active=test -Dspring.datasource.url=jdbc:mysql://localhost:3306/test_database -Dspring.datasource.username=root -Dspring.datasource.password=root -Dspring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
         env:
           SPRING_PROFILES_ACTIVE: test
           headless: true

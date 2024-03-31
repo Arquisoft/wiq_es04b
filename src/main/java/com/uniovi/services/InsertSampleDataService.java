@@ -55,6 +55,11 @@ public class InsertSampleDataService {
             return;
         }
 
+        generateSampleData();
+    }
+
+    @Transactional
+    public void generateSampleData() {
         if (!playerService.getUserByEmail("test@test.com").isPresent()) {
             PlayerDto player = new PlayerDto();
             player.setEmail("test@test.com");

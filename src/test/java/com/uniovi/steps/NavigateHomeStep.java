@@ -2,9 +2,11 @@ package com.uniovi.steps;
 
 import com.uniovi.*;
 import io.cucumber.java.After;
+import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import org.junit.jupiter.api.Assertions;
+import org.openqa.selenium.By;
 
 public class NavigateHomeStep extends Wiq_IntegrationTests {
 
