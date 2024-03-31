@@ -15,7 +15,7 @@
     <description>wiq_es04b</description>
     <properties>
         <java.version>17</java.version>
-        <sonar.sources>pom.xml,src/main/java,src/main/resources,src/test/resources/features</sonar.sources>
+        <sonar.sources>src/main/java,src/test/resources/features</sonar.sources>
     </properties>
     <dependencies>
         <dependency>
