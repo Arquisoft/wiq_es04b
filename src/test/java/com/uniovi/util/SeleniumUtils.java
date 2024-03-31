@@ -12,6 +12,7 @@ import java.time.Duration;
 import java.util.List;
 
 public class SeleniumUtils {
+
 	/**
 	 * Aborta si el "texto" no está presente en la página actual
 	 * @param driver: apuntando al navegador abierto actualmente.
