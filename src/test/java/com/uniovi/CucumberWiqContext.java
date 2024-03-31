@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Bean;
 public class CucumberWiqContext {
     WebDriver driver;
 
-    @Bean(name="webdriver", destroyMethod = "close")
+    @Bean(name="webdriver")
     public WebDriver webDriver() {
         driver = new FirefoxWebDriver();
         return driver;

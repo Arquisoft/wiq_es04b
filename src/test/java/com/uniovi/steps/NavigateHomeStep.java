@@ -1,12 +1,17 @@
 package com.uniovi.steps;
 
 import com.uniovi.*;
+import com.uniovi.util.SeleniumUtils;
 import io.cucumber.java.After;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
+import io.cucumber.java.en.When;
 import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+
+import java.util.List;
 
 public class NavigateHomeStep extends Wiq_IntegrationTests {
 
@@ -20,8 +25,20 @@ public class NavigateHomeStep extends Wiq_IntegrationTests {
         Assertions.assertEquals(title, driver.getTitle());
     }
 
+    @When("I click the register button")
+    public void i_click_the_register_button() {
+        List<WebElement> elems = SeleniumUtils.waitLoadElementsBy(driver, "@href", "signup", 5);
+        elems.get(0).click();
+    }
+
+    @Then("I should see the register page")
+    public void i_should_see_the_register_page() {
+        SeleniumUtils.waitLoadElementsBy(driver, "h2", "Regístrate", 5);
+        SeleniumUtils.textIsPresentOnPage(driver, "Regístrate");
+    }
+
     @After
     public void cleanUpAfterScenario() {
-        driver.manage().deleteAllCookies();
+        //driver.manage().deleteAllCookies();
     }
 }

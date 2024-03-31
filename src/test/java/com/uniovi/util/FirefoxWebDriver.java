@@ -30,7 +30,7 @@ public class FirefoxWebDriver extends EventFiringWebDriver {
             webdriver = new FirefoxDriver();
         }
 
-        Runtime.getRuntime().addShutdownHook(CLOSE_THREAD);
+        //Runtime.getRuntime().addShutdownHook(CLOSE_THREAD);
     }
 
     public FirefoxWebDriver() {
@@ -40,7 +40,7 @@ public class FirefoxWebDriver extends EventFiringWebDriver {
     @Override
     public void close() {
         if (Thread.currentThread() != CLOSE_THREAD) {
-            logger.info("You shouldn't close this WebDriver. It's shared and will close when the JVM exits.");
+           logger.info("You shouldn't close this WebDriver. It's shared and will close when the JVM exits.");
         }
         super.close();
     }
