@@ -1,5 +1,6 @@
 package com.uniovi;
 
+import com.uniovi.dto.PlayerDto;
 import com.uniovi.entities.Player;
 import com.uniovi.services.PlayerService;
 import org.junit.jupiter.api.*;
@@ -16,14 +17,20 @@ import java.util.Optional;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @ActiveProfiles("test")
 public class Wiq_UnitTests {
-
     @Autowired
     private PlayerService playerService;
 
     @Test
+    @Order(1)
     public void testPlayerService() {
-        Optional<Player> player = playerService.getUser(1L);
-        Assertions.assertTrue(player.isPresent());
+        PlayerDto dto = new PlayerDto();
+        dto.setUsername("test");
+        dto.setPassword("test");
+        dto.setEmail("test@test.com");
+        dto.setRoles(new String[]{"ROLE_USER"});
+        Player player = playerService.addNewPlayer(dto);
+        Assertions.assertNotNull(player);
+        Optional<Player> playerOptional = playerService.getUser(player.getId());
+        Assertions.assertTrue(playerOptional.isPresent());
     }
-
 }
