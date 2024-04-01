@@ -1,12 +1,14 @@
 package com.uniovi;
 
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
+import com.uniovi.entities.Player;
+import com.uniovi.services.PlayerService;
+import org.junit.jupiter.api.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
+
+import java.util.Optional;
 
 @SpringBootTest
 @Tag("unit")
@@ -15,9 +17,13 @@ import org.springframework.test.context.ActiveProfiles;
 @ActiveProfiles("test")
 public class Wiq_UnitTests {
 
-    @Test
-    public void contextLoads() {
+    @Autowired
+    private PlayerService playerService;
 
+    @Test
+    public void testPlayerService() {
+        Optional<Player> player = playerService.getUser(1L);
+        Assertions.assertTrue(player.isPresent());
     }
 
 }
