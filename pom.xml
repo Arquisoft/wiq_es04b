@@ -130,51 +130,40 @@
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>0.8.11</version>
                 <executions>
-                    <!-- Initialize JaCoCo agent before tests are run -->
+                    <!-- Prepare JaCoCo agent to track coverage -->
                     <execution>
-                        <id>pre-unit-tests</id>
                         <goals>
                             <goal>prepare-agent</goal>
                         </goals>
                         <configuration>
-                            <!-- Specifies the location of the JaCoCo data file -->
-                            <destFile>${project.build.directory}/coverage-reports/jacoco-unit.exec</destFile>
                             <propertyName>surefireArgLine</propertyName>
                         </configuration>
                     </execution>
-                    <!-- Generate report after unit tests have been run -->
-                    <!-- This might need adjustment to ensure it's executed after all tests, including integration tests -->
+                    <!-- Generate report after tests -->
                     <execution>
-                        <id>post-unit-tests</id>
+                        <id>generate-report</id>
                         <phase>verify</phase>
                         <goals>
                             <goal>report</goal>
                         </goals>
-                        <configuration>
-                            <!-- Specifies the path to the aggregated .exec file -->
-                            <dataFile>${project.build.directory}/coverage-reports/jacoco-unit.exec</dataFile>
-                            <outputDirectory>${project.reporting.outputDirectory}/jacoco</outputDirectory>
-                        </configuration>
                     </execution>
-                    <!-- Merge execution data from different test phases -->
-                    <!-- Ensure this is correctly configured to find any .exec files generated -->
+                    <!-- OPTIONAL: If merging is needed due to separate executions -->
                     <execution>
-                        <id>jacoco-merge</id>
-                        <phase>prepare-package</phase>
+                        <id>merge-results</id>
+                        <phase>verify</phase>
                         <goals>
                             <goal>merge</goal>
                         </goals>
                         <configuration>
                             <fileSets>
                                 <fileSet>
-                                    <directory>${project.build.directory}/coverage-reports</directory>
+                                    <directory>${project.build.directory}</directory>
                                     <includes>
                                         <include>*.exec</include>
                                     </includes>
                                 </fileSet>
                             </fileSets>
-                            <!-- Output merged result to a specific file -->
-                            <destFile>${project.build.directory}/coverage-reports/jacoco-merged.exec</destFile>
+                            <destFile>${project.build.directory}/coverage-results/merged.exec</destFile>
                         </configuration>
                     </execution>
                 </executions>
@@ -188,6 +177,7 @@
                         <include>**/Wiq_UnitTests.java</include>
                         <include>**/CucumberRunnerTests.java</include>
                     </includes>
+                    <argLine>${surefireArgLine}</argLine>
                 </configuration>
             </plugin>
             <plugin>
