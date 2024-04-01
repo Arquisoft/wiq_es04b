@@ -158,8 +158,8 @@
                 <version>2.22.2</version> <!-- Ensure using an appropriate version -->
                 <configuration>
                     <includes>
-                        <!--<include>**/Wiq_UnitTests.java</include>
-                        <include>**/CucumberRunnerTest.java</include>-->
+                        <include>**/Wiq_UnitTests.java</include>
+                        <include>**/CucumberRunnerTest.java</include>
                     </includes>
                 </configuration>
             </plugin>
