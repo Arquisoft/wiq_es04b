@@ -128,28 +128,23 @@
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.8.11</version>
+                <version>0.8.11</version> <!-- Use the latest version available -->
                 <executions>
-                    <!-- Prepare JaCoCo agent to track coverage -->
                     <execution>
                         <goals>
                             <goal>prepare-agent</goal>
                         </goals>
-                        <configuration>
-                            <propertyName>surefireArgLine</propertyName>
-                        </configuration>
                     </execution>
-                    <!-- Generate report after tests -->
+                    <!-- Attached to Maven test phase to generate report -->
                     <execution>
-                        <id>generate-report</id>
-                        <phase>verify</phase>
+                        <id>report</id>
+                        <phase>test</phase>
                         <goals>
                             <goal>report</goal>
                         </goals>
                     </execution>
-                    <!-- OPTIONAL: If merging is needed due to separate executions -->
                     <execution>
-                        <id>merge-results</id>
+                        <id>jacoco-merge</id>
                         <phase>verify</phase>
                         <goals>
                             <goal>merge</goal>
@@ -163,7 +158,7 @@
                                     </includes>
                                 </fileSet>
                             </fileSets>
-                            <destFile>${project.build.directory}/coverage-results/merged.exec</destFile>
+                            <destFile>${project.build.directory}/jacoco-merged.exec</destFile>
                         </configuration>
                     </execution>
                 </executions>
