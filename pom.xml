@@ -130,7 +130,7 @@
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>0.8.11</version> <!-- Use the latest version available -->
                 <executions>
-                    <!--<execution>
+                    <execution>
                         <goals>
                             <goal>prepare-agent</goal>
                         </goals>
@@ -147,6 +147,7 @@
                         <phase>verify</phase>
                         <goals>
                             <goal>merge</goal>
+                            <goal>report-aggregate</goal>
                         </goals>
                         <configuration>
                             <fileSets>
@@ -158,18 +159,6 @@
                                 </fileSet>
                             </fileSets>
                             <destFile>${project.build.directory}/jacoco-merged.exec</destFile>
-                        </configuration>
-                    </execution>-->
-                    <execution>
-                        <phase>test</phase>
-                        <goals>
-                            <goal>report-aggregate</goal>
-                        </goals>
-                        <configuration>
-                            <dataFileIncludes>
-                                <dataFileInclude>**/jacoco.exec</dataFileInclude>
-                            </dataFileIncludes>
-                            <outputDirectory>${project.reporting.outputDirectory}/jacoco-aggregate</outputDirectory>
                         </configuration>
                     </execution>
                 </executions>
