@@ -46,7 +46,7 @@ jobs:
         run: ./mvnw -B clean install -DskipTests=true
 
       - name: Start the application
-        run: ./mvnw spring-boot:run -Dserver.port=80 &
+        run: ./mvnw spring-boot:run
         env:
           SPRING_DATASOURCE_URL: jdbc:mysql://localhost:3306/test_database
           SPRING_DATASOURCE_USERNAME: root
