@@ -8,5 +8,5 @@ import org.springframework.boot.test.context.SpringBootTest;
 @RunWith(Cucumber.class)
 @CucumberOptions(plugin = {"pretty"}, features = "src/test/resources/features")
 @SpringBootTest
-public class CucumberRunnerTest {
+public class CucumberRunnerTests {
 }
