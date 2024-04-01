@@ -161,7 +161,7 @@
                         </configuration>
                     </execution>-->
                     <execution>
-                        <phase>verify</phase>
+                        <phase>test</phase>
                         <goals>
                             <goal>report-aggregate</goal>
                         </goals>
