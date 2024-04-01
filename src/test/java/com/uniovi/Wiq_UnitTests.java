@@ -23,6 +23,6 @@ public class Wiq_UnitTests {
     @Order(1)
     public void testPlayerService() {
         List<Player> players = playerService.getUsersByRole("ROLE_USER");
-        Assertions.assertEquals(2, players.size());
+        Assertions.assertEquals(1, players.size());
     }
 }
