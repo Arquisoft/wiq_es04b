@@ -9,8 +9,6 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import java.util.List;
 
-import java.util.Optional;
-
 @SpringBootTest
 @Tag("unit")
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
@@ -24,6 +22,6 @@ public class Wiq_UnitTests {
     @Order(1)
     public void testPlayerService() {
         List<Player> players = playerService.getUsersByRole("ROLE_USER");
-        Assertions.assertEquals(0, players.size());
+        Assertions.assertEquals(1, players.size());
     }
 }

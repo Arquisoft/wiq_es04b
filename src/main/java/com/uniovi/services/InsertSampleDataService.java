@@ -50,6 +50,15 @@ public class InsertSampleDataService {
     @Transactional
     @EventListener(ApplicationReadyEvent.class) // Uncomment this line to insert sample data on startup
     public void insertSampleQuestions() {
+        if (!playerService.getUserByEmail("test@test.com").isPresent()) {
+            PlayerDto player = new PlayerDto();
+            player.setEmail("test@test.com");
+            player.setUsername("test");
+            player.setPassword("test");
+            player.setRoles(new String[]{"ROLE_USER"});
+            playerService.generateApiKey(playerService.addNewPlayer(player));
+        }
+
         if (Arrays.stream(environment.getActiveProfiles()).anyMatch(env -> (env.equalsIgnoreCase("test")))) {
             log.info("Test profile active, skipping sample data insertion");
             return;
@@ -60,14 +69,6 @@ public class InsertSampleDataService {
 
     @Transactional
     public void generateSampleData() {
-        if (!playerService.getUserByEmail("test@test.com").isPresent()) {
-            PlayerDto player = new PlayerDto();
-            player.setEmail("test@test.com");
-            player.setUsername("test");
-            player.setPassword("test");
-            player.setRoles(new String[]{"ROLE_USER"});
-            playerService.generateApiKey(playerService.addNewPlayer(player));
-        }
 
         questionRepository.deleteAll();
 
