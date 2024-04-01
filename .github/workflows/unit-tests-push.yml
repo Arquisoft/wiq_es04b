@@ -46,16 +46,19 @@ jobs:
         run: ./mvnw -B clean install -DskipTests=true
 
       - name: Start the application
-        run: ./mvnw spring-boot:run &
+        run: |
+            ./mvnw spring-boot:run &
+            sleep 15
         env:
           SPRING_DATASOURCE_URL: jdbc:mysql://localhost:3306/test_database
           SPRING_DATASOURCE_USERNAME: root
           SPRING_DATASOURCE_PASSWORD: root
           SPRING_DATASOURCE_DRIVER_CLASS_NAME: com.mysql.cj.jdbc.Driver
-
+      - name: Check listening ports
+        run: ss -tuln
       - name: Run all tests with sonar analysis
         run: |
-          ./mvnw -B verify sonar:sonar -Dsonar.projectKey=Arquisoft_wiq_es04b -Dsonar.organization=arquisoft -Dsonar.branch.name=${{ github.ref }} -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=${{ secrets.SONAR_TOKEN }} -Dspring.profiles.active=test -Dspring.datasource.url=jdbc:mysql://localhost:3306/test_database -Dspring.datasource.username=root -Dspring.datasource.password=root -Dspring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+          ./mvnw -B org.jacoco:jacoco-maven-plugin:prepare-agent clean test sonar:sonar -Dsonar.projectKey=Arquisoft_wiq_es04b -Dsonar.organization=arquisoft -Dsonar.branch.name=${{ github.ref }} -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=${{ secrets.SONAR_TOKEN }} -Dspring.profiles.active=test -Dspring.datasource.url=jdbc:mysql://localhost:3306/test_database -Dspring.datasource.username=root -Dspring.datasource.password=root -Dspring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver -Dtest="com.uniovi.Wiq_UnitTests,com.uniovi.CucumberRunnerTests"
         env:
           SPRING_PROFILES_ACTIVE: test
           headless: true
