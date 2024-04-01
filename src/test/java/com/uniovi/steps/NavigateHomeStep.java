@@ -3,6 +3,8 @@ package com.uniovi.steps;
 import com.uniovi.*;
 import com.uniovi.util.SeleniumUtils;
 import io.cucumber.java.After;
+import io.cucumber.java.AfterAll;
+import io.cucumber.java.Scenario;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -35,10 +37,5 @@ public class NavigateHomeStep extends Wiq_IntegrationTests {
     public void i_should_see_the_register_page() {
         SeleniumUtils.waitLoadElementsBy(driver, "h2", "Regístrate", 5);
         SeleniumUtils.textIsPresentOnPage(driver, "Regístrate");
-    }
-
-    @After
-    public void cleanUpAfterScenario() {
-        //driver.manage().deleteAllCookies();
     }
 }
