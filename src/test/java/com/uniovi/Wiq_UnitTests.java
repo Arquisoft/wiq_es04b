@@ -12,6 +12,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 @SpringBootTest
 @Tag("unit")
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
@@ -91,6 +95,96 @@ class Wiq_UnitTests {
         Assertions.assertEquals(dto.getUsername(), player.getUsername());
         Assertions.assertEquals(dto.getEmail(), player.getEmail());
         Assertions.assertTrue(passwordEncoder.matches(dto.getPassword(), player.getPassword()));
+    }
+
+    @Test
+    @Order(5)
+    void PlayerServiceImpl_getUsers_ReturnsPlayersList() {
+        RoleService roleService = new RoleServiceImpl(roleRepository);
+        PlayerServiceImpl playerService = new PlayerServiceImpl(playerRepository, roleService, passwordEncoder);
+
+        List<Player> players = new ArrayList<>();
+        players.add(new Player("a", "a@gmail.com", "1a"));
+        players.add(new Player("b", "b@gmail.com", "1b"));
+
+        playerRepository.save(new Player("a", "a@gmail.com", "1a"));
+        playerRepository.save(new Player("b", "b@gmail.com", "1b"));
+
+        List<Player> result = playerService.getUsers();
+
+        Assertions.assertEquals(players.size(), result.size());
+        for (int i = 0; i < players.size(); i++) {
+            Assertions.assertEquals(players.get(i), result.get(i));
+        }
+    }
+
+    @Test
+    @Order(6)
+    void PlayerServiceImpl_getUsers_ReturnsEmptyList() {
+        RoleService roleService = new RoleServiceImpl(roleRepository);
+        PlayerServiceImpl playerService = new PlayerServiceImpl(playerRepository, roleService, passwordEncoder);
+
+        List<Player> result = playerService.getUsers();
+
+        Assertions.assertEquals(0, result.size());
+    }
+
+    @Test
+    @Order(7)
+    void PlayerServiceImpl_getUserByEmail_ReturnsPlayer() {
+        RoleService roleService = new RoleServiceImpl(roleRepository);
+        PlayerServiceImpl playerService = new PlayerServiceImpl(playerRepository, roleService, passwordEncoder);
+
+        String email = "a@gmail.com";
+        Player player = new Player("a", email, "password");
+
+        playerRepository.save(player);
+
+        Optional<Player> result = playerService.getUserByEmail(email);
+
+        Assertions.assertEquals(player, result.orElse(null));
+    }
+
+    @Test
+    @Order(8)
+    void PlayerServiceImpl_getUserByEmail_ReturnsEmpty() {
+        RoleService roleService = new RoleServiceImpl(roleRepository);
+        PlayerServiceImpl playerService = new PlayerServiceImpl(playerRepository, roleService, passwordEncoder);
+
+        String email = "nonexist@gmail.com";
+
+        Optional<Player> result = playerService.getUserByEmail(email);
+
+        Assertions.assertEquals(Optional.empty(), result);
+    }
+
+    @Test
+    @Order(9)
+    void PlayerServiceImpl_getUserByUsername_ReturnsPlayer() {
+        RoleService roleService = new RoleServiceImpl(roleRepository);
+        PlayerServiceImpl playerService = new PlayerServiceImpl(playerRepository, roleService, passwordEncoder);
+
+        String username = "abc";
+        Player player = new Player(username, "a@gmail,com", "password");
+
+        playerRepository.save(player);
+
+        Optional<Player> result = playerService.getUserByUsername(username);
+
+        Assertions.assertEquals(player, result.orElse(null));
+    }
+
+    @Test
+    @Order(10)
+    void PlayerServiceImpl_getUserByUsername_ReturnsEmpty() {
+        RoleService roleService = new RoleServiceImpl(roleRepository);
+        PlayerServiceImpl playerService = new PlayerServiceImpl(playerRepository, roleService, passwordEncoder);
+
+        String username = "nonexist";
+
+        Optional<Player> result = playerService.getUserByUsername(username);
+
+        Assertions.assertEquals(Optional.empty(), result);
     }
 
 }
