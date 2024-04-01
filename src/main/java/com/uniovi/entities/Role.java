@@ -16,7 +16,7 @@ public class Role {
     @Id
     private String name;
 
-    @ManyToMany(mappedBy = "roles")
+    @ManyToMany(mappedBy = "roles", fetch = FetchType.EAGER)
     private Set<Player> players = new HashSet<>();
 
     public Role(String name) {
