@@ -48,7 +48,6 @@ public class CapitalQuestionGenerator extends AbstractGeographyGenerator{
 
     private List<String> selectRandomIncorrectCapitals(List<String> allCapitals, String correctCapital, int count) {
         List<String> incorrectCapitals = new ArrayList<>();
-        Random random = new Random();
         while (incorrectCapitals.size() < count && allCapitals.size() > 0) {
             int randomIndex = random.nextInt(allCapitals.size());
             String selectedCapital = allCapitals.remove(randomIndex);

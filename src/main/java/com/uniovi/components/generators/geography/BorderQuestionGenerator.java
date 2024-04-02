@@ -33,7 +33,6 @@ public class BorderQuestionGenerator extends AbstractGeographyGenerator{
 
     private List<String> selectRandomIncorrectBorderingCountries(List<String> allBorderingCountries, String correctCountry, int count) {
         List<String> incorrectBorderingCountries = new ArrayList<>();
-        Random random = new Random();
         while (incorrectBorderingCountries.size() < count && allBorderingCountries.size() > 0) {
             int randomIndex = random.nextInt(allBorderingCountries.size());
             String selectedBorderingCountry = allBorderingCountries.remove(randomIndex);
