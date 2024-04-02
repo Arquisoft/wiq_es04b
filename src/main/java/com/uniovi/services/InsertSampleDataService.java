@@ -88,6 +88,14 @@ public class InsertSampleDataService {
         List<Question> questionsEs = allQuestionGenerator.getQuestions();
         questionsEs.forEach(questionService::addNewQuestion);
 
+        allQuestionGenerator = new MultipleQuestionGenerator(
+                new ContinentQuestionGeneration(categoryService, Question.FRENCH),
+                new CapitalQuestionGenerator(categoryService, Question.FRENCH),
+                new BorderQuestionGenerator(categoryService, Question.FRENCH)
+        );
+        List<Question> questionsFr = allQuestionGenerator.getQuestions();
+        questionsFr.forEach(questionService::addNewQuestion);
+
         log.info("Sample questions inserted");
     }
 }
