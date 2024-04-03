@@ -1,5 +1,6 @@
 package com.uniovi;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.uniovi.components.generators.geography.BorderQuestionGenerator;
 import com.uniovi.components.generators.geography.CapitalQuestionGenerator;
 import com.uniovi.components.generators.geography.ContinentQuestionGeneration;
@@ -16,7 +17,9 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static org.junit.Assert.*;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -212,6 +215,38 @@ public class Wiq_UnitTests {
         Assertions.assertFalse(question.getOptions().contains(answer2));
         Assertions.assertNull(answer1.getQuestion());
         Assertions.assertNull(answer2.getQuestion());
+    }
+
+    @Test
+    @Order(15)
+    public void testCategoryCreation() {
+        Category category = new Category("Test Category", "This is a test category");
+        Assertions.assertEquals("Test Category", category.getName());
+        Assertions.assertEquals("This is a test category", category.getDescription());
+    }
+
+    @Test
+    @Order(16)
+    public void testJsonGeneration() {
+        Category category = new Category("Test Category", "This is a test category");
+        JsonNode json = category.toJson();
+        Assertions.assertEquals("Test Category", json.get("name").asText());
+        Assertions.assertEquals("This is a test category", json.get("description").asText());
+    }
+
+    @Test
+    @Order(17)
+    public void testQuestionAssociation() {
+        Category category = new Category("Test Category", "This is a test category");
+        Question question = new Question();
+        question.setCategory(category);
+
+        Set<Question> questions = new HashSet<>();
+        questions.add(question);
+        category.setQuestions(questions);
+
+        Assertions.assertEquals(1, category.getQuestions().size());
+        Assertions.assertTrue(category.getQuestions().contains(question));
     }
 
 
