@@ -133,13 +133,13 @@ public class Wiq_UnitTests {
 
     @Test
     @Order(9)
-    public void testRemoveApiKey() {
+    void testRemoveApiKey() {
         Player player = new Player("name","email","password");
         ApiKey apiKey = new ApiKey();
         Associations.PlayerApiKey.addApiKey(player, apiKey);
         Associations.PlayerApiKey.removeApiKey(player, apiKey);
-        assertNull(player.getApiKey());
-        assertNull(apiKey.getPlayer());
+        Assertions.assertNull(player.getApiKey());
+        Assertions.assertNull(apiKey.getPlayer());
     }
 
     @Test
