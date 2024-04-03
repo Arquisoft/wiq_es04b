@@ -9,13 +9,13 @@ import com.uniovi.services.AnswerService;
 import com.uniovi.services.CategoryService;
 import com.uniovi.services.PlayerService;
 import com.uniovi.services.QuestionService;
-import com.uniovi.services.impl.QuestionServiceImpl;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -169,8 +169,8 @@ public class Wiq_UnitTests {
         Player player = new Player("name","email","password");
         GameSession gameSession = new GameSession();
         Associations.PlayerGameSession.addGameSession(player, gameSession);
-        assertTrue(player.getGameSessions().contains(gameSession));
-        assertEquals(gameSession.getPlayer(), player);
+        Assertions.assertTrue(player.getGameSessions().contains(gameSession));
+        Assertions.assertEquals(gameSession.getPlayer(), player);
     }
 
     @Test
@@ -194,10 +194,10 @@ public class Wiq_UnitTests {
         answers.add(answer1);
         answers.add(answer2);
         Associations.QuestionAnswers.addAnswer(question, answers);
-        assertTrue(question.getOptions().contains(answer1));
-        assertTrue(question.getOptions().contains(answer2));
-        assertEquals(answer1.getQuestion(), question);
-        assertEquals(answer2.getQuestion(), question);
+        Assertions.assertTrue(question.getOptions().contains(answer1));
+        Assertions.assertTrue(question.getOptions().contains(answer2));
+        Assertions.assertEquals(answer1.getQuestion(), question);
+        Assertions.assertEquals(answer2.getQuestion(), question);
     }
 
     @Test
@@ -247,6 +247,82 @@ public class Wiq_UnitTests {
 
         Assertions.assertEquals(1, category.getQuestions().size());
         Assertions.assertTrue(category.getQuestions().contains(question));
+    }
+
+    @Test
+    @Order(18)
+    public void testAnswerToJson() {
+        Question question = new Question();
+        question.setId(1L);
+
+        Answer answer = new Answer("Sample Answer", true);
+        answer.setQuestion(question);
+        answer.setId(1L);
+
+        JsonNode json = answer.toJson();
+
+        Assertions.assertEquals(1L, json.get("id").asLong());
+        Assertions.assertEquals("Sample Answer", json.get("text").asText());
+        Assertions.assertTrue(json.get("correct").asBoolean());
+        Assertions.assertEquals(1L, json.get("question").asLong());
+    }
+
+    @Test
+    @Order(19)
+    public void testAddQuestion_Correct() {
+        Player player = new Player("name","email","password");
+        List<Question> questions = new ArrayList<>();
+        GameSession gameSession = new GameSession(player, questions);
+
+        int initialScore = gameSession.getScore();
+        gameSession.addQuestion(true, 20);
+        Assertions.assertEquals(initialScore + 30, gameSession.getScore());
+        Assertions.assertEquals(1, gameSession.getCorrectQuestions());
+        Assertions.assertEquals(1, gameSession.getTotalQuestions());
+    }
+
+    @Test
+    @Order(20)
+    public void testAddQuestion_Incorrect() {
+        Player player = new Player("name","email","password");
+        List<Question> questions = new ArrayList<>();
+        GameSession gameSession = new GameSession(player, questions);
+
+        int initialScore = gameSession.getScore();
+        gameSession.addQuestion(false, 20);
+        Assertions.assertEquals(initialScore, gameSession.getScore());
+        Assertions.assertEquals(0, gameSession.getCorrectQuestions());
+        Assertions.assertEquals(1, gameSession.getTotalQuestions());
+    }
+
+    @Test
+    @Order(20)
+    public void testAddAnsweredQuestion() {
+        Player player = new Player("name","email","password");
+        List<Question> questions = new ArrayList<>();
+        Question question = new Question();
+        questions.add(question);
+        GameSession gameSession = new GameSession(player, questions);
+
+        Assertions.assertTrue(gameSession.getQuestionsToAnswer().contains(question));
+        Assertions.assertFalse(gameSession.getAnsweredQuestions().contains(question));
+        gameSession.addAnsweredQuestion(question);
+        Assertions.assertFalse(gameSession.getQuestionsToAnswer().contains(question));
+        Assertions.assertTrue(gameSession.getAnsweredQuestions().contains(question));
+    }
+
+    @Test
+    @Order(21)
+    public void testGetDuration() {
+        LocalDateTime createdAt = LocalDateTime.of(2022, 1, 1, 10, 0); // Assuming game started at 10:00 AM
+        LocalDateTime finishTime = LocalDateTime.of(2022, 1, 1, 10, 5); // Assuming game finished at 10:05 AM
+        Player player = new Player("name","email","password");
+        List<Question> questions = new ArrayList<>();
+        GameSession gameSession = new GameSession(player, questions);
+        gameSession.setCreatedAt(createdAt);
+        gameSession.setFinishTime(finishTime);
+
+        Assertions.assertEquals("00:05:00", gameSession.getDuration());
     }
 
 
