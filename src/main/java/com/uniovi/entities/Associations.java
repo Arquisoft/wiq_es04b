@@ -121,10 +121,16 @@ public class Associations {
          * @param answer   The answer
          */
         public static void removeAnswer(Question question, List<Answer> answer) {
-            question.getOptions().remove(answer);
+            question.getOptions().removeAll(answer);
             for (Answer a : answer) {
                 a.setQuestion(null);
             }
         }
+        //public static void removeAnswer(Question question, List<Answer> answer) {
+          //  question.getOptions().remove(answer);
+            //for (Answer a : answer) {
+              //  a.setQuestion(null);
+            //}
+        //}
     }
 }
