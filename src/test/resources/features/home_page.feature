@@ -28,3 +28,18 @@ Feature: I enter the webpage without being logged in
         Given I am not logged in
         When I click the global ranking button
         Then I should see the global ranking page
+
+    Scenario: I cant see the logout button
+        Given I am in the home page
+        Given I am not logged in
+        Then I should not see the logout button
+
+    Scenario: I cant see the profile button
+        Given I am in the home page
+        Given I am not logged in
+        Then I should not see the profile button
+
+    Scenario: I cant see the personal ranking button
+        Given I am in the home page
+        Given I am not logged in
+        Then I should not see the personal ranking button

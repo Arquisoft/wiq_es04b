@@ -69,4 +69,21 @@ public class NavigateHomeStep extends Wiq_IntegrationTests {
     public void iShouldSeeTheGlobalRankingPage() {
         SeleniumUtils.waitLoadElementsBy(driver, "h2", p.getString("ranking.title", PropertiesExtractor.getSPANISH()), 5);
     }
+
+    @Then("I should not see the logout button")
+    public void iShouldNotSeeTheLogoutButton() {
+        SeleniumUtils.waitElementNotPresent(driver, "//*[@href=\"/Logout\"]", 5);
+    }
+
+    @Then("I should not see the profile button")
+    public void iShouldNotSeeTheProfileButton() {
+        SeleniumUtils.waitElementNotPresent(driver, "//*[@id=\"btnUser\"]", 5);
+    }
+
+    @Then("I should not see the personal ranking button")
+    public void iShouldNotSeeThePersonalRankingButton() {
+        List<WebElement> elems = SeleniumUtils.waitLoadElementsBy(driver, "free", "//*[@id=\"navbarDropdown2\"]", 5);
+        elems.get(0).click();
+        SeleniumUtils.waitElementNotPresent(driver, "//*[@id=\"navbarDropdown2\"]/div/a[@href=\"/ranking/playerRanking\"]", 5);
+    }
 }
