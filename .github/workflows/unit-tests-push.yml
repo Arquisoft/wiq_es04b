@@ -63,6 +63,7 @@ jobs:
         env:
           SPRING_PROFILES_ACTIVE: test
           headless: true
+          EXCLUDE_JUNIT: true
       - name: Shut down the application
         if: always()
         run: |
