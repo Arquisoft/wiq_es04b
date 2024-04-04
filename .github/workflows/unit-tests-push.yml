@@ -47,9 +47,9 @@ jobs:
 
       - name: Start the application
         run: |
-            ./mvnw spring-boot:run &
+            ./mvnw spring-boot:run > logs.txt 2>&1 &
             echo $! > spring-boot-app.pid
-            sleep 30
+            sleep 5
         env:
           SPRING_DATASOURCE_URL: jdbc:mysql://localhost:3306/test_database
           SPRING_DATASOURCE_USERNAME: root
@@ -71,6 +71,10 @@ jobs:
           ./mvnw org.jacoco:jacoco-maven-plugin:prepare-agent verify -Dspring.datasource.url=jdbc:mysql://localhost:3306/test_database -Dspring.datasource.username=root -Dspring.datasource.password=root -Dspring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver -Dtest="com.uniovi.Wiq_UnitTests"
         env:
           SPRING_PROFILES_ACTIVE: test
+      - name: Show app logs
+        if: always()
+        run: |
+          cat logs.txt
       - name: Shut down the application
         if: always()
         run: |
