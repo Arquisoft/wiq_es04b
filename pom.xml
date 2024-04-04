@@ -17,7 +17,7 @@
         <java.version>17</java.version>
         <sonar.sources>src/main/java,src/test/resources/features</sonar.sources>
         <sonar.jacoco.reportPaths>${project.basedir}/target/jacoco-it.exec</sonar.jacoco.reportPaths>
-        <sonar.coverage.jacoco.xmlReportPaths>${project.build.directory}/coverage-reports/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
+        <sonar.coverage.jacoco.xmlReportPaths>${project.basedir}/target/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
     </properties>
     <dependencies>
         <dependency>
@@ -149,16 +149,6 @@
                             <destFile>${project.build.directory}/jacoco-merged.exec</destFile>
                         </configuration>
                     </execution>
-                    <execution>
-                        <id>report-xml</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>report</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>${project.build.directory}/coverage-reports</outputDirectory>
-                        </configuration>
-                    </execution>
                 </executions>
             </plugin>
             <plugin>
@@ -223,6 +213,7 @@
                 </dependency>
             </dependencies>
         </profile>
+
         <profile>
             <!-- This profile is active by default when the EXCLUDE_JUNIT environment variable is not set -->
             <id>include-junit</id>
@@ -238,6 +229,12 @@
                     <artifactId>spring-boot-starter-test</artifactId>
                     <scope>test</scope>
                     <!-- No exclusions -->
+                    <exclusions>
+                        <exclusion>
+                            <groupId>org.junit.jupiter</groupId>
+                            <artifactId>junit-jupiter-engine</artifactId>
+                        </exclusion>
+                    </exclusions>
                 </dependency>
             </dependencies>
         </profile>
