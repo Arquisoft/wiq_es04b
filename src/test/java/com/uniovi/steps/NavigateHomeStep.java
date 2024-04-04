@@ -43,8 +43,5 @@ public class NavigateHomeStep extends Wiq_IntegrationTests {
     public void i_should_see_the_register_page() {
         SeleniumUtils.waitLoadElementsBy(driver, "h2", "Regístrate", 5);
         SeleniumUtils.textIsPresentOnPage(driver, "Regístrate");
-
-        RoleDto role = new RoleDto("ROLE_USER2");
-        roleService.addRole(role);
     }
 }

@@ -57,8 +57,6 @@ jobs:
           SPRING_DATASOURCE_DRIVER_CLASS_NAME: com.mysql.cj.jdbc.Driver
       - name: Check listening ports
         run: ss -tuln
-      - name: Check the application is running
-        run: curl --retry 10 --retry-connrefused http://localhost:3000
       - name: Run integration tests
         run: |
           ./mvnw org.jacoco:jacoco-maven-plugin:prepare-agent verify -Dspring.datasource.url=jdbc:mysql://localhost:3306/test_database -Dspring.datasource.username=root -Dspring.datasource.password=root -Dspring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver -Dtest="com.uniovi.CucumberRunnerTests"
@@ -76,7 +74,6 @@ jobs:
         run: |
           cat logs.txt
       - name: Shut down the application
-        if: always()
         run: |
             kill $(cat spring-boot-app.pid)
       - name: Collect Jacoco report and send to Sonar
