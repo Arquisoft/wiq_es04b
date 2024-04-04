@@ -1,16 +1,12 @@
 package com.uniovi.steps;
 
-import com.uniovi.*;
+import com.uniovi.Wiq_IntegrationTests;
+import com.uniovi.util.PropertiesExtractor;
 import com.uniovi.util.SeleniumUtils;
-import io.cucumber.java.After;
-import io.cucumber.java.AfterAll;
-import io.cucumber.java.Scenario;
-import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import org.junit.jupiter.api.Assertions;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
 import java.util.List;
@@ -22,9 +18,30 @@ public class NavigateHomeStep extends Wiq_IntegrationTests {
         driver.navigate().to(URL);
     }
 
-    @Then("I should see the title {string}")
-    public void i_should_see_the_title(String title) {
-        Assertions.assertEquals(title, driver.getTitle());
+    @Given("I am not logged in")
+    public void iAmNotLoggedIn() {
+        driver.manage().deleteAllCookies();
+        driver.navigate().to(URL);
+    }
+
+    @When("I click the login button")
+    public void iClickTheLoginButton() {
+        List<WebElement> elems = SeleniumUtils.waitLoadElementsBy(driver, "@href", "login", 5);
+        elems.get(0).click();
+    }
+
+    @When("I click the global ranking button")
+    public void iClickTheGlobalRankingButton() {
+        List<WebElement> elems = SeleniumUtils.waitLoadElementsBy(driver, "free", "//*[@id=\"navbarDropdown2\"]", 5);
+        elems.get(0).click();
+        elems = SeleniumUtils.waitLoadElementsBy(driver, "@href", "/ranking/globalRanking", 5);
+        elems.get(0).click();
+    }
+
+    @When("I click the play button")
+    public void iClickThePlayButton() {
+        List<WebElement> elems = SeleniumUtils.waitLoadElementsBy(driver, "@href", "/game", 5);
+        elems.get(0).click();
     }
 
     @When("I click the register button")
@@ -33,9 +50,23 @@ public class NavigateHomeStep extends Wiq_IntegrationTests {
         elems.get(0).click();
     }
 
+    @Then("I should see the title {string}")
+    public void i_should_see_the_title(String title) {
+        Assertions.assertEquals(title, driver.getTitle());
+    }
+
     @Then("I should see the register page")
     public void i_should_see_the_register_page() {
-        SeleniumUtils.waitLoadElementsBy(driver, "h2", "Regístrate", 5);
-        SeleniumUtils.textIsPresentOnPage(driver, "Regístrate");
+        SeleniumUtils.waitLoadElementsBy(driver, "h2", p.getString("signup.title", PropertiesExtractor.getSPANISH()), 5);
+    }
+
+    @Then("I should see the login page")
+    public void iShouldSeeTheLoginPage() {
+        SeleniumUtils.waitLoadElementsBy(driver, "h2", p.getString("login.title", PropertiesExtractor.getSPANISH()), 5);
+    }
+
+    @Then("I should see the global ranking page")
+    public void iShouldSeeTheGlobalRankingPage() {
+        SeleniumUtils.waitLoadElementsBy(driver, "h2", p.getString("ranking.title", PropertiesExtractor.getSPANISH()), 5);
     }
 }
