@@ -7,7 +7,7 @@ import io.cucumber.java.Scenario;
 public class CucumberHooks extends Wiq_IntegrationTests {
     @After
     public void cleanUpAfterScenario(Scenario scenario) {
-
+        driver.manage().deleteAllCookies();
     }
 
     @AfterAll
