@@ -204,12 +204,12 @@
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-starter-test</artifactId>
                     <scope>test</scope>
-                    <exclusions>
+                    <!--<exclusions>
                         <exclusion>
                             <groupId>org.junit.jupiter</groupId>
                             <artifactId>junit-jupiter-engine</artifactId>
                         </exclusion>
-                    </exclusions>
+                    </exclusions>-->
                 </dependency>
             </dependencies>
         </profile>
