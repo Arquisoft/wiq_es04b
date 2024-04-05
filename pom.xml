@@ -16,7 +16,7 @@
     <properties>
         <java.version>17</java.version>
         <sonar.sources>src/main/java,src/test/resources/features</sonar.sources>
-        <sonar.jacoco.reportPaths>${project.basedir}/target/jacoco-it.exec</sonar.jacoco.reportPaths>
+        <sonar.jacoco.reportPaths>${project.basedir}/target/jacoco.exec</sonar.jacoco.reportPaths>
     </properties>
     <dependencies>
         <dependency>
@@ -135,24 +135,6 @@
                             </formats>
                         </configuration>
                     </execution>
-                    <execution>
-                        <id>jacoco-merge</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>merge</goal>
-                        </goals>
-                        <configuration>
-                            <fileSets>
-                                <fileSet>
-                                    <directory>${project.build.directory}</directory>
-                                    <includes>
-                                        <include>*.exec</include>
-                                    </includes>
-                                </fileSet>
-                            </fileSets>
-                            <destFile>${project.build.directory}/jacoco-merged.exec</destFile>
-                        </configuration>
-                    </execution>
                 </executions>
             </plugin>
             <plugin>
@@ -187,7 +169,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
                     <jvmArguments>
-                        -javaagent:${settings.localRepository}/org/jacoco/org.jacoco.agent/0.8.11/org.jacoco.agent-0.8.11-runtime.jar=destfile=${project.build.directory}/jacoco-it.exec,includes=*,output=file
+                        -javaagent:${settings.localRepository}/org/jacoco/org.jacoco.agent/0.8.11/org.jacoco.agent-0.8.11-runtime.jar=destfile=${project.build.directory}/jacoco.exec,includes=*,output=file
                     </jvmArguments>
                 </configuration>
             </plugin>
