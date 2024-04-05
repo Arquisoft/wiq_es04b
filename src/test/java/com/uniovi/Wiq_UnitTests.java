@@ -1,6 +1,7 @@
 package com.uniovi;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.uniovi.components.generators.geography.BorderQuestionGenerator;
 import com.uniovi.components.generators.geography.CapitalQuestionGenerator;
 import com.uniovi.components.generators.geography.ContinentQuestionGeneration;
@@ -327,6 +328,42 @@ public class Wiq_UnitTests {
         gameSession.setFinishTime(finishTime);
 
         Assertions.assertEquals("00:05:00", gameSession.getDuration());
+    }
+    @Test
+    @Order(22)
+    public void testPlayerToJson() {
+        Role role1 = new Role("ROLE_USER");
+        Role role2 = new Role("ROLE_ADMIN");
+
+        Set<Role> roles = new HashSet<>();
+        roles.add(role1);
+        roles.add(role2);
+
+        Player player = createPlayer();
+        player.setId(1L);
+        player.setRoles(roles);
+
+        GameSession gameSession = new GameSession(player, new ArrayList<>());
+        gameSession.setId(0L);
+        Set<GameSession> gameSessions = new HashSet<>();
+        gameSessions.add(gameSession);
+
+
+        player.setGameSessions(gameSessions);
+
+        JsonNode json = player.toJson();
+
+        Assertions.assertEquals(1L, json.get("id").asLong());
+        Assertions.assertEquals("name", json.get("username").asText());
+        Assertions.assertEquals("test@email.com", json.get("email").asText());
+
+        ArrayNode rolesArray = (ArrayNode) json.get("roles");
+        Assertions.assertEquals(2, rolesArray.size());
+
+        ArrayNode gameSessionsArray = (ArrayNode) json.get("gameSessions");
+        Assertions.assertEquals(1, gameSessionsArray.size());
+        // Se verifica que la sesión de juego está presente en el JSON
+        Assertions.assertEquals(gameSession.getId(), gameSessionsArray.get(0).get("id").asLong());
     }
 
 
