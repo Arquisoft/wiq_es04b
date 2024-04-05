@@ -366,5 +366,78 @@ public class Wiq_UnitTests {
         Assertions.assertEquals(gameSession.getId(), gameSessionsArray.get(0).get("id").asLong());
     }
 
+    @Test
+    @Order(23)
+    public void testAddOption() {
+        Question question = new Question();
+        Answer option = new Answer("Option A", false);
+        question.addOption(option);
+        Assertions.assertTrue(question.getOptions().contains(option));
+    }
+
+    @Test
+    @Order(24)
+    public void testRemoveOption() {
+        Question question = new Question();
+        Answer option = new Answer("Option A", false);
+        question.addOption(option);
+        question.removeOption(option);
+        Assertions.assertFalse(question.getOptions().contains(option));
+    }
+
+    @Test
+    @Order(25)
+    public void testScrambleOptions() {
+        Question question = new Question();
+        Answer option1 = new Answer("Option A", false);
+        Answer option2 = new Answer("Option B", false);
+        Answer option3 = new Answer("Option C", false);
+        question.addOption(option1);
+        question.addOption(option2);
+        question.addOption(option3);
+
+        List<Answer> originalOptions = new ArrayList<>(question.getOptions());
+        question.scrambleOptions();
+
+        Assertions.assertNotEquals(originalOptions, question.getOptions());
+    }
+
+    @Test
+    @Order(26)
+    public void testHasEmptyOptions() {
+        Question question = new Question();
+        Answer option1 = new Answer("Option A", false);
+        Answer option2 = new Answer("", false); // Empty option
+        question.addOption(option1);
+        question.addOption(option2);
+
+        Assertions.assertTrue(question.hasEmptyOptions());
+    }
+
+    @Test
+    @Order(27)
+    public void testToJson() {
+        Category category = new Category("Category", "Description");
+
+        List<Answer> options = new ArrayList<>();
+        Answer option1 = new Answer("Option A", false);
+        Answer option2 = new Answer("Option B", false);
+        options.add(option1);
+        options.add(option2);
+
+        Answer correctAnswer = option1;
+
+        Question question = new Question("Sample question", options, correctAnswer, category, "en");
+        question.setId(1L); // Establece el ID para el objeto de pregunta
+
+        JsonNode json = question.toJson();
+
+        // Verifica si el JSON contiene la declaración, la categoría y las opciones
+        Assertions.assertTrue(json.toString().contains("Sample question"));
+        Assertions.assertTrue(json.toString().contains("Category"));
+        Assertions.assertTrue(json.toString().contains("Option A"));
+        Assertions.assertTrue(json.toString().contains("Option B"));
+    }
+
 
 }
