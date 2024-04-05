@@ -215,12 +215,6 @@
                     <artifactId>spring-boot-starter-test</artifactId>
                     <scope>test</scope>
                     <!-- No exclusions -->
-                    <exclusions>
-                        <exclusion>
-                            <groupId>org.junit.jupiter</groupId>
-                            <artifactId>junit-jupiter-engine</artifactId>
-                        </exclusion>
-                    </exclusions>
                 </dependency>
             </dependencies>
         </profile>
