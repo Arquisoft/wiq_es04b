@@ -25,23 +25,23 @@ public class SignUpValidator implements Validator {
         PlayerDto user = (PlayerDto) target;
 
         if (!EmailValidator.getInstance().isValid(user.getEmail())) {
-            errors.rejectValue("email", null,
+            errors.rejectValue("email", "signup.error.email.valid",
                     "El email no es válido");
         }
 
         if(playerService.getUserByEmail(user.getEmail()).isPresent()){
-            errors.rejectValue("email", null,
+            errors.rejectValue("email", "signup.error.email.already",
                     "Ya hay una cuenta registrada con este email");
         }
 
         if (playerService.getUserByUsername(user.getUsername()).isPresent()) {
-            errors.rejectValue("username", null,
+            errors.rejectValue("username", "signup.error.username.already",
                     "Ya existe una cuenta con este nombre de usuario");
         }
 
         if (user.getPassword() == null
             || !user.getPassword().equals(user.getPasswordConfirm())) {
-            errors.rejectValue("passwordConfirm", null,
+            errors.rejectValue("passwordConfirm", "signup.error.password.match",
                     "Las contraseñas no coinciden");
         }
     }
