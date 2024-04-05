@@ -46,6 +46,11 @@ public class SignUpStep extends Wiq_IntegrationTests {
         passwordConfirm.sendKeys(pass2);
     }
 
+    @When("I fill in the form with invalid data username: {string} email: {string} password: {string} password_confirmation: {string}")
+    public void iFillInTheFormWithInvalidDataUsernameEmailPasswordPassword_confirmation(String username, String email, String pass, String pass2) {
+        this.iFillInTheFormWithValidDataUsernameEmailPasswordPassword_confirmation(username, email, pass, pass2);
+    }
+
     @And("I press the register button")
     public void iPressTheRegisterButton() {
         By boton = By.className("btn");
@@ -55,5 +60,10 @@ public class SignUpStep extends Wiq_IntegrationTests {
     @Then("I should see the profile page")
     public void iShouldSeeTheProfilePage() {
         SeleniumUtils.waitLoadElementsBy(driver, "span", p.getString("home.authenticated_as", PropertiesExtractor.getSPANISH()), 5);
+    }
+
+    @Then("I should see the error message {string}")
+    public void iShouldSeeTheErrorMessage(String errorMessage) {
+        SeleniumUtils.waitLoadElementsBy(driver, "text", p.getString(errorMessage, PropertiesExtractor.getSPANISH()), 5);
     }
 }
