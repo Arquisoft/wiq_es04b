@@ -6,10 +6,6 @@ import com.uniovi.entities.Answer;
 import com.uniovi.entities.Category;
 import com.uniovi.entities.Question;
 import com.uniovi.services.CategoryService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
-import org.springframework.stereotype.Component;
-
 import java.net.URI;
 import java.net.URLEncoder;
 import java.net.http.HttpClient;
@@ -18,11 +14,14 @@ import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public abstract class AbstractQuestionGenerator implements QuestionGenerator{
     private List<Question> questions = new ArrayList<>();
     protected final CategoryService categoryService;
-    private String query;
+
+    protected Random random = new Random();
+
     protected String statement;
     protected String language;
 
@@ -51,7 +50,7 @@ public abstract class AbstractQuestionGenerator implements QuestionGenerator{
         try {
 
             String endpointUrl = "https://query.wikidata.org/sparql?query=" +
-                    URLEncoder.encode(this.getQuery(), StandardCharsets.UTF_8.toString()) +
+                    URLEncoder.encode(this.getQuery(), StandardCharsets.UTF_8) +
                     "&format=json";
 
             HttpRequest request = HttpRequest.newBuilder()
@@ -72,12 +71,14 @@ public abstract class AbstractQuestionGenerator implements QuestionGenerator{
 
                 List<String> options = this.generateOptions(resultsNode, result);
                 String correctAnswer = this.generateCorrectAnswer(result);
-                String statement = this.getQuestionSubject(result);
-                questionGenerator(statement, options, correctAnswer, this.getCategory());
+                String questionStatement = this.getQuestionSubject(result);
+                questionGenerator(questionStatement, options, correctAnswer, this.getCategory());
 
             }
+        } catch (InterruptedException e) {
+            throw new QuestionGeneratorException("Generation of questions was interrupted");
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new QuestionGeneratorException("An error occurred while generating questions");
         }
 
         return questions;
@@ -87,4 +88,10 @@ public abstract class AbstractQuestionGenerator implements QuestionGenerator{
     protected abstract String generateCorrectAnswer(JsonNode result);
 
     protected abstract String getQuestionSubject(JsonNode result);
+
+    private static class QuestionGeneratorException extends RuntimeException {
+        public QuestionGeneratorException(String message) {
+            super(message);
+        }
+    }
 }
