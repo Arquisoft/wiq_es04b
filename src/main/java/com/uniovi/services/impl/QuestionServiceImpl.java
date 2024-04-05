@@ -14,11 +14,13 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 @Service
 public class QuestionServiceImpl implements QuestionService {
 
     private final QuestionRepository questionRepository;
+    private final Random random = new Random();
 
     public QuestionServiceImpl(QuestionRepository questionRepository) {
         this.questionRepository = questionRepository;
@@ -47,9 +49,9 @@ public class QuestionServiceImpl implements QuestionService {
                 .filter(question -> question.getLanguage().equals(LocaleContextHolder.getLocale().getLanguage())).toList();
         List<Question> res = new ArrayList<>();
         for (int i = 0; i < num; i++) {
-            int idx = (int) (Math.random() * allQuestions.size());
+            int idx = random.nextInt(allQuestions.size());
             while (allQuestions.get(idx).hasEmptyOptions()){
-                idx = (int) (Math.random() * allQuestions.size());
+                idx = random.nextInt(allQuestions.size());
             }
             res.add(allQuestions.get(idx));
         }

@@ -11,6 +11,7 @@ public class ContinentQuestionGeneration extends AbstractGeographyGenerator{
         {
             put("en", "In which continent is ");
             put("es", "¿En qué continente se encuentra ");
+            put("fr", "Sur quel continent est-il situé ");
         }
     };
 
@@ -34,7 +35,6 @@ public class ContinentQuestionGeneration extends AbstractGeographyGenerator{
 
     private List<String> selectRandomIncorrectContinents(List<String> allContinents, String correctContinent, int count) {
         List<String> incorrectContinents = new ArrayList<>();
-        Random random = new Random();
         while (incorrectContinents.size() < count && allContinents.size() > 0) {
             int randomIndex = random.nextInt(allContinents.size());
             String selectedCapital = allContinents.remove(randomIndex);

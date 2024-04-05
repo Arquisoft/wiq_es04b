@@ -16,7 +16,7 @@ import java.util.*;
 
 @Service
 public class GameSessionImpl implements GameSessionService {
-    public static final Integer NORMAL_GAME_QUESTION_NUM = 20;
+    public static final Integer NORMAL_GAME_QUESTION_NUM = 4;
 
     private final GameSessionRepository gameSessionRepository;
     private final QuestionService questionService;

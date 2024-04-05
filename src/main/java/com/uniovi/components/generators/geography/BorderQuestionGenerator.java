@@ -10,6 +10,7 @@ public class BorderQuestionGenerator extends AbstractGeographyGenerator{
         {
             put("en", "Which countries share a border with ");
             put("es", "¿Con qué países comparte frontera ");
+            put("fr", "Avec quels pays partage-t-il une frontière ");
         }
     };
     private Set<String> usedCountries = new HashSet<>();
@@ -33,7 +34,6 @@ public class BorderQuestionGenerator extends AbstractGeographyGenerator{
 
     private List<String> selectRandomIncorrectBorderingCountries(List<String> allBorderingCountries, String correctCountry, int count) {
         List<String> incorrectBorderingCountries = new ArrayList<>();
-        Random random = new Random();
         while (incorrectBorderingCountries.size() < count && allBorderingCountries.size() > 0) {
             int randomIndex = random.nextInt(allBorderingCountries.size());
             String selectedBorderingCountry = allBorderingCountries.remove(randomIndex);

@@ -12,6 +12,7 @@ public class CapitalQuestionGenerator extends AbstractGeographyGenerator{
         {
             put("en", "What is the capital of ");
             put("es", "¿Cuál es la capital de ");
+            put("fr", "Quelle est la capitale de ");
         }
     };
 
@@ -48,7 +49,6 @@ public class CapitalQuestionGenerator extends AbstractGeographyGenerator{
 
     private List<String> selectRandomIncorrectCapitals(List<String> allCapitals, String correctCapital, int count) {
         List<String> incorrectCapitals = new ArrayList<>();
-        Random random = new Random();
         while (incorrectCapitals.size() < count && allCapitals.size() > 0) {
             int randomIndex = random.nextInt(allCapitals.size());
             String selectedCapital = allCapitals.remove(randomIndex);
