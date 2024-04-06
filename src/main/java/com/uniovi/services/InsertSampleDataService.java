@@ -2,8 +2,20 @@ package com.uniovi.services;
 
 import com.uniovi.components.MultipleQuestionGenerator;
 import com.uniovi.components.generators.QuestionGenerator;
+import com.uniovi.components.generators.art.ArtMovementQuestionGenerator;
+import com.uniovi.components.generators.art.ArtPeriodQuestionGenerator;
+import com.uniovi.components.generators.art.ArtStyleQuestionGenerator;
+import com.uniovi.components.generators.art.ArtWorkQuestionGenerator;
 import com.uniovi.components.generators.geography.*;
 import com.uniovi.components.generators.history.*;
+import com.uniovi.components.generators.movie.MovieDirectorQuestionGenerator;
+import com.uniovi.components.generators.movie.MovieGenreQuestionGenerator;
+import com.uniovi.components.generators.movie.MovieReleaseYearQuestionGenerator;
+import com.uniovi.components.generators.movie.OriginalTitleQuestionGenerator;
+import com.uniovi.components.generators.science.MathPhysicsFormulaQuestionGenerator;
+import com.uniovi.components.generators.science.ScientificAchievementQuestionGenerator;
+import com.uniovi.components.generators.science.ScientificDiscoveryQuestionGenerator;
+import com.uniovi.components.generators.science.ScientistBirthplaceQuestionGenerator;
 import com.uniovi.dto.PlayerDto;
 import com.uniovi.entities.Associations;
 import com.uniovi.entities.GameSession;
@@ -110,6 +122,7 @@ public class InsertSampleDataService {
         List<Question> geographyQuestionsFrench = geographyQuestionsFr.getQuestions();
         geographyQuestionsFrench.forEach(questionService::addNewQuestion);
 
+
         // Generar preguntas de historia en inglés
         MultipleQuestionGenerator historyQuestionsEn = new MultipleQuestionGenerator(
                 new HistoricalArtifactQuestionGeneration(categoryService, Question.ENGLISH),
@@ -148,6 +161,90 @@ public class InsertSampleDataService {
         );
         List<Question> historyQuestionsFrench = historyQuestionsFr.getQuestions();
         historyQuestionsFrench.forEach(questionService::addNewQuestion);
+
+
+        MultipleQuestionGenerator scienceQuestionsEn = new MultipleQuestionGenerator(
+                new MathPhysicsFormulaQuestionGenerator(categoryService, Question.ENGLISH),
+                new ScientificAchievementQuestionGenerator(categoryService, Question.ENGLISH),
+                new ScientificDiscoveryQuestionGenerator(categoryService, Question.ENGLISH),
+                new ScientistBirthplaceQuestionGenerator(categoryService, Question.ENGLISH)
+        );
+        List<Question> scienceQuestions = scienceQuestionsEn.getQuestions();
+        scienceQuestions.forEach(questionService::addNewQuestion);
+
+        MultipleQuestionGenerator scienceQuestionsEs = new MultipleQuestionGenerator(
+                new MathPhysicsFormulaQuestionGenerator(categoryService, Question.SPANISH),
+                new ScientificAchievementQuestionGenerator(categoryService, Question.SPANISH),
+                new ScientificDiscoveryQuestionGenerator(categoryService, Question.SPANISH),
+                new ScientistBirthplaceQuestionGenerator(categoryService, Question.SPANISH)
+        );
+        List<Question> scienceQuestionsSpanish = scienceQuestionsEs.getQuestions();
+        scienceQuestionsSpanish.forEach(questionService::addNewQuestion);
+
+        MultipleQuestionGenerator scienceQuestionsFr = new MultipleQuestionGenerator(
+                new MathPhysicsFormulaQuestionGenerator(categoryService, Question.FRENCH),
+                new ScientificAchievementQuestionGenerator(categoryService, Question.FRENCH),
+                new ScientificDiscoveryQuestionGenerator(categoryService, Question.FRENCH),
+                new ScientistBirthplaceQuestionGenerator(categoryService, Question.FRENCH)
+        );
+        List<Question> scienceQuestionsFrench = scienceQuestionsFr.getQuestions();
+        scienceQuestionsFrench.forEach(questionService::addNewQuestion);
+
+
+        MultipleQuestionGenerator artQuestionsEn = new MultipleQuestionGenerator(
+                new ArtMovementQuestionGenerator(categoryService, Question.ENGLISH),
+                new ArtPeriodQuestionGenerator(categoryService, Question.ENGLISH),
+                new ArtStyleQuestionGenerator(categoryService, Question.ENGLISH),
+                new ArtWorkQuestionGenerator(categoryService, Question.ENGLISH)
+        );
+        List<Question> artQuestions = artQuestionsEn.getQuestions();
+        artQuestions.forEach(questionService::addNewQuestion);
+
+        MultipleQuestionGenerator artQuestionsEs = new MultipleQuestionGenerator(
+                new ArtMovementQuestionGenerator(categoryService, Question.SPANISH),
+                new ArtPeriodQuestionGenerator(categoryService, Question.SPANISH),
+                new ArtStyleQuestionGenerator(categoryService, Question.SPANISH),
+                new ArtWorkQuestionGenerator(categoryService, Question.SPANISH)
+        );
+        List<Question> artQuestionsSpanish = artQuestionsEs.getQuestions();
+        artQuestionsSpanish.forEach(questionService::addNewQuestion);
+
+        MultipleQuestionGenerator artQuestionsFr = new MultipleQuestionGenerator(
+                new ArtMovementQuestionGenerator(categoryService, Question.FRENCH),
+                new ArtPeriodQuestionGenerator(categoryService, Question.FRENCH),
+                new ArtStyleQuestionGenerator(categoryService, Question.FRENCH),
+                new ArtWorkQuestionGenerator(categoryService, Question.FRENCH)
+        );
+        List<Question> artQuestionsFrench = artQuestionsFr.getQuestions();
+        artQuestionsFrench.forEach(questionService::addNewQuestion);
+
+
+        MultipleQuestionGenerator movieQuestionsEn = new MultipleQuestionGenerator(
+                new MovieDirectorQuestionGenerator(categoryService, Question.ENGLISH),
+                new MovieGenreQuestionGenerator(categoryService, Question.ENGLISH),
+                new MovieReleaseYearQuestionGenerator(categoryService, Question.ENGLISH),
+                new OriginalTitleQuestionGenerator(categoryService, Question.ENGLISH)
+        );
+        List<Question> movieQuestions = movieQuestionsEn.getQuestions();
+        movieQuestions.forEach(questionService::addNewQuestion);
+
+        MultipleQuestionGenerator movieQuestionsEs = new MultipleQuestionGenerator(
+                new MovieDirectorQuestionGenerator(categoryService, Question.SPANISH),
+                new MovieGenreQuestionGenerator(categoryService, Question.SPANISH),
+                new MovieReleaseYearQuestionGenerator(categoryService, Question.SPANISH),
+                new OriginalTitleQuestionGenerator(categoryService, Question.SPANISH)
+        );
+        List<Question> movieQuestionsSpanish = movieQuestionsEs.getQuestions();
+        movieQuestionsSpanish.forEach(questionService::addNewQuestion);
+
+        MultipleQuestionGenerator movieQuestionsFr = new MultipleQuestionGenerator(
+                new MovieDirectorQuestionGenerator(categoryService, Question.FRENCH),
+                new MovieGenreQuestionGenerator(categoryService, Question.FRENCH),
+                new MovieReleaseYearQuestionGenerator(categoryService, Question.FRENCH),
+                new OriginalTitleQuestionGenerator(categoryService, Question.FRENCH)
+        );
+        List<Question> movieQuestionsFrench = movieQuestionsFr.getQuestions();
+        movieQuestionsFrench.forEach(questionService::addNewQuestion);
 
         log.info("Sample questions inserted");
     }
