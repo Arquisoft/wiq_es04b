@@ -34,7 +34,7 @@ public class InsertSampleDataService {
     private final GameSessionRepository gameSessionRepository;
     private Environment environment;
 
-    private Logger log = LoggerFactory.getLogger(InsertSampleDataService.class);;
+    private Logger log = LoggerFactory.getLogger(InsertSampleDataService.class);
 
     public InsertSampleDataService(PlayerService playerService, QuestionService questionService,
                                    CategoryService categoryService, QuestionRepository questionRepository,
