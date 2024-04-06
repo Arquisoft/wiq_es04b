@@ -6,10 +6,7 @@ import com.uniovi.components.generators.geography.BorderQuestionGenerator;
 import com.uniovi.components.generators.geography.CapitalQuestionGenerator;
 import com.uniovi.components.generators.geography.ContinentQuestionGeneration;
 import com.uniovi.entities.*;
-import com.uniovi.services.AnswerService;
-import com.uniovi.services.CategoryService;
-import com.uniovi.services.PlayerService;
-import com.uniovi.services.QuestionService;
+import com.uniovi.services.*;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -39,6 +36,8 @@ public class Wiq_UnitTests {
     private QuestionService questionService;
     @Autowired
     private CategoryService categoryService;
+    @Autowired
+    private InsertSampleDataService sampleDataService;
 
     private Player createPlayer(){
         return new Player("name","test@email.com","password");
@@ -52,6 +51,8 @@ public class Wiq_UnitTests {
     @Test
     @Order(2)
     public void testQuestions(){
+        sampleDataService.insertSampleQuestions();
+        sampleDataService.generateSampleData();
         List<Question> questions = questionService.getAllQuestions();
         Assertions.assertFalse(questions.isEmpty());
 
@@ -59,6 +60,8 @@ public class Wiq_UnitTests {
     @Test
     @Order(2)
     public void testRandomQuestions(){
+        sampleDataService.insertSampleQuestions();
+        sampleDataService.generateSampleData();
         List<Question> questions = questionService.getRandomQuestions(5);
         Assertions.assertEquals(5,questions.size());
     }
@@ -428,11 +431,10 @@ public class Wiq_UnitTests {
         Answer correctAnswer = option1;
 
         Question question = new Question("Sample question", options, correctAnswer, category, "en");
-        question.setId(1L); // Establece el ID para el objeto de pregunta
+        question.setId(1L);
 
         JsonNode json = question.toJson();
 
-        // Verifica si el JSON contiene la declaración, la categoría y las opciones
         Assertions.assertTrue(json.toString().contains("Sample question"));
         Assertions.assertTrue(json.toString().contains("Category"));
         Assertions.assertTrue(json.toString().contains("Option A"));
