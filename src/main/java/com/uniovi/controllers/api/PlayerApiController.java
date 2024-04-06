@@ -221,6 +221,8 @@ public class PlayerApiController {
             return objectMapper.writeValueAsString(error);
         }
 
+        playerDto.setPasswordConfirm(playerDto.getPassword());
+
         Errors err = new SimpleErrors(playerDto);
         signUpValidator.validate(playerDto, err);
 

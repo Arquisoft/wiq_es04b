@@ -49,7 +49,7 @@ public class InsertSampleDataService {
 
     @Transactional
     @EventListener(ApplicationReadyEvent.class) // Uncomment this line to insert sample data on startup
-    public void insertSampleQuestions() {
+    public void insertSampleQuestions() throws InterruptedException {
         if (!playerService.getUserByEmail("test@test.com").isPresent()) {
             PlayerDto player = new PlayerDto();
             player.setEmail("test@test.com");
@@ -68,7 +68,7 @@ public class InsertSampleDataService {
     }
 
     @Transactional
-    public void generateSampleData() {
+    public void generateSampleData() throws InterruptedException {
 
         questionRepository.deleteAll();
 
