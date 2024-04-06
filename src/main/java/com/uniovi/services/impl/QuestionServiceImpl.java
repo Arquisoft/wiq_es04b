@@ -132,20 +132,21 @@ public class QuestionServiceImpl implements QuestionService {
                 category = categoryService.getCategoryByName(questionDto.getCategory().getName());
             }
 
-            List<Answer> answers = new ArrayList<>();
-            for (int i = 0; i < question.getOptions().size(); i++) {
-                Answer a = new Answer();
-                a.setText(question.getOptions().get(i).getText());
-                a.setCorrect(question.getOptions().get(i).isCorrect());
-                answerService.addNewAnswer(a);
-                answers.add(a);
-            }
-
             Associations.QuestionAnswers.removeAnswer(question, question.getOptions());
             Associations.QuestionsCategory.removeCategory(question, question.getCategory());
 
+            List<Answer> answers = new ArrayList<>();
+            for (int i = 0; i < questionDto.getOptions().size(); i++) {
+                Answer a = new Answer();
+                a.setText(questionDto.getOptions().get(i).getText());
+                a.setCorrect(questionDto.getOptions().get(i).isCorrect());
+                answers.add(a);
+            }
+
             Associations.QuestionAnswers.addAnswer(question, answers);
             Associations.QuestionsCategory.addCategory(question, category);
+
+            question.setCorrectAnswer(question.getOptions().stream().filter(Answer::isCorrect).findFirst().orElse(null));
             questionRepository.save(question);
         }
     }

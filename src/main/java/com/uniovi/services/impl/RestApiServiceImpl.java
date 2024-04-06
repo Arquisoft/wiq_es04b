@@ -125,10 +125,7 @@ public class RestApiServiceImpl implements RestApiService {
         if (params.containsKey("id")) {
             try {
                 Optional<Question> found = questionService.getQuestion(Long.parseLong(params.get("id")));
-                if (found.isPresent())
-                    return List.of(found.get());
-                else
-                    return List.of();
+                return found.map(List::of).orElseGet(List::of);
             } catch (NumberFormatException e) {
                 return List.of();
             }
