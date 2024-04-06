@@ -29,9 +29,16 @@ class Wiq_UnitTests {
     RoleRepository roleRepository;
     @Autowired
     PasswordEncoder passwordEncoder;
+    @Autowired
+    AnswerRepository answerRepository;
 
     @Test
     void contextLoads() {
+    }
+
+    @BeforeEach
+    void tearDown() {
+        playerRepository.deleteAll();
     }
 
     @Test
@@ -185,6 +192,69 @@ class Wiq_UnitTests {
         Optional<Player> result = playerService.getUserByUsername(username);
 
         Assertions.assertEquals(Optional.empty(), result);
+    }
+
+    @Test
+    @Order(11)
+    void AnswerServiceImpl_addNewAnswer_SavesAnswer() {
+        AnswerServiceImpl answerService = new AnswerServiceImpl(answerRepository);
+
+        Answer respuesta = new Answer("respuesta", true);
+
+        answerService.addNewAnswer(respuesta);
+
+        Optional<Answer> respuestaGuardada = answerRepository.findById(respuesta.getId());
+        Assertions.assertEquals(respuesta, respuestaGuardada.orElse(null));
+    }
+
+    @Test
+    @Order(12)
+    void AnswerServiceImpl_getAnswersPerQuestion_QuestionExists() {
+        AnswerServiceImpl answerService = new AnswerServiceImpl(answerRepository);
+
+        String statement = "What is the capital of France?";
+        List<Answer> options = new ArrayList<>();
+        options.add(new Answer("Paris", true));
+        options.add(new Answer("Madrid", false));
+        options.add(new Answer("Rome", false));
+        Answer correctAnswer = options.get(0);
+        Category category = new Category("Geography", "Capitales mundiales");
+        String language = "en";
+        Question question = new Question(statement, options, correctAnswer, category, language);
+
+        List<Answer> expectedAnswers = question.getOptions();
+
+        // Act
+        List<Answer> result = answerService.getAnswersPerQuestion(question);
+
+        // Assert
+        Assertions.assertEquals(expectedAnswers.size(), result.size());
+        Assertions.assertEquals(expectedAnswers, result);
+    }
+
+    @Test
+    @Order(13)
+    void AnswerServiceImpl_getAnswer_ReturnsEmpty() {
+        AnswerServiceImpl answerService = new AnswerServiceImpl(answerRepository);
+
+        Long id = 999L;
+
+        Optional<Answer> result = answerService.getAnswer(id);
+
+        Assertions.assertEquals(Optional.empty(), result);
+    }
+
+    @Test
+    @Order(14)
+    void AnswerServiceImpl_getAnswer_ReturnsAnswer() {
+        AnswerServiceImpl answerService = new AnswerServiceImpl(answerRepository);
+
+        Answer answer = new Answer("Content", true);
+        Long id = answerRepository.save(answer).getId();
+
+        Optional<Answer> result = answerService.getAnswer(id);
+
+        Assertions.assertEquals(answer, result.orElse(null));
     }
 
 }
