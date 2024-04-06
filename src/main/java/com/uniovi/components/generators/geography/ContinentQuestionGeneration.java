@@ -7,16 +7,18 @@ import org.springframework.scheduling.annotation.Scheduled;
 import java.util.*;
 
 public class ContinentQuestionGeneration extends AbstractGeographyGenerator{
-    private static final Map<String, String> STATEMENTS = new HashMap<>() {
-        {
-            put("en", "In which continent is ");
-            put("es", "¿En qué continente se encuentra ");
-            put("fr", "Sur quel continent est-il situé ");
-        }
-    };
+    private static Map<String, String> STATEMENTS = null;
 
     public ContinentQuestionGeneration(CategoryService categoryService, String language) {
         super(categoryService);
+
+        if (STATEMENTS == null) {
+            STATEMENTS = new HashMap<>();
+            STATEMENTS.put("en", "In which continent is ");
+            STATEMENTS.put("es", "¿En qué continente se encuentra ");
+            STATEMENTS.put("fr", "Sur quel continent est-il situé ");
+        }
+
         this.statement = STATEMENTS.get(language);
         this.language = language;
     }

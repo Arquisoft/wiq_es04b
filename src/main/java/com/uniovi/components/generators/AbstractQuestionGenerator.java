@@ -12,6 +12,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -20,7 +21,7 @@ public abstract class AbstractQuestionGenerator implements QuestionGenerator{
     private List<Question> questions = new ArrayList<>();
     protected final CategoryService categoryService;
 
-    protected Random random = new Random();
+    protected Random random = new SecureRandom();
 
     protected String statement;
     protected String language;
@@ -45,7 +46,7 @@ public abstract class AbstractQuestionGenerator implements QuestionGenerator{
         questions.add(question);
     }
 
-    public List<Question> getQuestions() {
+    public List<Question> getQuestions() throws InterruptedException {
         HttpClient client = HttpClient.newHttpClient();
         try {
 
@@ -76,9 +77,9 @@ public abstract class AbstractQuestionGenerator implements QuestionGenerator{
 
             }
         } catch (InterruptedException e) {
-            throw new QuestionGeneratorException("Generation of questions was interrupted");
+            throw e;
         } catch (Exception e) {
-            throw new QuestionGeneratorException("An error occurred while generating questions");
+            throw new QuestionGeneratorException("An error occurred while generating questions." + e.getMessage());
         }
 
         return questions;

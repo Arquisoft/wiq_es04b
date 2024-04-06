@@ -14,7 +14,7 @@ public class MultipleQuestionGenerator {
         this.generators = generators;
     }
 
-    public List<Question> getQuestions() {
+    public List<Question> getQuestions() throws InterruptedException {
         List<Question> questions = new ArrayList<>();
         for (QuestionGenerator generator : generators) {
             questions.addAll(generator.getQuestions());

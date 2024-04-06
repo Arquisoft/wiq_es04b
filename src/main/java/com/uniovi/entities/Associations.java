@@ -121,10 +121,40 @@ public class Associations {
          * @param answer   The answer
          */
         public static void removeAnswer(Question question, List<Answer> answer) {
-            question.getOptions().remove(answer);
+            question.getOptions().removeAll(answer);
             for (Answer a : answer) {
                 a.setQuestion(null);
             }
+        }
+        //public static void removeAnswer(Question question, List<Answer> answer) {
+          //  question.getOptions().remove(answer);
+            //for (Answer a : answer) {
+              //  a.setQuestion(null);
+            //}
+        //}
+    }
+
+    public static class QuestionsCategory {
+        /**
+         * Add a new association between a question and a category
+         *
+         * @param question The question
+         * @param category The category
+         */
+        public static void addCategory(Question question, Category category) {
+            question.setCategory(category);
+            category.getQuestions().add(question);
+        }
+
+        /**
+         * Remove an association between a question and a category
+         *
+         * @param question The question
+         * @param category The category
+         */
+        public static void removeCategory(Question question, Category category) {
+            category.getQuestions().remove(question);
+            question.setCategory(null);
         }
     }
 }

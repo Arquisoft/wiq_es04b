@@ -6,17 +6,18 @@ import com.uniovi.services.CategoryService;
 import java.util.*;
 
 public class BorderQuestionGenerator extends AbstractGeographyGenerator{
-    private static final Map<String, String> STATEMENTS = new HashMap<>() {
-        {
-            put("en", "Which countries share a border with ");
-            put("es", "¿Con qué países comparte frontera ");
-            put("fr", "Avec quels pays partage-t-il une frontière ");
-        }
-    };
+    private static Map<String, String> STATEMENTS = null;
     private Set<String> usedCountries = new HashSet<>();
 
     public BorderQuestionGenerator(CategoryService categoryService, String language) {
         super(categoryService);
+        if (STATEMENTS == null) {
+            STATEMENTS = new HashMap<>();
+            STATEMENTS.put("en", "Which countries share a border with ");
+            STATEMENTS.put("es", "¿Con qué países comparte frontera ");
+            STATEMENTS.put("fr", "Avec quels pays partage-t-il une frontière ");
+        }
+        
         this.statement = STATEMENTS.get(language);
         this.language = language;
     }
