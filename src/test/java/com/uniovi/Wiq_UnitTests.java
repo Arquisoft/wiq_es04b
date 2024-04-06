@@ -60,7 +60,7 @@ public class Wiq_UnitTests {
     }
     @Test
     @Order(2)
-    public void testQuestions(){
+    public void testQuestions() throws InterruptedException {
         sampleDataService.insertSampleQuestions();
         sampleDataService.generateSampleData();
         List<Question> questions = questionService.getAllQuestions();
@@ -69,7 +69,7 @@ public class Wiq_UnitTests {
     }
     @Test
     @Order(2)
-    public void testRandomQuestions(){
+    public void testRandomQuestions() throws InterruptedException {
         sampleDataService.insertSampleQuestions();
         sampleDataService.generateSampleData();
         List<Question> questions = questionService.getRandomQuestions(5);
@@ -78,7 +78,7 @@ public class Wiq_UnitTests {
 
     @Test
     @Order(3)
-    public void testBorderQuestionsGenerator(){
+    public void testBorderQuestionsGenerator() throws InterruptedException {
         BorderQuestionGenerator borderQuestionGenerator=new BorderQuestionGenerator(categoryService,Question.SPANISH);
         List<Question> questions = borderQuestionGenerator.getQuestions();
         Assertions.assertFalse(questions.isEmpty());
@@ -92,7 +92,7 @@ public class Wiq_UnitTests {
 
     @Test
     @Order(4)
-    public void testCapitalQuestionsGenerator(){
+    public void testCapitalQuestionsGenerator() throws InterruptedException {
         CapitalQuestionGenerator capitalQuestionGenerator=new CapitalQuestionGenerator(categoryService,Question.SPANISH);
         List<Question> questions = capitalQuestionGenerator.getQuestions();
         Assertions.assertFalse(questions.isEmpty());
@@ -106,7 +106,7 @@ public class Wiq_UnitTests {
 
     @Test
     @Order(5)
-    public void testContinentQuestionsGenerator(){
+    public void testContinentQuestionsGenerator() throws InterruptedException {
         ContinentQuestionGeneration continentQuestionGenerator=new ContinentQuestionGeneration(categoryService,Question.SPANISH);
         List<Question> questions = continentQuestionGenerator.getQuestions();
         Assertions.assertFalse(questions.isEmpty());
@@ -1199,7 +1199,7 @@ public class Wiq_UnitTests {
     /**
      * Inserts some sample questions into the database
      */
-    private void insertSomeQuestions() {
+    private void insertSomeQuestions() throws InterruptedException {
         List<Question> qs = new ContinentQuestionGeneration(categoryService, Question.SPANISH).getQuestions();
         qs.forEach(questionService::addNewQuestion);
     }
