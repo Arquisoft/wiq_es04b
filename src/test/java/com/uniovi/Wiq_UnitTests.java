@@ -1016,6 +1016,7 @@ public class Wiq_UnitTests {
 
     @Test
     public void testModifyQuestionInvalidApiKey() throws IOException, InterruptedException, JSONException {
+        insertSomeQuestions();
         Question question = questionService.getAllQuestions().get(0);
 
         HttpResponse<String> response = sendRequest("PATCH", "/api/questions/" + question.getId(), Map.of("API-KEY", "zzzz"),
@@ -1135,6 +1136,7 @@ public class Wiq_UnitTests {
 
     @Test
     public void testDeleteQuestionInvalidApiKey() throws IOException, InterruptedException, JSONException {
+        insertSomeQuestions();
         Question question = questionService.getAllQuestions().get(0);
 
         HttpResponse<String> response = sendRequest("DELETE", "/api/questions/" + question.getId(), Map.of("API-KEY", "zzzz"),

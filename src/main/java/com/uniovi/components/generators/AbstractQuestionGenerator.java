@@ -78,7 +78,7 @@ public abstract class AbstractQuestionGenerator implements QuestionGenerator{
         } catch (InterruptedException e) {
             throw new QuestionGeneratorException("Generation of questions was interrupted");
         } catch (Exception e) {
-            throw new QuestionGeneratorException("An error occurred while generating questions");
+            throw new QuestionGeneratorException("An error occurred while generating questions." + e.getMessage());
         }
 
         return questions;
