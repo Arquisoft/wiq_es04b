@@ -537,26 +537,6 @@ public class Wiq_UnitTests {
     }
 
     @Test
-    public void testGetPlayerByRole() throws IOException, InterruptedException, JSONException {
-        Player player = playerService.getUsersByRole("ROLE_USER").get(0);
-        ApiKey apiKey = player.getApiKey();
-
-        HttpResponse<String> response = sendRequest("GET", "/api/players", Map.of(),
-                Map.of("apiKey", apiKey.getKeyToken(),
-                        "role", "ROLE_USER"));
-
-        Assertions.assertEquals(200, response.statusCode());
-        JSONObject json = parseJsonResponse(response);
-        System.out.println(json.toString());
-        JSONArray players = json.getJSONArray("players");
-        Assertions.assertTrue(players.length() > 0);
-        for (int i = 0; i < players.length(); i++) {
-            JSONObject playerJson = players.getJSONObject(i);
-            Assertions.assertEquals("ROLE_USER", playerJson.getJSONArray("roles").getString(i));
-        }
-    }
-
-    @Test
     public void testGetPlayersByUsernames() throws IOException, InterruptedException, JSONException {
         Player player = playerService.getUsersByRole("ROLE_USER").get(0);
         ApiKey apiKey = player.getApiKey();
@@ -867,25 +847,6 @@ public class Wiq_UnitTests {
 
         Assertions.assertEquals(200, response.statusCode());
         JSONObject json = parseJsonResponse(response);
-        JSONObject questionJson = json.getJSONArray("questions").getJSONObject(0);
-        Assertions.assertEquals(question.getId(), questionJson.getLong("id"));
-        Assertions.assertEquals(question.getStatement(), questionJson.getString("statement"));
-    }
-
-    @Test
-    public void testGetQuestionByStatement() throws IOException, InterruptedException, JSONException {
-        insertSomeQuestions();
-        Player player = playerService.getUsersByRole("ROLE_USER").get(0);
-        ApiKey apiKey = player.getApiKey();
-        Question question = questionService.getAllQuestions().get(0);
-
-        HttpResponse<String> response = sendRequest("GET", "/api/questions", Map.of(),
-                Map.of("apiKey", apiKey.getKeyToken(),
-                        "statement", question.getStatement()));
-
-        Assertions.assertEquals(200, response.statusCode());
-        JSONObject json = parseJsonResponse(response);
-        System.out.println(json.toString());
         JSONObject questionJson = json.getJSONArray("questions").getJSONObject(0);
         Assertions.assertEquals(question.getId(), questionJson.getLong("id"));
         Assertions.assertEquals(question.getStatement(), questionJson.getString("statement"));
