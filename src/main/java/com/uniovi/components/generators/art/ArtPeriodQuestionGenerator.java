@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Component
 public class ArtPeriodQuestionGenerator extends AbstractArtGenerator {
     private static final Map<String, String> STATEMENTS = new HashMap<>() {
         {
