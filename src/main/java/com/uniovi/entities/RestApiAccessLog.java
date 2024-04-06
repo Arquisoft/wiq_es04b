@@ -1,9 +1,6 @@
 package com.uniovi.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,5 +20,7 @@ public class RestApiAccessLog {
     private ApiKey apiKey;
 
     private String path;
+
+    @Column(columnDefinition = "VARCHAR(10000)")
     private String details;
 }

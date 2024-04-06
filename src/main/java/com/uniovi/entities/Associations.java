@@ -133,4 +133,28 @@ public class Associations {
             //}
         //}
     }
+
+    public static class QuestionsCategory {
+        /**
+         * Add a new association between a question and a category
+         *
+         * @param question The question
+         * @param category The category
+         */
+        public static void addCategory(Question question, Category category) {
+            question.setCategory(category);
+            category.getQuestions().add(question);
+        }
+
+        /**
+         * Remove an association between a question and a category
+         *
+         * @param question The question
+         * @param category The category
+         */
+        public static void removeCategory(Question question, Category category) {
+            category.getQuestions().remove(question);
+            question.setCategory(null);
+        }
+    }
 }

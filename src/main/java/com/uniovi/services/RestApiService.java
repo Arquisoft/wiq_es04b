@@ -4,6 +4,7 @@ import com.uniovi.entities.ApiKey;
 import com.uniovi.entities.Player;
 import com.uniovi.entities.Question;
 
+import org.springframework.data.domain.Pageable;
 import java.util.List;
 import java.util.Map;
 
@@ -28,5 +29,5 @@ public interface RestApiService {
      * @param params A map with the parameters of the request
      * @return A list with all the questions
      */
-    List<Question> getQuestions(Map<String, String> params);
+    List<Question> getQuestions(Map<String, String> params, Pageable pageable);
 }
