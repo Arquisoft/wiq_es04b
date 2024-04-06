@@ -734,6 +734,36 @@ public class Wiq_UnitTests {
     }
 
     @Test
+    public void testModifyUserMissing() throws IOException, InterruptedException, JSONException {
+        Player player = playerService.getUsersByRole("ROLE_USER").get(0);
+        ApiKey apiKey = player.getApiKey();
+
+        Map<String, Object> data = new HashMap<>();
+
+        HttpResponse<String> response = sendRequest("PATCH", "/api/players/" + player.getId(), Map.of("API-KEY", apiKey.getKeyToken()),
+                data);
+
+        Assertions.assertNotEquals(200, response.statusCode());
+    }
+
+    @Test
+    public void testModifyUserMissingSomeData() throws IOException, InterruptedException, JSONException {
+        Player player = playerService.getUsersByRole("ROLE_USER").get(0);
+        ApiKey apiKey = player.getApiKey();
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("username", "test");
+        //data.put("email", "test@test.com"); // Missing email
+        data.put("password", "newPassword");
+        data.put("roles", new String[]{"ROLE_USER"});
+
+        HttpResponse<String> response = sendRequest("PATCH", "/api/players/" + player.getId(), Map.of("API-KEY", apiKey.getKeyToken()),
+                data);
+
+        Assertions.assertNotEquals(200, response.statusCode());
+    }
+
+    @Test
     public void testDeleteUserInvalidApiKey() throws IOException, InterruptedException, JSONException {
         Player player = playerService.getUsersByRole("ROLE_USER").get(0);
 
