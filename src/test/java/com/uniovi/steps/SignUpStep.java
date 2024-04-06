@@ -66,4 +66,9 @@ public class SignUpStep extends Wiq_IntegrationTests {
     public void iShouldSeeTheErrorMessage(String errorMessage) {
         SeleniumUtils.waitLoadElementsBy(driver, "text", p.getString(errorMessage, PropertiesExtractor.getSPANISH()), 5);
     }
+
+    @When("I logout")
+    public void iLogout() {
+        SeleniumUtils.waitLoadElementsBy(driver, "free", "//a[contains(@href, 'logout')]", 10).get(0).click();
+    }
 }
