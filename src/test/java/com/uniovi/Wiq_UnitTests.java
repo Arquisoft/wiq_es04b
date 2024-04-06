@@ -31,6 +31,8 @@ class Wiq_UnitTests {
     PasswordEncoder passwordEncoder;
     @Autowired
     AnswerRepository answerRepository;
+    @Autowired
+    CategoryRepository categoryRepository;
 
     @Test
     void contextLoads() {
@@ -39,6 +41,9 @@ class Wiq_UnitTests {
     @BeforeEach
     void tearDown() {
         playerRepository.deleteAll();
+        roleRepository.deleteAll();
+        answerRepository.deleteAll();
+        categoryRepository.deleteAll();
     }
 
     @Test
@@ -255,6 +260,96 @@ class Wiq_UnitTests {
         Optional<Answer> result = answerService.getAnswer(id);
 
         Assertions.assertEquals(answer, result.orElse(null));
+    }
+
+    @Test
+    @Order(15)
+    void CategoryServiceImpl_addNewCategory_SavesCategory() {
+        CategoryServiceImpl categoryService = new CategoryServiceImpl(categoryRepository);
+
+        Category category = new Category("Capitals", "Capitals from countries");
+
+        categoryService.addNewCategory(category);
+
+        Optional<Category> savedCategory = categoryRepository.findById(category.getId());
+        Assertions.assertEquals(category, savedCategory.orElse(null));
+    }
+
+    @Test
+    @Order(16)
+    void CategoryServiceImpl_getAllCategories_ReturnsList() {
+        CategoryServiceImpl categoryService = new CategoryServiceImpl(categoryRepository);
+
+        List<Category> categories = new ArrayList<>();
+        Category category = new Category("Capitals", "Capitals from countries");
+        categories.add(category);
+
+        categoryService.addNewCategory(category);
+
+        List<Category> result = categoryService.getAllCategories();
+
+        Assertions.assertEquals(categories.size(), result.size());
+        Assertions.assertEquals(categories, result);
+    }
+
+    @Test
+    @Order(17)
+    void CategoryServiceImpl_getAllCategories_EmptyList() {
+        CategoryServiceImpl categoryService = new CategoryServiceImpl(categoryRepository);
+
+        List<Category> result = categoryService.getAllCategories();
+
+        Assertions.assertTrue(result.isEmpty());
+    }
+
+    @Test
+    @Order(18)
+    void CategoryServiceImpl_getCategory_ReturnsCategory() {
+        CategoryServiceImpl categoryService = new CategoryServiceImpl(categoryRepository);
+
+        Category category = new Category("Capitals", "Capitals from countries");
+
+        categoryService.addNewCategory(category);
+
+        Optional<Category> result = categoryService.getCategory(category.getId());
+
+        Assertions.assertEquals(category, result.orElse(null));
+    }
+
+    @Test
+    @Order(19)
+    void CategoryServiceImpl_getCategory_ReturnsEmptyOpt() {
+        CategoryServiceImpl categoryService = new CategoryServiceImpl(categoryRepository);
+
+        Long id = 999L;
+        Optional<Category> result = categoryService.getCategory(id);
+
+        Assertions.assertEquals(Optional.empty(), result);
+    }
+
+    @Test
+    @Order(20)
+    void CategoryServiceImpl_getCategoryByName_ReturnsCategory() {
+        CategoryServiceImpl categoryService = new CategoryServiceImpl(categoryRepository);
+
+        String name = "Capitals";
+        Category category = new Category(name, "Capitals from countries");
+
+        categoryService.addNewCategory(category);
+
+        Category result = categoryService.getCategoryByName(name);
+
+        Assertions.assertEquals(category, result);
+    }
+
+    @Test
+    @Order(21)
+    void CategoryServiceImpl_getCategoryByName_ReturnsNull() {
+        CategoryServiceImpl categoryService = new CategoryServiceImpl(categoryRepository);
+
+        Category result = categoryService.getCategoryByName("abcd");
+
+        Assertions.assertNull(result);
     }
 
 }
