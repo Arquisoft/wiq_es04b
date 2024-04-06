@@ -43,6 +43,7 @@ public class CategoryServiceImpl implements CategoryService {
             new AbstractMap.SimpleEntry<>("Geography", "Questions about geography"),
             new AbstractMap.SimpleEntry<>("History", "Questions about history"),
             new AbstractMap.SimpleEntry<>("Science", "Questions about science"),
+            new AbstractMap.SimpleEntry<>("Science", "Questions about art")
     };
 
     @PostConstruct
