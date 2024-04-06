@@ -399,10 +399,12 @@ public class Wiq_UnitTests {
         question.addOption(option2);
         question.addOption(option3);
 
-        List<Answer> originalOptions = new ArrayList<>(question.getOptions());
         question.scrambleOptions();
+        List<Answer> scrambledOptions = question.getOptions();
 
-        Assertions.assertNotEquals(originalOptions, question.getOptions());
+        Assertions.assertTrue(scrambledOptions.contains(option1));
+        Assertions.assertTrue(scrambledOptions.contains(option2));
+        Assertions.assertTrue(scrambledOptions.contains(option3));
     }
 
     @Test
