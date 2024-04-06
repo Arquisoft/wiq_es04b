@@ -70,7 +70,8 @@ public class Wiq_UnitTests {
     @Test
     @Order(2)
     public void testRandomQuestions(){
-        insertSomeQuestions();
+        sampleDataService.insertSampleQuestions();
+        sampleDataService.generateSampleData();
         List<Question> questions = questionService.getRandomQuestions(5);
         Assertions.assertEquals(5,questions.size());
     }
@@ -546,6 +547,7 @@ public class Wiq_UnitTests {
 
         Assertions.assertEquals(200, response.statusCode());
         JSONObject json = parseJsonResponse(response);
+        System.out.println(json.toString());
         JSONArray players = json.getJSONArray("players");
         Assertions.assertTrue(players.length() > 0);
         for (int i = 0; i < players.length(); i++) {
@@ -883,6 +885,7 @@ public class Wiq_UnitTests {
 
         Assertions.assertEquals(200, response.statusCode());
         JSONObject json = parseJsonResponse(response);
+        System.out.println(json.toString());
         JSONObject questionJson = json.getJSONArray("questions").getJSONObject(0);
         Assertions.assertEquals(question.getId(), questionJson.getLong("id"));
         Assertions.assertEquals(question.getStatement(), questionJson.getString("statement"));
