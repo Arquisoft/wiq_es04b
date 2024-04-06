@@ -15,6 +15,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.querydsl.QPageRequest;
 import org.springframework.stereotype.Service;
 
+import java.security.SecureRandom;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +30,7 @@ public class QuestionServiceImpl implements QuestionService {
     private final CategoryService categoryService;
     private final AnswerService answerService;
 
-    private final Random random = new Random();
+    private final Random random = new SecureRandom();
 
     public QuestionServiceImpl(QuestionRepository questionRepository, CategoryService categoryService, AnswerService answerService) {
         this.questionRepository = questionRepository;
