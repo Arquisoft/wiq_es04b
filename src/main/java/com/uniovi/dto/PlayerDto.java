@@ -1,18 +1,27 @@
 package com.uniovi.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.*;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 public class PlayerDto {
+
+    @Schema(description = "Username of the player", example = "student1")
     private String username;
+
+    @Schema(description = "Email of the player", example = "student1@email.com")
     private String email;
+
+    @Schema(description = "Password of the player", example = "password")
     private String password;
+
+    @Schema(hidden = true)
     private String passwordConfirm;
+
+    @Schema(description = "Roles of the player", example = "[\"ROLE_USER\"]")
     private String[] roles;
 }
