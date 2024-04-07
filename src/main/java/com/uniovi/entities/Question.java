@@ -23,6 +23,8 @@ import java.util.Objects;
 public class Question implements JsonEntity {
     public static final String ENGLISH = "en";
     public static final String SPANISH = "es";
+    public static final String FRENCH = "fr";
+
 
     @Id
     @GeneratedValue
@@ -34,7 +36,7 @@ public class Question implements JsonEntity {
     @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Answer> options = new ArrayList<>();
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     private Answer correctAnswer;
 
     @ManyToOne

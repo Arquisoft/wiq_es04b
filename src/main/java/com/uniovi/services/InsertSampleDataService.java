@@ -34,7 +34,7 @@ public class InsertSampleDataService {
     private final GameSessionRepository gameSessionRepository;
     private Environment environment;
 
-    private Logger log = LoggerFactory.getLogger(InsertSampleDataService.class);;
+    private Logger log = LoggerFactory.getLogger(InsertSampleDataService.class);
 
     public InsertSampleDataService(PlayerService playerService, QuestionService questionService,
                                    CategoryService categoryService, QuestionRepository questionRepository,
@@ -49,12 +49,7 @@ public class InsertSampleDataService {
 
     @Transactional
     @EventListener(ApplicationReadyEvent.class) // Uncomment this line to insert sample data on startup
-    public void insertSampleQuestions() {
-        if (Arrays.stream(environment.getActiveProfiles()).anyMatch(env -> (env.equalsIgnoreCase("test")))) {
-            log.info("Test profile active, skipping sample data insertion");
-            return;
-        }
-
+    public void insertSampleQuestions() throws InterruptedException {
         if (!playerService.getUserByEmail("test@test.com").isPresent()) {
             PlayerDto player = new PlayerDto();
             player.setEmail("test@test.com");
@@ -63,6 +58,17 @@ public class InsertSampleDataService {
             player.setRoles(new String[]{"ROLE_USER"});
             playerService.generateApiKey(playerService.addNewPlayer(player));
         }
+
+        if (Arrays.stream(environment.getActiveProfiles()).anyMatch(env -> (env.equalsIgnoreCase("test")))) {
+            log.info("Test profile active, skipping sample data insertion");
+            return;
+        }
+
+        generateSampleData();
+    }
+
+    @Transactional
+    public void generateSampleData() throws InterruptedException {
 
         questionRepository.deleteAll();
 
@@ -81,6 +87,14 @@ public class InsertSampleDataService {
         );
         List<Question> questionsEs = allQuestionGenerator.getQuestions();
         questionsEs.forEach(questionService::addNewQuestion);
+
+        allQuestionGenerator = new MultipleQuestionGenerator(
+                new ContinentQuestionGeneration(categoryService, Question.FRENCH),
+                new CapitalQuestionGenerator(categoryService, Question.FRENCH),
+                new BorderQuestionGenerator(categoryService, Question.FRENCH)
+        );
+        List<Question> questionsFr = allQuestionGenerator.getQuestions();
+        questionsFr.forEach(questionService::addNewQuestion);
 
         log.info("Sample questions inserted");
     }

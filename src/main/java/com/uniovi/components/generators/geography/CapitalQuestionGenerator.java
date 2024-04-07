@@ -8,15 +8,17 @@ import org.springframework.stereotype.Component;
 import java.util.*;
 
 public class CapitalQuestionGenerator extends AbstractGeographyGenerator{
-    private static final Map<String, String> STATEMENTS = new HashMap<>() {
-        {
-            put("en", "What is the capital of ");
-            put("es", "¿Cuál es la capital de ");
-        }
-    };
+    private static Map<String, String> STATEMENTS = null;
 
     public CapitalQuestionGenerator(CategoryService categoryService, String language) {
         super(categoryService);
+        if (STATEMENTS == null) {
+            STATEMENTS = new HashMap<>();
+            STATEMENTS.put("en", "What is the capital of ");
+            STATEMENTS.put("es", "¿Cuál es la capital de ");
+            STATEMENTS.put("fr", "Quelle est la capitale de ");
+        }
+
         this.statement = STATEMENTS.get(language);
         this.language = language;
     }
@@ -48,7 +50,6 @@ public class CapitalQuestionGenerator extends AbstractGeographyGenerator{
 
     private List<String> selectRandomIncorrectCapitals(List<String> allCapitals, String correctCapital, int count) {
         List<String> incorrectCapitals = new ArrayList<>();
-        Random random = new Random();
         while (incorrectCapitals.size() < count && allCapitals.size() > 0) {
             int randomIndex = random.nextInt(allCapitals.size());
             String selectedCapital = allCapitals.remove(randomIndex);

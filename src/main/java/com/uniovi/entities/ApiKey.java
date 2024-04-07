@@ -24,6 +24,6 @@ public class ApiKey {
     @OneToOne
     private Player player;
 
-    @OneToMany(mappedBy = "apiKey")
+    @OneToMany(mappedBy = "apiKey", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<RestApiAccessLog> accessLogs = new HashSet<>();
 }

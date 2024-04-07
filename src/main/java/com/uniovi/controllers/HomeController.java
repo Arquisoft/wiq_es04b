@@ -30,11 +30,6 @@ public class HomeController{
         return "index";
     }
 
-    @GetMapping("/api")
-    public String apiHome() {
-        return "api/apiHome";
-    }
-
     @GetMapping("/home/apikey")
     public String apiKeyHome(Authentication auth, Model model) {
         Player player = playerService.getUserByUsername(auth.getName()).get();

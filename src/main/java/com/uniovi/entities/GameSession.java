@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.io.Serializable;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -17,7 +18,7 @@ import java.util.*;
 @Setter
 @Entity
 @NoArgsConstructor
-public class GameSession implements JsonEntity {
+public class GameSession implements JsonEntity, Serializable {
     @Id
     @GeneratedValue
     private Long id;
