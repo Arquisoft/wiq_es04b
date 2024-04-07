@@ -53,8 +53,8 @@ public class SignUpStep extends Wiq_IntegrationTests {
 
     @And("I press the register button")
     public void iPressTheRegisterButton() {
-        By boton = By.className("btn");
-        driver.findElement(boton).click();
+        By button = By.className("btn");
+        driver.findElement(button).click();
     }
 
     @Then("I should see the profile page")
@@ -71,4 +71,5 @@ public class SignUpStep extends Wiq_IntegrationTests {
     public void iLogout() {
         SeleniumUtils.waitLoadElementsBy(driver, "free", "//a[contains(@href, 'logout')]", 10).get(0).click();
     }
+
 }

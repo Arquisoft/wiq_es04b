@@ -6,6 +6,7 @@ import com.uniovi.*;
 import com.uniovi.dto.RoleDto;
 import com.uniovi.services.RoleService;
 import com.uniovi.util.SeleniumUtils;
+import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -55,6 +56,11 @@ public class NavigateHomeStep extends Wiq_IntegrationTests {
     public void i_click_the_register_button() {
         List<WebElement> elems = SeleniumUtils.waitLoadElementsBy(driver, "@href", "signup", 5);
         elems.get(0).click();
+    }
+
+    @And("I am on the login page")
+    public void iAmOnTheLoginPage() {
+        iClickTheLoginButton();
     }
 
     @Then("I should see the title {string}")
