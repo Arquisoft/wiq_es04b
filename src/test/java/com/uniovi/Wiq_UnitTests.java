@@ -8,10 +8,15 @@ import com.uniovi.services.impl.*;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.awt.print.Pageable;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -33,6 +38,10 @@ class Wiq_UnitTests {
     AnswerRepository answerRepository;
     @Autowired
     CategoryRepository categoryRepository;
+    @Autowired
+    GameSessionRepository gameSessionRepository;
+    @Autowired
+    QuestionRepository questionRepository;
 
     @Test
     void contextLoads() {
@@ -44,6 +53,8 @@ class Wiq_UnitTests {
         roleRepository.deleteAll();
         answerRepository.deleteAll();
         categoryRepository.deleteAll();
+        gameSessionRepository.deleteAll();
+        questionRepository.deleteAll();
     }
 
     @Test
@@ -350,6 +361,138 @@ class Wiq_UnitTests {
         Category result = categoryService.getCategoryByName("abcd");
 
         Assertions.assertNull(result);
+    }
+
+    @Test
+    @Order(22)
+    void GameSessionImpl_getGameSessions_ReturnsList() {
+        QuestionServiceImpl questionService = new QuestionServiceImpl(questionRepository);
+        GameSessionImpl gameSession = new GameSessionImpl(gameSessionRepository, questionService);
+
+        List<GameSession> gameSessions = new ArrayList<>();
+        GameSession gameSession1 = new GameSession();
+        gameSessions.add(gameSession1);
+        GameSession gameSession2 = new GameSession();
+        gameSessions.add(gameSession2);
+
+        gameSessionRepository.save(gameSession1);
+        gameSessionRepository.save(gameSession2);
+
+        List<GameSession> result = gameSession.getGameSessions();
+
+        Assertions.assertEquals(gameSessions.size(), result.size());
+        Assertions.assertEquals(gameSessions, result);
+    }
+
+    @Test
+    @Order(23)
+    void GameSessionImpl_getGameSessions_ReturnsEmptyList() {
+        QuestionServiceImpl questionService = new QuestionServiceImpl(questionRepository);
+        GameSessionImpl gameSession = new GameSessionImpl(gameSessionRepository, questionService);
+
+        List<GameSession> result = gameSession.getGameSessions();
+
+        Assertions.assertEquals(0, result.size());
+    }
+
+    @Test
+    @Order(24)
+    void GameSessionImpl_getGameSessionsByPlayer_ReturnsList() {
+        QuestionServiceImpl questionService = new QuestionServiceImpl(questionRepository);
+        GameSessionImpl gameSession = new GameSessionImpl(gameSessionRepository, questionService);
+
+        Player player = new Player("abc", "abc@gmail.com", "abcd1234");
+
+        List<GameSession> gameSessions = new ArrayList<>();
+        GameSession gameSession1 = new GameSession(player, null);
+        gameSessions.add(gameSession1);
+        GameSession gameSession2 = new GameSession(player, null);
+        gameSessions.add(gameSession2);
+
+        gameSessionRepository.save(gameSession1);
+        gameSessionRepository.save(gameSession2);
+
+        List<GameSession> result = gameSession.getGameSessionsByPlayer(player);
+
+        Assertions.assertEquals(gameSessions.size(), result.size());
+        Assertions.assertEquals(gameSessions, result);
+    }
+
+    @Test
+    @Order(25)
+    void GameSessionImpl_getGameSessionsByPlayer_ReturnsEmptyList() {
+        QuestionServiceImpl questionService = new QuestionServiceImpl(questionRepository);
+        GameSessionImpl gameSession = new GameSessionImpl(gameSessionRepository, questionService);
+
+        List<GameSession> result = gameSession.getGameSessionsByPlayer(new Player("nonExists", "aabb@gmail.com", "abbacdc"));
+
+        Assertions.assertEquals(0, result.size());
+    }
+
+    @Test
+    @Order(26)
+    void GameSessionImpl_startNewGame_ReturnsGameSession() {
+        QuestionServiceImpl questionService = new QuestionServiceImpl(questionRepository);
+        GameSessionImpl gameSession = new GameSessionImpl(gameSessionRepository, questionService);
+
+        Player player = new Player("abc", "abc@gmail.com", "abcd1234");
+
+        GameSession gameSession1 = gameSession.startNewGame(player);
+
+        Assertions.assertNotNull(gameSession1);
+        Assertions.assertEquals(player, gameSession1.getPlayer());
+    }
+
+    @Test
+    @Order(27)
+    void GameSessionImpl_endGame_SavesGameSession() {
+        QuestionServiceImpl questionService = new QuestionServiceImpl(questionRepository);
+        GameSessionImpl gameSession = new GameSessionImpl(gameSessionRepository, questionService);
+
+        Player player = new Player("abc", "abc@gmail.com", "abcd1234");
+
+        GameSession gameSession1 = gameSession.startNewGame(player);
+        gameSession.endGame(gameSession1);
+
+        Assertions.assertEquals(LocalDateTime.now().getDayOfYear(), gameSession1.getFinishTime().getDayOfYear());
+        Assertions.assertEquals(gameSession.getGameSessionsByPlayer(player).get(0), gameSession1);
+    }
+
+    @Test
+    @Order(28)
+    void GameSessionImpl_getGlobalRanking_GlobalPages() {
+        QuestionServiceImpl questionService = new QuestionServiceImpl(questionRepository);
+        GameSessionImpl gameSession = new GameSessionImpl(gameSessionRepository, questionService);
+
+        PageRequest pageable = PageRequest.of(0, 10);
+        List<Object[]> globalRanking = new ArrayList<>();
+        globalRanking.add(new Object[]{"Player 1", 100});
+        globalRanking.add(new Object[]{"Player 2", 80});
+        globalRanking.add(new Object[]{"Player 3", 60});
+        Page<Object[]> expected = new PageImpl<>(globalRanking);
+
+        Page<Object[]> result = gameSession.getGlobalRanking(pageable);
+
+        Assertions.assertEquals(expected, result);
+    }
+
+    @Test
+    @Order(29)
+    void GameSessionImpl_getPlayerRanking_PageOfGames() {
+        QuestionServiceImpl questionService = new QuestionServiceImpl(questionRepository);
+        GameSessionImpl gameSession = new GameSessionImpl(gameSessionRepository, questionService);
+
+        Player player = new Player("aeiou", "gmail@gmail.com", "password");
+        PageRequest pageable = PageRequest.of(0, 10);
+        List<GameSession> playerRanking = new ArrayList<>();
+        playerRanking.add(new GameSession(player, null));
+        playerRanking.add(new GameSession(player, null));
+        playerRanking.add(new GameSession(player, null));
+        Page<GameSession> expected = new PageImpl<>(playerRanking);
+
+        Page<GameSession> result = gameSession.getPlayerRanking(pageable, player);
+
+        Assertions.assertEquals(expected, result);
     }
 
 }
