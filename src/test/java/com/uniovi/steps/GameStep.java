@@ -19,6 +19,7 @@ public class GameStep extends Wiq_IntegrationTests {
 
     @When("I press Play")
     public void iPressPlay() {
+        dataService.generateTestQuestions();
         List<WebElement> elems = SeleniumUtils.waitLoadElementsBy(driver, "free", "//*[@href=\"/game\"]", 5);
         elems.get(0).click();
     }
