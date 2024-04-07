@@ -167,11 +167,11 @@ public class QuestionServiceImpl implements QuestionService {
     public List<Question> testQuestions(int num) {
         List<Question> res = new ArrayList<>();
         Category c = new Category("Test category", "Test category");
+        categoryService.addNewCategory(c);
         for (int i = 0; i < num; i++) {
             Question q = new Question();
             q.setStatement("Test question " + i);
             q.setLanguage(LocaleContextHolder.getLocale().getLanguage());
-            categoryService.addNewCategory(c);
             Associations.QuestionsCategory.addCategory(q, c);
             List<Answer> answers = new ArrayList<>();
             for (int j = 0; j < 4; j++) {
