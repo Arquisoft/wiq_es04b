@@ -61,6 +61,9 @@ public class InsertSampleDataService {
 
         if (Arrays.stream(environment.getActiveProfiles()).anyMatch(env -> (env.equalsIgnoreCase("test")))) {
             log.info("Test profile active, skipping sample data insertion");
+            questionRepository.deleteAll();
+            List<Question> questionsTest = questionService.testQuestions(4);
+            questionsTest.forEach(questionService::addNewQuestion);
             return;
         }
 
