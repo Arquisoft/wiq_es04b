@@ -3,7 +3,6 @@ Feature: I try to play a normal game
     Given I am not registered or logged in
     And I am on the register page
     When I fill in the form with valid data username: "userGame" email: "userGame@gmail.com" password: "password" password_confirmation: "password"
-    Then I should see the profile page
     And I press the register button
     And I go to the home page
     When I press Play

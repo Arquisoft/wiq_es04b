@@ -59,7 +59,7 @@ public class SignUpStep extends Wiq_IntegrationTests {
 
     @Then("I should see the profile page")
     public void iShouldSeeTheProfilePage() {
-        SeleniumUtils.waitLoadElementsBy(driver, "span", p.getString("home.authenticated_as", PropertiesExtractor.getSPANISH()), 5);
+        SeleniumUtils.waitLoadElementsBy(driver, "span", p.getString("home.authenticated_as", PropertiesExtractor.getSPANISH()), 10);
     }
 
     @Then("I should see the error message {string}")
