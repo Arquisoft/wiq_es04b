@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.security.Principal;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Controller
 public class GameController {
@@ -149,7 +150,8 @@ public class GameController {
     }
 
     private Player getLoggedInPlayer(Principal principal) {
-        return playerService.getUserByUsername(principal.getName()).get();
+        Optional<Player> player = playerService.getUserByUsername(principal.getName());
+        return player.orElse(null);
     }
 
     /**

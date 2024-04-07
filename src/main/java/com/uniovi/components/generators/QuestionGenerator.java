@@ -10,7 +10,7 @@ import java.util.List;
 public interface QuestionGenerator {
 
     String getQuery();
-    List<Question> getQuestions();
+    List<Question> getQuestions() throws InterruptedException;
 
     Category getCategory();
 

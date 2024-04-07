@@ -59,4 +59,17 @@ public interface PlayerService {
      * @param player The player to generate the API key for
      */
     void generateApiKey(Player player);
+
+    /**
+     * Update the information of a player
+     * @param id The id of the player to update
+     * @param playerDto The new information of the player
+     */
+    void updatePlayer(Long id, PlayerDto playerDto);
+
+    /**
+     * Delete a player from the database
+     * @param id The id of the player to delete
+     */
+    void deletePlayer(Long id);
 }

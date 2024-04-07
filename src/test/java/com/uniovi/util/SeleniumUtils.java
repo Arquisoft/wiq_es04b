@@ -101,7 +101,6 @@ public class SeleniumUtils {
 
 
 	/**
-	 * PROHIBIDO USARLO PARA VERSIÓN FINAL.
 	 * Esperar "segundos" durante la ejecucion del navegador 
 	 * @param driver: apuntando al navegador abierto actualmente.
 	 * @param seconds: Segundos de bloqueo de la ejecución en el navegador.
