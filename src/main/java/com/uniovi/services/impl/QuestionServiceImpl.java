@@ -10,6 +10,7 @@ import com.uniovi.repositories.QuestionRepository;
 import com.uniovi.services.AnswerService;
 import com.uniovi.services.CategoryService;
 import com.uniovi.services.QuestionService;
+import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -28,20 +29,22 @@ import org.springframework.data.domain.Pageable;
 
 @Service
 public class QuestionServiceImpl implements QuestionService {
-
     private final QuestionRepository questionRepository;
     private final CategoryService categoryService;
     private final AnswerService answerService;
-
-    @Autowired
-    private AnswerRepository answerRepository;
+    private final AnswerRepository answerRepository;
+    private final EntityManager entityManager;
 
     private final Random random = new SecureRandom();
 
-    public QuestionServiceImpl(QuestionRepository questionRepository, CategoryService categoryService, AnswerService answerService) {
+    public QuestionServiceImpl(QuestionRepository questionRepository, CategoryService categoryService,
+                               AnswerService answerService, AnswerRepository answerRepository,
+                               EntityManager entityManager) {
         this.questionRepository = questionRepository;
         this.categoryService = categoryService;
         this.answerService = answerService;
+        this.answerRepository = answerRepository;
+        this.entityManager = entityManager;
     }
 
     @Override
@@ -131,6 +134,7 @@ public class QuestionServiceImpl implements QuestionService {
         Optional<Question> q = questionRepository.findById(id);
         if (q.isPresent()) {
             Question question = q.get();
+            entityManager.detach(question);
             question.setStatement(questionDto.getStatement());
             question.setLanguage(questionDto.getLanguage());
             Category category = categoryService.getCategoryByName(questionDto.getCategory().getName());

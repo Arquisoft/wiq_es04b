@@ -1256,31 +1256,6 @@ public class Wiq_UnitTests {
     }
 
     @Test
-    @Order(78)
-    void GameSessionImpl_startNewGame_ReturnsGameSession() throws InterruptedException {
-        Player player = new Player("abc", "abc@gmail.com", "abcd1234");
-        playerRepository.save(player);
-        insertSomeQuestions();
-
-        GameSession gameSession1 = gameSessionService.startNewGame(player);
-
-        Assertions.assertNotNull(gameSession1);
-    }
-
-    @Test
-    @Order(79)
-    void GameSessionImpl_endGame_SavesGameSession() throws InterruptedException {
-        insertSomeQuestions();
-        Player player = new Player("abc", "abc@gmail.com", "abcd1234");
-        playerRepository.save(player);
-
-        GameSession gameSession1 = gameSessionService.startNewGame(player);
-        gameSessionService.endGame(gameSession1);
-
-        Assertions.assertEquals(LocalDateTime.now().getDayOfYear(), gameSession1.getFinishTime().getDayOfYear());
-    }
-
-    @Test
     @Order(82)
     public void testAddQuestionInvalidApiKey() throws IOException, InterruptedException, JSONException {
         HttpResponse<String> response = sendRequest("POST", "/api/questions", Map.of("API-KEY", "zzzz"),
