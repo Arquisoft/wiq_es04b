@@ -37,4 +37,14 @@ public class APIStep extends Wiq_IntegrationTests {
         List<WebElement> elems = SeleniumUtils.waitLoadElementsBy(driver, "free", "//*[@id=\"apiKeyDiv\"]/form/div/div", 5);
         Assertions.assertTrue(elems.size() == 1);
     }
+
+    @And("I reenter the API key page")
+    public void iReenterTheAPIKeyPage() {
+        this.iGoToTheAPIKeyPage();
+    }
+
+    @Then("I should see the API key directly")
+    public void iShouldSeeTheAPIKeyDirectly() {
+        iShouldSeeTheAPIKey();
+    }
 }

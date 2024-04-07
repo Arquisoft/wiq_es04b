@@ -71,5 +71,4 @@ public class SignUpStep extends Wiq_IntegrationTests {
     public void iLogout() {
         SeleniumUtils.waitLoadElementsBy(driver, "free", "//a[contains(@href, 'logout')]", 10).get(0).click();
     }
-
 }
