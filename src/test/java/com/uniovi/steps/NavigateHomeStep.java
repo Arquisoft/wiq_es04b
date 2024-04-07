@@ -68,6 +68,11 @@ public class NavigateHomeStep extends Wiq_IntegrationTests {
         iClickTheLoginButton();
     }
 
+    @And("I go to the home page")
+    public void iGoToTheHomePage() {
+        driver.navigate().to(URL);
+    }
+
     @Then("I should see the title {string}")
     public void i_should_see_the_title(String title) {
         Assertions.assertEquals(title, driver.getTitle());
