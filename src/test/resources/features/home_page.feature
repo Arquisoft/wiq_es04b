@@ -43,3 +43,8 @@ Feature: I enter the webpage without being logged in
         Given I am in the home page
         Given I am not logged in
         Then I should not see the personal ranking button
+
+    Scenario: I try to access a non existent page
+        Given I am in the home page
+        When I try to access a non existent page
+        Then I should see the 404 page

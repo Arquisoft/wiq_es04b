@@ -58,6 +58,11 @@ public class NavigateHomeStep extends Wiq_IntegrationTests {
         elems.get(0).click();
     }
 
+    @When("I try to access a non existent page")
+    public void iTryToAccessANonExistentPage() {
+        driver.navigate().to(URL + "nonexistent");
+    }
+
     @And("I am on the login page")
     public void iAmOnTheLoginPage() {
         iClickTheLoginButton();
@@ -98,5 +103,11 @@ public class NavigateHomeStep extends Wiq_IntegrationTests {
         List<WebElement> elems = SeleniumUtils.waitLoadElementsBy(driver, "free", "//*[@id=\"navbarDropdown2\"]", 5);
         elems.get(0).click();
         SeleniumUtils.waitElementNotPresent(driver, "//*[@id=\"navbarDropdown2\"]/div/a[@href=\"/ranking/playerRanking\"]", 5);
+    }
+
+    @Then("I should see the {int} page")
+    public void iShouldSeeThePage(int errorCode) {
+        List<WebElement> elems = SeleniumUtils.waitLoadElementsBy(driver, "free", "/html/body/div[1]/div[1]/strong", 5);
+        Assertions.assertEquals(elems.get(0).getText(), String.valueOf(errorCode));
     }
 }
