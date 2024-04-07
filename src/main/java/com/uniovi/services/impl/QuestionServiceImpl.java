@@ -5,10 +5,14 @@ import com.uniovi.entities.Answer;
 import com.uniovi.entities.Associations;
 import com.uniovi.entities.Category;
 import com.uniovi.entities.Question;
+import com.uniovi.repositories.AnswerRepository;
 import com.uniovi.repositories.QuestionRepository;
 import com.uniovi.services.AnswerService;
 import com.uniovi.services.CategoryService;
 import com.uniovi.services.QuestionService;
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -25,17 +29,22 @@ import org.springframework.data.domain.Pageable;
 
 @Service
 public class QuestionServiceImpl implements QuestionService {
-
     private final QuestionRepository questionRepository;
     private final CategoryService categoryService;
     private final AnswerService answerService;
+    private final AnswerRepository answerRepository;
+    private final EntityManager entityManager;
 
     private final Random random = new SecureRandom();
 
-    public QuestionServiceImpl(QuestionRepository questionRepository, CategoryService categoryService, AnswerService answerService) {
+    public QuestionServiceImpl(QuestionRepository questionRepository, CategoryService categoryService,
+                               AnswerService answerService, AnswerRepository answerRepository,
+                               EntityManager entityManager) {
         this.questionRepository = questionRepository;
         this.categoryService = categoryService;
         this.answerService = answerService;
+        this.answerRepository = answerRepository;
+        this.entityManager = entityManager;
     }
 
     @Override
@@ -124,6 +133,7 @@ public class QuestionServiceImpl implements QuestionService {
     public void updateQuestion(Long id, QuestionDto questionDto) {
         Optional<Question> q = questionRepository.findById(id);
         if (q.isPresent()) {
+            entityManager.clear();
             Question question = q.get();
             question.setStatement(questionDto.getStatement());
             question.setLanguage(questionDto.getLanguage());
@@ -133,32 +143,29 @@ public class QuestionServiceImpl implements QuestionService {
                 category = categoryService.getCategoryByName(questionDto.getCategory().getName());
             }
 
-            Associations.QuestionAnswers.removeAnswer(question, question.getOptions());
             Associations.QuestionsCategory.removeCategory(question, question.getCategory());
 
-            List<Answer> answers = new ArrayList<>();
             for (int i = 0; i < questionDto.getOptions().size(); i++) {
-                Answer a = new Answer();
+                Answer a = question.getOption(i);
                 a.setText(questionDto.getOptions().get(i).getText());
                 a.setCorrect(questionDto.getOptions().get(i).isCorrect());
-                answers.add(a);
             }
 
-            Associations.QuestionAnswers.addAnswer(question, answers);
             Associations.QuestionsCategory.addCategory(question, category);
-
-            question.setCorrectAnswer(question.getOptions().stream().filter(Answer::isCorrect).findFirst().orElse(null));
             questionRepository.save(question);
         }
     }
 
     @Override
+    @Transactional
     public void deleteQuestion(Long id) {
         Optional<Question> q = questionRepository.findById(id);
         if (q.isPresent()) {
             Question question = q.get();
+            answerRepository.deleteAll(question.getOptions());
             Associations.QuestionAnswers.removeAnswer(question, question.getOptions());
             Associations.QuestionsCategory.removeCategory(question, question.getCategory());
+            q.get().setCorrectAnswer(null);
             questionRepository.delete(question);
         }
     }

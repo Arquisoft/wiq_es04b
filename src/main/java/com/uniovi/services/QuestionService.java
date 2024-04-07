@@ -3,6 +3,7 @@ package com.uniovi.services;
 import com.uniovi.dto.QuestionDto;
 import com.uniovi.entities.Category;
 import com.uniovi.entities.Question;
+import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
