@@ -133,8 +133,8 @@ public class QuestionServiceImpl implements QuestionService {
     public void updateQuestion(Long id, QuestionDto questionDto) {
         Optional<Question> q = questionRepository.findById(id);
         if (q.isPresent()) {
+            entityManager.clear();
             Question question = q.get();
-            entityManager.detach(question);
             question.setStatement(questionDto.getStatement());
             question.setLanguage(questionDto.getLanguage());
             Category category = categoryService.getCategoryByName(questionDto.getCategory().getName());
