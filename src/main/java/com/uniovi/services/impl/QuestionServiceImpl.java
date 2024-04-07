@@ -5,10 +5,13 @@ import com.uniovi.entities.Answer;
 import com.uniovi.entities.Associations;
 import com.uniovi.entities.Category;
 import com.uniovi.entities.Question;
+import com.uniovi.repositories.AnswerRepository;
 import com.uniovi.repositories.QuestionRepository;
 import com.uniovi.services.AnswerService;
 import com.uniovi.services.CategoryService;
 import com.uniovi.services.QuestionService;
+import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -29,6 +32,9 @@ public class QuestionServiceImpl implements QuestionService {
     private final QuestionRepository questionRepository;
     private final CategoryService categoryService;
     private final AnswerService answerService;
+
+    @Autowired
+    private AnswerRepository answerRepository;
 
     private final Random random = new SecureRandom();
 
@@ -153,12 +159,15 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
+    @Transactional
     public void deleteQuestion(Long id) {
         Optional<Question> q = questionRepository.findById(id);
         if (q.isPresent()) {
             Question question = q.get();
+            answerRepository.deleteAll(question.getOptions());
             Associations.QuestionAnswers.removeAnswer(question, question.getOptions());
             Associations.QuestionsCategory.removeCategory(question, question.getCategory());
+            q.get().setCorrectAnswer(null);
             questionRepository.delete(question);
         }
     }

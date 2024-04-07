@@ -28,7 +28,7 @@ public class Answer implements JsonEntity {
     private boolean correct;
 
     @JsonIgnore
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
     private Question question;
 
     public Answer(String text, boolean correct) {
