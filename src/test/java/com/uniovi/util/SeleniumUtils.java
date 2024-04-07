@@ -65,6 +65,14 @@ public class SeleniumUtils {
 		return driver.findElements(By.xpath(xpath));
 	}
 
+	static public void waitElementNotPresent(WebDriver driver, String xpath, int timeout)
+	{
+		Boolean resultado =
+				(new WebDriverWait(driver, Duration.ofSeconds(timeout))).until(ExpectedConditions.invisibilityOfElementLocated(By.xpath(xpath)));
+
+		Assertions.assertTrue(resultado);
+	}
+
 	/**
 	 * Espera por la visibilidad de un elemento/s en la vista actualmente cargandose en driver. Para ello se empleará una consulta xpath 
 	 * según varios criterios..

@@ -102,7 +102,7 @@ public class QuestionServiceImpl implements QuestionService {
         List<Question> res = new ArrayList<>();
         for (int i = 0; i < num; i++) {
             int idx = random.nextInt(allQuestions.size());
-            while (allQuestions.get(idx).hasEmptyOptions()){
+            while (allQuestions.get(idx).hasEmptyOptions() || res.contains(allQuestions.get(idx))){
                 idx = random.nextInt(allQuestions.size());
             }
             res.add(allQuestions.get(idx));
@@ -168,6 +168,32 @@ public class QuestionServiceImpl implements QuestionService {
             q.get().setCorrectAnswer(null);
             questionRepository.delete(question);
         }
+    }
+
+    @Override
+    public List<Question> testQuestions(int num) {
+        List<Question> res = new ArrayList<>();
+        Category c = new Category("Test category", "Test category");
+        categoryService.addNewCategory(c);
+        for (int i = 0; i < num; i++) {
+            Question q = new Question();
+            q.setStatement("Test question " + i);
+            q.setLanguage(LocaleContextHolder.getLocale().getLanguage());
+            Associations.QuestionsCategory.addCategory(q, c);
+            List<Answer> answers = new ArrayList<>();
+            for (int j = 0; j < 4; j++) {
+                Answer a = new Answer();
+                a.setText("Test answer " + j);
+                a.setCorrect(j == 0);
+                if(j==0) q.setCorrectAnswer(a);
+                answerService.addNewAnswer(a);
+                answers.add(a);
+            }
+            Associations.QuestionAnswers.addAnswer(q, answers);
+            addNewQuestion(q);
+            res.add(q);
+        }
+        return res;
     }
 
 }

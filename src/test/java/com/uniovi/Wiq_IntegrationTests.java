@@ -1,6 +1,7 @@
 package com.uniovi;
 
 import com.uniovi.util.FirefoxWebDriver;
+import com.uniovi.util.PropertiesExtractor;
 import io.cucumber.spring.CucumberContextConfiguration;
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.WebDriver;
@@ -16,6 +17,8 @@ import org.springframework.test.context.ActiveProfiles;
 @CucumberContextConfiguration
 public class Wiq_IntegrationTests {
     protected static final String URL = "http://localhost:3000/";
+
+    protected PropertiesExtractor p = new PropertiesExtractor("messages");
 
     protected static WebDriver driver;
 

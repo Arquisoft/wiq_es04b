@@ -87,7 +87,7 @@ public interface QuestionService {
 
     /**
      * Update a question
-     * @param q The question to update
+     * @param id The id of the question to update
      * @param questionDto The new data of the question
      */
     void updateQuestion(Long id, QuestionDto questionDto);
@@ -97,4 +97,12 @@ public interface QuestionService {
      * @param id The id of the question to delete
      */
     void deleteQuestion(Long id);
+
+    /**
+     * Get some test questions
+     *
+     * @param num The number of questions to get
+     * @return The questions selected
+     */
+    List<Question> testQuestions(int num);
 }

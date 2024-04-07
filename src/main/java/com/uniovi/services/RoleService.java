@@ -20,10 +20,4 @@ public interface RoleService {
      * @return The role with the given name
      */
     Role getRole(String name);
-
-    /**
-     * Get all the roles in the database
-     * @return A list with all the roles
-     */
-    List<Role> getRoles();
 }

@@ -68,6 +68,12 @@ public class InsertSampleDataService {
     }
 
     @Transactional
+    public void generateTestQuestions() {
+        questionRepository.deleteAll();
+        questionService.testQuestions(4);
+    }
+
+    @Transactional
     public void generateSampleData() throws InterruptedException {
 
         questionRepository.deleteAll();
