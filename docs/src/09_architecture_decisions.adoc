@@ -7,3 +7,10 @@ The purpose of this section is to create an ordered list of architectural decisi
 
 * https://github.com/Arquisoft/wiq_es04b/wiki/Record-of-architectural-decisions#protection-of-the-master-branch[ADR 01] - Protection of the master branch
 * https://github.com/Arquisoft/wiq_es04b/wiki/Record-of-architectural-decisions#switch-from-javascript-to-java-with-springboot[ADR 02] - Switch from JavaScript to Java with Spring
+* https://github.com/Arquisoft/wiq_es04b/wiki/Record-of-architectural-decisions#mvc-pattern[ADR 03] - MVC Pattern
+* https://github.com/Arquisoft/wiq_es04b/wiki/Record-of-architectural-decisions#hexagonal-architecture[ADR 04] - Hexagonal architecture
+* https://github.com/Arquisoft/wiq_es04b/wiki/Record-of-architectural-decisions#dto-pattern[ADR 05] - DTO Pattern
+* https://github.com/Arquisoft/wiq_es04b/wiki/Record-of-architectural-decisions#mysql-in-production-and-hsqldb-in-local[ADR 06] - MySQL in production and HSQLDB in local
+* https://github.com/Arquisoft/wiq_es04b/wiki/Record-of-architectural-decisions#monolithic-architecture[ADR 07] - Monolithic architecture
+* https://github.com/Arquisoft/wiq_es04b/wiki/Record-of-architectural-decisions#use-of-tbd[ADR 08] - Use of TBD
+* https://github.com/Arquisoft/wiq_es04b/wiki/Record-of-architectural-decisions#questions-refreshing[ADR 09] - Questions refreshing
