@@ -23,13 +23,13 @@ footer {
 
 
 /* Estilo personalizado para el botón */
-.btn-custom, .page-link {
+.btn-custom, .btn-primary, .page-link {
     color: #fff;
     background-color: transparent;
     border: 2px solid #fff;
 }
 
-.btn-custom:hover, .page-link:hover {
+.btn-custom:hover, .btn-primary:hover, .page-link:hover {
     background-color: #fff;
     color: #000;
 }

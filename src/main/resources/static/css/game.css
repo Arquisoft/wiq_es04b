@@ -46,3 +46,14 @@
          font-size: 3em;
      }
 }
+
+.container .btn {
+    color: #fff;
+    background-color: transparent;
+    border: 2px solid #fff;
+}
+
+.container .btn:hover {
+    background-color: #fff;
+    color: #000;
+}
