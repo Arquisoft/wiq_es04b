@@ -23,13 +23,13 @@ footer {
 
 
 /* Estilo personalizado para el botón */
-.btn-custom, .page-link {
+.btn-custom, .btn-primary, .page-link {
     color: #fff;
     background-color: transparent;
     border: 2px solid #fff;
 }
 
-.btn-custom:hover, .page-link:hover {
+.btn-custom:hover, .btn-primary:hover, .page-link:hover {
     background-color: #fff;
     color: #000;
 }
@@ -41,4 +41,25 @@ footer {
 
 .table-hover tbody tr:hover td {
     background: white;
+}
+
+.col-md-12 .display-4 {
+    font-size: 10em;
+}
+
+.col-md-12 .lead, .col-md-12 .btn {
+    font-size: 1.75em;
+}
+
+
+.nav {
+    background-color: transparent !important;
+}
+
+.nav .nav-link {
+    color: white !important; /* Cambia el color del texto del enlace a blanco */
+}
+
+.nav .nav-link:hover {
+    color: rgba(255, 255, 255, 0.7) !important; /* Cambia el color del texto del enlace cuando se pasa el mouse */
 }

@@ -81,13 +81,13 @@ public class GameController {
             || getRemainingTime(gameSession) <= 0) {
             model.addAttribute("correctAnswer", gameSession.getCurrentQuestion().getCorrectAnswer());
             model.addAttribute("messageKey", "timeRunOut.result");
-            model.addAttribute("logoImage", "/images/logo_incorrect.png");
+            model.addAttribute("logoImage", "/images/logo_incorrect.svg");
             gameSession.addAnsweredQuestion(gameSession.getCurrentQuestion());
             gameSession.addQuestion(false, 0);
         }
         else if(questionService.checkAnswer(idQuestion, idAnswer)) {
             model.addAttribute("messageKey", "correctAnswer.result");
-            model.addAttribute("logoImage", "/images/logo_correct.png");
+            model.addAttribute("logoImage", "/images/logo_correct.svg");
 
             if (!gameSession.isAnswered(gameSession.getCurrentQuestion())) {
                 gameSession.addQuestion(true, getRemainingTime(gameSession));
@@ -97,7 +97,7 @@ public class GameController {
         } else {
             model.addAttribute("correctAnswer", gameSession.getCurrentQuestion().getCorrectAnswer());
             model.addAttribute("messageKey", "failedAnswer.result");
-            model.addAttribute("logoImage", "/images/logo_incorrect.png");
+            model.addAttribute("logoImage", "/images/logo_incorrect.svg");
             gameSession.addAnsweredQuestion(gameSession.getCurrentQuestion());
             gameSession.addQuestion(false, 0);
         }

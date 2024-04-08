@@ -1,18 +1,13 @@
 package com.uniovi.controllers;
 
-import com.uniovi.entities.ApiKey;
 import com.uniovi.entities.Player;
 import com.uniovi.services.ApiKeyService;
 import com.uniovi.services.PlayerService;
-import com.uniovi.services.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-
-import java.util.Random;
 
 @Controller
 public class HomeController{

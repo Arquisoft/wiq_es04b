@@ -1,7 +1,6 @@
 package com.uniovi.components;
 
 import com.uniovi.components.generators.QuestionGenerator;
-import com.uniovi.entities.Category;
 import com.uniovi.entities.Question;
 
 import java.util.ArrayList;
