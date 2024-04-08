@@ -33,6 +33,7 @@ class Question {
 class Category {
   - id: Long
   - name: String
+  - description: String
   - questions: Set<Question>
   + toString(): String
   + toJson(): JsonNode
@@ -58,8 +59,16 @@ class GameSession {
   - createdAt: LocalDateTime
   - finishTime: LocalDateTime
   - score: int
+  - answeredQuestions: Set<Question>
+  - questionsToAnswer: List<Question>
+  - currentQuestion: Question
   + addQuestion(correct: boolean): void
+  + addAnsweredQuestion(question: Question): void
+  + isAnswered(question: Question): boolean
+  + getNextQuestion(): Question
   + toJson(): JsonNode
+  + hasQuestionId(idQuestion: Long): boolean
+  + getDuration(): String
 }
 
 class Role {
@@ -90,12 +99,15 @@ class RestApiAccessLog {
     - details: String
 }
 
-Role "*" - "*" Player
-Answer "*" - "1" Question
-ApiKey "1" - "1" Player
-ApiKey "1" - "*" RestApiAccessLog
-Category "1" - "*" Question
-Player "1" - "*" GameSession
+Role "*" -- "*" Player
+Answer "4  " --* "1" Question : Options
+Answer "1 " -- "  1" Question : Correct Answer
+ApiKey "1" --* "1" Player
+ApiKey "1" *-- "*" RestApiAccessLog
+Category "1" -- "*" Question
+Player "1" *-- "*" GameSession
+GameSession "1" -- "*" Question : Answered Questions
+GameSession "1" -- "*" Question : Questions To Answer
 
 @enduml
 ----
