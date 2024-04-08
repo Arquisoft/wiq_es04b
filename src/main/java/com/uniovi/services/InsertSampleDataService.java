@@ -19,8 +19,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -31,22 +33,24 @@ public class InsertSampleDataService {
     private final CategoryService categoryService;
     private final QuestionRepository questionRepository;
     private final GameSessionRepository gameSessionRepository;
+    private Environment environment;
 
-    private Logger log = LoggerFactory.getLogger(InsertSampleDataService.class);;
+    private Logger log = LoggerFactory.getLogger(InsertSampleDataService.class);
 
     public InsertSampleDataService(PlayerService playerService, QuestionService questionService,
                                    CategoryService categoryService, QuestionRepository questionRepository,
-                                   GameSessionRepository gameSessionRepository) {
+                                   GameSessionRepository gameSessionRepository, Environment environment) {
         this.playerService = playerService;
         this.questionService = questionService;
         this.categoryService = categoryService;
         this.questionRepository = questionRepository;
         this.gameSessionRepository = gameSessionRepository;
+        this.environment = environment;
     }
 
     @Transactional
     @EventListener(ApplicationReadyEvent.class) // Uncomment this line to insert sample data on startup
-    public void insertSampleQuestions() {
+    public void insertSampleQuestions() throws InterruptedException, IOException {
         if (!playerService.getUserByEmail("test@test.com").isPresent()) {
             PlayerDto player = new PlayerDto();
             player.setEmail("test@test.com");
@@ -55,6 +59,23 @@ public class InsertSampleDataService {
             player.setRoles(new String[]{"ROLE_USER"});
             playerService.generateApiKey(playerService.addNewPlayer(player));
         }
+
+        if (Arrays.stream(environment.getActiveProfiles()).anyMatch(env -> (env.equalsIgnoreCase("test")))) {
+            log.info("Test profile active, skipping sample data insertion");
+            return;
+        }
+
+        generateSampleData();
+    }
+
+    @Transactional
+    public void generateTestQuestions() {
+        questionRepository.deleteAll();
+        questionService.testQuestions(4);
+    }
+
+    @Transactional
+    public void generateSampleData() throws InterruptedException, IOException {
 
         questionRepository.deleteAll();
 
@@ -73,6 +94,14 @@ public class InsertSampleDataService {
         );
         List<Question> questionsEs = allQuestionGenerator.getQuestions();
         questionsEs.forEach(questionService::addNewQuestion);
+
+        allQuestionGenerator = new MultipleQuestionGenerator(
+                new ContinentQuestionGeneration(categoryService, Question.FRENCH),
+                new CapitalQuestionGenerator(categoryService, Question.FRENCH),
+                new BorderQuestionGenerator(categoryService, Question.FRENCH)
+        );
+        List<Question> questionsFr = allQuestionGenerator.getQuestions();
+        questionsFr.forEach(questionService::addNewQuestion);
 
         log.info("Sample questions inserted");
     }

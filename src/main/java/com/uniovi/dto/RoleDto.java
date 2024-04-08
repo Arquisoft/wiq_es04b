@@ -1,14 +1,12 @@
 package com.uniovi.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.*;
 
 @Getter
-@Setter
 @AllArgsConstructor
-@NoArgsConstructor
 public class RoleDto {
+
+    @Schema(description = "The name of the role", example = "ROLE_USER")
     private String name;
 }

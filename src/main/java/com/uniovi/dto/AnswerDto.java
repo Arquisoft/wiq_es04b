@@ -1,17 +1,18 @@
 package com.uniovi.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.*;
 
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
+@ToString
 public class AnswerDto {
-    private Long id;
+
+    @Schema(description = "The text of the answer", example = "The answer text")
     private String text;
+
+    @Schema(description = "Whether the answer is correct or not", example = "true")
     private boolean correct;
 
 }

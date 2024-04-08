@@ -102,4 +102,38 @@ public class PlayerServiceImpl implements PlayerService {
         System.out.println("Generated API key for " + player.getUsername() + ": " + apiKey.getKeyToken());
         playerRepository.save(player);
     }
+
+    @Override
+    public void updatePlayer(Long id, PlayerDto playerDto) {
+        Optional<Player> player = playerRepository.findById(id);
+        if (player.isEmpty())
+            return;
+
+        Player p = player.get();
+        if (playerDto.getEmail() != null)
+            p.setEmail(playerDto.getEmail());
+        if (playerDto.getUsername() != null)
+            p.setUsername(playerDto.getUsername());
+        if (playerDto.getPassword() != null)
+            p.setPassword(passwordEncoder.encode(playerDto.getPassword()));
+        if (playerDto.getRoles() != null) {
+            p.getRoles().clear();
+            for (String roleStr : playerDto.getRoles()) {
+                Role r = roleService.getRole(roleStr);
+                if (r != null)
+                    Associations.PlayerRole.addRole(p, r);
+                else {
+                    r = roleService.addRole(new RoleDto(roleStr));
+                    Associations.PlayerRole.addRole(p, r);
+                }
+            }
+        }
+
+        playerRepository.save(p);
+    }
+
+    @Override
+    public void deletePlayer(Long id) {
+        playerRepository.deleteById(id);
+    }
 }
