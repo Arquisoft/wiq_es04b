@@ -6,6 +6,8 @@ import com.uniovi.entities.Answer;
 import com.uniovi.entities.Category;
 import com.uniovi.entities.Question;
 import com.uniovi.services.CategoryService;
+
+import java.io.IOException;
 import java.net.URI;
 import java.net.URLEncoder;
 import java.net.http.HttpClient;
@@ -46,10 +48,8 @@ public abstract class AbstractQuestionGenerator implements QuestionGenerator{
         questions.add(question);
     }
 
-    public List<Question> getQuestions() throws InterruptedException {
+    public List<Question> getQuestions() throws InterruptedException, IOException {
         HttpClient client = HttpClient.newHttpClient();
-        try {
-
             String endpointUrl = "https://query.wikidata.org/sparql?query=" +
                     URLEncoder.encode(this.getQuery(), StandardCharsets.UTF_8) +
                     "&format=json";
@@ -76,12 +76,6 @@ public abstract class AbstractQuestionGenerator implements QuestionGenerator{
                 questionGenerator(questionStatement, options, correctAnswer, this.getCategory());
 
             }
-        } catch (InterruptedException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new QuestionGeneratorException("An error occurred while generating questions." + e.getMessage());
-        }
-
         return questions;
     }
 
@@ -90,9 +84,4 @@ public abstract class AbstractQuestionGenerator implements QuestionGenerator{
 
     protected abstract String getQuestionSubject(JsonNode result);
 
-    private static class QuestionGeneratorException extends RuntimeException {
-        public QuestionGeneratorException(String message) {
-            super(message);
-        }
-    }
 }

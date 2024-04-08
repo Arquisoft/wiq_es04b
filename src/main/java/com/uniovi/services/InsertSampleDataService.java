@@ -22,6 +22,7 @@ import org.springframework.context.event.EventListener;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -49,7 +50,7 @@ public class InsertSampleDataService {
 
     @Transactional
     @EventListener(ApplicationReadyEvent.class) // Uncomment this line to insert sample data on startup
-    public void insertSampleQuestions() throws InterruptedException {
+    public void insertSampleQuestions() throws InterruptedException, IOException {
         if (!playerService.getUserByEmail("test@test.com").isPresent()) {
             PlayerDto player = new PlayerDto();
             player.setEmail("test@test.com");
@@ -74,7 +75,7 @@ public class InsertSampleDataService {
     }
 
     @Transactional
-    public void generateSampleData() throws InterruptedException {
+    public void generateSampleData() throws InterruptedException, IOException {
 
         questionRepository.deleteAll();
 
