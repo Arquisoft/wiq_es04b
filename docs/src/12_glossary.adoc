@@ -23,4 +23,5 @@ ifndef::imagesdir[:imagesdir: ../images]
 |RestApiAccessLog  | This entity is used to register the access to the application.
 
 |Associations  | Represents the associations between entities. It has internal classes for each association.
+
 |===
