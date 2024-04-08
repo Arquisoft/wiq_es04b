@@ -28,7 +28,7 @@
     margin-bottom: 10%;
 }
 
-.points {
+.points, .questionCounter {
     font-size: 2em;
     color: white;
 }

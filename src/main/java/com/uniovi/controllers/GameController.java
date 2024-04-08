@@ -149,6 +149,16 @@ public class GameController {
             return "0";
     }
 
+    @GetMapping("/game/currentQuestion")
+    @ResponseBody
+    public String getCurrentQuestion(HttpSession session) {
+        GameSession gameSession = (GameSession) session.getAttribute("gameSession");
+        if (gameSession != null)
+            return String.valueOf(gameSession.getAnsweredQuestions().size()+1);
+        else
+            return "0";
+    }
+
     private Player getLoggedInPlayer(Principal principal) {
         Optional<Player> player = playerService.getUserByUsername(principal.getName());
         return player.orElse(null);

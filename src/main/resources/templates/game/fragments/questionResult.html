@@ -19,6 +19,7 @@
                 let activeTimeout = setTimeout(function () {
                         clearInterval(interval); // Ensure the interval is cleared when the timeout completes
                         $("#gameFrame").load('/game/update');
+                        updateQuestionCounter();
                     }, timeoutPeriod);
 
                 timeoutPeriod = timeoutPeriod - updateInterval * 2; // Adjust the timeout period to account for the update interval
@@ -43,12 +44,24 @@
                     }
                 }
 
+                function updateQuestionCounter() {
+                    $.ajax({
+                        type: "GET",
+                        url: "/game/currentQuestion",
+                        success: function (response) {
+                            if (!isNaN(response))
+                                $("#currentQuestion").text(response);
+                        }
+                    });
+                }
+
                 $("#continueBtn").off('click').on('click', function () {
                     if (activeTimeout) {
                         clearTimeout(activeTimeout);
                         clearInterval(interval);
                     }
                     $("#gameFrame").load("/game/update");
+                    updateQuestionCounter();
                 });
             }
 
