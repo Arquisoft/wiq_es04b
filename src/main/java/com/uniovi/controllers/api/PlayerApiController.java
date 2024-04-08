@@ -11,12 +11,15 @@ import com.uniovi.services.ApiKeyService;
 import com.uniovi.services.PlayerService;
 import com.uniovi.services.RestApiService;
 import com.uniovi.validators.SignUpValidator;
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.servers.Server;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.media.Content;
 import jakarta.servlet.http.HttpServletResponse;
@@ -32,6 +35,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+@OpenAPIDefinition(info = @Info(title = "Wikigame API", version = "1.0", description = "API for managing players and questions\nTo get access, please generate an API key in the webpage"),
+servers = {
+        @Server(url = "https://wikigame.es", description = "Production server"),
+        @Server(url = "http://localhost:8080", description = "Local server"),
+})
 @Tag(name = "Player API", description = "API for managing players")
 @RestController
 public class PlayerApiController {
