@@ -26,6 +26,13 @@ public interface PlayerService {
      */
     List<Player> getUsers();
 
+
+    /**
+     * Get all the players in the database with same multiplayerCode
+     * @return A list with  the players
+     */
+    List<Player> getUsersByMultiplayerCode(int multiplayerCode);
+
     /**
      * Get a player by its id
      * @param id The id of the player

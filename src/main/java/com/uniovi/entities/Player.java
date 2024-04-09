@@ -33,6 +33,9 @@ public class Player implements JsonEntity {
     @NotEmpty
     private String password;
 
+    @Column
+    private Integer multiplayerCode;
+
     @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     private Set<Role> roles = new HashSet<>();
 
@@ -41,6 +44,8 @@ public class Player implements JsonEntity {
 
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "player")
     private ApiKey apiKey;
+
+
 
     // Transient: no se almacena en la base de datos
     @Transient

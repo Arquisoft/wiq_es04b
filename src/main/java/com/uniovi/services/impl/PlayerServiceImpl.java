@@ -72,6 +72,13 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     @Override
+    public List<Player> getUsersByMultiplayerCode(int multiplayerCode) {
+        List<Player> l = new ArrayList<>();
+        playerRepository.findAllByMultiplayerCode(multiplayerCode).forEach(l::add);
+        return l;
+    }
+
+    @Override
     public Optional<Player> getUser(Long id) {
         return playerRepository.findById(id);
     }
@@ -116,6 +123,8 @@ public class PlayerServiceImpl implements PlayerService {
             p.setUsername(playerDto.getUsername());
         if (playerDto.getPassword() != null)
             p.setPassword(passwordEncoder.encode(playerDto.getPassword()));
+        if(playerDto.getMultiplayerCode() != null)
+            p.setMultiplayerCode(playerDto.getMultiplayerCode());
         if (playerDto.getRoles() != null) {
             p.getRoles().clear();
             for (String roleStr : playerDto.getRoles()) {
