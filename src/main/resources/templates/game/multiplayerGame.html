@@ -1,0 +1,26 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head}"></head>
+<body>
+<link th:href="@{/css/game.css}" rel="stylesheet" type="text/css"/>
+<canvas th:replace="~{fragments/background}"></canvas>
+<nav th:replace="~{fragments/nav}"></nav>
+
+<label class="form-label col-sm-10 text-center mb-3" for="code" th:text="#{multi.label}"></label>
+<div class="form-group col-sm-8 mx-auto">
+    <input type="text" class="form-control w-80 mx-auto" id="code" name="code"
+           th:placeholder="#{multi.placeholder}"/>
+    <!--<span class="text-danger" th:if="${#fields.hasErrors('code')}" th:errors="*{email}"></span>-->
+</div>
+
+<p class="display-5 text-center">
+    <span th:text="#{multi.text}"></span>
+</p>
+<button id="createBtn" type="button" class="btn btn-primary btn-block mb-2" th:text="#{multi.create}"></button>
+<button id="playBtn" type="button" class="btn btn-secondary btn-block" th:text="#{index.button}"></button>
+
+
+<footer th:replace="~{fragments/footer}"></footer>
+
+</body>
+</html>

@@ -54,6 +54,11 @@ public class GameController {
         return "game/basicGame";
     }
 
+    @GetMapping("/multiplayerGame")
+    public String getMultyplayerGame(HttpSession session, Model model, Principal principal) {
+       return "game/multiplayerGame";
+    }
+
 
     /**
      * This method is used to check the answer for a specific question
