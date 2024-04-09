@@ -1,5 +1,6 @@
 package com.uniovi.controllers;
 
+import com.uniovi.dto.PlayerDto;
 import com.uniovi.entities.GameSession;
 import com.uniovi.entities.Player;
 import com.uniovi.entities.Question;
@@ -55,8 +56,16 @@ public class GameController {
     }
 
     @GetMapping("/multiplayerGame")
-    public String getMultyplayerGame(HttpSession session, Model model, Principal principal) {
+    public String getMultiplayerGame() {
        return "game/multiplayerGame";
+    }
+
+    @GetMapping("/multiplayerGame/{code}")
+    public String joinMultiplayerGame(@PathVariable String code, HttpSession session, Principal principal) {
+        Optional<Player> player = playerService.getUserByUsername(principal.getName());
+        Player p = player.orElse(null);
+        //playerService.changeMultiplayerCode(code,new PlayerDto());
+        return "game/multiplayerGame";
     }
 
 

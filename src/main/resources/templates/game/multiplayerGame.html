@@ -12,11 +12,17 @@
            th:placeholder="#{multi.placeholder}"/>
     <!--<span class="text-danger" th:if="${#fields.hasErrors('code')}" th:errors="*{email}"></span>-->
 </div>
+<a th:href="@{'/multiplayerGame?parametro=' + ${#ids.seq('code')} }">
+    <button id="joinBtn" type="button" class="btn btn-primary btn-block mb-2" th:text="#{multi.join}"></button>
+    <!--Hay q comprobar q el codigo exista y demás-->
+</a>
 
 <p class="display-5 text-center">
     <span th:text="#{multi.text}"></span>
 </p>
-<button id="createBtn" type="button" class="btn btn-primary btn-block mb-2" th:text="#{multi.create}"></button>
+<a th:href="@{'/tu-endpoint?parametro=valor'}">
+    <button id="createBtn" type="button" class="btn btn-primary btn-block mb-2" th:text="#{multi.create}"></button>
+</a>
 <button id="playBtn" type="button" class="btn btn-secondary btn-block" th:text="#{index.button}"></button>
 
 
