@@ -1,6 +1,5 @@
 package com.uniovi.controllers;
 
-import com.uniovi.dto.PlayerDto;
 import com.uniovi.entities.GameSession;
 import com.uniovi.entities.Player;
 import com.uniovi.entities.Question;
@@ -17,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.security.Principal;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -64,8 +64,20 @@ public class GameController {
     public String joinMultiplayerGame(@PathVariable String code, HttpSession session, Principal principal, Model model) {
         Optional<Player> player = playerService.getUserByUsername(principal.getName());
         Player p = player.orElse(null);
-        playerService.changeMultiplayerCode(p.getId(),code);
+        if(playerService.changeMultiplayerCode(p.getId(),code)){
+            model.addAttribute("multiplayerGameCode",code);
+            session.setAttribute("multiplayerCode",code);
+            return "game/lobby";
+        }
         return "game/multiplayerGame";
+    }
+
+    @GetMapping("/game/lobby")
+    public String createLobby( HttpSession session, Principal principal, Model model) {
+        int code = Integer.parseInt((String)session.getAttribute("multiplayerCode"));
+        List<Player> players=playerService.getUsersByMultiplayerCode(code);
+        model.addAttribute("players",players);
+        return "/game/lobby";
     }
 
 

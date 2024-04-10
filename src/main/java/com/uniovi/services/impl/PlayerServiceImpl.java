@@ -142,15 +142,25 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     @Override
-    public void changeMultiplayerCode(Long id, String code) {
+    public boolean changeMultiplayerCode(Long id, String code) {
         Optional<Player> player = playerRepository.findById(id);
         if (player.isEmpty())
-            return;
+            return false;
 
         Player p = player.get();
-        p.setMultiplayerCode(Integer.parseInt(code));
-        playerRepository.save(p);
-
+        if(true/*existsMultiplayerCode(code)*/){
+            p.setMultiplayerCode(Integer.parseInt(code));
+            playerRepository.save(p);
+            return true;
+        }
+        return false;
+    }
+    /**
+    * A multiplayerCodeExists if there are any player
+     * with same multiplayerCode at the moment of the join
+    * */
+    private boolean existsMultiplayerCode(String code){
+        return ! getUsersByMultiplayerCode(Integer.parseInt(code)).isEmpty();
     }
 
     @Override

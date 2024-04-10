@@ -48,6 +48,7 @@ public class SecurityConfig {
                                 .requestMatchers("/api/**").permitAll()
                                 .requestMatchers("/game/**").authenticated()
                                 .requestMatchers("/multiplayerGame/**").authenticated()
+                                .requestMatchers("/lobby/**").authenticated()
                                 .requestMatchers("/ranking/playerRanking").authenticated()
                                 .requestMatchers("/**").permitAll()
                 ).formLogin(
