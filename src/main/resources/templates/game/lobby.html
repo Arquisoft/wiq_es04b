@@ -1,9 +1,42 @@
 <!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <head th:replace="~{fragments/head}"></head>
 <body>
 <link th:href="@{/css/game.css}" rel="stylesheet" type="text/css"/>
 <canvas th:replace="~{fragments/background}"></canvas>
 <nav th:replace="~{fragments/nav}"></nav>
-<div></div>
+<div class="container">
+    <h2>Jugadores unidos a la partida: <span th:text="${code}"></span> </h2>
+    <h3>Comparte el código de tu partida con tus amigos </h3>
+
+    <ul id="playerList">
+        <li th:each="player : ${players}" th:text="${player.username}"></li>
+    </ul>
+</div>
 <footer th:replace="~{fragments/footer}"></footer>
+
+
+
+<script>
+    $(document).ready(function() {
+        function updatePlayerList() {
+            const code = [[${code}]];
+            $.ajax({
+                url: '/game/lobby/' + code,
+                type: 'GET',
+                dataType: 'json',
+                success: function (response) {
+                    $('#playerList').empty();
+                    response.forEach(function (playerName) {
+                        $('#playerList').append('<li>' + playerName + '</li>');
+                    });
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error al actualizar la lista de jugadores:', error);
+                }
+            });
+        }
+        setInterval(updatePlayerList, 2000);
+    });
+</script>

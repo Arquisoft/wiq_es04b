@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.security.Principal;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -67,16 +68,27 @@ public class GameController {
         if(playerService.changeMultiplayerCode(p.getId(),code)){
             model.addAttribute("multiplayerGameCode",code);
             session.setAttribute("multiplayerCode",code);
-            return "game/lobby";
+            return "redirect:/game/lobby";
         }
         return "game/multiplayerGame";
     }
 
+    @GetMapping("/game/lobby/{code}")
+    @ResponseBody
+    public List<String> updatePlayerList(@PathVariable String code) {
+        List<Player> players = playerService.getUsersByMultiplayerCode(Integer.parseInt(code));
+        List<String> playerNames = new ArrayList<>();
+        for (Player player : players) {
+            playerNames.add(player.getUsername());
+        }
+        return playerNames;
+    }
     @GetMapping("/game/lobby")
-    public String createLobby( HttpSession session, Principal principal, Model model) {
+    public String createLobby( HttpSession session, Model model) {
         int code = Integer.parseInt((String)session.getAttribute("multiplayerCode"));
         List<Player> players=playerService.getUsersByMultiplayerCode(code);
         model.addAttribute("players",players);
+        model.addAttribute("code",code);
         return "/game/lobby";
     }
 
