@@ -148,7 +148,7 @@ public class PlayerServiceImpl implements PlayerService {
             return false;
 
         Player p = player.get();
-        if(true/*existsMultiplayerCode(code)*/){
+        if(existsMultiplayerCode(code)){
             p.setMultiplayerCode(Integer.parseInt(code));
             playerRepository.save(p);
             return true;
@@ -161,6 +161,17 @@ public class PlayerServiceImpl implements PlayerService {
     * */
     private boolean existsMultiplayerCode(String code){
         return ! getUsersByMultiplayerCode(Integer.parseInt(code)).isEmpty();
+    }
+
+    private void createMultiplayerGame(Long id){
+        Optional<Player> player = playerRepository.findById(id);
+        if (player.isEmpty())
+            return;
+
+        Player p = player.get();
+        int code = (int)Math.floor(Math.random()*10000);
+        p.setMultiplayerCode(code);
+        playerRepository.save(p);
     }
 
     @Override

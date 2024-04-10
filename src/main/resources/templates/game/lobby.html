@@ -7,17 +7,14 @@
 <canvas th:replace="~{fragments/background}"></canvas>
 <nav th:replace="~{fragments/nav}"></nav>
 <div class="container">
-    <h2>Jugadores unidos a la partida: <span th:text="${code}"></span> </h2>
-    <h3>Comparte el código de tu partida con tus amigos </h3>
+    <h2 th:text ="#{lobby.info}"> <span th:text="${code}"></span> </h2>
+    <h3 th:text ="#{lobby.friends}"> </h3>
 
     <ul id="playerList">
         <li th:each="player : ${players}" th:text="${player.username}"></li>
     </ul>
 </div>
 <footer th:replace="~{fragments/footer}"></footer>
-
-
-
 <script>
     $(document).ready(function() {
         function updatePlayerList() {

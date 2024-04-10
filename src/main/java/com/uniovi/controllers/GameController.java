@@ -70,7 +70,7 @@ public class GameController {
             session.setAttribute("multiplayerCode",code);
             return "redirect:/game/lobby";
         }
-        return "game/multiplayerGame";
+        return "redirect:/multiplayerGame";
     }
 
     @GetMapping("/game/lobby/{code}")
