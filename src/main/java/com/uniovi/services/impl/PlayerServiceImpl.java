@@ -142,6 +142,18 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     @Override
+    public void changeMultiplayerCode(Long id, String code) {
+        Optional<Player> player = playerRepository.findById(id);
+        if (player.isEmpty())
+            return;
+
+        Player p = player.get();
+        p.setMultiplayerCode(Integer.parseInt(code));
+        playerRepository.save(p);
+
+    }
+
+    @Override
     public void deletePlayer(Long id) {
         playerRepository.deleteById(id);
     }

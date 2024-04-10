@@ -61,10 +61,10 @@ public class GameController {
     }
 
     @GetMapping("/multiplayerGame/{code}")
-    public String joinMultiplayerGame(@PathVariable String code, HttpSession session, Principal principal) {
+    public String joinMultiplayerGame(@PathVariable String code, HttpSession session, Principal principal, Model model) {
         Optional<Player> player = playerService.getUserByUsername(principal.getName());
         Player p = player.orElse(null);
-        //playerService.changeMultiplayerCode(code,new PlayerDto());
+        playerService.changeMultiplayerCode(p.getId(),code);
         return "game/multiplayerGame";
     }
 

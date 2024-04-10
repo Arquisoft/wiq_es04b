@@ -75,6 +75,13 @@ public interface PlayerService {
     void updatePlayer(Long id, PlayerDto playerDto);
 
     /**
+     * Update the multiplayerCode of a player
+     * @param id The id of the player to update
+     * @param code The new multiplayerCode of the player
+     */
+    void changeMultiplayerCode(Long id, String code);
+
+    /**
      * Delete a player from the database
      * @param id The id of the player to delete
      */
