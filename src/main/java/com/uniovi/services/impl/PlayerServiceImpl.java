@@ -120,8 +120,8 @@ public class PlayerServiceImpl implements PlayerService {
             p.setUsername(playerDto.getUsername());
         if (playerDto.getPassword() != null)
             p.setPassword(passwordEncoder.encode(playerDto.getPassword()));
-        if(playerDto.getMultiplayerCode() != null)
-            p.setMultiplayerCode(playerDto.getMultiplayerCode());
+        //if(playerDto.getMultiplayerCode() != null)
+        //   p.setMultiplayerCode(playerDto.getMultiplayerCode());
         if (playerDto.getRoles() != null) {
             p.getRoles().clear();
             for (String roleStr : playerDto.getRoles()) {

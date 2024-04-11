@@ -106,6 +106,13 @@ public class GameController {
         return "/game/lobby";
     }
 
+    @GetMapping("/game/startMultiplayerGame")
+    public String startMultiplayerGame( HttpSession session, Model model) {
+        //La idea seria q dando uno al boton de empezar empezasen todos
+        return "/game/lobby";
+    }
+
+
 
     /**
      * This method is used to check the answer for a specific question
@@ -163,6 +170,13 @@ public class GameController {
     public String updateGame(Model model, HttpSession session) {
         GameSession gameSession = (GameSession) session.getAttribute("gameSession");
         Question nextQuestion = gameSession.getCurrentQuestion();
+        if(nextQuestion == null && session.getAttribute("multiplayerCode") !=null){
+            gameSessionService.endGame(gameSession);
+            session.removeAttribute("gameSession");
+            model.addAttribute("score", gameSession.getScore());
+            model.addAttribute("multiplayerCode",session.getAttribute("multiplayerCode"));
+            return "game/fragments/multiFinished";
+        }
         if (nextQuestion == null) {
             gameSessionService.endGame(gameSession);
             session.removeAttribute("gameSession");
