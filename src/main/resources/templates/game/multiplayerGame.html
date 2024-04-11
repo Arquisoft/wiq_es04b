@@ -15,16 +15,15 @@
 
 </div>
 <button id="joinBtn" type="submit" class="btn btn-primary btn-block mb-2" th:text="#{multi.join}" onclick="joinGame()" disabled></button>
-<!--Hay q comprobar q el codigo exista y demás-->
-
+<!--Hay q comprobar q el codigo exista y demás
+<span class="text-danger" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></span>-->
 
 <p class="display-5 text-center">
     <span th:text="#{multi.text}"></span>
 </p>
-<a th:href="@{'/multiplayerGame?parametro=valor'}">
+<a th:href="@{'/multiplayerGame/createGame'}">
     <button id="createBtn" type="button" class="btn btn-primary btn-block mb-2" th:text="#{multi.create}"></button>
 </a>
-<button id="playBtn" type="button" class="btn btn-secondary btn-block" th:text="#{index.button}"></button>
 
 
 <footer th:replace="~{fragments/footer}"></footer>

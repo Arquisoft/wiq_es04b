@@ -58,7 +58,10 @@ public class GameController {
 
     @GetMapping("/multiplayerGame")
     public String getMultiplayerGame() {
-       return "game/multiplayerGame";
+        //EL elminar el multiplaterCode del jugador se puede hacer cuando comienze el proximo
+        //juego con amigos o cuando acaba la partida, lo suyo seria cuando acabe
+        //ya mirare como
+        return "game/multiplayerGame";
     }
 
     @GetMapping("/multiplayerGame/{code}")
@@ -69,8 +72,19 @@ public class GameController {
             model.addAttribute("multiplayerGameCode",code);
             session.setAttribute("multiplayerCode",code);
             return "redirect:/game/lobby";
+        } else {
+            //Hay q tratarlo como como se hace en sinUp, hacienado validate y tal
+            return "redirect:/multiplayerGame";
         }
-        return "redirect:/multiplayerGame";
+    }
+
+    @GetMapping("/multiplayerGame/createGame")
+    public String createMultiplayerGame(HttpSession session, Principal principal, Model model) {
+        Optional<Player> player = playerService.getUserByUsername(principal.getName());
+        Player p = player.orElse(null);
+        String code=""+playerService.createMultiplayerGame(p.getId());
+        session.setAttribute("multiplayerCode",code);
+        return "redirect:/game/lobby";
     }
 
     @GetMapping("/game/lobby/{code}")
@@ -88,7 +102,7 @@ public class GameController {
         int code = Integer.parseInt((String)session.getAttribute("multiplayerCode"));
         List<Player> players=playerService.getUsersByMultiplayerCode(code);
         model.addAttribute("players",players);
-        model.addAttribute("code",code);
+        model.addAttribute("code",session.getAttribute("multiplayerCode"));
         return "/game/lobby";
     }
 

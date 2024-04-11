@@ -81,6 +81,8 @@ public interface PlayerService {
      */
     boolean changeMultiplayerCode(Long id, String code);
 
+    int createMultiplayerGame(Long id);
+
     /**
      * Delete a player from the database
      * @param id The id of the player to delete

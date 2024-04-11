@@ -7,8 +7,10 @@
 <canvas th:replace="~{fragments/background}"></canvas>
 <nav th:replace="~{fragments/nav}"></nav>
 <div class="container">
-    <h2 th:text ="#{lobby.info}"> <span th:text="${code}"></span> </h2>
-    <h3 th:text ="#{lobby.friends}"> </h3>
+    <h2 th:text ="#{lobby.friends}">  </h2>
+    <p th:text="${code}"></p>
+
+    <h3 th:text ="#{lobby.info}"> </h3>
 
     <ul id="playerList">
         <li th:each="player : ${players}" th:text="${player.username}"></li>

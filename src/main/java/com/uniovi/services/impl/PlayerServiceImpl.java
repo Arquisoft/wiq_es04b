@@ -6,16 +6,13 @@ import com.uniovi.entities.ApiKey;
 import com.uniovi.entities.Associations;
 import com.uniovi.entities.Player;
 import com.uniovi.repositories.PlayerRepository;
-import com.uniovi.repositories.RoleRepository;
 import com.uniovi.services.PlayerService;
 import com.uniovi.services.RoleService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.uniovi.entities.Role;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -162,16 +159,17 @@ public class PlayerServiceImpl implements PlayerService {
     private boolean existsMultiplayerCode(String code){
         return ! getUsersByMultiplayerCode(Integer.parseInt(code)).isEmpty();
     }
-
-    private void createMultiplayerGame(Long id){
+    @Override
+    public int createMultiplayerGame(Long id){
         Optional<Player> player = playerRepository.findById(id);
         if (player.isEmpty())
-            return;
+            return -1;
 
         Player p = player.get();
         int code = (int)Math.floor(Math.random()*10000);
         p.setMultiplayerCode(code);
         playerRepository.save(p);
+        return code;
     }
 
     @Override
