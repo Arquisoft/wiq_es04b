@@ -16,9 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.security.Principal;
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Controller
 public class GameController {
@@ -42,6 +40,7 @@ public class GameController {
     @GetMapping("/game")
     public String getGame(HttpSession session, Model model, Principal principal) {
         GameSession gameSession = (GameSession) session.getAttribute("gameSession");
+
         if (gameSession != null) {
             if (checkUpdateGameSession(gameSession, session)) {
                 return "game/fragments/gameFinished";
@@ -49,6 +48,7 @@ public class GameController {
         } else {
             gameSession = gameSessionService.startNewGame(getLoggedInPlayer(principal));
             session.setAttribute("gameSession", gameSession);
+
         }
 
         model.addAttribute("question", gameSession.getCurrentQuestion());
@@ -87,6 +87,43 @@ public class GameController {
         return "redirect:/game/lobby";
     }
 
+    @GetMapping("/multiplayerGame/finishedGame")
+    public String goToFinishedLobby(HttpSession session,Principal principal) {
+        Optional<Player> player = playerService.getUserByUsername(principal.getName());
+        Player p = player.orElse(null);
+        GameSession gameSession = (GameSession) session.getAttribute("gameSession");
+        playerService.setScoreMultiplayerCode(p.getId(),""+gameSession.getScore());
+        return "redirect:/game/multiFinished";
+    }
+
+    @GetMapping("/game/multiFinished")
+    public String createFinishedLobby( HttpSession session, Model model) {
+        int code = Integer.parseInt((String)session.getAttribute("multiplayerCode"));
+        List<Player> players=playerService.getUsersByMultiplayerCode(code);
+        model.addAttribute("players",players);
+        model.addAttribute("code",session.getAttribute("multiplayerCode"));
+        session.removeAttribute("gameSession");
+        return "/game/multiFinished";
+    }
+
+    @GetMapping("/game/multiFinished/{code}")
+    @ResponseBody
+    public Map<String,String> updateFinishedGame(@PathVariable String code, HttpSession session, Principal principal) {
+        List<Player> players = playerService.getUsersByMultiplayerCode(Integer.parseInt(code));
+        Map<String, String> playerInfo = new HashMap<>();
+        for (Player player : players) {
+            String playerName = player.getUsername();
+            String playerScore = player.getScoreMultiplayerCode();
+            if(playerScore==null){
+                playerScore="N/A";
+            }
+            playerInfo.put(playerName, playerScore);
+        }
+        return playerInfo;
+    }
+
+
+
     @GetMapping("/game/lobby/{code}")
     @ResponseBody
     public List<String> updatePlayerList(@PathVariable String code) {
@@ -111,6 +148,8 @@ public class GameController {
         //La idea seria q dando uno al boton de empezar empezasen todos
         return "/game/lobby";
     }
+
+
 
 
 
@@ -170,12 +209,9 @@ public class GameController {
     public String updateGame(Model model, HttpSession session) {
         GameSession gameSession = (GameSession) session.getAttribute("gameSession");
         Question nextQuestion = gameSession.getCurrentQuestion();
-        if(nextQuestion == null && session.getAttribute("multiplayerCode") !=null){
+        if(nextQuestion == null && gameSession.getPlayer().getMultiplayerCode()!=null/*session.getAttribute("multiplayerCode") !=null*/){
             gameSessionService.endGame(gameSession);
-            session.removeAttribute("gameSession");
-            model.addAttribute("score", gameSession.getScore());
-            model.addAttribute("multiplayerCode",session.getAttribute("multiplayerCode"));
-            return "game/fragments/multiFinished";
+            return "/game/multiFinished";
         }
         if (nextQuestion == null) {
             gameSessionService.endGame(gameSession);

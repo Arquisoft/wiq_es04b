@@ -81,7 +81,13 @@ public interface PlayerService {
      */
     boolean changeMultiplayerCode(Long id, String code);
 
+    String getScoreMultiplayerCode(Long id);
+
+    void setScoreMultiplayerCode(Long id, String score);
+
     int createMultiplayerGame(Long id);
+
+    void deleteMultiplayerCode(Long id);
 
     /**
      * Delete a player from the database

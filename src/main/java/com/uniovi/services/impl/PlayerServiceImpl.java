@@ -152,6 +152,25 @@ public class PlayerServiceImpl implements PlayerService {
         }
         return false;
     }
+    @Override
+    public String getScoreMultiplayerCode(Long id) {
+        Optional<Player> player = playerRepository.findById(id);
+        if (player.isEmpty())
+            return "";
+
+        return player.get().getScoreMultiplayerCode();
+    }
+
+    @Override
+    public void setScoreMultiplayerCode(Long id, String score) {
+        Optional<Player> player = playerRepository.findById(id);
+        if (player.isEmpty())
+            return;
+
+        Player p =player.get();
+        p.setScoreMultiplayerCode(score);
+        playerRepository.save(p);
+    }
     /**
     * A multiplayerCodeExists if there are any player
      * with same multiplayerCode at the moment of the join
@@ -170,6 +189,17 @@ public class PlayerServiceImpl implements PlayerService {
         p.setMultiplayerCode(code);
         playerRepository.save(p);
         return code;
+    }
+
+    @Override
+    public void deleteMultiplayerCode(Long id){
+        Optional<Player> player = playerRepository.findById(id);
+        if (player.isEmpty())
+            return;
+
+        Player p = player.get();
+        p.setMultiplayerCode(null);
+        playerRepository.save(p);
     }
 
     @Override
