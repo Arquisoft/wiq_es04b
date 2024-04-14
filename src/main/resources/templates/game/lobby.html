@@ -16,7 +16,7 @@
         <li th:each="player : ${players}" th:text="${player.username}"></li>
     </ul>
 </div>
-<a th:href="@{'/game'}">
+<a th:href="@{'/startMultiplayerGame'}">
     <button id="startBtn" type="button" class="btn btn-primary btn-block mb-2" th:text="#{lobby.start}"></button>
 </a>
 <footer th:replace="~{fragments/footer}"></footer>

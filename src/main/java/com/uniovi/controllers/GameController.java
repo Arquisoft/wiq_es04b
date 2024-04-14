@@ -40,13 +40,13 @@ public class GameController {
     @GetMapping("/game")
     public String getGame(HttpSession session, Model model, Principal principal) {
         GameSession gameSession = (GameSession) session.getAttribute("gameSession");
-
         if (gameSession != null) {
             if (checkUpdateGameSession(gameSession, session)) {
                 return "game/fragments/gameFinished";
             }
         } else {
             gameSession = gameSessionService.startNewGame(getLoggedInPlayer(principal));
+            playerService.deleteMultiplayerCode(gameSession.getPlayer().getId());
             session.setAttribute("gameSession", gameSession);
 
         }
@@ -62,6 +62,26 @@ public class GameController {
         //juego con amigos o cuando acaba la partida, lo suyo seria cuando acabe
         //ya mirare como
         return "game/multiplayerGame";
+    }
+
+    @GetMapping("/startMultiplayerGame")
+    public String getMultiplayerGame(HttpSession session, Model model, Principal principal) {
+        GameSession gameSession = (GameSession) session.getAttribute("gameSession");
+
+        if (gameSession != null) {
+            if (checkUpdateGameSession(gameSession, session)) {
+                return "game/fragments/gameFinished";
+            }
+        } else {
+            gameSession = gameSessionService.startNewMultiplayerGame(getLoggedInPlayer(principal),
+                    playerService.getUserByUsername(principal.getName()).get().getMultiplayerCode());
+            session.setAttribute("gameSession", gameSession);
+
+        }
+
+        model.addAttribute("question", gameSession.getCurrentQuestion());
+        model.addAttribute("questionDuration", getRemainingTime(gameSession));
+        return "game/basicGame";
     }
 
     @GetMapping("/multiplayerGame/{code}")
