@@ -40,11 +40,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     private static final Map.Entry<String, String>[] CATEGORIES = new AbstractMap.SimpleEntry[] {
-            new AbstractMap.SimpleEntry<>("Geography", "Questions about geography"),
-            new AbstractMap.SimpleEntry<>("History", "Questions about history"),
-            new AbstractMap.SimpleEntry<>("Science", "Questions about science"),
-            new AbstractMap.SimpleEntry<>("Art", "Questions about art"),
-            new AbstractMap.SimpleEntry<>("Movie", "Questions about movies")
+            new AbstractMap.SimpleEntry<>("Geography", "Questions about geography")
     };
 
     @PostConstruct
