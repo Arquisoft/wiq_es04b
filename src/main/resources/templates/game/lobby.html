@@ -3,23 +3,26 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <head th:replace="~{fragments/head}"></head>
 <body>
-<link th:href="@{/css/game.css}" rel="stylesheet" type="text/css"/>
+<link th:href="@{/css/multiplayer.css}" rel="stylesheet" type="text/css"/>
 <canvas th:replace="~{fragments/background}"></canvas>
 <nav th:replace="~{fragments/nav}"></nav>
-<div class="container">
+
+<div class="container" style="text-align: center" >
     <h2 th:text ="#{lobby.friends}">  </h2>
-    <p th:text="${code}"></p>
+    <code id="lobbyCode" th:text="${code}"></code>
+    <button id="copyBtn" type="button" class="btn btn-custom btn-block mb-2" onclick="copyCodeToClipboard()" th:text="#{multi.copyCode}"></button>
 
-    <h3 th:text ="#{lobby.info}"> </h3>
-
+    <h3 id="lobbyInfo" th:text ="#{lobby.info}"> </h3>
     <ul id="playerList">
         <li th:each="player : ${players}" th:text="${player.username}"></li>
     </ul>
+    <a th:href="@{'/startMultiplayerGame'}">
+        <button id="startBtn" type="button" class="btn btn-custom btn-block mb-2" th:text="#{lobby.start}"></button>
+    </a>
 </div>
-<a th:href="@{'/startMultiplayerGame'}">
-    <button id="startBtn" type="button" class="btn btn-primary btn-block mb-2" th:text="#{lobby.start}"></button>
-</a>
+
 <footer th:replace="~{fragments/footer}"></footer>
+
 <script>
     $(document).ready(function() {
         function updatePlayerList() {
@@ -41,4 +44,16 @@
         }
         setInterval(updatePlayerList, 2000);
     });
+
+    function copyCodeToClipboard() {
+        const codeElement = document.getElementById('lobbyCode');
+        const codeText = codeElement.innerText;
+
+        navigator.clipboard.writeText(codeText)
+            .then(() => {
+            })
+            .catch(err => {
+                console.error('Error al copiar el código al portapapeles: ', err);
+            });
+    }
 </script>
