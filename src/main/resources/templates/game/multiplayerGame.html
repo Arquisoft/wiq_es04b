@@ -2,28 +2,30 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{fragments/head}"></head>
 <body>
-<link th:href="@{/css/game.css}" rel="stylesheet" type="text/css"/>
+<link th:href="@{/css/multiplayer.css}" rel="stylesheet" type="text/css"/>
 <canvas th:replace="~{fragments/background}"></canvas>
 <nav th:replace="~{fragments/nav}"></nav>
 
-<label class="form-label col-sm-10 text-center mb-3" for="code" th:text="#{multi.label}"></label>
-<div class="form-group col-sm-8 mx-auto">
-    <input type="text" class="form-control w-80 mx-auto" id="code" name="code"
-           th:placeholder="#{multi.placeholder}" oninput="toggleJoinButton()"/>
-    <!--<span class="text-danger" th:if="${#fields.hasErrors('code')}" th:errors="*{email}"></span>-->
-    <p id="error-msg"  class="text-danger" style="display: none;" th:text="#{multi.onlyNumber}"></p>
+<div class="container" style="text-align: center">
+    <label id="label-code" class="form-label col-sm-10 text-center mb-3" for="code" th:text="#{multi.label}"></label>
+    <div class="form-group col-sm-8 mx-auto">
+        <input type="text" class="form-control w-80 mx-auto" id="code" name="code"
+               th:placeholder="#{multi.placeholder}" oninput="toggleJoinButton()" style="text-align: center"/>
+        <!--<span class="text-danger" th:if="${#fields.hasErrors('code')}" th:errors="*{email}"></span>-->
+        <p id="error-msg"  class="text-danger" style="display: none;" th:text="#{multi.onlyNumber}"></p>
 
+    </div>
+    <button id="joinBtn" type="submit" class="btn btn-custom btn-block mb-2" th:text="#{multi.join}" onclick="joinGame()" disabled></button>
+    <!--Hay q comprobar q el codigo exista y demás
+    <span class="text-danger" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></span>-->
+
+    <p class="display-5 text-center">
+        <span th:text="#{multi.text}"></span>
+    </p>
+    <a th:href="@{'/multiplayerGame/createGame'}">
+        <button id="createBtn" type="button" class="btn btn-custom btn-block mb-2" th:text="#{multi.create}"></button>
+    </a>
 </div>
-<button id="joinBtn" type="submit" class="btn btn-primary btn-block mb-2" th:text="#{multi.join}" onclick="joinGame()" disabled></button>
-<!--Hay q comprobar q el codigo exista y demás
-<span class="text-danger" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></span>-->
-
-<p class="display-5 text-center">
-    <span th:text="#{multi.text}"></span>
-</p>
-<a th:href="@{'/multiplayerGame/createGame'}">
-    <button id="createBtn" type="button" class="btn btn-primary btn-block mb-2" th:text="#{multi.create}"></button>
-</a>
 
 
 <footer th:replace="~{fragments/footer}"></footer>
