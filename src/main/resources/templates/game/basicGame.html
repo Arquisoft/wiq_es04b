@@ -14,7 +14,7 @@
     <b id="questionNumber" th:inline="text">
         <span id="currentQuestion" th:text="${session.gameSession.answeredQuestions.size()+1}"></span>
         /
-        <span id="totalQuestions" th:text="${session.gameSession.questionsToAnswer.size()}"></span>
+        <span id="totalQuestions" th:text="${session.gameSession.questionsToAnswer.size() + session.gameSession.answeredQuestions.size()}"></span>
     </b>
 </p>
 <div id="gameFrame" th:replace="~{game/fragments/gameFrame}"></div>
