@@ -42,15 +42,22 @@
     function toggleJoinButton() {
         var codeInput = document.getElementById("code");
         var joinBtn = document.getElementById("joinBtn");
+        var errorMsg = document.getElementById("error-msg");
+
+        if (codeInput.value.trim() === "") {
+            joinBtn.disabled = true;
+            errorMsg.style.display = "none";
+            return;
+        }
 
         var containsOnlyNumbers = /^[0-9]+$/.test(codeInput.value);
 
         if (containsOnlyNumbers) {
             joinBtn.disabled = false;
-            document.getElementById("error-msg").style.display = "none";
+            errorMsg.style.display = "none";
         } else {
             joinBtn.disabled = true;
-            document.getElementById("error-msg").style.display = "block";
+            errorMsg.style.display = "block";
         }
     }
 </script>
