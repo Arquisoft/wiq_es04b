@@ -8,7 +8,5 @@ scrape_configs:
     scrape_timeout: 1s
     metrics_path: '/actuator/prometheus'
     scheme: https
-    tls_config:
-      insecure_skip_verify: true
     static_configs:
-      - targets: [ 'wiq_es04b:443' ]
+      - targets: [ 'wikigame.es:443' ]
