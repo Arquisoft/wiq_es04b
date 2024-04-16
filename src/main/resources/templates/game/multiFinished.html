@@ -11,6 +11,10 @@
         <li th:each="player : ${players}"></li>
     </ul>
 
+    <a th:href="@{'/multiplayerGame/endGame/' + ${code}}">
+        <button id="createBtn" type="button" class="btn btn-custom btn-block mb-2">Continuar</button>
+    </a>
+
     <script>
         $(document).ready(function () {
             $(".points").remove();

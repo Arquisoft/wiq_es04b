@@ -148,6 +148,15 @@ public class GameController {
         return playerInfo;
     }
 
+//    @GetMapping("/multiplayerGame/endGame/{code}")
+//    public String endMultiplayerGame(@PathVariable String code) {
+//        List<Player> players = playerService.getUsersByMultiplayerCode(Integer.parseInt(code));
+//        for (Player player : players) {
+//            player.setScoreMultiplayerCode(null);
+//        }
+//        return "redirect:/index.html";
+//    }
+
 
 
     @GetMapping("/game/lobby/{code}")
@@ -232,7 +241,7 @@ public class GameController {
     }
 
     @GetMapping("/game/update")
-    public String updateGame(Model model, HttpSession session) {
+    public String updateGame(Model model, HttpSession session, Principal principal) {
         GameSession gameSession = (GameSession) session.getAttribute("gameSession");
         Question nextQuestion = gameSession.getCurrentQuestion();
         if(nextQuestion == null && gameSession.getPlayer().getMultiplayerCode()!=null/*session.getAttribute("multiplayerCode") !=null*/){
@@ -243,6 +252,10 @@ public class GameController {
             model.addAttribute("players",players);
             model.addAttribute("code",session.getAttribute("multiplayerCode"));
             session.removeAttribute("gameSession");
+
+            Optional<Player> player = playerService.getUserByUsername(principal.getName());
+            Player p = player.orElse(null);
+            playerService.setScoreMultiplayerCode(p.getId(),""+gameSession.getScore());
 
             return "game/multiFinished";
         }
