@@ -231,7 +231,7 @@ public class GameController {
         Question nextQuestion = gameSession.getCurrentQuestion();
         if(nextQuestion == null && gameSession.getPlayer().getMultiplayerCode()!=null/*session.getAttribute("multiplayerCode") !=null*/){
             gameSessionService.endGame(gameSession);
-            return "/game/multiFinished";
+            return "redirect:/game/multiFinished";
         }
         if (nextQuestion == null) {
             gameSessionService.endGame(gameSession);
