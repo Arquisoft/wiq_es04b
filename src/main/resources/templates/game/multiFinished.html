@@ -1,47 +1,42 @@
-<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<head th:replace="~{fragments/head}"></head>
-<body>
 <link th:href="@{/css/multiplayer.css}" rel="stylesheet" type="text/css"/>
-<canvas th:replace="~{fragments/background}"></canvas>
-<nav th:replace="~{fragments/nav}"></nav>
-
 <div class="container" style="text-align: center">
-    <h2 th:text ="#{multi.code}">  </h2>
+
+    <h2 id="finishedGame" th:text ="#{multi.finished}">  </h2>
+
+    <h3 th:text ="#{multi.code}">  </h3>
     <code id="lobbyCode" th:text="${code}"></code>
 
-    <h3 th:text ="#{lobby.info}"> </h3>
+    <h3 id="multiPoints" th:text ="#{multi.points}"> </h3>
     <ul id="playerList">
         <li th:each="player : ${players}"></li>
     </ul>
 
-    <a th:href="@{'/multiplayerGame/finishedGame'}">
-        <button id="createBtn" type="button" class="btn btn-primary btn-block mb-2" th:text="#{multi.results}"></button>
-    </a>
+    <script>
+        $(document).ready(function () {
+            $(".points").remove();
+            $(".questionCounter").remove();
+        });
+
+        $(document).ready(function() {
+            function updatePlayerList() {
+                const code = [[${code}]];
+                $.ajax({
+                    url: '/game/multiFinished/' + code,
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (response) {
+                        $('#playerList').empty();
+                        $.each(response, function(playerName, playerPoints) {
+                            $('#playerList').append('<li><span class="playerName">' + playerName + '</span>: <span class="playerStatus">' + playerPoints + '</span></li>');
+                        });
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error al actualizar la lista de jugadores:', error);
+                    }
+                });
+            }
+            setInterval(updatePlayerList, 1000);
+        });
+    </script>
+
 </div>
-
-<footer th:replace="~{fragments/footer}"></footer>
-
-<script>
-    $(document).ready(function() {
-        function updatePlayerList() {
-            const code = [[${code}]];
-            $.ajax({
-                url: '/game/multiFinished/' + code,
-                type: 'GET',
-                dataType: 'json',
-                success: function (response) {
-                    $('#playerList').empty();
-                    $.each(response, function(playerName, playerPoints) {
-                        $('#playerList').append('<li><span class="playerName">' + playerName + '</span>: <span class="playerStatus">' + playerPoints + '</span></li>');
-                    });
-                },
-                error: function (xhr, status, error) {
-                    console.error('Error al actualizar la lista de jugadores:', error);
-                }
-            });
-        }
-        setInterval(updatePlayerList, 1000);
-    });
-</script>

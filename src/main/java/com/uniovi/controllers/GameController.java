@@ -56,32 +56,15 @@ public class GameController {
         return "game/basicGame";
     }
 
+
+
+
     @GetMapping("/multiplayerGame")
     public String getMultiplayerGame() {
         //EL elminar el multiplaterCode del jugador se puede hacer cuando comienze el proximo
         //juego con amigos o cuando acaba la partida, lo suyo seria cuando acabe
         //ya mirare como
         return "game/multiplayerGame";
-    }
-
-    @GetMapping("/startMultiplayerGame")
-    public String getMultiplayerGame(HttpSession session, Model model, Principal principal) {
-        GameSession gameSession = (GameSession) session.getAttribute("gameSession");
-
-        if (gameSession != null) {
-            if (checkUpdateGameSession(gameSession, session)) {
-                return "game/fragments/gameFinished";
-            }
-        } else {
-            gameSession = gameSessionService.startNewMultiplayerGame(getLoggedInPlayer(principal),
-                    playerService.getUserByUsername(principal.getName()).get().getMultiplayerCode());
-            session.setAttribute("gameSession", gameSession);
-
-        }
-
-        model.addAttribute("question", gameSession.getCurrentQuestion());
-        model.addAttribute("questionDuration", getRemainingTime(gameSession));
-        return "game/basicGame";
     }
 
     @GetMapping("/multiplayerGame/{code}")
@@ -107,24 +90,47 @@ public class GameController {
         return "redirect:/game/lobby";
     }
 
-    @GetMapping("/multiplayerGame/finishedGame")
-    public String goToFinishedLobby(HttpSession session,Principal principal) {
-        Optional<Player> player = playerService.getUserByUsername(principal.getName());
-        Player p = player.orElse(null);
+    @GetMapping("/startMultiplayerGame")
+    public String startMultiplayerGame(HttpSession session, Model model, Principal principal) {
         GameSession gameSession = (GameSession) session.getAttribute("gameSession");
-        playerService.setScoreMultiplayerCode(p.getId(),""+gameSession.getScore());
-        return "redirect:/game/multiFinished";
+
+        if (gameSession != null) {
+            if (checkUpdateGameSession(gameSession, session)) {
+                return "game/fragments/gameFinished";
+            }
+        } else {
+            gameSession = gameSessionService.startNewMultiplayerGame(getLoggedInPlayer(principal),
+                    playerService.getUserByUsername(principal.getName()).get().getMultiplayerCode());
+            session.setAttribute("gameSession", gameSession);
+
+        }
+
+        model.addAttribute("question", gameSession.getCurrentQuestion());
+        model.addAttribute("questionDuration", getRemainingTime(gameSession));
+        return "game/basicGame";
     }
 
-    @GetMapping("/game/multiFinished")
-    public String createFinishedLobby( HttpSession session, Model model) {
-        int code = Integer.parseInt((String)session.getAttribute("multiplayerCode"));
-        List<Player> players=playerService.getUsersByMultiplayerCode(code);
-        model.addAttribute("players",players);
-        model.addAttribute("code",session.getAttribute("multiplayerCode"));
-        session.removeAttribute("gameSession");
-        return "/game/multiFinished";
-    }
+//    @GetMapping("/games/multiFinished")
+//    public String createFinishedLobby( HttpSession session, Model model) {
+//        int code = Integer.parseInt((String)session.getAttribute("multiplayerCode"));
+//        List<Player> players=playerService.getUsersByMultiplayerCode(code);
+//        model.addAttribute("players",players);
+//        model.addAttribute("code",session.getAttribute("multiplayerCode"));
+//        session.removeAttribute("gameSession");
+//        return "/game/multiFinished";
+//    }
+
+
+//    @GetMapping("/multiplayerGame/finishedGame")
+//    public String goToFinishedLobby(HttpSession session,Principal principal) {
+//        Optional<Player> player = playerService.getUserByUsername(principal.getName());
+//        Player p = player.orElse(null);
+//        GameSession gameSession = (GameSession) session.getAttribute("gameSession");
+//        playerService.setScoreMultiplayerCode(p.getId(),""+gameSession.getScore());
+//        return "redirect:/game/multiFinished";
+//    }
+//
+
 
     @GetMapping("/game/multiFinished/{code}")
     @ResponseBody
@@ -231,7 +237,14 @@ public class GameController {
         Question nextQuestion = gameSession.getCurrentQuestion();
         if(nextQuestion == null && gameSession.getPlayer().getMultiplayerCode()!=null/*session.getAttribute("multiplayerCode") !=null*/){
             gameSessionService.endGame(gameSession);
-            return "redirect:/game/multiFinished";
+
+            int code = Integer.parseInt((String)session.getAttribute("multiplayerCode"));
+            List<Player> players=playerService.getUsersByMultiplayerCode(code);
+            model.addAttribute("players",players);
+            model.addAttribute("code",session.getAttribute("multiplayerCode"));
+            session.removeAttribute("gameSession");
+
+            return "game/multiFinished";
         }
         if (nextQuestion == null) {
             gameSessionService.endGame(gameSession);
