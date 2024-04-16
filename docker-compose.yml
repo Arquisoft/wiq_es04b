@@ -18,7 +18,7 @@ services:
     restart: always
 
   wiq_es04b:
-    image: ${WIQ_IMAGE:-"ghcr.io/arquisoft/wiq_es04b:latest"}
+    image: ${WIQ_IMAGE:-ghcr.io/arquisoft/wiq_es04b:latest}
     environment:
       MYSQL_HOST: ${MYSQL_HOST}
       MYSQL_DATABASE: ${MYSQL_DATABASE:-wiq_es04b}
