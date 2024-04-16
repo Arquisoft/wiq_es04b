@@ -17,6 +17,7 @@
             function initiateGameCounters() {
                 let timeoutId = -1;
                 let interval = -1;
+                let questionId = [[${question.id}]];
                 let corrAnswerId = [[${question.correctAnswer.id}]];
                 let answers = /*[[${question.options}]]*/ [];
 
@@ -34,19 +35,23 @@
                             if (!(corrAnswerId == answer.id)) {
                                 $("#btn" + answer.id).css("background-color", "red");
                             }
-                            prueba();
+                            prueba(questionId, answer.id);
                         });
                     });
                 }
 
                 setupAnswers();
 
-                function prueba() {
+                function prueba(qId, aId) {
 
                     answers.forEach(answer => {
                         if (corrAnswerId == answer.id) {
                             $("#btn" + answer.id).css("background-color", "green");
                         }
+                        $("#btn" + answer.id).off("click");
+                    });
+                    $("#continueBtn").click(function () {
+                        $("#gameFrame").load("/game/" + qId + "/" + aId);
                     });
                     $("#continueBtn").show();
                 }
@@ -56,7 +61,7 @@
 
                 timeoutId = setTimeout(() => {
                     //$("#gameFrame").load('/game/[[${question.id}]]/-1');
-                    prueba();
+                    prueba(questionId, -1);
                     clearTimeout(timeoutId);
                 }, timeoutPeriod);
 
