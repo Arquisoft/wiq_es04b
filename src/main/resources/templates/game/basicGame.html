@@ -32,7 +32,19 @@
         });
     }
 
+    function updateQuestionCounter() {
+        $.ajax({
+            type: "GET",
+            url: "/game/currentQuestion",
+            success: function (response) {
+                if (!isNaN(response))
+                    $("#currentQuestion").text(response);
+            }
+        });
+    }
+
     setInterval(updatePoints, 1000);
+    setInterval(updateQuestionCounter, 1000);
 </script>
 </body>
 </html>
