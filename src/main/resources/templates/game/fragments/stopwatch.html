@@ -7,11 +7,19 @@
 
 <script th:inline="javascript">
     /*<![CDATA[*/
+    activeIntervalId = null;
+
     function initStopwatch(timer) {
+        // Si ya hay un contador activo, lo limpiamos
+        if (activeIntervalId !== null) {
+            clearInterval(activeIntervalId);
+        }
+
         let countdown = timer - 1;
         const display = document.getElementById('stopwatch');
 
-        setInterval(() => {
+        // Creamos un nuevo intervalo
+        activeIntervalId = setInterval(() => {
             countdown -= 1;
             if (countdown < 0) {
                 countdown = 0;

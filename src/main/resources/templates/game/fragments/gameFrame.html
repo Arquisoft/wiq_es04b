@@ -35,15 +35,14 @@
                             if (!(corrAnswerId == answer.id)) {
                                 $("#btn" + answer.id).css("background-color", "red");
                             }
-                            prueba(questionId, answer.id);
+                            respuesta(questionId, answer.id);
                         });
                     });
                 }
 
                 setupAnswers();
 
-                function prueba(qId, aId) {
-
+                function respuesta(qId, aId) {
                     answers.forEach(answer => {
                         if (corrAnswerId == answer.id) {
                             $("#btn" + answer.id).css("background-color", "green");
@@ -59,8 +58,7 @@
 
                 timeoutId = setTimeout(() => {
                     //$("#gameFrame").load('/game/[[${question.id}]]/-1');
-                    prueba(questionId, -1);
-                    clearTimeout(timeoutId);
+                    respuesta(questionId, -1);
                 }, timeoutPeriod);
 
                 initStopwatch(timeoutPeriod / 1000);
@@ -87,41 +85,31 @@
                 }
 
                 function initiateTimeout(qId, aId) {
-                    let timeoutPeriod = 8000; // Timeout period in milliseconds (e.g., 8000ms for 8 seconds)
-                    let updateInterval = 100; // How often to update the progress bar (in milliseconds)
+                    if (timeoutId) {
+                        clearTimeout(timeoutId);
+                        clearInterval(interval);
+                    }
+                    timeoutPeriod = 12000; // Timeout period in milliseconds (e.g., 8000ms for 8 seconds)
+                    updateInterval = 100; // How often to update the progress bar (in milliseconds)
                     let progressBar = $('#progressBar');
+                    progressBar.attr('aria-valuenow', 100);
 
-                    let activeTimeout = setTimeout(function () {
-                        clearInterval(interval); // Ensure the interval is cleared when the timeout completes
-                        $("#gameFrame").load('/game/update');
-                        updateQuestionCounter();
-                    }, timeoutPeriod);
-
-                    timeoutPeriod = timeoutPeriod - updateInterval * 2; // Adjust the timeout period to account for the update interval
-                    let interval = setInterval(updateProgressBar, updateInterval);
-
-                    function updateProgressBar() {
-                        let currentTime = parseFloat(progressBar.attr('aria-valuenow'));
-                        let decrement = 100 * updateInterval / timeoutPeriod;
-                        let newTime = Math.max(0, currentTime - decrement);
-
-                        // Calculate the color based on the percentage
-                        let greenValue = Math.round((newTime * 255) / 100);
-                        let redValue = 255 - greenValue;
-                        let color = 'rgb(' + redValue + ',' + greenValue + ',0)';
-
-                        progressBar.css('width', newTime + '%');
-                        progressBar.css('background-color', color); // Apply the calculated color
-                        progressBar.attr('aria-valuenow', newTime);
-
-                        if(newTime <= 0) {
+                    timeoutId = setTimeout(function () {
+                        if (timeoutId) {
+                            clearTimeout(timeoutId);
                             clearInterval(interval);
                         }
-                    }
+                        $("#gameFrame").load("/game/" + qId + "/" + aId);
+                    }, timeoutPeriod);
+
+                    initStopwatch(timeoutPeriod / 1000);
+                    timeoutPeriod = timeoutPeriod - updateInterval * 2; // Adjust the timeout period to account for the update interval
+                    interval = setInterval(updateProgressBar, updateInterval);
+
                     $("#continueBtn").show();
                     $("#continueBtn").off('click').on('click', function () {
-                        if (activeTimeout) {
-                            clearTimeout(activeTimeout);
+                        if (timeoutId) {
+                            clearTimeout(timeoutId);
                             clearInterval(interval);
                         }
                         $("#gameFrame").load("/game/" + qId + "/" + aId);
