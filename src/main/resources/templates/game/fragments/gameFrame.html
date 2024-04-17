@@ -7,8 +7,8 @@
                 <div th:each="answer, iterStat : ${question.returnScrambledOptions()}" class="col-6 col-md-6 col-12">
                     <button th:id="${'btn' + answer.id}" class="btn btn-primary btn-block m-2 rounded" th:text="${answer.text}" th:value="${answer}"></button>
                 </div>
-                <button id="continueBtn" th:text="#{game.continue}"></button>
         </div>
+        <button id="continueBtn" class="prueba btn btn-primary btn-block m-2 rounded" th:text="#{game.continue}"></button>
     </div>
     <div id="bottomGamePart">
         <div th:replace="~{game/fragments/stopwatch}"></div>
