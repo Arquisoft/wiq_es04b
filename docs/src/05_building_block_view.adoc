@@ -18,10 +18,10 @@ This section provides an overview of the main components of the system and their
 actor User
 actor "External Developers" as Dev
 component "[WIQ QuestionGame]" as WIQ {
-  component "[Game Logic]" as Logic
-  component "[User Account\nManagement]" as UserMgmt
-  component "[Question\nManagement]" as QuestMgmt
-  component "[API\nManagement]" as APIMgmt
+  component "[GameSession\nService]" as Logic
+  component "[PlayerService]" as UserMgmt
+  component "[QuestionService]" as QuestMgmt
+  component "[RestApi\nService]" as APIMgmt
 }
 database "Database" as DB
 [WikiData] as WikiData
