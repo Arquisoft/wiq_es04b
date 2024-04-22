@@ -64,13 +64,13 @@ The decomposition provides a clear, high-level overview of how the WIQ system in
 
 For Level 2 of the Building Block View, the WIQ (QuestionGame) system is further decomposed into four primary components that define its operational structure. Each component is designed to fulfill specific roles within the architecture, ensuring the system's functionality and responsiveness to user interactions.
 
-* *Game Logic:* This component acts as the core of the QuestionGame, orchestrating the flow of games, managing question selection, enforcing game rules, and tracking scores. It ensures that gameplay proceeds smoothly and according to the predefined logic, offering a seamless experience for the user.
+* *GameService:* This component acts as the core of the QuestionGame, orchestrating the flow of games, managing question selection, enforcing game rules, and tracking scores. It ensures that gameplay proceeds smoothly and according to the predefined logic, offering a seamless experience for the user.
 
-* *User Account Management:* Responsible for handling user accounts, this component manages registration, authentication, and profile management. It safeguards user data while providing a personalized experience through game history tracking and preference settings.
+* *PlayerService:* Responsible for handling user accounts, this component manages registration, authentication, and profile management. It safeguards user data while providing a personalized experience through game history tracking and preference settings.
 
-* *Question Management:* This component interacts directly with the Wikidata service to fetch data for question generation. It processes and curates content to produce relevant, challenging questions for the game, thereby ensuring a varied and educational experience.
+* *QuestionService:* This component interacts directly with the Wikidata service to fetch data for question generation. It processes and curates content to produce relevant, challenging questions for the game, thereby ensuring a varied and educational experience.
 
-* *API Management:* Serving as the gateway for external developers, this component exposes a set of RESTful APIs that allow access to player information and question data. It handles request processing, authentication, and data delivery, facilitating third-party integrations and extensions of the WIQ platform.
+* *RestApiService:* Serving as the gateway for external developers, this component exposes a set of RESTful APIs that allow access to player information and question data. It handles request processing, authentication, and data delivery, facilitating third-party integrations and extensions of the WIQ platform.
 
 
 [plantuml,"level2",png]
@@ -79,10 +79,10 @@ For Level 2 of the Building Block View, the WIQ (QuestionGame) system is further
 !theme plain
 
 package "WIQ QuestionGame" {
-  component "[Game Logic]" as Logic
-  component "[User Account\nManagement]" as UserMgmt
-  component "[Question\nManagement]" as QuestMgmt
-  component "[API\nManagement]" as APIMgmt
+  component "[GameSession\nService]" as Logic
+  component "[PlayerService]" as UserMgmt
+  component "[QuestionService]" as QuestMgmt
+  component "[RestApi\nService]" as APIMgmt
 
   UserMgmt -[hidden]-> Logic : <<uses>>
   QuestMgmt -[hidden]-> Logic : <<uses>>
