@@ -4,6 +4,7 @@ import com.uniovi.entities.GameSession;
 import com.uniovi.entities.Player;
 import com.uniovi.entities.Question;
 import com.uniovi.services.GameSessionService;
+import com.uniovi.services.MultiplayerSessionService;
 import com.uniovi.services.PlayerService;
 import com.uniovi.services.QuestionService;
 import jakarta.servlet.http.HttpSession;
@@ -24,11 +25,14 @@ public class GameController {
     private final GameSessionService gameSessionService;
     private final PlayerService playerService;
 
+    private final MultiplayerSessionService multiplayerSessionService;
+
     public GameController(QuestionService questionService, GameSessionService gameSessionService,
-                          PlayerService playerService) {
+                          PlayerService playerService, MultiplayerSessionService multiplayerSessionService) {
         this.questionService = questionService;
         this.gameSessionService = gameSessionService;
         this.playerService = playerService;
+        this.multiplayerSessionService = multiplayerSessionService;
     }
 
 
@@ -72,6 +76,7 @@ public class GameController {
         Optional<Player> player = playerService.getUserByUsername(principal.getName());
         Player p = player.orElse(null);
         if(playerService.changeMultiplayerCode(p.getId(),code)){
+            multiplayerSessionService.addToLobby(code,p.getId());
             model.addAttribute("multiplayerGameCode",code);
             session.setAttribute("multiplayerCode",code);
             return "redirect:/game/lobby";
@@ -86,6 +91,7 @@ public class GameController {
         Optional<Player> player = playerService.getUserByUsername(principal.getName());
         Player p = player.orElse(null);
         String code=""+playerService.createMultiplayerGame(p.getId());
+        multiplayerSessionService.multiCreate(code,p.getId());
         session.setAttribute("multiplayerCode",code);
         return "redirect:/game/lobby";
     }

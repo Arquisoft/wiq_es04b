@@ -16,5 +16,6 @@ public interface MultiplayerSessionRepository extends CrudRepository<Multiplayer
     @Query("SELECT m FROM MultiplayerSession m JOIN FETCH m.players p WHERE m.multiplayerCode = :multiplayerCode ORDER BY p.scoreMultiplayerCode")
     Page<MultiplayerSession> findPlayersByMultiplayerCode(Pageable pageable, int multiplayerCode);
 
+    MultiplayerSession findByCode(String code);
 }
 

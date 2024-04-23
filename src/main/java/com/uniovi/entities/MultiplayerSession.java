@@ -3,6 +3,7 @@ package com.uniovi.entities;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -19,4 +20,17 @@ public class MultiplayerSession  {
     @ManyToMany
     private Set<Player> players =new HashSet<>();
 
+    public MultiplayerSession() {
+
+    }
+
+    public MultiplayerSession(String code, Player p) {
+        this.multiplayerCode=Integer.parseInt(code);
+        players.add(p);
+
+    }
+
+    public void addPlayer(Player p){
+        players.add(p);
+    }
 }
