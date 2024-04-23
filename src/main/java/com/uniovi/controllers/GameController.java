@@ -27,6 +27,8 @@ public class GameController {
 
     private final MultiplayerSessionService multiplayerSessionService;
 
+    private boolean isMultiPlayer;
+
     public GameController(QuestionService questionService, GameSessionService gameSessionService,
                           PlayerService playerService, MultiplayerSessionService multiplayerSessionService) {
         this.questionService = questionService;
@@ -75,6 +77,7 @@ public class GameController {
     public String joinMultiplayerGame(@PathVariable String code, HttpSession session, Principal principal, Model model) {
         Optional<Player> player = playerService.getUserByUsername(principal.getName());
         Player p = player.orElse(null);
+        isMultiPlayer=true;
         if(playerService.changeMultiplayerCode(p.getId(),code)){
             multiplayerSessionService.addToLobby(code,p.getId());
             model.addAttribute("multiplayerGameCode",code);
@@ -250,7 +253,7 @@ public class GameController {
     public String updateGame(Model model, HttpSession session, Principal principal) {
         GameSession gameSession = (GameSession) session.getAttribute("gameSession");
         Question nextQuestion = gameSession.getCurrentQuestion();
-        if(nextQuestion == null && gameSession.getPlayer().getMultiplayerCode()!=null/*session.getAttribute("multiplayerCode") !=null*/){
+        if(nextQuestion == null && isMultiPlayer/*gameSession.getPlayer().getMultiplayerCode()!=null session.getAttribute("multiplayerCode") !=null*/){
             gameSessionService.endGame(gameSession);
 
             int code = Integer.parseInt((String)session.getAttribute("multiplayerCode"));

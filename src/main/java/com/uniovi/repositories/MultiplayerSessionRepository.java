@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
@@ -14,8 +15,8 @@ public interface MultiplayerSessionRepository extends CrudRepository<Multiplayer
     //List<MultiplayerSession> findAll();
 
     @Query("SELECT m FROM MultiplayerSession m JOIN FETCH m.players p WHERE m.multiplayerCode = :multiplayerCode ORDER BY p.scoreMultiplayerCode")
-    Page<MultiplayerSession> findPlayersByMultiplayerCode(Pageable pageable, int multiplayerCode);
+    Page<MultiplayerSession> findPlayersByMultiplayerCode(Pageable pageable, String multiplayerCode);
 
-    MultiplayerSession findByCode(String code);
+    MultiplayerSession findByMultiplayerCode(String code);
 }
 

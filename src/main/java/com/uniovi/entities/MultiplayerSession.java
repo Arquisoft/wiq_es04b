@@ -16,16 +16,14 @@ public class MultiplayerSession  {
     @GeneratedValue
     private Long id;
     @Column
-    private int  multiplayerCode;
+    private String multiplayerCode;
     @ManyToMany
     private Set<Player> players =new HashSet<>();
 
-    public MultiplayerSession() {
-
-    }
+    public MultiplayerSession() {}
 
     public MultiplayerSession(String code, Player p) {
-        this.multiplayerCode=Integer.parseInt(code);
+        this.multiplayerCode=code;
         players.add(p);
 
     }
