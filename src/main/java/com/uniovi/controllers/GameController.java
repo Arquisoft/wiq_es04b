@@ -1,6 +1,7 @@
 package com.uniovi.controllers;
 
 import com.uniovi.entities.GameSession;
+import com.uniovi.entities.MultiplayerSession;
 import com.uniovi.entities.Player;
 import com.uniovi.entities.Question;
 import com.uniovi.services.GameSessionService;
@@ -8,6 +9,8 @@ import com.uniovi.services.MultiplayerSessionService;
 import com.uniovi.services.PlayerService;
 import com.uniovi.services.QuestionService;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -96,13 +99,16 @@ public class GameController {
         String code=""+playerService.createMultiplayerGame(p.getId());
         multiplayerSessionService.multiCreate(code,p.getId());
         session.setAttribute("multiplayerCode",code);
+        isMultiPlayer=true;
         return "redirect:/game/lobby";
     }
 
     @GetMapping("/startMultiplayerGame")
     public String startMultiplayerGame(HttpSession session, Model model, Principal principal) {
         GameSession gameSession = (GameSession) session.getAttribute("gameSession");
-
+        if(! isMultiPlayer){
+            return "index";
+        }
         if (gameSession != null) {
             if (checkUpdateGameSession(gameSession, session)) {
                 return "game/fragments/gameFinished";
@@ -141,30 +147,31 @@ public class GameController {
 //
 
 
-    @GetMapping("/game/multiFinished/{code}")
-    @ResponseBody
-    public Map<String,String> updateFinishedGame(@PathVariable String code, HttpSession session, Principal principal) {
-        List<Player> players = playerService.getUsersByMultiplayerCode(Integer.parseInt(code));
-        Map<String, String> playerInfo = new HashMap<>();
-        for (Player player : players) {
-            String playerName = player.getUsername();
-            String playerScore = player.getScoreMultiplayerCode();
-            if(playerScore==null){
-                playerScore="N/A";
-            }
-            playerInfo.put(playerName, playerScore);
-        }
-        return playerInfo;
-    }
-
-//    @GetMapping("/multiplayerGame/endGame/{code}")
-//    public String endMultiplayerGame(@PathVariable String code) {
+//    @GetMapping("/game/multiFinished/{code}")
+//    @ResponseBody
+//    public Map<String,String> updateFinishedGame(@PathVariable String code) {
 //        List<Player> players = playerService.getUsersByMultiplayerCode(Integer.parseInt(code));
+//        Map<String, String> playerInfo = new HashMap<>();
 //        for (Player player : players) {
-//            player.setScoreMultiplayerCode(null);
+//            String playerName = player.getUsername();
+//            String playerScore = player.getScoreMultiplayerCode();
+//            if(playerScore==null){
+//                playerScore="N/A";
+//            }
+//            playerInfo.put(playerName, playerScore);
 //        }
-//        return "redirect:/index.html";
+//        return playerInfo;
 //    }
+
+    @GetMapping("/multiplayerGame/endGame/{code}")
+    public String endMultiplayerGame(Pageable pageable, Model model,@PathVariable String code) {
+            Page<MultiplayerSession> ranking =multiplayerSessionService.getMultiplayerPlayerRanking(pageable,Integer.parseInt(code));
+
+            model.addAttribute("MultiplayerRanking", ranking.getContent());
+            model.addAttribute("page", ranking);
+
+            return "ranking/globalRanking";
+    }
 
 
 
@@ -265,8 +272,10 @@ public class GameController {
             Optional<Player> player = playerService.getUserByUsername(principal.getName());
             Player p = player.orElse(null);
             playerService.setScoreMultiplayerCode(p.getId(),""+gameSession.getScore());
+            isMultiPlayer=false;
 
-            return "game/multiFinished";
+            return "redirect:multiplayerGame/endGame/"+p.getMultiplayerCode();
+            //return "game/multiFinished";
         }
         if (nextQuestion == null) {
             gameSessionService.endGame(gameSession);

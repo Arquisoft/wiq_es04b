@@ -25,7 +25,8 @@
             function updatePlayerList() {
                 const code = [[${code}]];
                 $.ajax({
-                    url: '/game/multiFinished/' + code,
+                    //url: '/game/multiFinished/' + code,
+                    url: '/multiplayerGame/endGame/' + code,
                     type: 'GET',
                     dataType: 'json',
                     success: function (response) {
