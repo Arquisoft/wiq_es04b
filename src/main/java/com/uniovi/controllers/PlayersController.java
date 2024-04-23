@@ -100,6 +100,7 @@ public class PlayersController {
 
         model.addAttribute("ranking", ranking.getContent());
         model.addAttribute("page", ranking);
+        model.addAttribute("num", pageable.getPageSize());
 
         return "ranking/globalRanking";
     }
@@ -117,6 +118,7 @@ public class PlayersController {
 
         model.addAttribute("ranking", ranking.getContent());
         model.addAttribute("page", ranking);
+        model.addAttribute("num", pageable.getPageSize());
 
         return "ranking/playerRanking";
     }
