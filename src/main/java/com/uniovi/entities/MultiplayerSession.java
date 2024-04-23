@@ -5,7 +5,9 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 @Getter // getters para todas las propiedades
@@ -17,18 +19,21 @@ public class MultiplayerSession  {
     private Long id;
     @Column
     private String multiplayerCode;
-    @ManyToMany
-    private Set<Player> players =new HashSet<>();
+    //@ManyToMany
+    //private Set<Player> players =new HashSet<>();
+    @ElementCollection
+    @Column
+    private Map<Player, Integer> playerScores = new HashMap<>();
 
     public MultiplayerSession() {}
 
     public MultiplayerSession(String code, Player p) {
         this.multiplayerCode=code;
-        players.add(p);
+        playerScores.put(p,0);
 
     }
 
     public void addPlayer(Player p){
-        players.add(p);
+        playerScores.put(p,0);
     }
 }

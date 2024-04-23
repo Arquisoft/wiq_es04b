@@ -164,13 +164,11 @@ public class GameController {
 //    }
 
     @GetMapping("/multiplayerGame/endGame/{code}")
-    public String endMultiplayerGame(Pageable pageable, Model model,@PathVariable String code) {
-            Page<MultiplayerSession> ranking =multiplayerSessionService.getMultiplayerPlayerRanking(pageable,Integer.parseInt(code));
+    public String endMultiplayerGame(Model model,@PathVariable String code) {
+            List<Object[]> playersWithScores =multiplayerSessionService.getPlayersWithScores(Integer.parseInt(code));
+            model.addAttribute("MultiplayerRanking", playersWithScores);
 
-            model.addAttribute("MultiplayerRanking", ranking.getContent());
-            model.addAttribute("page", ranking);
-
-            return "ranking/globalRanking";
+            return "ranking/multiplayerRanking";
     }
 
 
@@ -272,6 +270,7 @@ public class GameController {
             Optional<Player> player = playerService.getUserByUsername(principal.getName());
             Player p = player.orElse(null);
             playerService.setScoreMultiplayerCode(p.getId(),""+gameSession.getScore());
+            multiplayerSessionService.changeScore(p.getMultiplayerCode()+"",p.getId(),gameSession.getScore());
             isMultiPlayer=false;
 
             return "redirect:multiplayerGame/endGame/"+p.getMultiplayerCode();

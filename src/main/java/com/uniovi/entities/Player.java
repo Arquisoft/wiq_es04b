@@ -39,8 +39,8 @@ public class Player implements JsonEntity {
     @Column
     private String scoreMultiplayerCode;
 
-    @ManyToMany
-    private Set<MultiplayerSession> multiplayerSessions = new HashSet<>();
+    //@ManyToMany
+    //private Set<MultiplayerSession> multiplayerSessions = new HashSet<>();
 
     @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     private Set<Role> roles = new HashSet<>();

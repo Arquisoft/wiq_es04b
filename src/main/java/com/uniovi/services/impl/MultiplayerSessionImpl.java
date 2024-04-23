@@ -9,7 +9,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class MultiplayerSessionImpl implements MultiplayerSessionService {
@@ -22,9 +23,30 @@ public class MultiplayerSessionImpl implements MultiplayerSessionService {
         this.multiplayerSessionRepository = multiplayerSessionRepository;
     }
 
+//    @Override
+//    public Page<MultiplayerSession> getMultiplayerPlayerRanking(Pageable pageable, int multiplayerCode) {
+//        return multiplayerSessionRepository.findPlayersByMultiplayerCode(pageable, ""+multiplayerCode);
+//    }
+
     @Override
-    public Page<MultiplayerSession> getMultiplayerPlayerRanking(Pageable pageable, int multiplayerCode) {
-        return multiplayerSessionRepository.findPlayersByMultiplayerCode(pageable, ""+multiplayerCode);
+    public List<Object[]> getPlayersWithScores(int multiplayerCode) {
+        MultiplayerSession session = multiplayerSessionRepository.findByMultiplayerCode(String.valueOf(multiplayerCode));
+        Map<Player, Integer> playerScores = session.getPlayerScores();
+
+        // Ordenar los jugadores por puntuación de mayor a menor
+        List<Player> sortedPlayers = playerScores.entrySet().stream()
+                .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+                .map(Map.Entry::getKey)
+                .collect(Collectors.toList());
+
+        List<Object[]> playersWithScores = new ArrayList<>();
+        for (Player player : sortedPlayers) {
+            int score = playerScores.get(player);
+            Object[] playerWithScore = new Object[]{player.getUsername(), score};
+            playersWithScores.add(playerWithScore);
+        }
+
+        return playersWithScores;
     }
 
     @Override
@@ -38,6 +60,14 @@ public class MultiplayerSessionImpl implements MultiplayerSessionService {
         Player p = playerRepository.findById(id).get();
         MultiplayerSession ms=multiplayerSessionRepository.findByMultiplayerCode(code);
         ms.addPlayer(p);
+        multiplayerSessionRepository.save(ms);
+    }
+
+    @Override
+    public void changeScore(String code, Long id, int score) {
+        Player p = playerRepository.findById(id).get();
+        MultiplayerSession ms=multiplayerSessionRepository.findByMultiplayerCode(code);
+        ms.getPlayerScores().put(p,score);
         multiplayerSessionRepository.save(ms);
     }
 }
