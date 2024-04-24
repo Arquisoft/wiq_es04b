@@ -6,7 +6,21 @@
       "questions": [
         {
           "type": "capital",
-          "sparqlQuery": "Consulta SPARQL para obtener preguntas sobre fronteras"
+          "statements": [
+            {
+              "language": "es",
+              "statement": "¿Cuál es la capital de [COUNTRY]?"
+            },
+            {
+              "language": "en",
+              "statement": "What is the capital of [COUNTRY]?"
+            },
+            {
+              "language": "fr",
+              "statement": "Quelle est la capitale de [COUNTRY]?"
+            }
+          ],
+          "sparqlQuery": "Consulta SPARQL para obtener preguntas sobre capitales"
         },
         {
           "type": "border",
