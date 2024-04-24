@@ -6,27 +6,22 @@
     <h3 th:text ="#{multi.code}">  </h3>
     <code id="lobbyCode" th:text="${code}"></code>
 
-    <h3 id="multiPoints" th:text ="#{multi.points}"> </h3>
+    <!--<h3 id="multiPoints" th:text ="#{multi.points}"> </h3>
     <ul id="playerList">
         <li th:each="player : ${players}"></li>
-    </ul>
+    </ul>-->
 
     <a th:href="@{'/multiplayerGame/endGame/' + ${code}}">
         <button id="createBtn" type="button" class="btn btn-custom btn-block mb-2">Continuar</button>
     </a>
 
-    <script>
-        $(document).ready(function () {
-            $(".points").remove();
-            $(".questionCounter").remove();
-        });
-
+    <!--<script>
         $(document).ready(function() {
             function updatePlayerList() {
                 const code = [[${code}]];
                 $.ajax({
                     //url: '/game/multiFinished/' + code,
-                    url: '/multiplayerGame/endGame/' + code,
+                    url: '/endGameList/' + code,
                     type: 'GET',
                     dataType: 'json',
                     success: function (response) {
@@ -42,6 +37,6 @@
             }
             setInterval(updatePlayerList, 1000);
         });
-    </script>
+    </script>-->
 
 </div>

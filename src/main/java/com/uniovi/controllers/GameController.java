@@ -193,10 +193,11 @@ public class GameController {
     @GetMapping("/game/lobby/{code}")
     @ResponseBody
     public List<String> updatePlayerList(@PathVariable String code) {
-        List<Player> players = playerService.getUsersByMultiplayerCode(Integer.parseInt(code));
+        //List<Player> players = playerService.getUsersByMultiplayerCode(Integer.parseInt(code));
+        Map<Player,Integer> players= multiplayerSessionService.getPlayersWithScores(Integer.parseInt(code));
         List<String> playerNames = new ArrayList<>();
-        for (Player player : players) {
-            playerNames.add(player.getUsername());
+        for (Map.Entry<Player, Integer> player : players.entrySet()) {
+            playerNames.add(player.getKey().getUsername());
         }
         return playerNames;
     }
