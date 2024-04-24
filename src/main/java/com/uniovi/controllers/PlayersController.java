@@ -122,4 +122,26 @@ public class PlayersController {
 
         return "ranking/playerRanking";
     }
+
+    // ----- Admin endpoints -----
+
+    @GetMapping("/player/admin")
+    public String showAdminPanel(Model model) {
+        return "player/admin/admin";
+    }
+
+    @GetMapping("/player/admin/userManagement")
+    public String showUserManagementFragment(Model model, Pageable pageable) {
+        model.addAttribute("endpoint", "/player/admin/userManagement");
+        Page<Player> users = playerService.getPlayersPage(pageable);
+        model.addAttribute("page", users);
+        model.addAttribute("users", users.getContent());
+
+        return "player/admin/userManagement";
+    }
+
+    @GetMapping("/player/admin/questionManagement")
+    public String showQuestionManagementFragment() {
+        return "player/admin/questionManagement";
+    }
 }

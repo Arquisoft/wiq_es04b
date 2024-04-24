@@ -1,0 +1,30 @@
+<div class="container-fluid">
+    <h2 th:text="#{admin.section.user.management}"></h2>
+    <div class="table-responsive">
+        <table class="table table-hover" th:fragment="userManagementTable" id="userManagementTable">
+            <thead>
+            <tr>
+                <th scope="col" th:text="#{login.username.label}">Username</th>
+                <th scope="col" th:text="#{signup.email.label}">Email</th>
+                <th scope="col" th:text="#{role.label}">Role</th>
+                <th scope="col" th:text="#{user.details}">Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="user, iterStat : ${users}">
+                <td th:text="${user.username}">Username</td>
+                <td th:text="${user.email}">Email</td>
+                <td th:text="${user.roles}">Role</td>
+                <td class="dropdown">
+                    <button th:text="#{user.details}" class="btn btn-info dropdown-toggle" type="button" th:id="'dropdownMenuButton' + ${iterStat.index}" data-bs-toggle="dropdown" aria-expanded="false">
+                    </button>
+                    <ul class="dropdown-menu" th:attr="aria-labelledby=${'dropdownMenuButton' + iterStat.index}">
+                        <li><a class="dropdown-item" href="#">Action</a></li>
+                    </ul>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<footer th:replace="~{fragments/paginationDynamic}"></footer>
