@@ -165,10 +165,27 @@ public class GameController {
 
     @GetMapping("/multiplayerGame/endGame/{code}")
     public String endMultiplayerGame(Model model,@PathVariable String code) {
-            List<Object[]> playersWithScores =multiplayerSessionService.getPlayersWithScores(Integer.parseInt(code));
-            model.addAttribute("MultiplayerRanking", playersWithScores);
-
+//            List<Object[]> playersWithScores =multiplayerSessionService.getPlayersWithScores(Integer.parseInt(code));
+//            model.addAttribute("MultiplayerRanking", playersWithScores);
+            model.addAttribute("code",code);
             return "ranking/multiplayerRanking";
+    }
+    @GetMapping("/endGameList/{code}")
+    @ResponseBody
+    public Map<String, String> endMultiplayerGameTable(@PathVariable String code) {
+        Map<Player, Integer> playerScores = multiplayerSessionService.getPlayersWithScores(Integer.parseInt(code));
+        Map<String, String> playersNameWithScore=new HashMap<>();
+        for (Map.Entry<Player, Integer> player : playerScores.entrySet()) {
+            String playerName = player.getKey().getUsername();
+            String playerScoreValue;
+            if(player.getValue()==-1){
+                playerScoreValue="N/A"; //estaria bien q pusiese jugagando pero internazionalizadp
+            }else{
+                playerScoreValue=""+player.getValue();
+            }
+            playersNameWithScore.put(playerName, playerScoreValue);
+        }
+        return playersNameWithScore;
     }
 
 
@@ -272,9 +289,9 @@ public class GameController {
             playerService.setScoreMultiplayerCode(p.getId(),""+gameSession.getScore());
             multiplayerSessionService.changeScore(p.getMultiplayerCode()+"",p.getId(),gameSession.getScore());
             isMultiPlayer=false;
-
-            return "redirect:multiplayerGame/endGame/"+p.getMultiplayerCode();
-            //return "game/multiFinished";
+            //return "game/multiplayerGame/endGame/"+p.getMultiplayerCode();
+            //return "redirect:multiplayerGame/endGame/"+p.getMultiplayerCode();
+            return "game/multiFinished";
         }
         if (nextQuestion == null) {
             gameSessionService.endGame(gameSession);

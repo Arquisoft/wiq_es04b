@@ -29,7 +29,7 @@ public class MultiplayerSessionImpl implements MultiplayerSessionService {
 //    }
 
     @Override
-    public List<Object[]> getPlayersWithScores(int multiplayerCode) {
+    public Map<Player, Integer> getPlayersWithScores(int multiplayerCode) {
         MultiplayerSession session = multiplayerSessionRepository.findByMultiplayerCode(String.valueOf(multiplayerCode));
         Map<Player, Integer> playerScores = session.getPlayerScores();
 
@@ -39,14 +39,11 @@ public class MultiplayerSessionImpl implements MultiplayerSessionService {
                 .map(Map.Entry::getKey)
                 .collect(Collectors.toList());
 
-        List<Object[]> playersWithScores = new ArrayList<>();
+        Map<Player, Integer> playersSorted = new HashMap<>();
         for (Player player : sortedPlayers) {
-            int score = playerScores.get(player);
-            Object[] playerWithScore = new Object[]{player.getUsername(), score};
-            playersWithScores.add(playerWithScore);
+            playersSorted.put(player,playerScores.get(player));
         }
-
-        return playersWithScores;
+        return playersSorted;
     }
 
     @Override

@@ -29,11 +29,11 @@ public class MultiplayerSession  {
 
     public MultiplayerSession(String code, Player p) {
         this.multiplayerCode=code;
-        playerScores.put(p,0);
+        playerScores.put(p,-1);
 
     }
 
     public void addPlayer(Player p){
-        playerScores.put(p,0);
+        playerScores.put(p,-1);
     }
 }

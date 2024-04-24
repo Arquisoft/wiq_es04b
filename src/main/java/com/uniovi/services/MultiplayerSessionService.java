@@ -8,13 +8,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public interface MultiplayerSessionService {
 
     //Page<MultiplayerSession> getMultiplayerPlayerRanking(Pageable pageable, int multiplayerCode);
 
-    List<Object[]> getPlayersWithScores(int multiplayerCode);
+    Map<Player, Integer> getPlayersWithScores(int multiplayerCode);
     void multiCreate(String code, Long id);
 
     void addToLobby(String code, Long id);
