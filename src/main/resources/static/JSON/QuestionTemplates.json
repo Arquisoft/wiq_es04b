@@ -1,0 +1,22 @@
+{
+  "language_placeholder": "[LANGUAGE]",
+  "categories": [
+    {
+      "name": "Geography",
+      "questions": [
+        {
+          "type": "capital",
+          "sparqlQuery": "Consulta SPARQL para obtener preguntas sobre fronteras"
+        },
+        {
+          "type": "border",
+          "sparqlQuery": "Consulta SPARQL para obtener preguntas sobre fronteras"
+        },
+        {
+          "type": "continent",
+          "sparqlQuery": "Consulta SPARQL para obtener preguntas sobre continentes"
+        }
+      ]
+    }
+  ]
+}
