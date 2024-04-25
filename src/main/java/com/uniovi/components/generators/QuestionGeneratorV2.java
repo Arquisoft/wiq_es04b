@@ -91,9 +91,6 @@ public class QuestionGeneratorV2 implements QuestionGenerator{
             // Generate the question
             Question q = new Question(questionStatement, options, correct, cat, language);
 
-            // Scramble the options
-            q.scrambleOptions();
-
             // Add the question to the list
             questions.add(q);
         }
