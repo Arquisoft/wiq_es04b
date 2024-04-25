@@ -12,20 +12,16 @@ import com.uniovi.services.CategoryService;
 import com.uniovi.services.QuestionService;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.querydsl.QPageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
-import org.springframework.data.domain.Pageable;
 
 @Service
 public class QuestionServiceImpl implements QuestionService {
@@ -169,31 +165,4 @@ public class QuestionServiceImpl implements QuestionService {
             questionRepository.delete(question);
         }
     }
-
-    @Override
-    public List<Question> testQuestions(int num) {
-        List<Question> res = new ArrayList<>();
-        Category c = new Category("Test category", "Test category");
-        categoryService.addNewCategory(c);
-        for (int i = 0; i < num; i++) {
-            Question q = new Question();
-            q.setStatement("Test question " + i);
-            q.setLanguage(LocaleContextHolder.getLocale().getLanguage());
-            Associations.QuestionsCategory.addCategory(q, c);
-            List<Answer> answers = new ArrayList<>();
-            for (int j = 0; j < 4; j++) {
-                Answer a = new Answer();
-                a.setText("Test answer " + j);
-                a.setCorrect(j == 0);
-                if(j==0) q.setCorrectAnswer(a);
-                answerService.addNewAnswer(a);
-                answers.add(a);
-            }
-            Associations.QuestionAnswers.addAnswer(q, answers);
-            addNewQuestion(q);
-            res.add(q);
-        }
-        return res;
-    }
-
 }
