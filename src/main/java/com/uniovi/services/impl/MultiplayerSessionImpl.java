@@ -14,19 +14,14 @@ import java.util.stream.Collectors;
 
 @Service
 public class MultiplayerSessionImpl implements MultiplayerSessionService {
-    private PlayerRepository playerRepository;
-    private MultiplayerSessionRepository multiplayerSessionRepository;
+    private final PlayerRepository playerRepository;
+    private final MultiplayerSessionRepository multiplayerSessionRepository;
 
 
     public MultiplayerSessionImpl(PlayerRepository playerRepository, MultiplayerSessionRepository multiplayerSessionRepository) {
         this.playerRepository = playerRepository;
         this.multiplayerSessionRepository = multiplayerSessionRepository;
     }
-
-//    @Override
-//    public Page<MultiplayerSession> getMultiplayerPlayerRanking(Pageable pageable, int multiplayerCode) {
-//        return multiplayerSessionRepository.findPlayersByMultiplayerCode(pageable, ""+multiplayerCode);
-//    }
 
     @Override
     public Map<Player, Integer> getPlayersWithScores(int multiplayerCode) {

@@ -12,11 +12,6 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface MultiplayerSessionRepository extends CrudRepository<MultiplayerSession, Long> {
-    //List<MultiplayerSession> findAll();
-
-//    @Query("SELECT m FROM MultiplayerSession m JOIN FETCH m.playerScores p WHERE m.multiplayerCode = :multiplayerCode ORDER BY p.scoreMultiplayerCode")
-//    Page<MultiplayerSession> findPlayersByMultiplayerCode(Pageable pageable, String multiplayerCode);
-
     MultiplayerSession findByMultiplayerCode(String code);
 }
 

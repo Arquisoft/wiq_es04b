@@ -19,8 +19,7 @@ public class MultiplayerSession  {
     private Long id;
     @Column
     private String multiplayerCode;
-    //@ManyToMany
-    //private Set<Player> players =new HashSet<>();
+
     @ElementCollection
     @Column
     private Map<Player, Integer> playerScores = new HashMap<>();

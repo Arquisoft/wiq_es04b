@@ -65,9 +65,6 @@ public class GameController {
         return "game/basicGame";
     }
 
-
-
-
     @GetMapping("/multiplayerGame")
     public String getMultiplayerGame() {
         return "game/multiplayerGame";
@@ -121,50 +118,10 @@ public class GameController {
         return "game/basicGame";
     }
 
-//    @GetMapping("/games/multiFinished")
-//    public String createFinishedLobby( HttpSession session, Model model) {
-//        int code = Integer.parseInt((String)session.getAttribute("multiplayerCode"));
-//        List<Player> players=playerService.getUsersByMultiplayerCode(code);
-//        model.addAttribute("players",players);
-//        model.addAttribute("code",session.getAttribute("multiplayerCode"));
-//        session.removeAttribute("gameSession");
-//        return "/game/multiFinished";
-//    }
-
-
-//    @GetMapping("/multiplayerGame/finishedGame")
-//    public String goToFinishedLobby(HttpSession session,Principal principal) {
-//        Optional<Player> player = playerService.getUserByUsername(principal.getName());
-//        Player p = player.orElse(null);
-//        GameSession gameSession = (GameSession) session.getAttribute("gameSession");
-//        playerService.setScoreMultiplayerCode(p.getId(),""+gameSession.getScore());
-//        return "redirect:/game/multiFinished";
-//    }
-//
-
-
-//    @GetMapping("/game/multiFinished/{code}")
-//    @ResponseBody
-//    public Map<String,String> updateFinishedGame(@PathVariable String code) {
-//        List<Player> players = playerService.getUsersByMultiplayerCode(Integer.parseInt(code));
-//        Map<String, String> playerInfo = new HashMap<>();
-//        for (Player player : players) {
-//            String playerName = player.getUsername();
-//            String playerScore = player.getScoreMultiplayerCode();
-//            if(playerScore==null){
-//                playerScore="N/A";
-//            }
-//            playerInfo.put(playerName, playerScore);
-//        }
-//        return playerInfo;
-//    }
-
     @GetMapping("/multiplayerGame/endGame/{code}")
     public String endMultiplayerGame(Model model,@PathVariable String code) {
-//            List<Object[]> playersWithScores =multiplayerSessionService.getPlayersWithScores(Integer.parseInt(code));
-//            model.addAttribute("MultiplayerRanking", playersWithScores);
-            model.addAttribute("code",code);
-            return "ranking/multiplayerRanking";
+        model.addAttribute("code",code);
+        return "ranking/multiplayerRanking";
     }
     @GetMapping("/endGameList/{code}")
     @ResponseBody
@@ -175,7 +132,7 @@ public class GameController {
             String playerName = player.getKey().getUsername();
             String playerScoreValue;
             if(player.getValue()==-1){
-                playerScoreValue="N/A"; //estaria bien q pusiese jugagando pero internazionalizadp
+                playerScoreValue="N/A";
             }else{
                 playerScoreValue=""+player.getValue();
             }
@@ -183,8 +140,6 @@ public class GameController {
         }
         return playersNameWithScore;
     }
-
-
 
     @GetMapping("/game/lobby/{code}")
     @ResponseBody
@@ -208,13 +163,8 @@ public class GameController {
 
     @GetMapping("/game/startMultiplayerGame")
     public String startMultiplayerGame( HttpSession session, Model model) {
-        //La idea seria q dando uno al boton de empezar empezasen todos
         return "/game/lobby";
     }
-
-
-
-
 
     /**
      * This method is used to check the answer for a specific question
@@ -286,9 +236,6 @@ public class GameController {
             playerService.setScoreMultiplayerCode(p.getId(),""+gameSession.getScore());
             multiplayerSessionService.changeScore(p.getMultiplayerCode()+"",p.getId(),gameSession.getScore());
             isMultiPlayer=false;
-            //return "game/multiplayerGame/endGame/"+p.getMultiplayerCode();
-            //return "redirect:multiplayerGame/endGame/"+p.getMultiplayerCode();
-            //return "redirect:multiplayerGame/endGame/"+p.getMultiplayerCode();
             return "game/multiFinished";
         }
         if (nextQuestion == null) {
