@@ -33,11 +33,6 @@ public class QuestionGeneratorV2 implements QuestionGenerator{
     }
 
     @Override
-    public String getQuery() {
-        return null;
-    }
-
-    @Override
     public List<Question> getQuestions() throws IOException {
         List<Question> questions = new ArrayList<>();
         JsonNode categories = jsonNode.findValue("categories");
