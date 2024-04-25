@@ -11,8 +11,4 @@ public interface QuestionGenerator {
 
     String getQuery();
     List<Question> getQuestions();
-
-    Category getCategory();
-
-
 }
