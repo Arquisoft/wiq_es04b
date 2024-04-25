@@ -795,12 +795,13 @@ public class Wiq_UnitTests {
     @Test
     @Order(51)
     public void testGetQuestionsByCategoryName() throws IOException, InterruptedException, JSONException {
-        insertSomeQuestions();
+        String cat = "Science";
+        questionGeneratorService.generateTestQuestions(cat);
         Player player = playerService.getUsersByRole("ROLE_USER").get(0);
         ApiKey apiKey = player.getApiKey();
 
         HttpResponse<String> response = sendRequest("GET", "/api/questions", Map.of(),
-                Map.of("apiKey", apiKey.getKeyToken(), "category", "Science"));
+                Map.of("apiKey", apiKey.getKeyToken(), "category", cat));
 
         Assertions.assertEquals(200, response.statusCode());
         JSONObject json = parseJsonResponse(response);
@@ -811,10 +812,11 @@ public class Wiq_UnitTests {
     @Test
     @Order(52)
     public void testGetQuestionsByCategoryId() throws IOException, InterruptedException, JSONException {
-        insertSomeQuestions();
+        String category = "Science";
+        questionGeneratorService.generateTestQuestions(category);
         Player player = playerService.getUsersByRole("ROLE_USER").get(0);
         ApiKey apiKey = player.getApiKey();
-        Category cat = categoryService.getCategoryByName("Science");
+        Category cat = categoryService.getCategoryByName(category);
 
         HttpResponse<String> response = sendRequest("GET", "/api/questions", Map.of(),
                 Map.of("apiKey", apiKey.getKeyToken(), "category", cat.getId()));
@@ -1545,7 +1547,7 @@ public class Wiq_UnitTests {
     /**
      * Inserts some sample questions into the database
      */
-    private void insertSomeQuestions() throws InterruptedException, IOException {
+    private void insertSomeQuestions() throws IOException {
         questionGeneratorService.generateTestQuestions();
     }
 }

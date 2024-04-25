@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.uniovi.components.generators.QuestionGenerator;
 import com.uniovi.components.generators.QuestionGeneratorV2;
 import com.uniovi.dto.QuestionDto;
+import com.uniovi.entities.Answer;
 import com.uniovi.entities.Category;
 import com.uniovi.entities.Question;
 import jakarta.transaction.Transactional;
@@ -27,7 +28,7 @@ public class QuestionGeneratorService {
 
     private final QuestionService questionService;
 
-    private String jsonFilePath = "src/main/resources/static/JSON/QuestionTemplates.json";
+    public static final String jsonFilePath = "src/main/resources/static/JSON/QuestionTemplates.json";
 
     private Deque<QuestionType> types = new ArrayDeque<>();
 
@@ -100,6 +101,14 @@ public class QuestionGeneratorService {
         List<Question> qsp = qgen.getQuestions(Question.SPANISH, type.getQuestion(), type.getCategory());
         questions = qsp.stream().map(QuestionDto::new).toList();
         questions.forEach(questionService::addNewQuestion);
+    }
+
+    @Transactional
+    public void generateTestQuestions(String cat) throws IOException {
+        Answer a1 = new Answer("1", true);
+        List<Answer> answers = List.of(a1, new Answer("2", false), new Answer("3", false), new Answer("4", false));
+        Question q = new Question("Statement", answers, a1, new Category(cat), "es");
+        questionService.addNewQuestion(new QuestionDto(q));
     }
 
     private class QuestionType {
