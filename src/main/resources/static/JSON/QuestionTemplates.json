@@ -24,7 +24,7 @@
           ],
           "question": "countryLabel",
           "answer": "capitalLabel",
-          "sparqlQuery": "select distinct ?country ?[QUESTION] ?capital ?[ANSWER] where {\n  ?country wdt:P31 wd:Q6256 .\n  ?capital wdt:P31 wd:Q5119 .\n  ?country wdt:P36 ?capital .\n  ?country rdfs:label ?countryLabel .\n  ?capital rdfs:label ?capitalLabel .\n  FILTER(LANG(?countryLabel)=\"[LANGUAGE]\" && LANG(?capitalLabel)=\"[LANGUAGE]\")\n  }"
+          "sparqlQuery": "select distinct ?country ?[QUESTION] ?capital ?[ANSWER] where {\n  ?country wdt:P31 wd:Q6256 .\n  ?capital wdt:P31 wd:Q5119 .\n  ?country wdt:P36 ?capital .\n  ?country rdfs:label ?[QUESTION] .\n  ?capital rdfs:label ?[ANSWER] .\n  FILTER(LANG(?[QUESTION])=\"[LANGUAGE]\" && LANG(?[ANSWER])=\"[LANGUAGE]\")\n  }"
         },
         {
           "type": "currency",
@@ -44,7 +44,32 @@
             ],
           "question": "countryLabel",
           "answer": "currencyLabel",
-          "sparqlQuery": "select distinct ?country ?[QUESTION] ?currency ?[ANSWER] where {\n  ?country wdt:P31 wd:Q6256 .\n  ?currency wdt:P31 wd:Q8142 .\n  ?country wdt:P38 ?currency .\n  ?country rdfs:label ?countryLabel .\n  ?currency rdfs:label ?currencyLabel .\n  FILTER NOT EXISTS {?country wdt:P31 wd:Q3024240} .\n  FILTER(LANG(?countryLabel)=\"[LANGUAGE]\" && LANG(?currencyLabel)=\"[LANGUAGE]\")\n  }"
+          "sparqlQuery": "select distinct ?country ?[QUESTION] ?currency ?[ANSWER] where {\n  ?country wdt:P31 wd:Q6256 .\n  ?currency wdt:P31 wd:Q8142 .\n  ?country wdt:P38 ?currency .\n  ?country rdfs:label ?[QUESTION] .\n  ?currency rdfs:label ?[ANSWER] .\n  FILTER NOT EXISTS {?country wdt:P31 wd:Q3024240} .\n  FILTER(LANG(?[QUESTION])=\"[LANGUAGE]\" && LANG(?[ANSWER])=\"[LANGUAGE]\")\n  }"
+        }
+      ]
+    },
+    {
+      "name": "Science",
+      "questions": [
+        {
+          "type": "element",
+          "statements": [
+            {
+              "language": "es",
+              "statement": "¿Cuál es el símbolo químico del [QUESTION]?"
+            },
+            {
+              "language": "en",
+              "statement": "What is the chemical symbol of [QUESTION]?"
+            },
+            {
+              "language": "fr",
+              "statement": "Quel est le symbole chimique du [QUESTION]?"
+            }
+          ],
+          "question": "elementLabel",
+          "answer": "symbol",
+          "sparqlQuery": "select distinct ?element ?[QUESTION] ?[ANSWER] where {\n  ?element wdt:P31 wd:Q11344 .\n  ?element wdt:P246 ?[ANSWER] .\n  ?element rdfs:label ?[QUESTION] .\n  FILTER NOT EXISTS {?element wdt:P31 wd:Q1299291} .\n  FILTER(LANG(?[QUESTION])=\"[LANGUAGE]\")\n  }"
         }
       ]
     }
