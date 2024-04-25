@@ -176,7 +176,7 @@ public class GameController {
      * shown or the timeOutFailure view is shown.
      */
     @GetMapping("/game/{idQuestion}/{idAnswer}")
-    public String getCheckResult(@PathVariable Long idQuestion, @PathVariable Long idAnswer, Model model, HttpSession session) {
+    public String getCheckResult(@PathVariable Long idQuestion, @PathVariable Long idAnswer, Model model, HttpSession session,Principal principal) {
         GameSession gameSession = (GameSession) session.getAttribute("gameSession");
         if (gameSession == null) {
             return "redirect:/game";
@@ -216,7 +216,7 @@ public class GameController {
         session.setAttribute("hasJustAnswered", true);
         gameSession.getNextQuestion();
         //return "game/fragments/questionResult";
-        return updateGame(model, session);
+        return updateGame(model, session, principal);
     }
 
     @GetMapping("/game/update")

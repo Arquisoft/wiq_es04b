@@ -1,11 +1,13 @@
 package com.uniovi.services.impl;
 
+import ch.qos.logback.core.joran.sanity.Pair;
 import com.uniovi.dto.PlayerDto;
 import com.uniovi.dto.RoleDto;
 import com.uniovi.entities.ApiKey;
 import com.uniovi.entities.Associations;
 import com.uniovi.entities.Player;
 import com.uniovi.repositories.PlayerRepository;
+import com.uniovi.services.MultiplayerSessionService;
 import com.uniovi.services.PlayerService;
 import com.uniovi.services.RoleService;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -22,10 +24,13 @@ public class PlayerServiceImpl implements PlayerService {
     private RoleService roleService;
     private PasswordEncoder passwordEncoder;
 
-    public PlayerServiceImpl(PlayerRepository playerRepository, RoleService roleService, PasswordEncoder passwordEncoder) {
+    private MultiplayerSessionService multiplayerSessionService;
+
+    public PlayerServiceImpl(PlayerRepository playerRepository, RoleService roleService, MultiplayerSessionService multiplayerSessionService,PasswordEncoder passwordEncoder) {
         this.playerRepository = playerRepository;
         this.roleService = roleService;
         this.passwordEncoder = passwordEncoder;
+        this.multiplayerSessionService = multiplayerSessionService;
     }
 
     @Override
@@ -176,8 +181,10 @@ public class PlayerServiceImpl implements PlayerService {
      * with same multiplayerCode at the moment of the join
     * */
     private boolean existsMultiplayerCode(String code){
-        return ! getUsersByMultiplayerCode(Integer.parseInt(code)).isEmpty();
+        //return ! getUsersByMultiplayerCode(Integer.parseInt(code)).isEmpty();
+        return ! multiplayerSessionService.getPlayersWithScores(Integer.parseInt(code)).isEmpty();
     }
+
     @Override
     public int createMultiplayerGame(Long id){
         Optional<Player> player = playerRepository.findById(id);
