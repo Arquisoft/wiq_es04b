@@ -11,7 +11,7 @@
     </thead>
     <tbody>
     <tr th:each="game, iterStat : ${ranking}">
-        <td th:text="${iterStat.count}"></td>
+        <td th:text="${iterStat.count + page.getNumber() * num}"></td>
         <td th:text="${game.score}"></td>
         <td th:text="${game.getDuration()}"></td>
         <td th:text="${game.correctQuestions}"></td>

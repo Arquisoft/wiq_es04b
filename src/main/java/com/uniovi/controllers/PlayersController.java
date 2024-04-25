@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.security.Principal;
+import java.util.Optional;
 
 @Controller
 public class PlayersController {
@@ -99,17 +100,25 @@ public class PlayersController {
 
         model.addAttribute("ranking", ranking.getContent());
         model.addAttribute("page", ranking);
+        model.addAttribute("num", pageable.getPageSize());
 
         return "ranking/globalRanking";
     }
 
     @GetMapping("/ranking/playerRanking")
     public String showPlayerRanking(Pageable pageable, Model model, Principal principal) {
-        Player player = playerService.getUserByUsername(principal.getName()).get();
-        Page<GameSession> ranking = gameSessionService.getPlayerRanking(pageable, player);
+        Optional<Player> player = playerService.getUserByUsername(principal.getName());
+        Player p = player.orElse(null);
+
+        if (p == null) {
+            return "redirect:/login";
+        }
+
+        Page<GameSession> ranking = gameSessionService.getPlayerRanking(pageable, p);
 
         model.addAttribute("ranking", ranking.getContent());
         model.addAttribute("page", ranking);
+        model.addAttribute("num", pageable.getPageSize());
 
         return "ranking/playerRanking";
     }

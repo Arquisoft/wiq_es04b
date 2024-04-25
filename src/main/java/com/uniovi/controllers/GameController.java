@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.security.Principal;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Controller
 public class GameController {
@@ -78,15 +79,15 @@ public class GameController {
 
         if(idAnswer == -1
             || getRemainingTime(gameSession) <= 0) {
-            model.addAttribute("correctAnswer", gameSession.getCurrentQuestion().getCorrectAnswer());
-            model.addAttribute("messageKey", "timeRunOut.result");
-            model.addAttribute("logoImage", "/images/logo_incorrect.png");
+            //model.addAttribute("correctAnswer", gameSession.getCurrentQuestion().getCorrectAnswer());
+            //model.addAttribute("messageKey", "timeRunOut.result");
+            //model.addAttribute("logoImage", "/images/logo_incorrect.svg");
             gameSession.addAnsweredQuestion(gameSession.getCurrentQuestion());
             gameSession.addQuestion(false, 0);
         }
         else if(questionService.checkAnswer(idQuestion, idAnswer)) {
-            model.addAttribute("messageKey", "correctAnswer.result");
-            model.addAttribute("logoImage", "/images/logo_correct.png");
+            //model.addAttribute("messageKey", "correctAnswer.result");
+            //model.addAttribute("logoImage", "/images/logo_correct.svg");
 
             if (!gameSession.isAnswered(gameSession.getCurrentQuestion())) {
                 gameSession.addQuestion(true, getRemainingTime(gameSession));
@@ -94,16 +95,17 @@ public class GameController {
             }
 
         } else {
-            model.addAttribute("correctAnswer", gameSession.getCurrentQuestion().getCorrectAnswer());
-            model.addAttribute("messageKey", "failedAnswer.result");
-            model.addAttribute("logoImage", "/images/logo_incorrect.png");
+            //model.addAttribute("correctAnswer", gameSession.getCurrentQuestion().getCorrectAnswer());
+            //model.addAttribute("messageKey", "failedAnswer.result");
+            //model.addAttribute("logoImage", "/images/logo_incorrect.svg");
             gameSession.addAnsweredQuestion(gameSession.getCurrentQuestion());
             gameSession.addQuestion(false, 0);
         }
 
         session.setAttribute("hasJustAnswered", true);
         gameSession.getNextQuestion();
-        return "game/fragments/questionResult";
+        //return "game/fragments/questionResult";
+        return updateGame(model, session);
     }
 
     @GetMapping("/game/update")
@@ -148,8 +150,19 @@ public class GameController {
             return "0";
     }
 
+    @GetMapping("/game/currentQuestion")
+    @ResponseBody
+    public String getCurrentQuestion(HttpSession session) {
+        GameSession gameSession = (GameSession) session.getAttribute("gameSession");
+        if (gameSession != null)
+            return String.valueOf(gameSession.getAnsweredQuestions().size()+1);
+        else
+            return "0";
+    }
+
     private Player getLoggedInPlayer(Principal principal) {
-        return playerService.getUserByUsername(principal.getName()).get();
+        Optional<Player> player = playerService.getUserByUsername(principal.getName());
+        return player.orElse(null);
     }
 
     /**
