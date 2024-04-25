@@ -85,18 +85,31 @@ public class QuestionGeneratorV2 implements QuestionGenerator{
             String questionStatement = statement.replace(question_placeholder, result.path(questionLabel).path("value").asText());
 
             // Generate the question
-            questions.add(new Question(questionStatement, options, correct, cat, language));
+            Question q = new Question(questionStatement, options, correct, cat, language);
+
+            // Scramble the options
+            q.scrambleOptions();
+
+            // Add the question to the list
+            questions.add(q);
         }
         return questions;
     }
 
     private List<Answer> generateOptions(JsonNode results, String correctAnswer, String answerLabel) {
         List<Answer> options = new ArrayList<>();
-        for (JsonNode result : results) {
-            String option = result.path(answerLabel).path("value").asText();
-            if (!option.equals(correctAnswer)) {
+        List<String> usedOptions = new ArrayList<>();
+        int size = results.size();
+        int tries = 0;
+
+       while (options.size() < 3 && tries < 10){
+            int random = (int) (Math.random() * size);
+            String option = results.get(random).path(answerLabel).path("value").asText();
+            if (!option.equals(correctAnswer) && !usedOptions.contains(option) ) {
+                usedOptions.add(option);
                 options.add(new Answer(option, false));
             }
+            tries++;
         }
         return options;
     }
