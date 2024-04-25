@@ -453,8 +453,8 @@ public class Wiq_UnitTests {
         question.addOption(option2);
         question.addOption(option3);
 
-        question.scrambleOptions();
-        List<Answer> scrambledOptions = question.getOptions();
+        // question.scrambleOptions();
+        List<Answer> scrambledOptions = question.returnScrambledOptions();
 
         Assertions.assertTrue(scrambledOptions.contains(option1));
         Assertions.assertTrue(scrambledOptions.contains(option2));

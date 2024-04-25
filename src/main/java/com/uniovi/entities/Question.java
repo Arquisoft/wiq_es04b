@@ -78,8 +78,13 @@ public class Question implements JsonEntity {
         return answer.isCorrect();
     }
 
-    public void scrambleOptions(){
+    /*public void scrambleOptions(){
+        Collections.shuffle(options);   USO EN LOS TESTS Y ABSTRACTQUESTIONGENERATOR
+    }*/
+
+    public List<Answer> returnScrambledOptions(){
         Collections.shuffle(options);
+        return options;
     }
 
     @Override

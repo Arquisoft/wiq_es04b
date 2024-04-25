@@ -63,3 +63,7 @@ footer {
 .nav .nav-link:hover {
     color: rgba(255, 255, 255, 0.7) !important; /* Cambia el color del texto del enlace cuando se pasa el mouse */
 }
+
+.prueba {
+    font-weight: bold;
+}

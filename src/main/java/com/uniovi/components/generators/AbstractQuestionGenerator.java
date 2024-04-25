@@ -44,7 +44,7 @@ public abstract class AbstractQuestionGenerator implements QuestionGenerator{
         answers.add(correct);
 
         Question question = new Question(statement, answers, correct, category, language);
-        question.scrambleOptions();
+        //question.scrambleOptions();
         questions.add(question);
     }
 
