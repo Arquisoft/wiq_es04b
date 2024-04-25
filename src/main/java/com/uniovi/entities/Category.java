@@ -33,6 +33,10 @@ public class Category implements JsonEntity {
         this.description = description;
     }
 
+    public Category(String categoryName) {
+        this.name = categoryName;
+    }
+
     @Override
     public String toString() {
         return name;
