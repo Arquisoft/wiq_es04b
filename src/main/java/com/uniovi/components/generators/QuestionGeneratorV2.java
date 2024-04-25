@@ -2,6 +2,7 @@ package com.uniovi.components.generators;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.uniovi.entities.Answer;
 import com.uniovi.entities.Category;
 import com.uniovi.entities.Question;
 
@@ -53,24 +54,50 @@ public class QuestionGeneratorV2 implements QuestionGenerator{
     private List<Question> generateQuestion(JsonNode question, Category cat) {
         // Get the SPARQL query from the JSON
         String query = question.get("sparqlQuery").textValue();
+
+        // Get the question and answer words from the JSON
+        String questionLabel = question.get("question").textValue();
+        String answerLabel= question.get("answer").textValue();
+
         // Replace the placeholders in the query with the actual values
         query = query.replace(language_placeholder, language).
-                replace(question_placeholder, question.get("question").textValue()).
-                replace(answer_placeholder, question.get("answer").textValue());
+                replace(question_placeholder, questionLabel).
+                replace(answer_placeholder, answerLabel);
+
         // Execute the query and get the results
         JsonNode results = getQueryResult(query);
         List<Question> questions = new ArrayList<>();
+
         // Prepare the statement base based on the language
         String statement = this.prepareStatement(question);
-        for(JsonNode result : results){
-            String statement = result.get("statement").textValue();
-            List<String> options = new ArrayList<>();
-            for(JsonNode option : result.get("options")){
-                options.add(option.textValue());
-            }
-            String correctAnswer = result.get("correctAnswer").textValue();
-            this.questionGenerator(statement, options, correctAnswer, cat, questions);
+
+        for (JsonNode result : results) {
+            // Generate the correct answer
+            String correctAnswer = result.get(answerLabel).textValue();
+            Answer correct = new Answer(correctAnswer, true);
+
+            // Generate the options
+            List<Answer> options = this.generateOptions(results, correctAnswer, answerLabel);
+
+
+            // Generate the question statement
+            String questionStatement = statement.replace(question_placeholder, result.get(questionLabel).textValue());
+
+            // Generate the question
+            questions.add(new Question(questionStatement, options, correct, cat, language));
         }
+        return questions;
+    }
+
+    private List<Answer> generateOptions(JsonNode results, String correctAnswer, String answerLabel) {
+        List<Answer> options = new ArrayList<>();
+        for (JsonNode result : results) {
+            String option = result.get(answerLabel).textValue();
+            if (!option.equals(correctAnswer)) {
+                options.add(new Answer(option, false));
+            }
+        }
+        return options;
     }
 
     /**
