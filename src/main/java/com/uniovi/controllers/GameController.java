@@ -70,9 +70,6 @@ public class GameController {
 
     @GetMapping("/multiplayerGame")
     public String getMultiplayerGame() {
-        //EL elminar el multiplaterCode del jugador se puede hacer cuando comienze el proximo
-        //juego con amigos o cuando acaba la partida, lo suyo seria cuando acabe
-        //ya mirare como
         return "game/multiplayerGame";
     }
 
@@ -87,7 +84,6 @@ public class GameController {
             session.setAttribute("multiplayerCode",code);
             return "redirect:/game/lobby";
         } else {
-            //Hay q tratarlo como como se hace en sinUp, hacienado validate y tal
             return "redirect:/multiplayerGame";
         }
     }
@@ -193,12 +189,12 @@ public class GameController {
     @GetMapping("/game/lobby/{code}")
     @ResponseBody
     public List<String> updatePlayerList(@PathVariable String code) {
-        //List<Player> players = playerService.getUsersByMultiplayerCode(Integer.parseInt(code));
         Map<Player,Integer> players= multiplayerSessionService.getPlayersWithScores(Integer.parseInt(code));
         List<String> playerNames = new ArrayList<>();
         for (Map.Entry<Player, Integer> player : players.entrySet()) {
             playerNames.add(player.getKey().getUsername());
         }
+        Collections.sort(playerNames);
         return playerNames;
     }
     @GetMapping("/game/lobby")
@@ -291,6 +287,7 @@ public class GameController {
             multiplayerSessionService.changeScore(p.getMultiplayerCode()+"",p.getId(),gameSession.getScore());
             isMultiPlayer=false;
             //return "game/multiplayerGame/endGame/"+p.getMultiplayerCode();
+            //return "redirect:multiplayerGame/endGame/"+p.getMultiplayerCode();
             //return "redirect:multiplayerGame/endGame/"+p.getMultiplayerCode();
             return "game/multiFinished";
         }
