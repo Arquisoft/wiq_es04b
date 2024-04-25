@@ -2,9 +2,6 @@ package com.uniovi;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.uniovi.components.generators.geography.BorderQuestionGenerator;
-import com.uniovi.components.generators.geography.CapitalQuestionGenerator;
-import com.uniovi.components.generators.geography.ContinentQuestionGeneration;
 import com.uniovi.entities.*;
 import com.uniovi.services.*;
 import org.junit.jupiter.api.*;
@@ -13,14 +10,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import static org.junit.Assert.*;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
 @Tag("unit")
@@ -38,6 +33,8 @@ public class Wiq_UnitTests {
     private CategoryService categoryService;
     @Autowired
     private InsertSampleDataService sampleDataService;
+    @Autowired
+    private QuestionGeneratorService questionGeneratorService;
 
     private Player createPlayer(){
         return new Player("name","test@email.com","password");
@@ -48,57 +45,12 @@ public class Wiq_UnitTests {
         List<Player> players = playerService.getUsersByRole("ROLE_USER");
         Assertions.assertEquals(1, players.size());
     }
-    @Test
-    @Order(2)
-    public void testQuestions(){
-        sampleDataService.insertSampleQuestions();
-        sampleDataService.generateSampleData();
-        List<Question> questions = questionService.getAllQuestions();
-        Assertions.assertFalse(questions.isEmpty());
-
-    }
-    @Test
-    @Order(2)
-    public void testRandomQuestions(){
-        sampleDataService.insertSampleQuestions();
-        sampleDataService.generateSampleData();
-        List<Question> questions = questionService.getRandomQuestions(5);
-        Assertions.assertEquals(5,questions.size());
-    }
 
     @Test
     @Order(3)
-    public void testBorderQuestionsGenerator(){
-        BorderQuestionGenerator borderQuestionGenerator=new BorderQuestionGenerator(categoryService,Question.SPANISH);
-        List<Question> questions = borderQuestionGenerator.getQuestions();
-        Assertions.assertFalse(questions.isEmpty());
-
-        for (Question question : questions) {
-            Assertions.assertNotNull(question.getCorrectAnswer());
-            Assertions.assertEquals(4, question.getOptions().size());
-            Assertions.assertTrue(question.getOptions().contains(question.getCorrectAnswer()));
-        }
-    }
-
-    @Test
-    @Order(4)
-    public void testCapitalQuestionsGenerator(){
-        CapitalQuestionGenerator capitalQuestionGenerator=new CapitalQuestionGenerator(categoryService,Question.SPANISH);
-        List<Question> questions = capitalQuestionGenerator.getQuestions();
-        Assertions.assertFalse(questions.isEmpty());
-
-        for (Question question : questions) {
-            Assertions.assertNotNull(question.getCorrectAnswer());
-            Assertions.assertEquals(4, question.getOptions().size());
-            Assertions.assertTrue(question.getOptions().contains(question.getCorrectAnswer()));
-        }
-    }
-
-    @Test
-    @Order(5)
-    public void testContinentQuestionsGenerator(){
-        ContinentQuestionGeneration continentQuestionGenerator=new ContinentQuestionGeneration(categoryService,Question.SPANISH);
-        List<Question> questions = continentQuestionGenerator.getQuestions();
+    public void testQuestionsGenerator() throws IOException {
+        questionGeneratorService.generateTestQuestions();
+        List<Question> questions = questionService.getAllQuestions();
         Assertions.assertFalse(questions.isEmpty());
 
         for (Question question : questions) {

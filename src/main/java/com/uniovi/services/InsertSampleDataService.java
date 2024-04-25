@@ -1,6 +1,5 @@
 package com.uniovi.services;
 
-import com.uniovi.components.MultipleQuestionGenerator;
 import com.uniovi.dto.PlayerDto;
 import com.uniovi.entities.Question;
 import com.uniovi.repositories.GameSessionRepository;
@@ -19,81 +18,37 @@ import java.util.List;
 
 @Service
 public class InsertSampleDataService {
-//    private final PlayerService playerService;
-//    private final QuestionService questionService;
-//    private final CategoryService categoryService;
-//    private final QuestionRepository questionRepository;
-//    private final GameSessionRepository gameSessionRepository;
-//    private Environment environment;
-//
-//    private Logger log = LoggerFactory.getLogger(InsertSampleDataService.class);
-//
-////    public InsertSampleDataService(PlayerService playerService, QuestionService questionService,
-////                                   CategoryService categoryService, QuestionRepository questionRepository,
-////                                   GameSessionRepository gameSessionRepository, Environment environment) {
-////        this.playerService = playerService;
-////        this.questionService = questionService;
-////        this.categoryService = categoryService;
-////        this.questionRepository = questionRepository;
-////        this.gameSessionRepository = gameSessionRepository;
-////        this.environment = environment;
-////    }
-////
-////    @Transactional
-////    @EventListener(ApplicationReadyEvent.class) // Uncomment this line to insert sample data on startup
-////    public void insertSampleQuestions() throws InterruptedException, IOException {
-////        if (!playerService.getUserByEmail("test@test.com").isPresent()) {
-////            PlayerDto player = new PlayerDto();
-////            player.setEmail("test@test.com");
-////            player.setUsername("test");
-////            player.setPassword("test");
-////            player.setRoles(new String[]{"ROLE_USER"});
-////            playerService.generateApiKey(playerService.addNewPlayer(player));
-////        }
-////
-////        if (Arrays.stream(environment.getActiveProfiles()).anyMatch(env -> (env.equalsIgnoreCase("test")))) {
-////            log.info("Test profile active, skipping sample data insertion");
-////            return;
-////        }
-////
-////        generateSampleData();
-////    }
-////
-////    @Transactional
-////    public void generateTestQuestions() {
-////        questionRepository.deleteAll();
-////        questionService.testQuestions(4);
-////    }
-////
-////    @Transactional
-////    public void generateSampleData() throws InterruptedException, IOException {
-////
-////        questionRepository.deleteAll();
-////
-////        MultipleQuestionGenerator allQuestionGenerator = new MultipleQuestionGenerator(
-////                new ContinentQuestionGeneration(categoryService, Question.ENGLISH),
-////                new CapitalQuestionGenerator(categoryService, Question.ENGLISH),
-////                new BorderQuestionGenerator(categoryService, Question.ENGLISH)
-////        );
-////        List<Question> questionsEn = allQuestionGenerator.getQuestions();
-////        questionsEn.forEach(questionService::addNewQuestion);
-////
-////        allQuestionGenerator = new MultipleQuestionGenerator(
-////                new ContinentQuestionGeneration(categoryService, Question.SPANISH),
-////                new CapitalQuestionGenerator(categoryService, Question.SPANISH),
-////                new BorderQuestionGenerator(categoryService, Question.SPANISH)
-////        );
-////        List<Question> questionsEs = allQuestionGenerator.getQuestions();
-////        questionsEs.forEach(questionService::addNewQuestion);
-////
-////        allQuestionGenerator = new MultipleQuestionGenerator(
-////                new ContinentQuestionGeneration(categoryService, Question.FRENCH),
-////                new CapitalQuestionGenerator(categoryService, Question.FRENCH),
-////                new BorderQuestionGenerator(categoryService, Question.FRENCH)
-////        );
-////        List<Question> questionsFr = allQuestionGenerator.getQuestions();
-////        questionsFr.forEach(questionService::addNewQuestion);
-////
-////        log.info("Sample questions inserted");
-////    }
+    private final PlayerService playerService;
+    private final QuestionService questionService;
+    private final CategoryService categoryService;
+    private final QuestionRepository questionRepository;
+    private final GameSessionRepository gameSessionRepository;
+    private Environment environment;
+
+    private Logger log = LoggerFactory.getLogger(InsertSampleDataService.class);
+
+    public InsertSampleDataService(PlayerService playerService, QuestionService questionService,
+                                   CategoryService categoryService, QuestionRepository questionRepository,
+                                   GameSessionRepository gameSessionRepository, Environment environment) {
+        this.playerService = playerService;
+        this.questionService = questionService;
+        this.categoryService = categoryService;
+        this.questionRepository = questionRepository;
+        this.gameSessionRepository = gameSessionRepository;
+        this.environment = environment;
+    }
+
+    @Transactional
+    @EventListener(ApplicationReadyEvent.class) // Uncomment this line to insert sample data on startup
+    public void insertSampleQuestions() throws InterruptedException, IOException {
+        if (!playerService.getUserByEmail("test@test.com").isPresent()) {
+            PlayerDto player = new PlayerDto();
+            player.setEmail("test@test.com");
+            player.setUsername("test");
+            player.setPassword("test");
+            player.setRoles(new String[]{"ROLE_USER"});
+            playerService.generateApiKey(playerService.addNewPlayer(player));
+        }
+    }
+
 }
