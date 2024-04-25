@@ -2,6 +2,9 @@ package com.uniovi.components.generators;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.uniovi.dto.AnswerDto;
+import com.uniovi.dto.CategoryDto;
+import com.uniovi.dto.QuestionDto;
 import com.uniovi.entities.Answer;
 import com.uniovi.entities.Category;
 import com.uniovi.entities.Question;
@@ -45,6 +48,12 @@ public class QuestionGeneratorV2 implements QuestionGenerator{
             }
         }
         return questions;
+    }
+
+    @Override
+    public List<Question> getQuestions(String language, JsonNode question, Category cat) throws IOException {
+        this.language = language;
+        return this.generateQuestion(question, cat);
     }
 
     private List<Question> generateQuestion(JsonNode question, Category cat) throws IOException {

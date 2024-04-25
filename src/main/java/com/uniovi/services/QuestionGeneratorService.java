@@ -2,29 +2,33 @@ package com.uniovi.services;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.uniovi.components.generators.QuestionGenerator;
 import com.uniovi.components.generators.QuestionGeneratorV2;
+import com.uniovi.dto.QuestionDto;
 import com.uniovi.entities.Category;
 import com.uniovi.entities.Question;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.List;
-import java.util.Stack;
 
 @Service
 public class QuestionGeneratorService {
 
     private final QuestionService questionService;
 
-    @Value("${question.json.path}")
-    private String jsonFilePath;
+    @Value("${question.json.path:src/main/resources/static/JSON/QuestionTemplates.json}")
+    private String jsonFilePath = "src/main/resources/static/JSON/QuestionTemplates.json";
 
-    private Stack<QuestionType> types = new Stack<>();
+    private Deque<QuestionType> types = new ArrayDeque<>();
 
-    private JsonNode currentType;
+    private JsonNode json;
 
     public QuestionGeneratorService(QuestionService questionService) {
         this.questionService = questionService;
@@ -35,8 +39,8 @@ public class QuestionGeneratorService {
         try {
             File jsonFile = new File(jsonFilePath);
             ObjectMapper objectMapper = new ObjectMapper();
-            JsonNode jsonNode = objectMapper.readTree(jsonFile);
-            JsonNode categories = jsonNode.findValue("categories");
+            json = objectMapper.readTree(jsonFile);
+            JsonNode categories = json.findValue("categories");
             for (JsonNode category : categories) {
                 String categoryName = category.get("name").textValue();
                 Category cat = new Category(categoryName);
@@ -51,24 +55,26 @@ public class QuestionGeneratorService {
     }
 
     @Scheduled(fixedRate = 150000)
-    public void generateQuestions() {
-
-        File jsonFile = new File(jsonFilePath);
-
-        ObjectMapper objectMapper = new ObjectMapper();
-
-        try {
-            JsonNode jsonNode = objectMapper.readTree(jsonFile);
-            QuestionGeneratorV2 qgen = new QuestionGeneratorV2(jsonNode);
-            List<Question> qsp = qgen.getQuestions(Question.SPANISH);
-            qsp.forEach(questionService::addNewQuestion);
-            List<Question> qen = qgen.getQuestions(Question.ENGLISH);
-            qen.forEach(questionService::addNewQuestion);
-            List<Question> qfr = qgen.getQuestions(Question.FRENCH);
-            qfr.forEach(questionService::addNewQuestion);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+    @Transactional
+    public void generateQuestions() throws IOException {
+        if (types.isEmpty()) {
+            return;
         }
+        QuestionGenerator qgen = new QuestionGeneratorV2(json);
+        QuestionType type = types.pop();
+        List<QuestionDto> questions;
+
+        List<Question> qsp = qgen.getQuestions(Question.SPANISH, type.getQuestion(), type.getCategory());
+        questions = qsp.stream().map(QuestionDto::new).toList();
+        questions.forEach(questionService::addNewQuestion);
+
+        List<Question> qen = qgen.getQuestions(Question.ENGLISH,  type.getQuestion(), type.getCategory());
+        questions = qen.stream().map(QuestionDto::new).toList();
+        questions.forEach(questionService::addNewQuestion);
+
+        List<Question> qfr = qgen.getQuestions(Question.FRENCH,  type.getQuestion(), type.getCategory());
+        questions = qfr.stream().map(QuestionDto::new).toList();
+        questions.forEach(questionService::addNewQuestion);
     }
 
     private class QuestionType {
