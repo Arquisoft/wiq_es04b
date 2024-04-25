@@ -9,5 +9,5 @@ import java.util.List;
 
 @Component
 public interface QuestionGenerator {
-    List<Question> getQuestions() throws IOException;
+    List<Question> getQuestions(String language) throws IOException;
 }

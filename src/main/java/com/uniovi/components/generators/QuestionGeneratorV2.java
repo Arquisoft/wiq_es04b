@@ -24,16 +24,16 @@ public class QuestionGeneratorV2 implements QuestionGenerator{
     private String answer_placeholder;
     private String language;
 
-    public QuestionGeneratorV2(JsonNode jsonNode, String language) {
+    public QuestionGeneratorV2(JsonNode jsonNode) {
         this.jsonNode = jsonNode;
         this.language_placeholder = jsonNode.get("language_placeholder").textValue();
         this.question_placeholder = jsonNode.get("question_placeholder").textValue();
         this.answer_placeholder = jsonNode.get("answer_placeholder").textValue();
-        this.language = language;
     }
 
     @Override
-    public List<Question> getQuestions() throws IOException {
+    public List<Question> getQuestions(String language) throws IOException {
+        this.language = language;
         List<Question> questions = new ArrayList<>();
         JsonNode categories = jsonNode.findValue("categories");
         for(JsonNode category : categories){

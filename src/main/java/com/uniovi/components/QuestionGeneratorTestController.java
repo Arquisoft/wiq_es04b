@@ -26,8 +26,8 @@ public class QuestionGeneratorTestController {
 
         // Leer el archivo JSON y convertirlo en un JsonNode
         JsonNode jsonNode = objectMapper.readTree(jsonFile);
-        QuestionGeneratorV2 qgen = new QuestionGeneratorV2(jsonNode, Question.SPANISH);
-        List<Question> q = qgen.getQuestions();
+        QuestionGeneratorV2 qgen = new QuestionGeneratorV2(jsonNode);
+        List<Question> q = qgen.getQuestions(Question.SPANISH);
         for(Question question : q){
             System.out.println(question);
         }
