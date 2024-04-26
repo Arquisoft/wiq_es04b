@@ -96,4 +96,9 @@ public interface QuestionService {
      * @param id The id of the question to delete
      */
     void deleteQuestion(Long id);
+
+    /**
+     * Delete all the questions
+     */
+    void deleteAllQuestions();
 }

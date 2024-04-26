@@ -39,9 +39,12 @@ public class QuestionGeneratorService {
 
     private Logger log = LoggerFactory.getLogger(InsertSampleDataService.class);
 
+    private boolean started;
+
     public QuestionGeneratorService(QuestionService questionService) {
         this.questionService = questionService;
         parseQuestionTypes();
+        this.started = true;
     }
 
     private void parseQuestionTypes() {
@@ -63,11 +66,20 @@ public class QuestionGeneratorService {
         }
     }
 
+    @Scheduled(fixedRate = 86400000, initialDelay = 86400000)
+    public void generateAllQuestions(){
+    }
+
     @Scheduled(fixedRate = 150000)
     @Transactional
     public void generateQuestions() throws IOException {
         if (types.isEmpty()) {
             return;
+        }
+
+        if (started){
+            started = false;
+            questionService.deleteAllQuestions();
         }
 
         if (Arrays.stream(environment.getActiveProfiles()).anyMatch(env -> (env.equalsIgnoreCase("test")))) {
