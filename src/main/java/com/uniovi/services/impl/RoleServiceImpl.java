@@ -35,4 +35,11 @@ public class RoleServiceImpl implements RoleService {
     public Role getRole(String name) {
         return roleRepository.findById(name).orElse(null);
     }
+
+    @Override
+    public List<Role> getAllRoles() {
+        List<Role> roles = new ArrayList<>();
+        roleRepository.findAll().forEach(roles::add);
+        return roles;
+    }
 }

@@ -143,4 +143,15 @@ public class PlayerServiceImpl implements PlayerService {
     public Page<Player> getPlayersPage(Pageable pageable) {
         return playerRepository.findAll(pageable);
     }
+
+    @Override
+    public void updatePassword(Player player, String password) {
+        player.setPassword(passwordEncoder.encode(password));
+        playerRepository.save(player);
+    }
+
+    @Override
+    public void savePlayer(Player player) {
+        playerRepository.save(player);
+    }
 }

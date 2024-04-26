@@ -80,15 +80,15 @@ public class InsertSampleDataService {
 
         questionRepository.deleteAll();
 
-        MultipleQuestionGenerator allQuestionGenerator = new MultipleQuestionGenerator(
-                //new ContinentQuestionGeneration(categoryService, Question.ENGLISH),
-                //new CapitalQuestionGenerator(categoryService, Question.ENGLISH),
-                //new BorderQuestionGenerator(categoryService, Question.ENGLISH)
-        );
-        List<Question> questionsEn = allQuestionGenerator.getQuestions();
-        questionsEn.forEach(questionService::addNewQuestion);
+        //MultipleQuestionGenerator allQuestionGenerator = new MultipleQuestionGenerator(
+        //        //new ContinentQuestionGeneration(categoryService, Question.ENGLISH),
+        //        //new CapitalQuestionGenerator(categoryService, Question.ENGLISH),
+        //        //new BorderQuestionGenerator(categoryService, Question.ENGLISH)
+        //);
+        //List<Question> questionsEn = allQuestionGenerator.getQuestions();
+        //questionsEn.forEach(questionService::addNewQuestion);
 
-        allQuestionGenerator = new MultipleQuestionGenerator(
+        MultipleQuestionGenerator allQuestionGenerator = new MultipleQuestionGenerator(
                 //new ContinentQuestionGeneration(categoryService, Question.SPANISH),
                 //new CapitalQuestionGenerator(categoryService, Question.SPANISH),
                 new BorderQuestionGenerator(categoryService, Question.SPANISH)
@@ -101,8 +101,8 @@ public class InsertSampleDataService {
         //        new CapitalQuestionGenerator(categoryService, Question.FRENCH),
         //        new BorderQuestionGenerator(categoryService, Question.FRENCH)
         //);
-        List<Question> questionsFr = allQuestionGenerator.getQuestions();
-        questionsFr.forEach(questionService::addNewQuestion);
+        //List<Question> questionsFr = allQuestionGenerator.getQuestions();
+        //questionsFr.forEach(questionService::addNewQuestion);
 
         log.info("Sample questions inserted");
     }

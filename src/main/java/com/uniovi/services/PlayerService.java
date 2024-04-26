@@ -81,4 +81,17 @@ public interface PlayerService {
      * @return A page with all the players
      */
     Page<Player> getPlayersPage(Pageable pageable);
+
+    /**
+     * Update the password of a player
+     * @param player The player to update the password
+     * @param password The new password
+     */
+    void updatePassword(Player player, String password);
+
+    /**
+     * Save a player in the database
+     * @param player The player to save
+     */
+    void savePlayer(Player player);
 }

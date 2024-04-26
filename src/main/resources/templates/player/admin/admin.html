@@ -8,7 +8,7 @@
 
 <canvas th:replace="~{fragments/background}"></canvas>
 
-<div class="container-fluid" style="text-align: center">
+<div class="container-fluid" style="text-align: center; overflow: visible">
     <h1 th:text="#{navbar.section.admin}"></h1>
     <ul class="nav nav-tabs justify-content-center" id="adminTab" role="tablist">
         <li class="nav-item">
@@ -50,5 +50,6 @@
         });
     });
 </script>
+<script src="/script/adminModals.js"></script>
 </body>
 </html>
