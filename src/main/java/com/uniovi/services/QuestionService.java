@@ -3,11 +3,10 @@ package com.uniovi.services;
 import com.uniovi.dto.QuestionDto;
 import com.uniovi.entities.Category;
 import com.uniovi.entities.Question;
-import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import org.springframework.data.domain.Pageable;
 import java.util.List;
 import java.util.Optional;
 
@@ -97,12 +96,4 @@ public interface QuestionService {
      * @param id The id of the question to delete
      */
     void deleteQuestion(Long id);
-
-    /**
-     * Get some test questions
-     *
-     * @param num The number of questions to get
-     * @return The questions selected
-     */
-    List<Question> testQuestions(int num);
 }
