@@ -1799,8 +1799,36 @@ public class Wiq_UnitTests {
         Assertions.assertEquals("", result);
     }
 
+    @Test
+    @Order(112)
+    public void PlayerServiceImpl_createMultiplayerGame() {
+        Long playerId = 1L;
 
+        int result = playerService.createMultiplayerGame(playerId);
+        Assertions.assertNotEquals(-1, result);
+    }
 
+    @Test
+    @Order(113)
+    public void PlayerServiceImpl_createMultiplayerGame_EmptyPlayer() {
+        Long playerId = 5L;
+
+        int result = playerService.createMultiplayerGame(playerId);
+        Assertions.assertEquals(-1, result);
+    }
+
+    @Test
+    @Order(114)
+    public void PlayerServiceImpl_deleteMultiplayerCode() {
+        Long playerId = 1L;
+        Player player = createPlayer();
+        player.setId(playerId);
+        playerRepository.save(player);
+        playerService.createMultiplayerGame(playerId);
+
+        playerService.deleteMultiplayerCode(playerId);
+        Assertions.assertNull(player.getMultiplayerCode());
+    }
 
 
 
