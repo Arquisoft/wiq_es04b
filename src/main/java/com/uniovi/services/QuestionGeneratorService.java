@@ -68,6 +68,7 @@ public class QuestionGeneratorService {
 
     @Scheduled(fixedRate = 86400000, initialDelay = 86400000)
     public void generateAllQuestions() throws IOException {
+        started = true;
         resetGeneration();
     }
 
@@ -78,7 +79,7 @@ public class QuestionGeneratorService {
             return;
         }
 
-        if (started){
+        if (started) {
             started = false;
             questionService.deleteAllQuestions();
         }
