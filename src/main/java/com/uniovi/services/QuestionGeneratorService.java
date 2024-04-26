@@ -71,7 +71,9 @@ public class QuestionGeneratorService {
     }
 
     @Scheduled(fixedRate = 86400000, initialDelay = 86400000)
-    public void generateAllQuestions(){
+    public void generateAllQuestions() {
+        started = true;
+        resetGeneration();
     }
 
     @Scheduled(fixedRate = 150000)
