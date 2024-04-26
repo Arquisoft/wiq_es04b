@@ -9,9 +9,12 @@ import com.uniovi.repositories.AnswerRepository;
 import com.uniovi.repositories.QuestionRepository;
 import com.uniovi.services.AnswerService;
 import com.uniovi.services.CategoryService;
+import com.uniovi.services.QuestionGeneratorService;
 import com.uniovi.services.QuestionService;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
+import lombok.Setter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -30,6 +33,9 @@ public class QuestionServiceImpl implements QuestionService {
     private final AnswerService answerService;
     private final AnswerRepository answerRepository;
     private final EntityManager entityManager;
+
+    @Setter
+    private QuestionGeneratorService questionGeneratorService;
 
     private final Random random = new SecureRandom();
 
@@ -168,6 +174,7 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Override
     public void deleteAllQuestions() {
+        questionGeneratorService.resetGeneration();
         questionRepository.deleteAll();
     }
 }

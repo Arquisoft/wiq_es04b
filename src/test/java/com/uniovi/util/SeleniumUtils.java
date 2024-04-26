@@ -73,6 +73,14 @@ public class SeleniumUtils {
 		Assertions.assertTrue(resultado);
 	}
 
+	static public List<WebElement> waitLoadElements(WebDriver driver, By by, int timeout)
+	{
+		WebElement result =
+				(new WebDriverWait(driver, Duration.ofSeconds(timeout))).until(ExpectedConditions.visibilityOfElementLocated(by));
+		Assertions.assertNotNull(result);
+		return driver.findElements(by);
+	}
+
 	/**
 	 * Espera por la visibilidad de un elemento/s en la vista actualmente cargandose en driver. Para ello se empleará una consulta xpath 
 	 * según varios criterios..
@@ -124,4 +132,10 @@ public class SeleniumUtils {
 			}
 		}
 	}
+
+    public static void waitInvisibleElement(WebDriver driver, By by, int timeout) {
+		Boolean resultado =
+				(new WebDriverWait(driver, Duration.ofSeconds(timeout))).until(ExpectedConditions.invisibilityOfElementLocated(by));
+		Assertions.assertTrue(resultado);
+    }
 }

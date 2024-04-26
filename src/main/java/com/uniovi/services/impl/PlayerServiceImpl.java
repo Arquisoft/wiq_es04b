@@ -10,6 +10,8 @@ import com.uniovi.repositories.RoleRepository;
 import com.uniovi.services.PlayerService;
 import com.uniovi.services.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.uniovi.entities.Role;
@@ -135,5 +137,21 @@ public class PlayerServiceImpl implements PlayerService {
     @Override
     public void deletePlayer(Long id) {
         playerRepository.deleteById(id);
+    }
+
+    @Override
+    public Page<Player> getPlayersPage(Pageable pageable) {
+        return playerRepository.findAll(pageable);
+    }
+
+    @Override
+    public void updatePassword(Player player, String password) {
+        player.setPassword(passwordEncoder.encode(password));
+        playerRepository.save(player);
+    }
+
+    @Override
+    public void savePlayer(Player player) {
+        playerRepository.save(player);
     }
 }

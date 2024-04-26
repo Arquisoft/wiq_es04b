@@ -8,7 +8,10 @@ import com.uniovi.dto.QuestionDto;
 import com.uniovi.entities.Answer;
 import com.uniovi.entities.Category;
 import com.uniovi.entities.Question;
+import com.uniovi.services.impl.QuestionServiceImpl;
 import jakarta.transaction.Transactional;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +46,7 @@ public class QuestionGeneratorService {
 
     public QuestionGeneratorService(QuestionService questionService) {
         this.questionService = questionService;
+        ((QuestionServiceImpl)questionService).setQuestionGeneratorService(this);
         parseQuestionTypes();
         this.started = true;
     }
@@ -123,24 +127,15 @@ public class QuestionGeneratorService {
         questionService.addNewQuestion(new QuestionDto(q));
     }
 
-    private class QuestionType {
-
-        private JsonNode question;
-        private Category category;
-
-        public QuestionType(JsonNode question, Category category) {
-            this.question = question;
-            this.category = category;
-        }
-
-        public JsonNode getQuestion() {
-            return question;
-        }
-
-        public Category getCategory() {
-            return category;
-        }
+    public void resetGeneration() {
+        types.clear();
+        parseQuestionTypes();
     }
 
-
+    @Getter
+    @AllArgsConstructor
+    private static class QuestionType {
+        private final JsonNode question;
+        private final Category category;
+    }
 }

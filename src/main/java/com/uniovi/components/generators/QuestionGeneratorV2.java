@@ -16,8 +16,10 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class QuestionGeneratorV2 implements QuestionGenerator{
 
@@ -26,6 +28,8 @@ public class QuestionGeneratorV2 implements QuestionGenerator{
     private String question_placeholder;
     private String answer_placeholder;
     private String language;
+
+    private Random random = new SecureRandom();
 
     public QuestionGeneratorV2(JsonNode jsonNode) {
         this.jsonNode = jsonNode;
@@ -103,8 +107,8 @@ public class QuestionGeneratorV2 implements QuestionGenerator{
         int size = results.size();
         int tries = 0;
 
-       while (options.size() < 3 && tries < 10){
-            int random = (int) (Math.random() * size);
+       while (options.size() < 3 && tries < 10) {
+            int random = (int) (this.random.nextFloat() * size);
             String option = results.get(random).path(answerLabel).path("value").asText();
             if (!option.equals(correctAnswer) && !usedOptions.contains(option) ) {
                 usedOptions.add(option);
