@@ -12,6 +12,7 @@ import com.uniovi.components.generators.geography.CapitalQuestionGenerator;
 import com.uniovi.components.generators.geography.ContinentQuestionGeneration;
 import com.uniovi.entities.*;
 import com.uniovi.services.*;
+import jakarta.validation.constraints.AssertTrue;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -1766,6 +1767,42 @@ public class Wiq_UnitTests {
 
         Assertions.assertTrue(result.isEmpty());
     }
+
+    @Test
+    @Order(110)
+    public void PlayerServiceImpl_setANDgetScoreMultiplayerCode() {
+        Long playerId = 1L;
+        Player player = createPlayer();
+        player.setId(playerId);
+
+        player.setMultiplayerCode(123);
+        playerRepository.save(player);
+
+        String score = "100";
+        playerService.setScoreMultiplayerCode(playerId, score);
+
+        String result = playerService.getScoreMultiplayerCode(playerId);
+
+        Assertions.assertEquals(score, result);
+    }
+
+    @Test
+    @Order(111)
+    public void PlayerServiceImpl_setANDgetScoreMultiplayerCode_EmptyPlayer() {
+        Long playerId = 5L;
+
+        String score = "100";
+        playerService.setScoreMultiplayerCode(playerId, score);
+
+        String result = playerService.getScoreMultiplayerCode(playerId);
+
+        Assertions.assertEquals("", result);
+    }
+
+
+
+
+
 
 
     /**
