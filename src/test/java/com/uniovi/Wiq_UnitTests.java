@@ -7,6 +7,7 @@ import com.uniovi.dto.RoleDto;
 import com.uniovi.entities.*;
 import com.uniovi.repositories.*;
 import com.uniovi.services.*;
+import jakarta.transaction.Transactional;
 import jakarta.validation.constraints.AssertTrue;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -1634,7 +1635,7 @@ public class Wiq_UnitTests {
     @Test
     @Order(106)
     public void GameSessionImpl_startNewMultiplayerGame()  throws InterruptedException, IOException {
-        insertSomeQuestions();
+        testQuestions(10);
 
         Long playerId = 1L;
         Player player = createPlayer();
@@ -1653,7 +1654,7 @@ public class Wiq_UnitTests {
     @Test
     @Order(107)
     public void testRandomMultiplayerQuestions() throws InterruptedException, IOException {
-        insertSomeQuestions();
+        testQuestions(10);
 
         Long playerId = 1L;
         Player player = createPlayer();
@@ -1825,5 +1826,29 @@ public class Wiq_UnitTests {
      */
     private void insertSomeQuestions() throws IOException, InterruptedException {
         questionGeneratorService.generateTestQuestions();
+    }
+
+    public List<Question> testQuestions(int num) {
+        List<Question> res = new ArrayList<>();
+        Category c = new Category("Test category", "Test category");
+        categoryService.addNewCategory(c);
+        for (int i = 0; i < num; i++) {
+            Question q = new Question();
+            q.setStatement("Test question " + i);
+            q.setLanguage("es");
+            Associations.QuestionsCategory.addCategory(q, c);
+            List<Answer> answers = new ArrayList<>();
+            for (int j = 0; j < 4; j++) {
+                Answer a = new Answer();
+                a.setText("Test answer " + j);
+                a.setCorrect(j == 0);
+                if(j==0) q.setCorrectAnswer(a);
+                answers.add(a);
+            }
+            Associations.QuestionAnswers.addAnswer(q, answers);
+            questionService.addNewQuestion(q);
+            res.add(q);
+        }
+        return res;
     }
 }
