@@ -13,8 +13,6 @@ import java.util.Map;
 @Service
 public interface MultiplayerSessionService {
 
-    //Page<MultiplayerSession> getMultiplayerPlayerRanking(Pageable pageable, int multiplayerCode);
-
     Map<Player, Integer> getPlayersWithScores(int multiplayerCode);
     void multiCreate(String code, Long id);
 

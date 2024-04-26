@@ -75,6 +75,8 @@ public class Wiq_UnitTests {
     private GameSessionService gameSessionService;
     @Autowired
     private InsertSampleDataService sampleDataService;
+    @Autowired
+    private MultiplayerSessionService multiplayerSessionService;
 
     @Autowired
     PlayerRepository playerRepository;
@@ -90,11 +92,17 @@ public class Wiq_UnitTests {
     GameSessionRepository gameSessionRepository;
     @Autowired
     QuestionRepository questionRepository;
+    @Autowired
+    MultiplayerSessionRepository multiplayerSessionRepository;
 
     private final HttpClient httpClient = HttpClient.newHttpClient();
 
     private Player createPlayer(){
         return new Player("name","test@email.com","password");
+    }
+    private Player createDiferentPlayer(String word){
+        return new Player("name"+word,word+"test@email.com","password");
+
     }
     @Test
     @Order(1)
@@ -1553,6 +1561,88 @@ public class Wiq_UnitTests {
         Assertions.assertEquals(200, response.statusCode());
         Optional<Question> deletedQuestion = questionService.getQuestion(question.getId());
         Assertions.assertTrue(deletedQuestion.isEmpty());
+    }
+
+    @Test
+    @Order(97)
+    public void testGetPlayersWithScores() {
+        Player player1 = playerRepository.save(createDiferentPlayer("aa"));
+        Player player2 = playerRepository.save(createDiferentPlayer("bb"));
+        Player player3 = playerRepository.save(createDiferentPlayer("cc"));
+
+        MultiplayerSession session = new MultiplayerSession("123",player3);
+        Map<Player, Integer> playerScores = new HashMap<>();
+        playerScores.put(player1, 10);
+        playerScores.put(player2, 5);
+        session.setPlayerScores(playerScores);
+
+        multiplayerSessionRepository.save(session);
+
+        Map<Player, Integer> result = multiplayerSessionService.getPlayersWithScores(123);
+
+        assertNotNull(result);
+        Assertions.assertEquals(2, result.size());
+    }
+
+    @Test
+    @Order(98)
+    public void testMultiCreate() {
+        // Given
+        Long playerId = 1L;
+        Player player = createPlayer();
+        player.setId(playerId);
+
+        String code = "123";
+        playerRepository.findById(playerId);
+        multiplayerSessionService.multiCreate(code, playerId);
+
+        MultiplayerSession ms = multiplayerSessionRepository.findByMultiplayerCode("123");
+        Assertions.assertNotNull(ms);
+        Assertions.assertEquals("123",ms.getMultiplayerCode());
+    }
+
+    @Test
+    @Order(99)
+    public void testAddToLobby() {
+
+        Long playerId = 1L;
+        Player player = createPlayer();
+        player.setId(playerId);
+
+        String code = "123";
+        MultiplayerSession multiplayerSession = new MultiplayerSession();
+        multiplayerSession.setMultiplayerCode(code);
+
+        playerRepository.save(player);
+        multiplayerSessionRepository.save(multiplayerSession);
+
+        multiplayerSessionService.addToLobby(code, playerId);
+
+        MultiplayerSession ms = multiplayerSessionRepository.findByMultiplayerCode(code);
+        Assertions.assertNotNull(ms);
+        Assertions.assertEquals("123",ms.getMultiplayerCode());
+    }
+
+    @Test
+    @Order(100)
+    public void testChangeScore() {
+        Long playerId = 1L;
+        Player player = createPlayer();
+        player.setId(playerId);
+
+        String code = "123";
+        int newScore = 100;
+        MultiplayerSession multiplayerSession = new MultiplayerSession();
+        multiplayerSession.setMultiplayerCode(code);
+        multiplayerSession.addPlayer(player);
+
+        playerRepository.save(player);
+        multiplayerSessionRepository.save(multiplayerSession);
+
+        multiplayerSessionService.changeScore(code, playerId, newScore);
+
+        multiplayerSession = multiplayerSessionRepository.findByMultiplayerCode("123");
+        Assertions.assertNotNull(multiplayerSession);
     }
 
     /**
