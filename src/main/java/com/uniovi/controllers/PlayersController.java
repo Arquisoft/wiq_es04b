@@ -1,5 +1,7 @@
 package com.uniovi.controllers;
 
+import com.fasterxml.jackson.core.util.DefaultIndenter;
+import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -9,9 +11,7 @@ import com.uniovi.entities.Associations;
 import com.uniovi.entities.GameSession;
 import com.uniovi.entities.Player;
 import com.uniovi.entities.Role;
-import com.uniovi.services.GameSessionService;
-import com.uniovi.services.PlayerService;
-import com.uniovi.services.RoleService;
+import com.uniovi.services.*;
 import com.uniovi.validators.SignUpValidator;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -28,6 +28,9 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import com.uniovi.dto.PlayerDto;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.security.Principal;
 import java.util.Optional;
 import java.util.List;
@@ -36,13 +39,14 @@ import java.util.List;
 public class PlayersController {
     private final PlayerService playerService;
     private final RoleService roleService;
+    private QuestionService questionService;
     private final SignUpValidator signUpValidator;
 
     private final GameSessionService gameSessionService;
 
     @Autowired
     public PlayersController(PlayerService playerService, SignUpValidator signUpValidator, GameSessionService gameSessionService,
-                             RoleService roleService) {
+                             RoleService roleService, QuestionService questionService) {
         this.playerService = playerService;
         this.signUpValidator =  signUpValidator;
         this.gameSessionService = gameSessionService;
@@ -242,8 +246,33 @@ public class PlayersController {
     }
 
     @GetMapping("/player/admin/questionManagement")
-    public String showQuestionManagementFragment() {
+    public String showQuestionManagementFragment(Model model) throws IOException {
+        File jsonFile = new File(QuestionGeneratorService.jsonFilePath);
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode json = objectMapper.readTree(jsonFile);
+        model.addAttribute("jsonContent", json.toString());
 
         return "player/admin/questionManagement";
+    }
+
+    @GetMapping("/player/admin/deleteAllQuestions")
+    @ResponseBody
+    public String deleteAllQuestions() {
+        questionService.deleteAllQuestions();
+        return "Questions deleted";
+    }
+
+    @GetMapping("/player/admin/saveQuestions")
+    @ResponseBody
+    public String saveQuestions(@RequestParam String json) throws IOException {
+        JsonNode node = new ObjectMapper().readTree(json);
+        DefaultPrettyPrinter printer = new DefaultPrettyPrinter();
+        DefaultPrettyPrinter.Indenter indenter = new DefaultIndenter();
+        printer.indentObjectsWith(indenter); // Indent JSON objects
+        printer.indentArraysWith(indenter);  // Indent JSON arrays
+
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.writer(printer).writeValue(new FileOutputStream(QuestionGeneratorService.jsonFilePath), node);
+        return "Questions saved";
     }
 }

@@ -165,4 +165,9 @@ public class QuestionServiceImpl implements QuestionService {
             questionRepository.delete(question);
         }
     }
+
+    @Override
+    public void deleteAllQuestions() {
+        questionRepository.deleteAll();
+    }
 }

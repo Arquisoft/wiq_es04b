@@ -1,15 +1,13 @@
 <div class="container-fluid">
     <div id="jsonEditorElement"></div>
-    <button id="saveButton" class="btn btn-primary" th:text="#{modal.confirm}">Save</button>
-    <button type="button" class="dropdown-item"
+    <button id="saveButton" class="btn btn-primary mt-2 mb-2" th:text="#{modal.confirm}">Save</button>
+    <button type="button" class="btn btn-primary"
             data-bs-toggle="modal" data-bs-target="#deleteQuestionsDialog"
             th:text="#{admin.questions.delete.title}">
     </button>
 </div>
 <script>
-    /*<![CDATA[*/
-    setupQuestionManagement([[${jsonContent}}]]);
-    /*]]>*/
+    setupQuestionManagement();
 </script>
 
 <div class="modal fade" id="deleteQuestionsDialog" tabindex="-1" aria-labelledby="deleteQuestionsDialogLabel" aria-hidden="true">
