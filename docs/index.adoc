@@ -101,4 +101,12 @@ include::src/11_technical_risks.adoc[]
 // 12. Glossary
 include::src/12_glossary.adoc[]
 
+<<<<
+// 13. Question Generation Strategy
+include::src/13_question_generation_strategy.adoc[]
+
+<<<<
+// 14. Testing
+include::src/14_testing.adoc[]
+
 
