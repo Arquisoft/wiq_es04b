@@ -41,12 +41,15 @@ public class InsertSampleDataService {
     @Transactional
     @EventListener(ApplicationReadyEvent.class) // Uncomment this line to insert sample data on startup
     public void insertSampleQuestions() throws InterruptedException, IOException {
-        if (!playerService.getUserByEmail("test@test.com").isPresent()) {
+        if (playerService.getUserByEmail("test@test.com").isEmpty()) {
             PlayerDto player = new PlayerDto();
             player.setEmail("test@test.com");
             player.setUsername("test");
             player.setPassword("test");
-            player.setRoles(new String[]{"ROLE_USER"});
+            if (Arrays.asList(environment.getActiveProfiles()).contains("test"))
+                player.setRoles(new String[]{"ROLE_USER", "ROLE_ADMIN"});
+            else
+                player.setRoles(new String[]{"ROLE_USER"});
             playerService.generateApiKey(playerService.addNewPlayer(player));
         }
     }
