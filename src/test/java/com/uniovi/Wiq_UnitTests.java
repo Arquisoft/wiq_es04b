@@ -1645,6 +1645,65 @@ public class Wiq_UnitTests {
         Assertions.assertNotNull(multiplayerSession);
     }
 
+
+    @Test
+    @Order(101)
+    public void testMultiplayerIdGeneration() {
+        MultiplayerSession multiplayerSession = new MultiplayerSession();
+        multiplayerSessionRepository.save(multiplayerSession);
+
+        Long id = multiplayerSession.getId();
+        Assertions.assertNotNull(id);
+    }
+
+
+    @Test
+    @Order(102)
+    public void testMultiplayerCodeInitialization() {
+        Long playerId = 1L;
+        Player player = createPlayer();
+        player.setId(playerId);
+
+        Integer multiplayerCode = player.getMultiplayerCode();
+        Assertions.assertNull(multiplayerCode);
+    }
+
+    @Test
+    @Order(103)
+    public void testScoreMultiplayerCodeInitialization() {
+        Long playerId = 1L;
+        Player player = createPlayer();
+        player.setId(playerId);
+
+        String scoreMultiplayerCode = player.getScoreMultiplayerCode();
+        Assertions.assertNull(scoreMultiplayerCode);
+    }
+
+    @Test
+    @Order(104)
+    public void testMultiplayerCodeAssignment() {
+        Long playerId = 1L;
+        Player player = createPlayer();
+        player.setId(playerId);
+
+        player.setMultiplayerCode(123);
+        Integer multiplayerCode = player.getMultiplayerCode();
+        Assertions.assertEquals(123, multiplayerCode);
+    }
+
+    @Test
+    @Order(105)
+    public void testScoreMultiplayerCodeAssignment() {
+        Long playerId = 1L;
+        Player player = createPlayer();
+        player.setId(playerId);
+
+        player.setScoreMultiplayerCode("200");
+        String scoreMultiplayerCode = player.getScoreMultiplayerCode();
+        Assertions.assertEquals("200", scoreMultiplayerCode);
+    }
+
+
     /**
      * Sends an HTTP request to the API
      * @param method HTTP method
