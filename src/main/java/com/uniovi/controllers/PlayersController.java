@@ -264,15 +264,21 @@ public class PlayersController {
 
     @GetMapping("/player/admin/saveQuestions")
     @ResponseBody
-    public String saveQuestions(@RequestParam String json) throws IOException {
-        JsonNode node = new ObjectMapper().readTree(json);
-        DefaultPrettyPrinter printer = new DefaultPrettyPrinter();
-        DefaultPrettyPrinter.Indenter indenter = new DefaultIndenter();
-        printer.indentObjectsWith(indenter); // Indent JSON objects
-        printer.indentArraysWith(indenter);  // Indent JSON arrays
+    public String saveQuestions(HttpServletResponse response, @RequestParam String json) throws IOException {
+        try {
+            JsonNode node = new ObjectMapper().readTree(json);
+            DefaultPrettyPrinter printer = new DefaultPrettyPrinter();
+            DefaultPrettyPrinter.Indenter indenter = new DefaultIndenter();
+            printer.indentObjectsWith(indenter); // Indent JSON objects
+            printer.indentArraysWith(indenter);  // Indent JSON arrays
 
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.writer(printer).writeValue(new FileOutputStream(QuestionGeneratorService.jsonFilePath), node);
-        return "Questions saved";
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.writer(printer).writeValue(new FileOutputStream(QuestionGeneratorService.jsonFilePath), node);
+            return "Questions saved";
+        }
+        catch (Exception e) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            return "Invalid JSON";
+        }
     }
 }
