@@ -6,7 +6,6 @@
 
 ### 🚀 TEAM
 
-- **Daniel Alvarez Blanco**
 - **Pelayo Rojas Iñigo**
 - **Álvaro Arias Martínez De Vega**
 - **Ricardo Díaz Núñez**
