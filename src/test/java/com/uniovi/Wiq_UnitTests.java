@@ -1703,6 +1703,26 @@ public class Wiq_UnitTests {
         Assertions.assertEquals("200", scoreMultiplayerCode);
     }
 
+    @Test
+    @Order(106)
+    public void GameSessionImpl_startNewMultiplayerGame()  throws InterruptedException, IOException {
+        sampleDataService.insertSampleQuestions();
+        sampleDataService.generateSampleData();
+
+        Long playerId = 1L;
+        Player player = createPlayer();
+        player.setId(playerId);
+
+        String code = "123";
+        playerRepository.findById(playerId);
+        multiplayerSessionService.multiCreate(code, playerId);
+
+        GameSession multiplayerGame = gameSessionService.startNewMultiplayerGame(player, 123);
+
+        Assertions.assertNotNull(multiplayerGame);
+        Assertions.assertEquals(player, multiplayerGame.getPlayer());
+    }
+
 
     /**
      * Sends an HTTP request to the API
