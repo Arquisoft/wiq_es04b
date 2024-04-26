@@ -243,6 +243,7 @@ public class PlayersController {
 
     @GetMapping("/player/admin/questionManagement")
     public String showQuestionManagementFragment() {
+
         return "player/admin/questionManagement";
     }
 }
