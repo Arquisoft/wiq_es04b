@@ -25,7 +25,7 @@ public class MultiplayerSessionImpl implements MultiplayerSessionService {
     }
 
     @Override
-    //@Transactional
+    @Transactional
     public Map<Player, Integer> getPlayersWithScores(int multiplayerCode) {
         MultiplayerSession session = multiplayerSessionRepository.findByMultiplayerCode(String.valueOf(multiplayerCode));
         Map<Player, Integer> playerScores = session.getPlayerScores();
@@ -50,7 +50,7 @@ public class MultiplayerSessionImpl implements MultiplayerSessionService {
     }
 
     @Override
-    //@Transactional
+    @Transactional
     public void addToLobby(String code, Long id) {
         Player p = playerRepository.findById(id).get();
         MultiplayerSession ms=multiplayerSessionRepository.findByMultiplayerCode(code);
@@ -59,7 +59,7 @@ public class MultiplayerSessionImpl implements MultiplayerSessionService {
     }
 
     @Override
-    //@Transactional
+    @Transactional
     public void changeScore(String code, Long id, int score) {
         Player p = playerRepository.findById(id).get();
         MultiplayerSession ms=multiplayerSessionRepository.findByMultiplayerCode(code);
