@@ -74,9 +74,10 @@ public class Wiq_UnitTests {
 
     private final HttpClient httpClient = HttpClient.newHttpClient();
 
-    private Player createPlayer(){
-        return new Player("name","test@email.com","password");
+    private Player createPlayer() {
+        return new Player("name", "test@email.com", "password");
     }
+
     private Player createDiferentPlayer(String word){
         return new Player("name"+word,word+"test@email.com","password");
     }
@@ -789,7 +790,7 @@ public class Wiq_UnitTests {
     @Test
     @Order(50)
     public void testGetQuestions() throws IOException, InterruptedException, JSONException {
-        insertSomeQuestions();
+        insertSomeQuestions();;
         Player player = playerService.getUsersByRole("ROLE_USER").get(0);
         ApiKey apiKey = player.getApiKey();
 
@@ -840,7 +841,7 @@ public class Wiq_UnitTests {
     @Test
     @Order(53)
     public void testGetQuestionById() throws IOException, InterruptedException, JSONException {
-        insertSomeQuestions();
+        insertSomeQuestions();;
         Player player = playerService.getUsersByRole("ROLE_USER").get(0);
         ApiKey apiKey = player.getApiKey();
         Question question = questionService.getAllQuestions().get(0);
@@ -1325,7 +1326,7 @@ public class Wiq_UnitTests {
     @Test
     @Order(88)
     public void testModifyQuestionInvalidApiKey() throws IOException, InterruptedException, JSONException {
-        insertSomeQuestions();
+        insertSomeQuestions();;
         Question question = questionService.getAllQuestions().get(0);
 
         HttpResponse<String> response = sendRequest("PATCH", "/api/questions/" + question.getId(), Map.of("API-KEY", "zzzz"),
@@ -1349,7 +1350,7 @@ public class Wiq_UnitTests {
     @Test
     @Order(90)
     public void testModifyQuestionMissingData() throws IOException, InterruptedException, JSONException {
-        insertSomeQuestions();
+        insertSomeQuestions();;
         Question question = questionService.getAllQuestions().get(0);
         Player player = playerService.getUsersByRole("ROLE_USER").get(0);
         ApiKey apiKey = player.getApiKey();
@@ -1364,7 +1365,7 @@ public class Wiq_UnitTests {
     @Order(91)
     @Tag("flaky")
     public void testModifyQuestion() throws IOException, InterruptedException, JSONException {
-        insertSomeQuestions();
+        insertSomeQuestions();;
         Question question = questionService.getAllQuestions().get(0);
         Player player = playerService.getUsersByRole("ROLE_USER").get(0);
         ApiKey apiKey = player.getApiKey();
@@ -1398,7 +1399,7 @@ public class Wiq_UnitTests {
     @Test
     @Order(92)
     public void testModifyQuestionWithLessOptions() throws IOException, InterruptedException, JSONException {
-        insertSomeQuestions();
+        insertSomeQuestions();;
         Question question = questionService.getAllQuestions().get(0);
         Player player = playerService.getUsersByRole("ROLE_USER").get(0);
         ApiKey apiKey = player.getApiKey();
@@ -1424,7 +1425,7 @@ public class Wiq_UnitTests {
     @Test
     @Order(93)
     public void testModifyQuestionWithNoCorrect() throws IOException, InterruptedException, JSONException {
-        insertSomeQuestions();
+        insertSomeQuestions();;
         Question question = questionService.getAllQuestions().get(0);
         Player player = playerService.getUsersByRole("ROLE_USER").get(0);
         ApiKey apiKey = player.getApiKey();
@@ -1452,7 +1453,7 @@ public class Wiq_UnitTests {
     @Test
     @Order(94)
     public void testDeleteQuestionInvalidApiKey() throws IOException, InterruptedException, JSONException {
-        insertSomeQuestions();
+        insertSomeQuestions();;
         Question question = questionService.getAllQuestions().get(0);
 
         HttpResponse<String> response = sendRequest("DELETE", "/api/questions/" + question.getId(), Map.of("API-KEY", "zzzz"),
@@ -1477,7 +1478,7 @@ public class Wiq_UnitTests {
     @Order(96)
     @Tag("flaky")
     public void testDeleteQuestion() throws IOException, InterruptedException, JSONException {
-        insertSomeQuestions();
+        insertSomeQuestions();;
         Question question = questionService.getAllQuestions().get(0);
         Player player = playerService.getUsersByRole("ROLE_USER").get(0);
         ApiKey apiKey = player.getApiKey();
@@ -1633,8 +1634,7 @@ public class Wiq_UnitTests {
     @Test
     @Order(106)
     public void GameSessionImpl_startNewMultiplayerGame()  throws InterruptedException, IOException {
-        sampleDataService.insertSampleQuestions();
-        sampleDataService.generateSampleData();
+        insertSomeQuestions();
 
         Long playerId = 1L;
         Player player = createPlayer();
@@ -1653,8 +1653,7 @@ public class Wiq_UnitTests {
     @Test
     @Order(107)
     public void testRandomMultiplayerQuestions() throws InterruptedException, IOException {
-        sampleDataService.insertSampleQuestions();
-        sampleDataService.generateSampleData();
+        insertSomeQuestions();
 
         Long playerId = 1L;
         Player player = createPlayer();
