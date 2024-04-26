@@ -8,6 +8,7 @@ import com.uniovi.dto.QuestionDto;
 import com.uniovi.entities.Answer;
 import com.uniovi.entities.Category;
 import com.uniovi.entities.Question;
+import com.uniovi.services.impl.QuestionServiceImpl;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -43,6 +44,7 @@ public class QuestionGeneratorService {
 
     public QuestionGeneratorService(QuestionService questionService) {
         this.questionService = questionService;
+        ((QuestionServiceImpl)questionService).setQuestionGeneratorService(this);
         parseQuestionTypes();
     }
 

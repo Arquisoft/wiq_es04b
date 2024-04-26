@@ -1,14 +1,9 @@
 /* Estilo del footer */
 .footer {
-    position: absolute;
     bottom: 0;
-    min-height: 10%;
     width: 100%;
-    padding: 0; /* Eliminar relleno */
-    text-align: center; /* Alineación del texto */
-    display: flex; /* Usar flexbox para centrar verticalmente */
-    /*align-items: center; /* Centrar verticalmente */
-    margin-top: 5%;
+    height: 60px; /* Set the fixed height of the footer here */
+    line-height: 60px; /* Vertically center the text there */
     background-color: transparent !important; /* Hace que el footer sea transparente */
 }
 

@@ -13,6 +13,8 @@ import com.uniovi.services.QuestionGeneratorService;
 import com.uniovi.services.QuestionService;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
+import lombok.Setter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -31,19 +33,20 @@ public class QuestionServiceImpl implements QuestionService {
     private final AnswerService answerService;
     private final AnswerRepository answerRepository;
     private final EntityManager entityManager;
-    private final QuestionGeneratorService questionGeneratorService;
+
+    @Setter
+    private QuestionGeneratorService questionGeneratorService;
 
     private final Random random = new SecureRandom();
 
     public QuestionServiceImpl(QuestionRepository questionRepository, CategoryService categoryService,
                                AnswerService answerService, AnswerRepository answerRepository,
-                               EntityManager entityManager, QuestionGeneratorService questionGeneratorService) {
+                               EntityManager entityManager) {
         this.questionRepository = questionRepository;
         this.categoryService = categoryService;
         this.answerService = answerService;
         this.answerRepository = answerRepository;
         this.entityManager = entityManager;
-        this.questionGeneratorService = questionGeneratorService;
     }
 
     @Override

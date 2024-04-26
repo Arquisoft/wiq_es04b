@@ -281,4 +281,9 @@ public class PlayersController {
             return "Invalid JSON";
         }
     }
+
+    @GetMapping("/player/admin/monitoring")
+    public String showMonitoring(Model model) {
+        return "player/admin/monitoring";
+    }
 }

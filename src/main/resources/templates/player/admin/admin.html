@@ -1,14 +1,14 @@
 <!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 <head th:replace="~{fragments/head}"></head>
-<body>
+<body class="d-flex flex-column min-vh-100">
 <link rel="stylesheet" href="/css/admin.css"/>
 
 <nav th:replace="~{fragments/nav}"></nav>
 
 <canvas th:replace="~{fragments/background}"></canvas>
 
-<div class="container-fluid" style="text-align: center; overflow: visible">
+<div class="container-fluid flex-fill" style="text-align: center; overflow: visible">
     <h1 th:text="#{navbar.section.admin}"></h1>
     <ul class="nav nav-tabs justify-content-center" id="adminTab" role="tablist">
         <li class="nav-item">
@@ -17,13 +17,15 @@
         <li class="nav-item">
             <a class="nav-link" id="tab2-tab" data-toggle="tab" href="#tab2" role="tab" aria-controls="tab2" aria-selected="false" th:text="#{admin.section.question.management}"></a>
         </li>
+        <li class="nav-item">
+            <a class="nav-link" id="tab3-tab" data-toggle="tab" href="#tab3" role="tab" aria-controls="tab3" aria-selected="false" th:text="#{admin.monitoring}"></a>
+        </li>
     </ul>
     <div class="separator"></div>
     <div class="tab-content" id="tab-content">
     </div>
 </div>
 <footer th:replace="~{fragments/footer}"></footer>
-
 <script>
     $(document).ready(function(){
         $('#adminTab a:first').tab('show');
@@ -38,13 +40,17 @@
                 return;
             }
 
+            let tabContent = $('#tab-content');
             activeTab = tabNum;
             switch (tabNum) {
                 case 'tab1':
-                    $('#tab-content').load('/player/admin/userManagement');
+                    tabContent.load('/player/admin/userManagement');
                     break;
                 case 'tab2':
-                    $('#tab-content').load('/player/admin/questionManagement');
+                    tabContent.load('/player/admin/questionManagement');
+                    break;
+                case 'tab3':
+                    tabContent.load('/player/admin/monitoring');
                     break;
             }
         });

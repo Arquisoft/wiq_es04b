@@ -8,14 +8,6 @@ body {
     margin-bottom: 60px;
     color: #fff;
 }
-footer {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    height: 60px;
-    text-align:center;
-    line-height:60px
-}
 
 .bg-primary {
     background-color: rgb(1, 85, 20) !important;
@@ -122,4 +114,8 @@ footer {
 
 .modal-body {
     white-space: pre;
+}
+
+.container, .container-fluid {
+    flex: 1 1 auto !important;
 }
