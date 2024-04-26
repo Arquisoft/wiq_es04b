@@ -4,6 +4,8 @@ import com.uniovi.dto.PlayerDto;
 import com.uniovi.entities.Player;
 import com.uniovi.repositories.PlayerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -94,4 +96,24 @@ public interface PlayerService {
      * @param id The id of the player to delete
      */
     void deletePlayer(Long id);
+
+    /**
+     * Get a page with all the players in the database
+     * @param pageable The page information
+     * @return A page with all the players
+     */
+    Page<Player> getPlayersPage(Pageable pageable);
+
+    /**
+     * Update the password of a player
+     * @param player The player to update the password
+     * @param password The new password
+     */
+    void updatePassword(Player player, String password);
+
+    /**
+     * Save a player in the database
+     * @param player The player to save
+     */
+    void savePlayer(Player player);
 }

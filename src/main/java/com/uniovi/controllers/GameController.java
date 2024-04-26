@@ -190,33 +190,24 @@ public class GameController {
 
         if(idAnswer == -1
             || getRemainingTime(gameSession) <= 0) {
-            //model.addAttribute("correctAnswer", gameSession.getCurrentQuestion().getCorrectAnswer());
-            //model.addAttribute("messageKey", "timeRunOut.result");
-            //model.addAttribute("logoImage", "/images/logo_incorrect.svg");
             gameSession.addAnsweredQuestion(gameSession.getCurrentQuestion());
             gameSession.addQuestion(false, 0);
         }
         else if(questionService.checkAnswer(idQuestion, idAnswer)) {
-            //model.addAttribute("messageKey", "correctAnswer.result");
-            //model.addAttribute("logoImage", "/images/logo_correct.svg");
-
             if (!gameSession.isAnswered(gameSession.getCurrentQuestion())) {
                 gameSession.addQuestion(true, getRemainingTime(gameSession));
                 gameSession.addAnsweredQuestion(gameSession.getCurrentQuestion());
             }
 
         } else {
-            //model.addAttribute("correctAnswer", gameSession.getCurrentQuestion().getCorrectAnswer());
-            //model.addAttribute("messageKey", "failedAnswer.result");
-            //model.addAttribute("logoImage", "/images/logo_incorrect.svg");
             gameSession.addAnsweredQuestion(gameSession.getCurrentQuestion());
             gameSession.addQuestion(false, 0);
         }
 
         session.setAttribute("hasJustAnswered", true);
         gameSession.getNextQuestion();
-        //return "game/fragments/questionResult";
-        return updateGame(model, session, principal);
+      
+        return updateGame(model, session);
     }
 
     @GetMapping("/game/update")
