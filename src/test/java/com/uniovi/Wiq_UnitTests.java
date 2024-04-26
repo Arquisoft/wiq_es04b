@@ -79,7 +79,7 @@ public class Wiq_UnitTests {
     }
 
     @Order(3)
-    public void testQuestionsGenerator() throws IOException {
+    public void testQuestionsGenerator() throws IOException, InterruptedException {
         questionGeneratorService.generateTestQuestions();
         List<Question> questions = questionService.getAllQuestions();
         Assertions.assertFalse(questions.isEmpty());
@@ -1547,7 +1547,7 @@ public class Wiq_UnitTests {
     /**
      * Inserts some sample questions into the database
      */
-    private void insertSomeQuestions() throws IOException {
+    private void insertSomeQuestions() throws IOException, InterruptedException {
         questionGeneratorService.generateTestQuestions();
     }
 }

@@ -39,7 +39,7 @@ public class QuestionGeneratorV2 implements QuestionGenerator{
     }
 
     @Override
-    public List<Question> getQuestions(String language) throws IOException {
+    public List<Question> getQuestions(String language) throws IOException, InterruptedException {
         this.language = language;
         List<Question> questions = new ArrayList<>();
         JsonNode categories = jsonNode.findValue("categories");
@@ -55,12 +55,12 @@ public class QuestionGeneratorV2 implements QuestionGenerator{
     }
 
     @Override
-    public List<Question> getQuestions(String language, JsonNode question, Category cat) throws IOException {
+    public List<Question> getQuestions(String language, JsonNode question, Category cat) throws IOException, InterruptedException {
         this.language = language;
         return this.generateQuestion(question, cat);
     }
 
-    private List<Question> generateQuestion(JsonNode question, Category cat) throws IOException {
+    private List<Question> generateQuestion(JsonNode question, Category cat) throws IOException, InterruptedException {
         // Get the SPARQL query from the JSON
         String query = question.get("sparqlQuery").textValue();
 
@@ -89,14 +89,16 @@ public class QuestionGeneratorV2 implements QuestionGenerator{
             List<Answer> options = this.generateOptions(results, correctAnswer, answerLabel);
             options.add(correct);
 
-            // Generate the question statement
-            String questionStatement = statement.replace(question_placeholder, result.path(questionLabel).path("value").asText());
+            if (statement != null) {
+                // Generate the question statement
+                String questionStatement = statement.replace(question_placeholder, result.path(questionLabel).path("value").asText());
 
-            // Generate the question
-            Question q = new Question(questionStatement, options, correct, cat, language);
+                // Generate the question
+                Question q = new Question(questionStatement, options, correct, cat, language);
 
-            // Add the question to the list
-            questions.add(q);
+                // Add the question to the list
+                questions.add(q);
+            }
         }
         return questions;
     }
@@ -134,41 +136,28 @@ public class QuestionGeneratorV2 implements QuestionGenerator{
         return null;
     }
 
-    private JsonNode getQueryResult(String query) throws IOException {
+    private JsonNode getQueryResult(String query) throws IOException, InterruptedException {
 
         System.out.println("Query: " + query);
         HttpClient client = HttpClient.newHttpClient();
         JsonNode resultsNode;
-        try {
+        String endpointUrl = "https://query.wikidata.org/sparql?query=" +
+                URLEncoder.encode(query, StandardCharsets.UTF_8) +
+                "&format=json";
 
-            String endpointUrl = "https://query.wikidata.org/sparql?query=" +
-                    URLEncoder.encode(query, StandardCharsets.UTF_8) +
-                    "&format=json";
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(endpointUrl))
+                .header("Accept", "application/json")
+                .build();
 
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(endpointUrl))
-                    .header("Accept", "application/json")
-                    .build();
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        // Process the JSON response using Jackson ObjectMapper
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode jsonResponse = objectMapper.readTree(response.body());
 
-            // Process the JSON response using Jackson ObjectMapper
-            ObjectMapper objectMapper = new ObjectMapper();
-            JsonNode jsonResponse = objectMapper.readTree(response.body());
-
-            // Access the data from the JSON response
-            resultsNode = jsonResponse.path("results").path("bindings");
-
-        } catch (InterruptedException e) {
-            throw new QuestionGeneratorException("Generation of questions was interrupted");
-        }
+        // Access the data from the JSON response
+        resultsNode = jsonResponse.path("results").path("bindings");
         return resultsNode;
-
-    }
-
-    private static class QuestionGeneratorException extends RuntimeException {
-        public QuestionGeneratorException(String message) {
-            super(message);
-        }
     }
 }

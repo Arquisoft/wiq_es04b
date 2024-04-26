@@ -26,7 +26,7 @@ public class GameStep extends Wiq_IntegrationTests {
     private Logger log = LoggerFactory.getLogger(GameStep.class);
 
     @When("I press Play")
-    public void iPressPlay() throws IOException {
+    public void iPressPlay() throws IOException, InterruptedException {
         questionGeneratorService.generateTestQuestions();
         List<WebElement> elems = SeleniumUtils.waitLoadElementsBy(driver, "free", "//*[@href=\"/game\"]", 5);
         elems.get(0).click();

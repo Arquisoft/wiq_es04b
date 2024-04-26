@@ -76,7 +76,7 @@ public class QuestionGeneratorService {
 
     @Scheduled(fixedRate = 150000)
     @Transactional
-    public void generateQuestions() throws IOException {
+    public void generateQuestions() throws IOException, InterruptedException {
         if (types.isEmpty()) {
             return;
         }
@@ -109,7 +109,7 @@ public class QuestionGeneratorService {
     }
 
     @Transactional
-    public void generateTestQuestions() throws IOException {
+    public void generateTestQuestions() throws IOException, InterruptedException {
         QuestionGenerator qgen = new QuestionGeneratorV2(json);
         QuestionType type = types.pop();
         List<QuestionDto> questions;
