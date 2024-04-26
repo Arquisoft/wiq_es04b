@@ -40,7 +40,7 @@ public class GameStep extends Wiq_IntegrationTests {
         List<WebElement> finalMessage;
         while(playing){
             //I obtain the buttons for the answers
-            List<WebElement> elems = SeleniumUtils.waitLoadElementsBy(driver, "text", "Test answer 0", 10);
+            List<WebElement> elems = By.cssSelector(".container .row button").findElements(driver);
             log.info("Found " + elems.size() + " buttons");
             log.info("Iteration " + i + " of the game");
             //I click on the first button
