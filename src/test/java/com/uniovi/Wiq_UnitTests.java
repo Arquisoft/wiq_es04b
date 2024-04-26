@@ -1,44 +1,23 @@
 package com.uniovi;
 
-import com.uniovi.dto.*;
-import com.uniovi.entities.*;
-import com.uniovi.repositories.*;
-import com.uniovi.services.*;
-import com.uniovi.services.impl.*;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.uniovi.components.generators.geography.BorderQuestionGenerator;
-import com.uniovi.components.generators.geography.CapitalQuestionGenerator;
-import com.uniovi.components.generators.geography.ContinentQuestionGeneration;
+import com.uniovi.dto.PlayerDto;
+import com.uniovi.dto.RoleDto;
 import com.uniovi.entities.*;
+import com.uniovi.repositories.*;
 import com.uniovi.services.*;
 import jakarta.validation.constraints.AssertTrue;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.junit.Assert;
-import org.junit.jupiter.api.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import com.uniovi.dto.*;
-import com.uniovi.entities.*;
-import com.uniovi.repositories.*;
-import com.uniovi.services.*;
-import com.uniovi.services.impl.*;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 
-import java.awt.print.Pageable;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URLEncoder;
@@ -49,12 +28,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.*;
 
-import static org.junit.Assert.*;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import static org.junit.Assert.assertNotNull;
 
 @SpringBootTest
 @Tag("unit")
@@ -78,6 +52,8 @@ public class Wiq_UnitTests {
     private InsertSampleDataService sampleDataService;
     @Autowired
     private MultiplayerSessionService multiplayerSessionService;
+    @Autowired
+    private QuestionGeneratorService questionGeneratorService;
 
     @Autowired
     PlayerRepository playerRepository;
@@ -103,72 +79,20 @@ public class Wiq_UnitTests {
     }
     private Player createDiferentPlayer(String word){
         return new Player("name"+word,word+"test@email.com","password");
-
     }
+
     @Test
     @Order(1)
     public void testPlayerService() {
         List<Player> players = playerService.getUsersByRole("ROLE_USER");
         Assertions.assertEquals(1, players.size());
     }
-    @Test
-    @Order(2)
-    public void testQuestions() throws InterruptedException, IOException {
-        sampleDataService.insertSampleQuestions();
-        sampleDataService.generateSampleData();
+
+    @Order(3)
+    public void testQuestionsGenerator() throws IOException, InterruptedException {
+        questionGeneratorService.generateTestQuestions();
         List<Question> questions = questionService.getAllQuestions();
         Assertions.assertFalse(questions.isEmpty());
-
-    }
-    @Test
-    @Order(2)
-    public void testRandomQuestions() throws InterruptedException, IOException {
-        sampleDataService.insertSampleQuestions();
-        sampleDataService.generateSampleData();
-        List<Question> questions = questionService.getRandomQuestions(5);
-        Assertions.assertEquals(5,questions.size());
-    }
-
-    @Test
-    @Order(3)
-    public void testBorderQuestionsGenerator() throws InterruptedException, IOException {
-        BorderQuestionGenerator borderQuestionGenerator=new BorderQuestionGenerator(categoryService,Question.SPANISH);
-        List<Question> questions = borderQuestionGenerator.getQuestions();
-        Assertions.assertFalse(questions.isEmpty());
-
-        for (Question question : questions) {
-            Assertions.assertNotNull(question.getCorrectAnswer());
-            Assertions.assertEquals(4, question.getOptions().size());
-            Assertions.assertTrue(question.getOptions().contains(question.getCorrectAnswer()));
-        }
-    }
-
-    @Test
-    @Order(4)
-    public void testCapitalQuestionsGenerator() throws InterruptedException, IOException {
-        CapitalQuestionGenerator capitalQuestionGenerator=new CapitalQuestionGenerator(categoryService,Question.SPANISH);
-        List<Question> questions = capitalQuestionGenerator.getQuestions();
-        Assertions.assertFalse(questions.isEmpty());
-
-        for (Question question : questions) {
-            Assertions.assertNotNull(question.getCorrectAnswer());
-            Assertions.assertEquals(4, question.getOptions().size());
-            Assertions.assertTrue(question.getOptions().contains(question.getCorrectAnswer()));
-        }
-    }
-
-    @Test
-    @Order(5)
-    public void testContinentQuestionsGenerator() throws InterruptedException, IOException {
-        ContinentQuestionGeneration continentQuestionGenerator=new ContinentQuestionGeneration(categoryService,Question.SPANISH);
-        List<Question> questions = continentQuestionGenerator.getQuestions();
-        Assertions.assertFalse(questions.isEmpty());
-
-        for (Question question : questions) {
-            Assertions.assertNotNull(question.getCorrectAnswer());
-            Assertions.assertEquals(4, question.getOptions().size());
-            Assertions.assertTrue(question.getOptions().contains(question.getCorrectAnswer()));
-        }
     }
 
     @Test
@@ -395,6 +319,7 @@ public class Wiq_UnitTests {
 
         Assertions.assertEquals("00:05:00", gameSession.getDuration());
     }
+
     @Test
     @Order(22)
     public void testPlayerToJson() {
@@ -462,7 +387,6 @@ public class Wiq_UnitTests {
         question.addOption(option2);
         question.addOption(option3);
 
-        // question.scrambleOptions();
         List<Answer> scrambledOptions = question.returnScrambledOptions();
 
         Assertions.assertTrue(scrambledOptions.contains(option1));
@@ -663,7 +587,7 @@ public class Wiq_UnitTests {
         data.put("username", "newUser");
         data.put("email", "newUser@email.com");
         data.put("password", "password");
-        data.put("roles", new String[] {"ROLE_USER"});
+        data.put("roles", new String[]{"ROLE_USER"});
 
         HttpResponse<String> response = sendRequest("POST", "/api/players", Map.of("API-KEY", apiKey.getKeyToken()),
                 data);
@@ -881,12 +805,13 @@ public class Wiq_UnitTests {
     @Test
     @Order(51)
     public void testGetQuestionsByCategoryName() throws IOException, InterruptedException, JSONException {
-        insertSomeQuestions();
+        String cat = "Science";
+        questionGeneratorService.generateTestQuestions(cat);
         Player player = playerService.getUsersByRole("ROLE_USER").get(0);
         ApiKey apiKey = player.getApiKey();
 
         HttpResponse<String> response = sendRequest("GET", "/api/questions", Map.of(),
-                Map.of("apiKey", apiKey.getKeyToken(), "category", "Geography"));
+                Map.of("apiKey", apiKey.getKeyToken(), "category", cat));
 
         Assertions.assertEquals(200, response.statusCode());
         JSONObject json = parseJsonResponse(response);
@@ -897,10 +822,11 @@ public class Wiq_UnitTests {
     @Test
     @Order(52)
     public void testGetQuestionsByCategoryId() throws IOException, InterruptedException, JSONException {
-        insertSomeQuestions();
+        String category = "Science";
+        questionGeneratorService.generateTestQuestions(category);
         Player player = playerService.getUsersByRole("ROLE_USER").get(0);
         ApiKey apiKey = player.getApiKey();
-        Category cat = categoryService.getCategoryByName("Geography");
+        Category cat = categoryService.getCategoryByName(category);
 
         HttpResponse<String> response = sendRequest("GET", "/api/questions", Map.of(),
                 Map.of("apiKey", apiKey.getKeyToken(), "category", cat.getId()));
@@ -1835,17 +1761,18 @@ public class Wiq_UnitTests {
 
     /**
      * Sends an HTTP request to the API
-     * @param method HTTP method
-     * @param uri URI to send the request to
+     *
+     * @param method  HTTP method
+     * @param uri     URI to send the request to
      * @param headers Headers to include in the request
-     * @param data Data to send in the request
+     * @param data    Data to send in the request
      * @return The response from the server
      * @throws IOException
      * @throws InterruptedException
      */
     private HttpResponse<String> sendRequest(String method, String uri,
-                                                   Map<String, String> headers,
-                                                   Map<String, Object> data) throws IOException, InterruptedException {
+                                             Map<String, String> headers,
+                                             Map<String, Object> data) throws IOException, InterruptedException {
         HttpRequest.Builder requestBuilder = HttpRequest.newBuilder();
 
         uri = Wiq_IntegrationTests.URL.substring(0, Wiq_IntegrationTests.URL.length() - 1) + uri;
@@ -1897,8 +1824,7 @@ public class Wiq_UnitTests {
     /**
      * Inserts some sample questions into the database
      */
-    private void insertSomeQuestions() throws InterruptedException, IOException {
-        List<Question> qs = new ContinentQuestionGeneration(categoryService, Question.SPANISH).getQuestions();
-        qs.forEach(questionService::addNewQuestion);
+    private void insertSomeQuestions() throws IOException, InterruptedException {
+        questionGeneratorService.generateTestQuestions();
     }
 }

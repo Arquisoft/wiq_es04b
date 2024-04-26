@@ -1,6 +1,5 @@
 package com.uniovi.services.impl;
 
-import ch.qos.logback.core.joran.sanity.Pair;
 import com.uniovi.dto.PlayerDto;
 import com.uniovi.dto.RoleDto;
 import com.uniovi.entities.ApiKey;
@@ -10,6 +9,9 @@ import com.uniovi.repositories.PlayerRepository;
 import com.uniovi.services.MultiplayerSessionService;
 import com.uniovi.services.PlayerService;
 import com.uniovi.services.RoleService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.uniovi.entities.Role;
@@ -125,8 +127,6 @@ public class PlayerServiceImpl implements PlayerService {
             p.setUsername(playerDto.getUsername());
         if (playerDto.getPassword() != null)
             p.setPassword(passwordEncoder.encode(playerDto.getPassword()));
-        //if(playerDto.getMultiplayerCode() != null)
-        //   p.setMultiplayerCode(playerDto.getMultiplayerCode());
         if (playerDto.getRoles() != null) {
             p.getRoles().clear();
             for (String roleStr : playerDto.getRoles()) {
@@ -212,5 +212,21 @@ public class PlayerServiceImpl implements PlayerService {
     @Override
     public void deletePlayer(Long id) {
         playerRepository.deleteById(id);
+    }
+
+    @Override
+    public Page<Player> getPlayersPage(Pageable pageable) {
+        return playerRepository.findAll(pageable);
+    }
+
+    @Override
+    public void updatePassword(Player player, String password) {
+        player.setPassword(passwordEncoder.encode(password));
+        playerRepository.save(player);
+    }
+
+    @Override
+    public void savePlayer(Player player) {
+        playerRepository.save(player);
     }
 }
