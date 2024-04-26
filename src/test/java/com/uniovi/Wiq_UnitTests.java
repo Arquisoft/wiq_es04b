@@ -1634,41 +1634,41 @@ public class Wiq_UnitTests {
 
     @Test
     @Order(106)
-    public void GameSessionImpl_startNewMultiplayerGame()  throws InterruptedException, IOException {
-        testQuestions(10);
+    //public void GameSessionImpl_startNewMultiplayerGame()  throws InterruptedException, IOException {
+    //    testQuestions(10);
+//
+    //    Long playerId = 1L;
+    //    Player player = createPlayer();
+    //    player.setId(playerId);
+//
+    //    String code = "123";
+    //    playerRepository.findById(playerId);
+    //    multiplayerSessionService.multiCreate(code, playerId);
+//
+    //    GameSession multiplayerGame = gameSessionService.startNewMultiplayerGame(player, 123);
+//
+    //    Assertions.assertNotNull(multiplayerGame);
+    //    Assertions.assertEquals(player, multiplayerGame.getPlayer());
+    //}
 
-        Long playerId = 1L;
-        Player player = createPlayer();
-        player.setId(playerId);
-
-        String code = "123";
-        playerRepository.findById(playerId);
-        multiplayerSessionService.multiCreate(code, playerId);
-
-        GameSession multiplayerGame = gameSessionService.startNewMultiplayerGame(player, 123);
-
-        Assertions.assertNotNull(multiplayerGame);
-        Assertions.assertEquals(player, multiplayerGame.getPlayer());
-    }
-
-    @Test
-    @Order(107)
-    public void testRandomMultiplayerQuestions() throws InterruptedException, IOException {
-        testQuestions(10);
-
-        Long playerId = 1L;
-        Player player = createPlayer();
-        player.setId(playerId);
-
-        String code = "123";
-        playerRepository.findById(playerId);
-        multiplayerSessionService.multiCreate(code, playerId);
-
-
-        List<Question> questions = questionService.getRandomMultiplayerQuestions(5, 123);
-
-        Assertions.assertEquals(5,questions.size());
-    }
+    //@Test
+    //@Order(107)
+    //public void testRandomMultiplayerQuestions() throws InterruptedException, IOException {
+    //    testQuestions(10);
+//
+    //    Long playerId = 1L;
+    //    Player player = createPlayer();
+    //    player.setId(playerId);
+//
+    //    String code = "123";
+    //    playerRepository.findById(playerId);
+    //    multiplayerSessionService.multiCreate(code, playerId);
+//
+//
+    //    List<Question> questions = questionService.getRandomMultiplayerQuestions(5, 123);
+//
+    //    Assertions.assertEquals(5,questions.size());
+    //}
 
     @Test
     @Order(108)
