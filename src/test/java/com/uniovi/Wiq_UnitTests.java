@@ -1723,6 +1723,26 @@ public class Wiq_UnitTests {
         Assertions.assertEquals(player, multiplayerGame.getPlayer());
     }
 
+    @Test
+    @Order(107)
+    public void testRandomMultiplayerQuestions() throws InterruptedException, IOException {
+        sampleDataService.insertSampleQuestions();
+        sampleDataService.generateSampleData();
+
+        Long playerId = 1L;
+        Player player = createPlayer();
+        player.setId(playerId);
+
+        String code = "123";
+        playerRepository.findById(playerId);
+        multiplayerSessionService.multiCreate(code, playerId);
+
+
+        List<Question> questions = questionService.getRandomMultiplayerQuestions(5, 123);
+
+        Assertions.assertEquals(5,questions.size());
+    }
+
 
     /**
      * Sends an HTTP request to the API
