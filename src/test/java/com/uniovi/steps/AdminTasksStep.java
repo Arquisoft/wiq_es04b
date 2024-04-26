@@ -5,6 +5,7 @@ import com.uniovi.util.PropertiesExtractor;
 import com.uniovi.util.SeleniumUtils;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
+import io.cucumber.java.en.When;
 import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -82,5 +83,11 @@ public class AdminTasksStep extends Wiq_IntegrationTests {
     @Then("I should not see the text {string}")
     public void iShouldNotSeeTheText(String text) {
         SeleniumUtils.waitInvisibleElement(driver, By.xpath("//*[contains(text(),'" + text + "')]"), 5);
+    }
+
+    @When("I click question management button")
+    public void iClickQuestionManagementButton() {
+        List<WebElement> elems = SeleniumUtils.waitLoadElements(driver, By.id("tab2-tab"), 5);
+        elems.get(0).click();
     }
 }

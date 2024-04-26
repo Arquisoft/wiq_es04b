@@ -57,3 +57,14 @@ Feature: I do admin tasks
         And I should see the modal dialog "admin.user.delete.title"
         And I click "deleteModalConfirm" button
         Then I should not see the text "user1"
+
+    Scenario: I save question JSON
+        Given I am in the home page
+        When I click the login button
+        And I fill in the form with valid data email: "test" password: "test"
+        And I press the login button
+        Then I should see the admin zone button
+        And I enter the admin zone
+        And I should see the message "navbar.section.admin"
+        When I click question management button
+        Then I click "saveButton" button
