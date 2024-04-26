@@ -6,10 +6,8 @@ import com.uniovi.entities.ApiKey;
 import com.uniovi.entities.Associations;
 import com.uniovi.entities.Player;
 import com.uniovi.repositories.PlayerRepository;
-import com.uniovi.repositories.RoleRepository;
 import com.uniovi.services.PlayerService;
 import com.uniovi.services.RoleService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -17,15 +15,14 @@ import org.springframework.stereotype.Service;
 import com.uniovi.entities.Role;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class PlayerServiceImpl implements PlayerService {
-    private PlayerRepository playerRepository;
-    private RoleService roleService;
-    private PasswordEncoder passwordEncoder;
+    private final PlayerRepository playerRepository;
+    private final RoleService roleService;
+    private final PasswordEncoder passwordEncoder;
 
     public PlayerServiceImpl(PlayerRepository playerRepository, RoleService roleService, PasswordEncoder passwordEncoder) {
         this.playerRepository = playerRepository;
@@ -101,7 +98,6 @@ public class PlayerServiceImpl implements PlayerService {
     public void generateApiKey(Player player) {
         ApiKey apiKey = new ApiKey();
         Associations.PlayerApiKey.addApiKey(player, apiKey);
-        System.out.println("Generated API key for " + player.getUsername() + ": " + apiKey.getKeyToken());
         playerRepository.save(player);
     }
 

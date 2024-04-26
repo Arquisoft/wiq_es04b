@@ -31,47 +31,44 @@ public class QuestionGeneratorService {
 
     private final QuestionService questionService;
 
-    public static final String jsonFilePath = "src/main/resources/static/JSON/QuestionTemplates.json";
+    public static final String JSON_FILE_PATH = "src/main/resources/static/JSON/QuestionTemplates.json";
 
     private Deque<QuestionType> types = new ArrayDeque<>();
 
     private JsonNode json;
 
-    @Autowired
     private Environment environment;
 
-    private Logger log = LoggerFactory.getLogger(InsertSampleDataService.class);
+    private final Logger log = LoggerFactory.getLogger(QuestionGeneratorService.class);
 
     private boolean started;
 
-    public QuestionGeneratorService(QuestionService questionService) {
+    public QuestionGeneratorService(QuestionService questionService, Environment environment) throws IOException {
         this.questionService = questionService;
+        this.environment = environment;
         ((QuestionServiceImpl)questionService).setQuestionGeneratorService(this);
         parseQuestionTypes();
         this.started = true;
     }
 
-    private void parseQuestionTypes() {
-        try {
-            File jsonFile = new File(jsonFilePath);
-            ObjectMapper objectMapper = new ObjectMapper();
-            json = objectMapper.readTree(jsonFile);
-            JsonNode categories = json.findValue("categories");
-            for (JsonNode category : categories) {
-                String categoryName = category.get("name").textValue();
-                Category cat = new Category(categoryName);
-                JsonNode questionsNode = category.findValue("questions");
-                for (JsonNode question : questionsNode) {
-                    types.push(new QuestionType(question, cat));
-                }
+    private void parseQuestionTypes() throws IOException {
+        File jsonFile = new File(JSON_FILE_PATH);
+        ObjectMapper objectMapper = new ObjectMapper();
+        json = objectMapper.readTree(jsonFile);
+        JsonNode categories = json.findValue("categories");
+        for (JsonNode category : categories) {
+            String categoryName = category.get("name").textValue();
+            Category cat = new Category(categoryName);
+            JsonNode questionsNode = category.findValue("questions");
+            for (JsonNode question : questionsNode) {
+                types.push(new QuestionType(question, cat));
             }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
         }
     }
 
     @Scheduled(fixedRate = 86400000, initialDelay = 86400000)
-    public void generateAllQuestions(){
+    public void generateAllQuestions() throws IOException {
+        resetGeneration();
     }
 
     @Scheduled(fixedRate = 150000)
@@ -120,14 +117,14 @@ public class QuestionGeneratorService {
     }
 
     @Transactional
-    public void generateTestQuestions(String cat) throws IOException {
+    public void generateTestQuestions(String cat) {
         Answer a1 = new Answer("1", true);
         List<Answer> answers = List.of(a1, new Answer("2", false), new Answer("3", false), new Answer("4", false));
         Question q = new Question("Statement", answers, a1, new Category(cat), "es");
         questionService.addNewQuestion(new QuestionDto(q));
     }
 
-    public void resetGeneration() {
+    public void resetGeneration() throws IOException {
         types.clear();
         parseQuestionTypes();
     }

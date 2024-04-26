@@ -40,7 +40,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf
                         .ignoringRequestMatchers("/api/**")
                 )
-                .authorizeHttpRequests((authorize) ->
+                .authorizeHttpRequests(authorize ->
                         authorize
                                 .requestMatchers("/css/**", "/img/**", "/script/**").permitAll()
                                 .requestMatchers("/home/**").authenticated()

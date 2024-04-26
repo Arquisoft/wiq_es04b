@@ -20,6 +20,8 @@ import java.util.Optional;
 
 @Controller
 public class GameController {
+    private static final String GAMESESSION_STR = "gameSession";
+
     private final QuestionService questionService;
     private final GameSessionService gameSessionService;
     private final PlayerService playerService;
@@ -31,7 +33,6 @@ public class GameController {
         this.playerService = playerService;
     }
 
-
     /**
      * This method is used to get the game view and to start the game
      * @param model The model to be used
@@ -39,14 +40,14 @@ public class GameController {
      */
     @GetMapping("/game")
     public String getGame(HttpSession session, Model model, Principal principal) {
-        GameSession gameSession = (GameSession) session.getAttribute("gameSession");
+        GameSession gameSession = (GameSession) session.getAttribute(GAMESESSION_STR);
         if (gameSession != null) {
             if (checkUpdateGameSession(gameSession, session)) {
                 return "game/fragments/gameFinished";
             }
         } else {
             gameSession = gameSessionService.startNewGame(getLoggedInPlayer(principal));
-            session.setAttribute("gameSession", gameSession);
+            session.setAttribute(GAMESESSION_STR, gameSession);
         }
 
         model.addAttribute("question", gameSession.getCurrentQuestion());
@@ -66,14 +67,14 @@ public class GameController {
      */
     @GetMapping("/game/{idQuestion}/{idAnswer}")
     public String getCheckResult(@PathVariable Long idQuestion, @PathVariable Long idAnswer, Model model, HttpSession session) {
-        GameSession gameSession = (GameSession) session.getAttribute("gameSession");
+        GameSession gameSession = (GameSession) session.getAttribute(GAMESESSION_STR);
         if (gameSession == null) {
             return "redirect:/game";
         }
 
         if (!gameSession.hasQuestionId(idQuestion)) {
             model.addAttribute("score", gameSession.getScore());
-            session.removeAttribute("gameSession");
+            session.removeAttribute(GAMESESSION_STR);
             return "redirect:/game"; // if someone wants to exploit the game, just redirect to the game page
         }
 
@@ -101,11 +102,11 @@ public class GameController {
 
     @GetMapping("/game/update")
     public String updateGame(Model model, HttpSession session) {
-        GameSession gameSession = (GameSession) session.getAttribute("gameSession");
+        GameSession gameSession = (GameSession) session.getAttribute(GAMESESSION_STR);
         Question nextQuestion = gameSession.getCurrentQuestion();
         if (nextQuestion == null) {
             gameSessionService.endGame(gameSession);
-            session.removeAttribute("gameSession");
+            session.removeAttribute(GAMESESSION_STR);
             model.addAttribute("score", gameSession.getScore());
             return "game/fragments/gameFinished";
         }
@@ -122,10 +123,10 @@ public class GameController {
 
     @GetMapping("/game/finished/{points}")
     public String finishGame(@PathVariable int points, Model model, HttpSession session) {
-        GameSession gameSession = (GameSession) session.getAttribute("gameSession");
+        GameSession gameSession = (GameSession) session.getAttribute(GAMESESSION_STR);
         if (gameSession != null) {
             gameSessionService.endGame(gameSession);
-            session.removeAttribute("gameSession");
+            session.removeAttribute(GAMESESSION_STR);
         }
         model.addAttribute("score", points);
         return "game/gameFinished";
@@ -134,7 +135,7 @@ public class GameController {
     @GetMapping("/game/points")
     @ResponseBody
     public String getPoints(HttpSession session) {
-        GameSession gameSession = (GameSession) session.getAttribute("gameSession");
+        GameSession gameSession = (GameSession) session.getAttribute(GAMESESSION_STR);
         if (gameSession != null)
             return String.valueOf(gameSession.getScore());
         else
@@ -144,7 +145,7 @@ public class GameController {
     @GetMapping("/game/currentQuestion")
     @ResponseBody
     public String getCurrentQuestion(HttpSession session) {
-        GameSession gameSession = (GameSession) session.getAttribute("gameSession");
+        GameSession gameSession = (GameSession) session.getAttribute(GAMESESSION_STR);
         if (gameSession != null)
             return String.valueOf(gameSession.getAnsweredQuestions().size()+1);
         else
@@ -171,7 +172,7 @@ public class GameController {
             gameSession.addAnsweredQuestion(gameSession.getCurrentQuestion());
             if (gameSession.getQuestionsToAnswer().isEmpty()) {
                 gameSessionService.endGame(gameSession);
-                session.removeAttribute("gameSession");
+                session.removeAttribute(GAMESESSION_STR);
                 return true;
             }
         }

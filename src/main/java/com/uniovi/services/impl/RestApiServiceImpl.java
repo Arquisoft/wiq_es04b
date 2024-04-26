@@ -59,6 +59,7 @@ public class RestApiServiceImpl implements RestApiService {
                 Optional<Player> found = playerService.getUser(Long.parseLong(params.get("id")));
                 found.ifPresent(players::add);
             } catch (NumberFormatException ignored) {
+
             }
         }
 
@@ -85,7 +86,7 @@ public class RestApiServiceImpl implements RestApiService {
             if (!ranOtherParams)
                 return playerService.getUsersByRole(params.get("role"));
             else
-                players.removeIf(p -> !p.getRoles().stream().anyMatch(r -> r.getName().equals(params.get("role"))));
+                players.removeIf(p -> p.getRoles().stream().noneMatch(r -> r.getName().equals(params.get("role"))));
         }
 
         return players.stream().toList();
