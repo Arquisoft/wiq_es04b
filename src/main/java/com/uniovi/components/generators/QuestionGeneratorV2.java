@@ -107,7 +107,7 @@ public class QuestionGeneratorV2 implements QuestionGenerator{
         int size = results.size();
         int tries = 0;
 
-       while (options.size() < 3 && tries < 10){
+       while (options.size() < 3 && tries < 10) {
             int random = (int) (this.random.nextFloat() * size);
             String option = results.get(random).path(answerLabel).path("value").asText();
             if (!option.equals(correctAnswer) && !usedOptions.contains(option) ) {
