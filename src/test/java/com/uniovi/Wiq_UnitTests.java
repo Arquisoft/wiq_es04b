@@ -1743,6 +1743,30 @@ public class Wiq_UnitTests {
         Assertions.assertEquals(5,questions.size());
     }
 
+    @Test
+    @Order(108)
+    public void PlayerServiceImpl_getUsersByMultiplayerCode_ReturnsPlayer() {
+        Long playerId = 1L;
+        Player player = createPlayer();
+        player.setId(playerId);
+
+        player.setMultiplayerCode(123);
+        playerRepository.save(player);
+
+        List<Player> result = playerService.getUsersByMultiplayerCode(123);
+
+        Assertions.assertEquals(1, result.size());
+        Assertions.assertEquals(123, result.get(0).getMultiplayerCode());
+    }
+
+    @Test
+    @Order(109)
+    public void PlayerServiceImpl_getUsersByMultiplayerCode_ReturnsEmpty() {
+        List<Player> result = playerService.getUsersByMultiplayerCode(123);
+
+        Assertions.assertTrue(result.isEmpty());
+    }
+
 
     /**
      * Sends an HTTP request to the API
