@@ -1,0 +1,13 @@
+ifndef::imagesdir[:imagesdir: ../images]
+
+[[section-testing]]
+== Testing
+
+To be able to achieve continuous delivery, we need to have a good test coverage. We need to have a good test coverage to be able to refactor the code without breaking it, to be able to deliver the software with confidence and to be able to deliver the software with quality.
+
+=== Unit Test
+In our project, we have implemented unit tests for various components of the application. The tests are written in Java and use the JUnit 5 framework for testing. We also use the Spring Boot Test framework for testing Spring Boot applications, which provides utilities and annotations to test the application in a way that is very close to its actual runtime behavior.  The tests are located in the src/test/java/com/uniovi directory. The main test class is Wiq_UnitTests.java, which contains tests for various services and repositories in our application.
+
+=== Integration Test (E2E)
+
+=== Load Test
