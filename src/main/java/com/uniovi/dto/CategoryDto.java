@@ -11,6 +11,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class CategoryDto {
 
     @Schema(description = "The name of the category", example = "Geography")
