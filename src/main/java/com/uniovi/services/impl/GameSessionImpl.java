@@ -51,6 +51,11 @@ public class GameSessionImpl implements GameSessionService {
     }
 
     @Override
+    public GameSession startNewMultiplayerGame(Player player, int code) {
+        return new GameSession(player, questionService.getRandomMultiplayerQuestions(NORMAL_GAME_QUESTION_NUM,code));
+    }
+
+    @Override
     public void endGame(GameSession gameSession) {
         Associations.PlayerGameSession.addGameSession(gameSession.getPlayer(), gameSession);
         gameSession.setFinishTime(LocalDateTime.now());

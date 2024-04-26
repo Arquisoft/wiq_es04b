@@ -1,0 +1,19 @@
+<link th:href="@{/css/multiplayer.css}" rel="stylesheet" type="text/css"/>
+<div class="container" style="text-align: center">
+
+    <h2 id="finishedGame" th:text ="#{multi.finished}">  </h2>
+
+    <h3 th:text ="#{multi.code}">  </h3>
+    <code id="lobbyCode" th:text="${code}"></code>
+
+    <a th:href="@{'/multiplayerGame/endGame/' + ${code}}">
+        <button id="createBtn" type="button" class="btn btn-custom btn-block mb-2" th:text="#{multi.results}"></button>
+    </a>
+
+    <script>
+        $(document).ready(function () {
+            $(".points").remove();
+            $(".questionCounter").remove();
+        });
+    </script>
+</div>

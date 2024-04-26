@@ -59,6 +59,8 @@ public interface QuestionService {
      */
     List<Question> getRandomQuestions(int num);
 
+    List<Question> getRandomMultiplayerQuestions(int num, int code);
+
     /**
      * Check if the answer is correct
      * @param idquestion The id of the question

@@ -21,6 +21,8 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.security.SecureRandom;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -111,6 +113,39 @@ public class QuestionServiceImpl implements QuestionService {
         return res;
     }
 
+
+    @Override
+    public List<Question> getRandomMultiplayerQuestions(int num, int code) {
+        List<Question> allQuestions = questionRepository.findAll().stream()
+                .filter(question -> question.getLanguage().equals(LocaleContextHolder.getLocale().getLanguage())).toList();
+        List<Question> res = new ArrayList<>();
+        int size= allQuestions.size();
+
+        int currentIndex = generateIndex(code, size) -4;
+
+        for (int i = 0; i < num; i++) {
+
+            Question question = allQuestions.get(currentIndex);
+
+            while (question.hasEmptyOptions() || res.contains(question)) {
+                question = allQuestions.get(currentIndex);
+            }
+
+            res.add(question);
+            currentIndex++;
+        }
+        return res;
+    }
+    private int generateIndex(int code, int size) {
+        int hashCode = combineHash(code, LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+        return Math.abs(hashCode) % size;
+    }
+
+    private int combineHash(int code, String date) {
+        String combinedString = code + date;
+        return combinedString.hashCode();
+    }
+
     @Override
     public boolean checkAnswer(Long idquestion, Long idanswer) {
         Optional<Question> q = questionRepository.findById(idquestion);
@@ -176,4 +211,5 @@ public class QuestionServiceImpl implements QuestionService {
         questionGeneratorService.resetGeneration();
         questionRepository.deleteAll();
     }
+
 }

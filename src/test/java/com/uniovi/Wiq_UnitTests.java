@@ -7,6 +7,8 @@ import com.uniovi.dto.RoleDto;
 import com.uniovi.entities.*;
 import com.uniovi.repositories.*;
 import com.uniovi.services.*;
+import jakarta.transaction.Transactional;
+import jakarta.validation.constraints.AssertTrue;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -26,6 +28,8 @@ import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.*;
+
+import static org.junit.Assert.assertNotNull;
 
 @SpringBootTest
 @Tag("unit")
@@ -48,6 +52,8 @@ public class Wiq_UnitTests {
     @Autowired
     private InsertSampleDataService sampleDataService;
     @Autowired
+    private MultiplayerSessionService multiplayerSessionService;
+    @Autowired
     private QuestionGeneratorService questionGeneratorService;
 
     @Autowired
@@ -64,11 +70,17 @@ public class Wiq_UnitTests {
     GameSessionRepository gameSessionRepository;
     @Autowired
     QuestionRepository questionRepository;
+    @Autowired
+    MultiplayerSessionRepository multiplayerSessionRepository;
 
     private final HttpClient httpClient = HttpClient.newHttpClient();
 
     private Player createPlayer() {
         return new Player("name", "test@email.com", "password");
+    }
+
+    private Player createDiferentPlayer(String word){
+        return new Player("name"+word,word+"test@email.com","password");
     }
 
     @Test
@@ -779,7 +791,7 @@ public class Wiq_UnitTests {
     @Test
     @Order(50)
     public void testGetQuestions() throws IOException, InterruptedException, JSONException {
-        insertSomeQuestions();
+        insertSomeQuestions();;
         Player player = playerService.getUsersByRole("ROLE_USER").get(0);
         ApiKey apiKey = player.getApiKey();
 
@@ -830,7 +842,7 @@ public class Wiq_UnitTests {
     @Test
     @Order(53)
     public void testGetQuestionById() throws IOException, InterruptedException, JSONException {
-        insertSomeQuestions();
+        insertSomeQuestions();;
         Player player = playerService.getUsersByRole("ROLE_USER").get(0);
         ApiKey apiKey = player.getApiKey();
         Question question = questionService.getAllQuestions().get(0);
@@ -1315,7 +1327,7 @@ public class Wiq_UnitTests {
     @Test
     @Order(88)
     public void testModifyQuestionInvalidApiKey() throws IOException, InterruptedException, JSONException {
-        insertSomeQuestions();
+        insertSomeQuestions();;
         Question question = questionService.getAllQuestions().get(0);
 
         HttpResponse<String> response = sendRequest("PATCH", "/api/questions/" + question.getId(), Map.of("API-KEY", "zzzz"),
@@ -1339,7 +1351,7 @@ public class Wiq_UnitTests {
     @Test
     @Order(90)
     public void testModifyQuestionMissingData() throws IOException, InterruptedException, JSONException {
-        insertSomeQuestions();
+        insertSomeQuestions();;
         Question question = questionService.getAllQuestions().get(0);
         Player player = playerService.getUsersByRole("ROLE_USER").get(0);
         ApiKey apiKey = player.getApiKey();
@@ -1354,7 +1366,7 @@ public class Wiq_UnitTests {
     @Order(91)
     @Tag("flaky")
     public void testModifyQuestion() throws IOException, InterruptedException, JSONException {
-        insertSomeQuestions();
+        insertSomeQuestions();;
         Question question = questionService.getAllQuestions().get(0);
         Player player = playerService.getUsersByRole("ROLE_USER").get(0);
         ApiKey apiKey = player.getApiKey();
@@ -1388,7 +1400,7 @@ public class Wiq_UnitTests {
     @Test
     @Order(92)
     public void testModifyQuestionWithLessOptions() throws IOException, InterruptedException, JSONException {
-        insertSomeQuestions();
+        insertSomeQuestions();;
         Question question = questionService.getAllQuestions().get(0);
         Player player = playerService.getUsersByRole("ROLE_USER").get(0);
         ApiKey apiKey = player.getApiKey();
@@ -1414,7 +1426,7 @@ public class Wiq_UnitTests {
     @Test
     @Order(93)
     public void testModifyQuestionWithNoCorrect() throws IOException, InterruptedException, JSONException {
-        insertSomeQuestions();
+        insertSomeQuestions();;
         Question question = questionService.getAllQuestions().get(0);
         Player player = playerService.getUsersByRole("ROLE_USER").get(0);
         ApiKey apiKey = player.getApiKey();
@@ -1442,7 +1454,7 @@ public class Wiq_UnitTests {
     @Test
     @Order(94)
     public void testDeleteQuestionInvalidApiKey() throws IOException, InterruptedException, JSONException {
-        insertSomeQuestions();
+        insertSomeQuestions();;
         Question question = questionService.getAllQuestions().get(0);
 
         HttpResponse<String> response = sendRequest("DELETE", "/api/questions/" + question.getId(), Map.of("API-KEY", "zzzz"),
@@ -1467,7 +1479,7 @@ public class Wiq_UnitTests {
     @Order(96)
     @Tag("flaky")
     public void testDeleteQuestion() throws IOException, InterruptedException, JSONException {
-        insertSomeQuestions();
+        insertSomeQuestions();;
         Question question = questionService.getAllQuestions().get(0);
         Player player = playerService.getUsersByRole("ROLE_USER").get(0);
         ApiKey apiKey = player.getApiKey();
@@ -1479,6 +1491,273 @@ public class Wiq_UnitTests {
         Optional<Question> deletedQuestion = questionService.getQuestion(question.getId());
         Assertions.assertTrue(deletedQuestion.isEmpty());
     }
+
+    @Test
+    @Order(97)
+    public void testGetPlayersWithScores() {
+        Player player1 = playerRepository.save(createDiferentPlayer("aa"));
+        Player player2 = playerRepository.save(createDiferentPlayer("bb"));
+        Player player3 = playerRepository.save(createDiferentPlayer("cc"));
+
+        MultiplayerSession session = new MultiplayerSession("123",player3);
+        Map<Player, Integer> playerScores = new HashMap<>();
+        playerScores.put(player1, 10);
+        playerScores.put(player2, 5);
+        session.setPlayerScores(playerScores);
+
+        multiplayerSessionRepository.save(session);
+
+        Map<Player, Integer> result = multiplayerSessionService.getPlayersWithScores(123);
+
+        assertNotNull(result);
+        Assertions.assertEquals(2, result.size());
+    }
+
+    @Test
+    @Order(98)
+    public void testMultiCreate() {
+        // Given
+        Long playerId = 1L;
+        Player player = createPlayer();
+        player.setId(playerId);
+
+        String code = "123";
+        playerRepository.findById(playerId);
+        multiplayerSessionService.multiCreate(code, playerId);
+
+        MultiplayerSession ms = multiplayerSessionRepository.findByMultiplayerCode("123");
+        Assertions.assertNotNull(ms);
+        Assertions.assertEquals("123",ms.getMultiplayerCode());
+    }
+
+    @Test
+    @Order(99)
+    public void testAddToLobby() {
+
+        Long playerId = 1L;
+        Player player = createPlayer();
+        player.setId(playerId);
+
+        String code = "123";
+        MultiplayerSession multiplayerSession = new MultiplayerSession();
+        multiplayerSession.setMultiplayerCode(code);
+
+        playerRepository.save(player);
+        multiplayerSessionRepository.save(multiplayerSession);
+
+        multiplayerSessionService.addToLobby(code, playerId);
+
+        MultiplayerSession ms = multiplayerSessionRepository.findByMultiplayerCode(code);
+        Assertions.assertNotNull(ms);
+        Assertions.assertEquals("123",ms.getMultiplayerCode());
+    }
+
+    @Test
+    @Order(100)
+    public void testChangeScore() {
+        Long playerId = 1L;
+        Player player = createPlayer();
+        player.setId(playerId);
+
+        String code = "123";
+        int newScore = 100;
+        MultiplayerSession multiplayerSession = new MultiplayerSession();
+        multiplayerSession.setMultiplayerCode(code);
+        multiplayerSession.addPlayer(player);
+
+        playerRepository.save(player);
+        multiplayerSessionRepository.save(multiplayerSession);
+
+        multiplayerSessionService.changeScore(code, playerId, newScore);
+
+        multiplayerSession = multiplayerSessionRepository.findByMultiplayerCode("123");
+        Assertions.assertNotNull(multiplayerSession);
+    }
+
+
+    @Test
+    @Order(101)
+    public void testMultiplayerIdGeneration() {
+        MultiplayerSession multiplayerSession = new MultiplayerSession();
+        multiplayerSessionRepository.save(multiplayerSession);
+
+        Long id = multiplayerSession.getId();
+        Assertions.assertNotNull(id);
+    }
+
+
+    @Test
+    @Order(102)
+    public void testMultiplayerCodeInitialization() {
+        Long playerId = 1L;
+        Player player = createPlayer();
+        player.setId(playerId);
+
+        Integer multiplayerCode = player.getMultiplayerCode();
+        Assertions.assertNull(multiplayerCode);
+    }
+
+    @Test
+    @Order(103)
+    public void testScoreMultiplayerCodeInitialization() {
+        Long playerId = 1L;
+        Player player = createPlayer();
+        player.setId(playerId);
+
+        String scoreMultiplayerCode = player.getScoreMultiplayerCode();
+        Assertions.assertNull(scoreMultiplayerCode);
+    }
+
+    @Test
+    @Order(104)
+    public void testMultiplayerCodeAssignment() {
+        Long playerId = 1L;
+        Player player = createPlayer();
+        player.setId(playerId);
+
+        player.setMultiplayerCode(123);
+        Integer multiplayerCode = player.getMultiplayerCode();
+        Assertions.assertEquals(123, multiplayerCode);
+    }
+
+    @Test
+    @Order(105)
+    public void testScoreMultiplayerCodeAssignment() {
+        Long playerId = 1L;
+        Player player = createPlayer();
+        player.setId(playerId);
+
+        player.setScoreMultiplayerCode("200");
+        String scoreMultiplayerCode = player.getScoreMultiplayerCode();
+        Assertions.assertEquals("200", scoreMultiplayerCode);
+    }
+
+    //@Test
+    //@Order(106)
+    //public void GameSessionImpl_startNewMultiplayerGame()  throws InterruptedException, IOException {
+    //    testQuestions(10);
+//
+    //    Long playerId = 1L;
+    //    Player player = createPlayer();
+    //    player.setId(playerId);
+//
+    //    String code = "123";
+    //    playerRepository.findById(playerId);
+    //    multiplayerSessionService.multiCreate(code, playerId);
+//
+    //    GameSession multiplayerGame = gameSessionService.startNewMultiplayerGame(player, 123);
+//
+    //    Assertions.assertNotNull(multiplayerGame);
+    //    Assertions.assertEquals(player, multiplayerGame.getPlayer());
+    //}
+
+    //@Test
+    //@Order(107)
+    //public void testRandomMultiplayerQuestions() throws InterruptedException, IOException {
+    //    testQuestions(10);
+//
+    //    Long playerId = 1L;
+    //    Player player = createPlayer();
+    //    player.setId(playerId);
+//
+    //    String code = "123";
+    //    playerRepository.findById(playerId);
+    //    multiplayerSessionService.multiCreate(code, playerId);
+//
+//
+    //    List<Question> questions = questionService.getRandomMultiplayerQuestions(5, 123);
+//
+    //    Assertions.assertEquals(5,questions.size());
+    //}
+
+    @Test
+    @Order(108)
+    public void PlayerServiceImpl_getUsersByMultiplayerCode_ReturnsPlayer() {
+        Long playerId = 1L;
+        Player player = createPlayer();
+        player.setId(playerId);
+
+        player.setMultiplayerCode(123);
+        playerRepository.save(player);
+
+        List<Player> result = playerService.getUsersByMultiplayerCode(123);
+
+        Assertions.assertEquals(1, result.size());
+        Assertions.assertEquals(123, result.get(0).getMultiplayerCode());
+    }
+
+    @Test
+    @Order(109)
+    public void PlayerServiceImpl_getUsersByMultiplayerCode_ReturnsEmpty() {
+        List<Player> result = playerService.getUsersByMultiplayerCode(123);
+
+        Assertions.assertTrue(result.isEmpty());
+    }
+
+    @Test
+    @Order(110)
+    public void PlayerServiceImpl_setANDgetScoreMultiplayerCode() {
+        Long playerId = 1L;
+        Player player = createPlayer();
+        player.setId(playerId);
+
+        player.setMultiplayerCode(123);
+        playerRepository.save(player);
+
+        String score = "100";
+        playerService.setScoreMultiplayerCode(playerId, score);
+
+        String result = playerService.getScoreMultiplayerCode(playerId);
+
+        Assertions.assertEquals(score, result);
+    }
+
+    @Test
+    @Order(111)
+    public void PlayerServiceImpl_setANDgetScoreMultiplayerCode_EmptyPlayer() {
+        Long playerId = 5L;
+
+        String score = "100";
+        playerService.setScoreMultiplayerCode(playerId, score);
+
+        String result = playerService.getScoreMultiplayerCode(playerId);
+
+        Assertions.assertEquals("", result);
+    }
+
+    @Test
+    @Order(112)
+    public void PlayerServiceImpl_createMultiplayerGame() {
+        Long playerId = 1L;
+
+        int result = playerService.createMultiplayerGame(playerId);
+        Assertions.assertNotEquals(-1, result);
+    }
+
+    @Test
+    @Order(113)
+    public void PlayerServiceImpl_createMultiplayerGame_EmptyPlayer() {
+        Long playerId = 5L;
+
+        int result = playerService.createMultiplayerGame(playerId);
+        Assertions.assertEquals(-1, result);
+    }
+
+    @Test
+    @Order(114)
+    public void PlayerServiceImpl_deleteMultiplayerCode() {
+        Long playerId = 1L;
+        Player player = createPlayer();
+        player.setId(playerId);
+        playerRepository.save(player);
+        playerService.createMultiplayerGame(playerId);
+
+        playerService.deleteMultiplayerCode(playerId);
+        Assertions.assertNull(player.getMultiplayerCode());
+    }
+
+
+
 
     /**
      * Sends an HTTP request to the API
@@ -1522,7 +1801,6 @@ public class Wiq_UnitTests {
 
     /**
      * Builds a query string from a map of data
-     *
      * @param data The data to include in the query string
      * @return The query string
      */
@@ -1535,7 +1813,6 @@ public class Wiq_UnitTests {
 
     /**
      * Parses the JSON response from the server
-     *
      * @param response The response from the server
      * @return The JSON object
      * @throws JSONException
@@ -1549,5 +1826,29 @@ public class Wiq_UnitTests {
      */
     private void insertSomeQuestions() throws IOException, InterruptedException {
         questionGeneratorService.generateTestQuestions();
+    }
+
+    public List<Question> testQuestions(int num) {
+        List<Question> res = new ArrayList<>();
+        Category c = new Category("Test category", "Test category");
+        categoryService.addNewCategory(c);
+        for (int i = 0; i < num; i++) {
+            Question q = new Question();
+            q.setStatement("Test question " + i);
+            q.setLanguage("es");
+            Associations.QuestionsCategory.addCategory(q, c);
+            List<Answer> answers = new ArrayList<>();
+            for (int j = 0; j < 4; j++) {
+                Answer a = new Answer();
+                a.setText("Test answer " + j);
+                a.setCorrect(j == 0);
+                if(j==0) q.setCorrectAnswer(a);
+                answers.add(a);
+            }
+            Associations.QuestionAnswers.addAnswer(q, answers);
+            questionService.addNewQuestion(q);
+            res.add(q);
+        }
+        return res;
     }
 }

@@ -40,5 +40,8 @@ public interface GameSessionService {
     Page<GameSession> getPlayerRanking(Pageable pageable, Player player);
 
     GameSession startNewGame(Player player);
+
+    GameSession startNewMultiplayerGame(Player player, int code);
+
     void endGame(GameSession gameSession);
 }

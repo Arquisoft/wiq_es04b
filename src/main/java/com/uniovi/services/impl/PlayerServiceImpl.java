@@ -6,6 +6,7 @@ import com.uniovi.entities.ApiKey;
 import com.uniovi.entities.Associations;
 import com.uniovi.entities.Player;
 import com.uniovi.repositories.PlayerRepository;
+import com.uniovi.services.MultiplayerSessionService;
 import com.uniovi.services.PlayerService;
 import com.uniovi.services.RoleService;
 import org.springframework.data.domain.Page;
@@ -24,10 +25,13 @@ public class PlayerServiceImpl implements PlayerService {
     private final RoleService roleService;
     private final PasswordEncoder passwordEncoder;
 
-    public PlayerServiceImpl(PlayerRepository playerRepository, RoleService roleService, PasswordEncoder passwordEncoder) {
+    private MultiplayerSessionService multiplayerSessionService;
+
+    public PlayerServiceImpl(PlayerRepository playerRepository, RoleService roleService, MultiplayerSessionService multiplayerSessionService,PasswordEncoder passwordEncoder) {
         this.playerRepository = playerRepository;
         this.roleService = roleService;
         this.passwordEncoder = passwordEncoder;
+        this.multiplayerSessionService = multiplayerSessionService;
     }
 
     @Override
@@ -67,6 +71,13 @@ public class PlayerServiceImpl implements PlayerService {
     public List<Player> getUsers() {
         List<Player> l = new ArrayList<>();
         playerRepository.findAll().forEach(l::add);
+        return l;
+    }
+
+    @Override
+    public List<Player> getUsersByMultiplayerCode(int multiplayerCode) {
+        List<Player> l = new ArrayList<>();
+        playerRepository.findAllByMultiplayerCode(multiplayerCode).forEach(l::add);
         return l;
     }
 
@@ -127,6 +138,72 @@ public class PlayerServiceImpl implements PlayerService {
             }
         }
 
+        playerRepository.save(p);
+    }
+
+    @Override
+    public boolean changeMultiplayerCode(Long id, String code) {
+        Optional<Player> player = playerRepository.findById(id);
+        if (player.isEmpty())
+            return false;
+
+        Player p = player.get();
+        if(existsMultiplayerCode(code)){
+            p.setMultiplayerCode(Integer.parseInt(code));
+            playerRepository.save(p);
+            return true;
+        }
+        return false;
+    }
+    @Override
+    public String getScoreMultiplayerCode(Long id) {
+        Optional<Player> player = playerRepository.findById(id);
+        if (player.isEmpty())
+            return "";
+
+        return player.get().getScoreMultiplayerCode();
+    }
+
+    @Override
+    public void setScoreMultiplayerCode(Long id, String score) {
+        Optional<Player> player = playerRepository.findById(id);
+        if (player.isEmpty())
+            return;
+
+        Player p =player.get();
+        p.setScoreMultiplayerCode(score);
+        playerRepository.save(p);
+    }
+    /**
+    * A multiplayerCodeExists if there are any player
+     * with same multiplayerCode at the moment of the join
+    * */
+    private boolean existsMultiplayerCode(String code){
+        //return ! getUsersByMultiplayerCode(Integer.parseInt(code)).isEmpty();
+        return ! multiplayerSessionService.getPlayersWithScores(Integer.parseInt(code)).isEmpty();
+    }
+
+    @Override
+    public int createMultiplayerGame(Long id){
+        Optional<Player> player = playerRepository.findById(id);
+        if (player.isEmpty())
+            return -1;
+
+        Player p = player.get();
+        int code = (int)Math.floor(Math.random()*10000);
+        p.setMultiplayerCode(code);
+        playerRepository.save(p);
+        return code;
+    }
+
+    @Override
+    public void deleteMultiplayerCode(Long id){
+        Optional<Player> player = playerRepository.findById(id);
+        if (player.isEmpty())
+            return;
+
+        Player p = player.get();
+        p.setMultiplayerCode(null);
         playerRepository.save(p);
     }
 
