@@ -207,7 +207,8 @@ public class GameController {
         session.setAttribute("hasJustAnswered", true);
         gameSession.getNextQuestion();
       
-        return updateGame(model, session);
+        //return updateGame(model, session);
+        return updateGame(model, session, principal);
     }
 
     @GetMapping("/game/update")
