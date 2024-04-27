@@ -870,10 +870,10 @@ System will allow accessing user information and the information of the generate
 <div class="ulist">
 <ul>
 <li>
-<p>The default branch: master. This branch will only be used to create new releases and will contain the most stable version of the system.</p>
+<p>The default branch: <a href="https://github.com/Arquisoft/wiq_es04b/tree/master">master</a>. This branch will only be used to create new releases and will contain the most stable version of the system.</p>
 </li>
 <li>
-<p>The development branch: develop. This branch will be used to integrate the features developed by the team and will be the basis for creating new releases. This will have the largest commit amount, and will also have a stable version that could be deployed at any time.</p>
+<p>The development branch: <a href="https://github.com/Arquisoft/wiq_es04b/tree/develop">develop</a>. This branch will be used to integrate the features developed by the team and will be the basis for creating new releases. This will have the largest commit amount, and will also have a stable version that could be deployed at any time.</p>
 </li>
 <li>
 <p>Feature branches: These branches will be used to develop new features, and will be created from the develop branch. After the feature is developed, it will be merged into the develop branch and branch can be deleted, although we will not usually delete branches.</p>
@@ -1140,11 +1140,14 @@ The infrastructure features a single Docker container that hosts the Java Spring
 <div class="sect2">
 <h3 id="_domain_model">8.1. Domain Model</h3>
 <div class="paragraph">
-<p>The domain model for our game includes entities such as <code>Question</code>, <code>Category</code>, <code>Player</code>, <code>Role</code>, and <code>GameSession</code>. These are crucial for representing the game&#8217;s data and logic. The model serves as the basis for interactions within the application and between the application and the database.</p>
+<p>The domain model for our game includes entities such as <a href="https://github.com/Arquisoft/wiq_es04b/blob/master/src/main/java/com/uniovi/entities/Question.java">Question</a>, <a href="https://github.com/Arquisoft/wiq_es04b/blob/master/src/main/java/com/uniovi/entities/Category.java">Category</a>, <a href="https://github.com/Arquisoft/wiq_es04b/blob/master/src/main/java/com/uniovi/entities/Player.java">Player</a>, <a href="https://github.com/Arquisoft/wiq_es04b/blob/master/src/main/java/com/uniovi/entities/Role.java">Role</a>, or <a href="https://github.com/Arquisoft/wiq_es04b/blob/master/src/main/java/com/uniovi/entities/GameSession.java">GameSession</a>. These are crucial for representing the game&#8217;s data and logic. The model serves as the basis for interactions within the application and between the application and the database.</p>
+</div>
+<div class="paragraph">
+<p><a href="https://github.com/Arquisoft/wiq_es04b/tree/master/src/main/java/com/uniovi/entities">Source code</a></p>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="./images/domain-model.svg" alt="domain model" width="852" height="1122">
+<img src="./images/domain-model.svg" alt="domain model" width="1131" height="1203">
 </div>
 </div>
 </div>
@@ -1264,72 +1267,59 @@ Scalable solutions such as Docker containers allow the application to be deploye
 <div class="sectionbody">
 <div class="sect2">
 <h3 id="_quality_tree">10.1. Quality Tree</h3>
-<div class="paragraph">
-<p><em>Note: Items (1), (2), (3) in the table below repeat the higher-level quality requirements of Chapter 1.2.</em></p>
-</div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
-<col style="width: 25%;">
-<col style="width: 25%;">
-<col style="width: 25%;">
-<col style="width: 25%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
 </colgroup>
 <thead>
 <tr>
-<th class="tableblock halign-left valign-top">Quality category</th>
-<th class="tableblock halign-left valign-top">Quality</th>
+<th class="tableblock halign-left valign-top">Quality requirement</th>
 <th class="tableblock halign-left valign-top">Description</th>
 <th class="tableblock halign-left valign-top">Scenario</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Usability</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Ease of use</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The application shall be easy to use by the user, with intuitive functionality.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Efficiency</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Access, creation of questions, and navigation between them should be fast to ensure user satisfaction.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">SC1</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Familiarity of the environment (2)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The application should appeal to all fans of the original programme and provide a wide variety of questions.</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Performance</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Accuracy</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The questions in the application must be accurate, both the question and the correct answer.</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Efficiency (1)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Accessing, creating questions and moving between questions should be fast to ensure user satisfaction.</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Robustness</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The system shall function reliably in all specified environments and operating conditions.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Usability</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The application should be appealing to all fans of the original program while also offering a wide variety of questions.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">SC2</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Safety</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Integrity</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The application shall be user-friendly, with intuitive functionality.</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Maintainability and support</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Maintenance (2)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The application shall ensure that it can be easily extended and modified to provide new features to users.</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Cultural and Regional</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Multilingual</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The user interface texts must be able to be converted by a translation file into different languages with an ASCII character set.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Manteinance</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The application should ensure easy expansion and modification to provide users with new features.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">SC3</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Availability</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Our goal is to achieve at least 95% availability, ensuring that the system is always available for users to play.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SC4</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Responsiveness</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The system must be responsive, providing a good user experience for those in desktop and mobile environments.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SC5</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Testability</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The system must facilitate the testing process(creating test cases, executing tests, analyzing results&#8230;&#8203;)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SC6</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Scalability</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The ability of a system to handle increasing workload or growing demands by adapting or expanding its capacity without compromising performance.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SC7</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Interoperability</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The system must have the ability of  seamlessly communicate, exchange data, and work together effectively with different systems, applications, or components, even if they use different technologies.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SC8</p></td>
 </tr>
 </tbody>
 </table>
@@ -1350,15 +1340,35 @@ Scalable solutions such as Docker containers allow the application to be deploye
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">SC1</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">A user who is not familiar with the application will know how to use it after a few minutes of instruction.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Users expect the application to load quickly and respond promptly to their interactions, ensuring a smooth and efficient user experience.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">SC2</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The application should be able to be run from any device, from a computer to a mobile phone, without losing formatting.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The application&#8217;s user interface is designed intuitively, allowing users to navigate effortlessly and find what they need without confusion or frustration.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">CS3</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">With the appropriate translation files replacing the default language (English), all displayed and printed texts now appear in this language.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SC3</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Developers can easily add new features or modify existing ones without disrupting the overall functionality of the application, ensuring its long-term maintainability.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SC4</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Users rely on the application to be available whenever they want to play, and the system ensures a high level of uptime, minimizing downtime for maintenance or updates.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SC5</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Whether accessed from a desktop computer or a mobile device, users expect the application to adapt seamlessly to their screen size and input method, providing a consistent experience across platforms.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SC6</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The testing process is streamlined, allowing QA teams to efficiently create, execute, and analyze test cases, ensuring the reliability and stability of the application.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SC7</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">As user demand grows, the application scales its resources dynamically to accommodate increased traffic and maintain optimal performance levels, ensuring a consistent user experience.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SC8</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The application seamlessly integrates with other systems, allowing for the exchange of data and functionality without compatibility issues, enhancing its overall interoperability.</p></td>
 </tr>
 </tbody>
 </table>
@@ -1880,7 +1890,7 @@ General information: Finally, tests were carried out to log out your user. These
 <div id="footer">
 <div id="footer-text">
 Version 2<br>
-Last updated 2024-04-27 17:33:57 UTC
+Last updated 2024-04-27 19:16:53 UTC
 </div>
 </div>
 </body>
