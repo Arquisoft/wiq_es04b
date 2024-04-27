@@ -7,7 +7,6 @@ import com.uniovi.entities.GameSession;
 import com.uniovi.services.GameSessionService;
 import com.uniovi.services.QuestionService;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -49,6 +48,11 @@ public class GameSessionImpl implements GameSessionService {
     @Override
     public GameSession startNewGame(Player player) {
         return new GameSession(player, questionService.getRandomQuestions(NORMAL_GAME_QUESTION_NUM));
+    }
+
+    @Override
+    public GameSession startNewMultiplayerGame(Player player, int code) {
+        return new GameSession(player, questionService.getRandomMultiplayerQuestions(NORMAL_GAME_QUESTION_NUM,code));
     }
 
     @Override

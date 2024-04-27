@@ -9,15 +9,20 @@ import com.uniovi.repositories.AnswerRepository;
 import com.uniovi.repositories.QuestionRepository;
 import com.uniovi.services.AnswerService;
 import com.uniovi.services.CategoryService;
+import com.uniovi.services.QuestionGeneratorService;
 import com.uniovi.services.QuestionService;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
+import lombok.Setter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -30,6 +35,9 @@ public class QuestionServiceImpl implements QuestionService {
     private final AnswerService answerService;
     private final AnswerRepository answerRepository;
     private final EntityManager entityManager;
+
+    @Setter
+    private QuestionGeneratorService questionGeneratorService;
 
     private final Random random = new SecureRandom();
 
@@ -106,6 +114,39 @@ public class QuestionServiceImpl implements QuestionService {
         return res;
     }
 
+
+    @Override
+    public List<Question> getRandomMultiplayerQuestions(int num, int code) {
+        List<Question> allQuestions = questionRepository.findAll().stream()
+                .filter(question -> question.getLanguage().equals(LocaleContextHolder.getLocale().getLanguage())).toList();
+        List<Question> res = new ArrayList<>();
+        int size= allQuestions.size();
+
+        int currentIndex = generateIndex(code, size) -4;
+
+        for (int i = 0; i < num; i++) {
+
+            Question question = allQuestions.get(currentIndex);
+
+            while (question.hasEmptyOptions() || res.contains(question)) {
+                question = allQuestions.get(currentIndex);
+            }
+
+            res.add(question);
+            currentIndex++;
+        }
+        return res;
+    }
+    private int generateIndex(int code, int size) {
+        int hashCode = combineHash(code, LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+        return Math.abs(hashCode) % size;
+    }
+
+    private int combineHash(int code, String date) {
+        String combinedString = code + date;
+        return combinedString.hashCode();
+    }
+
     @Override
     public boolean checkAnswer(Long idquestion, Long idanswer) {
         Optional<Question> q = questionRepository.findById(idquestion);
@@ -168,6 +209,8 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Override
     public void deleteAllQuestions() {
+        questionGeneratorService.resetGeneration();
         questionRepository.deleteAll();
     }
+
 }

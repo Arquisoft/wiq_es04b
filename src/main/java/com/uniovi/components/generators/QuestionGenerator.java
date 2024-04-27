@@ -10,7 +10,7 @@ import java.util.List;
 
 @Component
 public interface QuestionGenerator {
-    List<Question> getQuestions(String language) throws IOException;
+    List<Question> getQuestions(String language) throws IOException, InterruptedException;
 
-    List<Question> getQuestions(String language, JsonNode question, Category cat) throws IOException;
+    List<Question> getQuestions(String language, JsonNode question, Category cat) throws IOException, InterruptedException;
 }

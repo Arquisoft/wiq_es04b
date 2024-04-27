@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://thymeleaf.org">
+<head th:replace="~{fragments/head}"/>
+<body class="d-flex flex-column min-vh-100">
+<nav th:replace="~{fragments/nav}"/>
+
+<canvas th:replace="~{fragments/background}"></canvas>
+
+<div class="container">
+    <div class="table-responsive">
+        <h2 th:text ="#{multi.info}"></h2>
+        <h3 th:text="${code}"></h3>
+        <ul id="playerList">
+        </ul>
+    </div>
+</div>
+<div class="text-center">
+    <a th:href="@{'/'}">
+        <button id="createBtn" type="button" class="btn btn-custom" th:text="#{multi.menu}"></button>
+    </a>
+</div>
+
+<footer th:replace="~{fragments/footer}"/>
+</body>
+</html>
+
+<script>
+    $(document).ready(function() {
+        function updatePlayerList() {
+            const code = [[${code}]];
+            $.ajax({
+                url: '/endGameList/' + code,
+                type: 'GET',
+                dataType: 'json',
+                success: function (response) {
+                    $('#playerList').empty();
+                    $.each(response, function(playerName, playerPoints) {
+                        $('#playerList').append('<li><span class="playerName">' + playerName + '</span>: <span class="playerStatus">' + playerPoints + '</span></li>');
+                    });
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error al actualizar la lista de jugadores:', error);
+                }
+            });
+        }
+        setInterval(updatePlayerList, 1000);
+    });
+</script>
