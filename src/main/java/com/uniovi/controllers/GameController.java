@@ -74,10 +74,15 @@ public class GameController {
 
     @GetMapping("/multiplayerGame/{code}")
     public String joinMultiplayerGame(@PathVariable String code, HttpSession session, Principal principal, Model model) {
+        if (!multiplayerSessionService.existsCode(code)) {
+            model.addAttribute("errorKey", "multi.code.invalid");
+            return "game/multiplayerGame";
+        }
+
         Optional<Player> player = playerService.getUserByUsername(principal.getName());
         Player p = player.orElse(null);
         isMultiPlayer=true;
-        if(playerService.changeMultiplayerCode(p.getId(),code)){
+        if (playerService.changeMultiplayerCode(p.getId(),code)) {
             multiplayerSessionService.addToLobby(code,p.getId());
             model.addAttribute("multiplayerGameCode",code);
             session.setAttribute("multiplayerCode",code);
@@ -153,6 +158,7 @@ public class GameController {
         Collections.sort(playerNames);
         return playerNames;
     }
+
     @GetMapping("/game/lobby")
     public String createLobby( HttpSession session, Model model) {
         int code = Integer.parseInt((String)session.getAttribute("multiplayerCode"));
@@ -245,17 +251,6 @@ public class GameController {
         model.addAttribute("question", gameSession.getCurrentQuestion());
         model.addAttribute("questionDuration", getRemainingTime(gameSession));
         return "game/fragments/gameFrame";
-    }
-
-    @GetMapping("/game/finished/{points}")
-    public String finishGame(@PathVariable int points, Model model, HttpSession session) {
-        GameSession gameSession = (GameSession) session.getAttribute(GAMESESSION_STR);
-        if (gameSession != null) {
-            gameSessionService.endGame(gameSession);
-            session.removeAttribute(GAMESESSION_STR);
-        }
-        model.addAttribute("score", points);
-        return "game/gameFinished";
     }
 
     @GetMapping("/game/points")

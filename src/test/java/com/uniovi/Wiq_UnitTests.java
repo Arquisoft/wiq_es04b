@@ -561,6 +561,46 @@ public class Wiq_UnitTests {
     }
 
     @Test
+    @Order(35)
+    public void testGetPlayersByEmailsAndRole() throws IOException, InterruptedException, JSONException {
+        Player player = playerService.getUsersByRole("ROLE_USER").get(0);
+        ApiKey apiKey = player.getApiKey();
+
+        HttpResponse<String> response = sendRequest("GET", "/api/players", Map.of(),
+                Map.of("apiKey", apiKey.getKeyToken(),
+                        "emails", player.getEmail(), "role", "ROLE_USER"));
+
+        Assertions.assertEquals(200, response.statusCode());
+        JSONObject json = parseJsonResponse(response);
+        JSONArray players = json.getJSONArray("players");
+        Assertions.assertTrue(players.length() > 0);
+        for (int i = 0; i < players.length(); i++) {
+            JSONObject playerJson = players.getJSONObject(i);
+            Assertions.assertEquals(player.getEmail(), playerJson.getString("email"));
+        }
+    }
+
+    @Test
+    @Order(35)
+    public void testGetPlayersByRole() throws IOException, InterruptedException, JSONException {
+        Player player = playerService.getUsersByRole("ROLE_USER").get(0);
+        ApiKey apiKey = player.getApiKey();
+
+        HttpResponse<String> response = sendRequest("GET", "/api/players", Map.of(),
+                Map.of("apiKey", apiKey.getKeyToken(),
+                        "role", "ROLE_USER"));
+
+        Assertions.assertEquals(200, response.statusCode());
+        JSONObject json = parseJsonResponse(response);
+        JSONArray players = json.getJSONArray("players");
+        Assertions.assertTrue(players.length() > 0);
+        for (int i = 0; i < players.length(); i++) {
+            JSONObject playerJson = players.getJSONObject(i);
+            Assertions.assertEquals(player.getEmail(), playerJson.getString("email"));
+        }
+    }
+
+    @Test
     @Order(36)
     public void testCreatePlayerEmptyApiKey() throws IOException, InterruptedException, JSONException {
         HttpResponse<String> response = sendRequest("POST", "/api/players", Map.of(),
@@ -796,12 +836,28 @@ public class Wiq_UnitTests {
         ApiKey apiKey = player.getApiKey();
 
         HttpResponse<String> response = sendRequest("GET", "/api/questions", Map.of(),
-                Map.of("apiKey", apiKey.getKeyToken()));
+                Map.of("apiKey", apiKey.getKeyToken(), "lang", "es"));
 
         Assertions.assertEquals(200, response.statusCode());
         JSONObject json = parseJsonResponse(response);
         Assertions.assertTrue(json.has("questions"));
         Assertions.assertTrue(json.getJSONArray("questions").length() > 0);
+    }
+
+    @Test
+    @Order(50)
+    void testGetQuestionsInvalidId() throws IOException, InterruptedException, JSONException {
+        insertSomeQuestions();;
+        Player player = playerService.getUsersByRole("ROLE_USER").get(0);
+        ApiKey apiKey = player.getApiKey();
+
+        HttpResponse<String> response = sendRequest("GET", "/api/questions", Map.of(),
+                Map.of("apiKey", apiKey.getKeyToken(), "id", "notnumeric"));
+
+        Assertions.assertEquals(200, response.statusCode());
+        JSONObject json = parseJsonResponse(response);
+        Assertions.assertTrue(json.has("questions"));
+        Assertions.assertEquals(0, json.getJSONArray("questions").length());
     }
 
     @Test
@@ -850,6 +906,25 @@ public class Wiq_UnitTests {
         HttpResponse<String> response = sendRequest("GET", "/api/questions", Map.of(),
                 Map.of("apiKey", apiKey.getKeyToken(),
                         "id", question.getId()));
+
+        Assertions.assertEquals(200, response.statusCode());
+        JSONObject json = parseJsonResponse(response);
+        JSONObject questionJson = json.getJSONArray("questions").getJSONObject(0);
+        Assertions.assertEquals(question.getId(), questionJson.getLong("id"));
+        Assertions.assertEquals(question.getStatement(), questionJson.getString("statement"));
+    }
+
+    @Test
+    @Order(53)
+    public void testGetQuestionByStatement() throws IOException, InterruptedException, JSONException {
+        insertSomeQuestions();;
+        Player player = playerService.getUsersByRole("ROLE_USER").get(0);
+        ApiKey apiKey = player.getApiKey();
+        Question question = questionService.getAllQuestions().get(0);
+
+        HttpResponse<String> response = sendRequest("GET", "/api/questions", Map.of(),
+                Map.of("apiKey", apiKey.getKeyToken(),
+                        "statement", question.getStatement()));
 
         Assertions.assertEquals(200, response.statusCode());
         JSONObject json = parseJsonResponse(response);
@@ -1364,9 +1439,8 @@ public class Wiq_UnitTests {
 
     @Test
     @Order(91)
-    @Tag("flaky")
     public void testModifyQuestion() throws IOException, InterruptedException, JSONException {
-        insertSomeQuestions();;
+        insertSomeQuestions();
         Question question = questionService.getAllQuestions().get(0);
         Player player = playerService.getUsersByRole("ROLE_USER").get(0);
         ApiKey apiKey = player.getApiKey();
@@ -1383,6 +1457,40 @@ public class Wiq_UnitTests {
 
         data.put("options", opts);
         data.put("category", Map.of("name", category.getName()));
+        data.put("language", "en");
+
+        HttpResponse<String> response = sendRequest("PATCH", "/api/questions/" + question.getId(), Map.of("API-KEY", apiKey.getKeyToken()),
+                data);
+
+        Assertions.assertEquals(200, response.statusCode());
+        JSONObject json = parseJsonResponse(response);
+        Assertions.assertTrue(json.getBoolean("success"));
+
+        Optional<Question> updatedQuestion = questionService.getQuestion(question.getId());
+        Assertions.assertTrue(updatedQuestion.isPresent());
+        Assertions.assertEquals("Modified question", updatedQuestion.get().getStatement());
+    }
+
+    @Test
+    @Order(91)
+    public void testModifyQuestionNewCategory() throws IOException, InterruptedException, JSONException {
+        insertSomeQuestions();;
+        Question question = questionService.getAllQuestions().get(0);
+        Player player = playerService.getUsersByRole("ROLE_USER").get(0);
+        ApiKey apiKey = player.getApiKey();
+        Category category = categoryService.getCategoryByName("Geography");
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("statement", "Modified question");
+
+        List<Map<String, Object>> opts = new ArrayList<>();
+        opts.add(Map.of("text", "Option A", "correct", true));
+        opts.add(Map.of("text", "Option B", "correct", false));
+        opts.add(Map.of("text", "Option C", "correct", false));
+        opts.add(Map.of("text", "Option D", "correct", false));
+
+        data.put("options", opts);
+        data.put("category", Map.of("name", "NewCreatedCategory"));
         data.put("language", "en");
 
         HttpResponse<String> response = sendRequest("PATCH", "/api/questions/" + question.getId(), Map.of("API-KEY", apiKey.getKeyToken()),
