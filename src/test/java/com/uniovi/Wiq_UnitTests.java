@@ -561,6 +561,46 @@ public class Wiq_UnitTests {
     }
 
     @Test
+    @Order(35)
+    public void testGetPlayersByEmailsAndRole() throws IOException, InterruptedException, JSONException {
+        Player player = playerService.getUsersByRole("ROLE_USER").get(0);
+        ApiKey apiKey = player.getApiKey();
+
+        HttpResponse<String> response = sendRequest("GET", "/api/players", Map.of(),
+                Map.of("apiKey", apiKey.getKeyToken(),
+                        "emails", player.getEmail(), "role", "ROLE_USER"));
+
+        Assertions.assertEquals(200, response.statusCode());
+        JSONObject json = parseJsonResponse(response);
+        JSONArray players = json.getJSONArray("players");
+        Assertions.assertTrue(players.length() > 0);
+        for (int i = 0; i < players.length(); i++) {
+            JSONObject playerJson = players.getJSONObject(i);
+            Assertions.assertEquals(player.getEmail(), playerJson.getString("email"));
+        }
+    }
+
+    @Test
+    @Order(35)
+    public void testGetPlayersByRole() throws IOException, InterruptedException, JSONException {
+        Player player = playerService.getUsersByRole("ROLE_USER").get(0);
+        ApiKey apiKey = player.getApiKey();
+
+        HttpResponse<String> response = sendRequest("GET", "/api/players", Map.of(),
+                Map.of("apiKey", apiKey.getKeyToken(),
+                        "role", "ROLE_USER"));
+
+        Assertions.assertEquals(200, response.statusCode());
+        JSONObject json = parseJsonResponse(response);
+        JSONArray players = json.getJSONArray("players");
+        Assertions.assertTrue(players.length() > 0);
+        for (int i = 0; i < players.length(); i++) {
+            JSONObject playerJson = players.getJSONObject(i);
+            Assertions.assertEquals(player.getEmail(), playerJson.getString("email"));
+        }
+    }
+
+    @Test
     @Order(36)
     public void testCreatePlayerEmptyApiKey() throws IOException, InterruptedException, JSONException {
         HttpResponse<String> response = sendRequest("POST", "/api/players", Map.of(),
