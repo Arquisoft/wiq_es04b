@@ -796,7 +796,7 @@ public class Wiq_UnitTests {
         ApiKey apiKey = player.getApiKey();
 
         HttpResponse<String> response = sendRequest("GET", "/api/questions", Map.of(),
-                Map.of("apiKey", apiKey.getKeyToken()));
+                Map.of("apiKey", apiKey.getKeyToken(), "lang", "es"));
 
         Assertions.assertEquals(200, response.statusCode());
         JSONObject json = parseJsonResponse(response);
@@ -806,18 +806,18 @@ public class Wiq_UnitTests {
 
     @Test
     @Order(50)
-    public void testGetQuestionsInvalidId() throws IOException, InterruptedException, JSONException {
+    void testGetQuestionsInvalidId() throws IOException, InterruptedException, JSONException {
         insertSomeQuestions();;
         Player player = playerService.getUsersByRole("ROLE_USER").get(0);
         ApiKey apiKey = player.getApiKey();
 
-        HttpResponse<String> response = sendRequest("GET", "/api/questions", Map.of("id", "notnumeric"),
-                Map.of("apiKey", apiKey.getKeyToken()));
+        HttpResponse<String> response = sendRequest("GET", "/api/questions", Map.of(),
+                Map.of("apiKey", apiKey.getKeyToken(), "id", "notnumeric"));
 
         Assertions.assertEquals(200, response.statusCode());
         JSONObject json = parseJsonResponse(response);
         Assertions.assertTrue(json.has("questions"));
-        Assertions.assertTrue(json.getJSONArray("questions").length() > 0);
+        Assertions.assertEquals(0, json.getJSONArray("questions").length());
     }
 
     @Test
@@ -866,6 +866,25 @@ public class Wiq_UnitTests {
         HttpResponse<String> response = sendRequest("GET", "/api/questions", Map.of(),
                 Map.of("apiKey", apiKey.getKeyToken(),
                         "id", question.getId()));
+
+        Assertions.assertEquals(200, response.statusCode());
+        JSONObject json = parseJsonResponse(response);
+        JSONObject questionJson = json.getJSONArray("questions").getJSONObject(0);
+        Assertions.assertEquals(question.getId(), questionJson.getLong("id"));
+        Assertions.assertEquals(question.getStatement(), questionJson.getString("statement"));
+    }
+
+    @Test
+    @Order(53)
+    public void testGetQuestionByStatement() throws IOException, InterruptedException, JSONException {
+        insertSomeQuestions();;
+        Player player = playerService.getUsersByRole("ROLE_USER").get(0);
+        ApiKey apiKey = player.getApiKey();
+        Question question = questionService.getAllQuestions().get(0);
+
+        HttpResponse<String> response = sendRequest("GET", "/api/questions", Map.of(),
+                Map.of("apiKey", apiKey.getKeyToken(),
+                        "statement", question.getStatement()));
 
         Assertions.assertEquals(200, response.statusCode());
         JSONObject json = parseJsonResponse(response);
