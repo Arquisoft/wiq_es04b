@@ -11,3 +11,136 @@ In our project, we have implemented unit tests for various components of the app
 === Integration Test (E2E)
 
 === Load Test
+We have implemented load tests to evaluate the performance of our website under extreme situations. For this we use the "Gatling" application, which allows us to evaluate a set of web requests by simulating the number of users who make them simultaneously.
+All tests have been carried out with a load of 1, 250, 1000, 2000 and 5000 users, for the following use cases: login, show profile, show apikey, play a game, show personal ranking, show the global ranking, change the language, return to the index and log out.
+
+==== Test results
+
+==== Login
+1 User:
+image:Login/1UserLogin.png[Login1User]
+250 Users:
+image:Login/250UsersLogin.png[Login250Users]
+1000 Users:
+image:Login/1000UsersLogin.png[Login1000Users]
+2000 Users:
+image:Login/2000UsersLogin.png[Login2000Users]
+5000 Users:
+image:Login/5000UsersLogin.png[Login5000Users]
+General information: All responses to the server have generally worked correctly, except for the third response, which logs in using existing credentials. We don't know exactly why this last request doesn't work. If we analyze how the number of users affects the login, at first it does not generate any errors, but response times increase considerably, until reaching 5000 active users at the same time, then there is some error related to a timeout.
+image:Login/GeneralLogin.png[GeneralLogin]
+image:Login/GraphicLogin.png[GraphicLogin]
+
+==== Show ApiKey
+1 User:
+image:ShowApiKey/1UserApiKey.png[ApiKey1User]
+250 Users:
+image:ShowApiKey/250UsersApiKey.png[ApiKey250Users]
+1000 Users:
+image:ShowApiKey/1000UsersApiKey.png[ApiKey1000Users]
+2000 Users:
+image:ShowApiKey/2000UsersApiKey.png[ApiKey2000Users]
+5000 Users:
+image:ShowApiKey/5000UsersApiKey.png[ApiKey5000Users]
+General information: For this use case, from the beginning all requests worked correctly. As the active users increased, the response time increased, but it was not until reaching 5,000 active users that the request failed, logically related to a timeout. In any case, the graph of the number of responses per second shows quite balanced, with only a large gap of erroneous requests.
+image:ShowApiKey/GeneralApiKey.png[GeneralApiKey]
+image:ShowApiKey/GraphicApiKey.png[GraphicGraphic]
+
+==== Show profile
+1 User:
+image:ShowProfile/1UserProfile.png[Profile1User]
+250 Users:
+image:ShowProfile/250UsersProfile.png[Profile250Users]
+1000 Users:
+image:ShowProfile/1000UsersProfile.png[Profile1000Users]
+2000 Users:
+image:ShowProfile/2000UsersProfile.png[Profile2000Users]
+5000 Users:
+image:ShowProfile/5000UsersProfile.png[Profile5000Users]
+General information: The results of the load tests carried out to show the player's profile almost completely coincide with the results of showing the ApiKey, since in both tests two requests are made, which are supported very well by active users, up to 5000 users, where there are already some failed requests but in rare moments.
+image:ShowProfile/GeneralProfile.png[GeneralProfile]
+image:ShowProfile/GraphicProfile.png[GraphicProfile]
+
+==== Play a game
+1 User:
+image:Login/Login1User.png[Login1User]
+250 Users:
+image:Login/Login1User.png[Login1User]
+1000 Users:
+image:Login/Login1User.png[Login1User]
+2000 Users:
+image:Login/Login1User.png[Login1User]
+5000 Users:
+image:Login/Login1User.png[Login1User]
+
+==== Show personal ranking
+1 User:
+image:Login/Login1User.png[Login1User]
+250 Users:
+image:Login/Login1User.png[Login1User]
+1000 Users:
+image:Login/Login1User.png[Login1User]
+2000 Users:
+image:Login/Login1User.png[Login1User]
+5000 Users:
+image:Login/Login1User.png[Login1User]
+
+==== Show global ranking
+1 User:
+image:Login/Login1User.png[Login1User]
+250 Users:
+image:Login/Login1User.png[Login1User]
+1000 Users:
+image:Login/Login1User.png[Login1User]
+2000 Users:
+image:Login/Login1User.png[Login1User]
+5000 Users:
+image:Login/Login1User.png[Login1User]
+
+==== Change language
+1 User:
+image:Login/Login1User.png[Login1User]
+250 Users:
+image:Login/Login1User.png[Login1User]
+1000 Users:
+image:Login/Login1User.png[Login1User]
+2000 Users:
+image:Login/Login1User.png[Login1User]
+5000 Users:
+image:Login/Login1User.png[Login1User]
+
+==== Return to the index
+1 User:
+image:Login/Login1User.png[Login1User]
+250 Users:
+image:Login/Login1User.png[Login1User]
+1000 Users:
+image:Login/Login1User.png[Login1User]
+2000 Users:
+image:Login/Login1User.png[Login1User]
+5000 Users:
+image:Login/Login1User.png[Login1User]
+
+==== Log out
+1 User:
+image:Login/Login1User.png[Login1User]
+250 Users:
+image:Login/Login1User.png[Login1User]
+1000 Users:
+image:Login/Login1User.png[Login1User]
+2000 Users:
+image:Login/Login1User.png[Login1User]
+5000 Users:
+image:Login/Login1User.png[Login1User]
+
+==== Login
+1 User:
+image:Login/Login1User.png[Login1User]
+250 Users:
+image:Login/Login1User.png[Login1User]
+1000 Users:
+image:Login/Login1User.png[Login1User]
+2000 Users:
+image:Login/Login1User.png[Login1User]
+5000 Users:
+image:Login/Login1User.png[Login1User]
