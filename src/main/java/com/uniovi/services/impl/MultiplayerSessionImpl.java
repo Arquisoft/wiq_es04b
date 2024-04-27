@@ -2,26 +2,31 @@ package com.uniovi.services.impl;
 
 import com.uniovi.entities.MultiplayerSession;
 import com.uniovi.entities.Player;
+import com.uniovi.entities.Question;
 import com.uniovi.repositories.MultiplayerSessionRepository;
 import com.uniovi.repositories.PlayerRepository;
+import com.uniovi.services.GameSessionService;
 import com.uniovi.services.MultiplayerSessionService;
+import com.uniovi.services.QuestionService;
 import jakarta.transaction.Transactional;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class MultiplayerSessionImpl implements MultiplayerSessionService {
     private final PlayerRepository playerRepository;
     private final MultiplayerSessionRepository multiplayerSessionRepository;
+    private final QuestionService questionService;
+
+    private Map<String, List<Question>> multiplayerSessionQuestions = new HashMap<>();
 
 
-    public MultiplayerSessionImpl(PlayerRepository playerRepository, MultiplayerSessionRepository multiplayerSessionRepository) {
+    public MultiplayerSessionImpl(PlayerRepository playerRepository, MultiplayerSessionRepository multiplayerSessionRepository,
+                                  QuestionService questionService) {
         this.playerRepository = playerRepository;
         this.multiplayerSessionRepository = multiplayerSessionRepository;
+        this.questionService = questionService;
     }
 
     @Override
@@ -47,8 +52,10 @@ public class MultiplayerSessionImpl implements MultiplayerSessionService {
     public void multiCreate(String code, Long id) {
         Player p = playerRepository.findById(id).orElse(null);
 
-        if (p != null)
-            multiplayerSessionRepository.save(new MultiplayerSession(code,p));
+        if (p != null) {
+            multiplayerSessionRepository.save(new MultiplayerSession(code, p));
+            multiplayerSessionQuestions.put(code, questionService.getRandomQuestions(GameSessionService.NORMAL_GAME_QUESTION_NUM));
+        }
     }
 
     @Override
@@ -78,5 +85,13 @@ public class MultiplayerSessionImpl implements MultiplayerSessionService {
     @Override
     public boolean existsCode(String code) {
         return multiplayerSessionRepository.findByMultiplayerCode(code) != null;
+    }
+
+    @Override
+    public List<Question> getQuestions(String code) {
+        if (!multiplayerSessionQuestions.containsKey(code)) {
+            return null;
+        }
+        return new ArrayList<>(multiplayerSessionQuestions.get(code));
     }
 }

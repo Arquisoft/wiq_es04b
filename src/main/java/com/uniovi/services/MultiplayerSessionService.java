@@ -3,6 +3,7 @@ package com.uniovi.services;
 import com.uniovi.entities.GameSession;
 import com.uniovi.entities.MultiplayerSession;
 import com.uniovi.entities.Player;
+import com.uniovi.entities.Question;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -21,4 +22,6 @@ public interface MultiplayerSessionService {
     void changeScore(String code,Long id,int score);
 
     boolean existsCode(String code);
+
+    List<Question> getQuestions(String code);
 }
