@@ -8,6 +8,7 @@ import com.uniovi.util.SeleniumUtils;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.slf4j.Logger;
@@ -18,11 +19,12 @@ import java.io.IOException;
 import java.util.List;
 
 public class GameStep extends Wiq_IntegrationTests {
-
     @Autowired
     private InsertSampleDataService dataService;
     @Autowired
     private QuestionGeneratorService questionGeneratorService;
+
+    private String code = "";
 
     private Logger log = LoggerFactory.getLogger(GameStep.class);
 
@@ -76,6 +78,28 @@ public class GameStep extends Wiq_IntegrationTests {
     @And("I press start")
     public void iPressStart() {
         List<WebElement> elems = SeleniumUtils.waitLoadElementsBy(driver, "id", "startBtn", 5);
+        elems.get(0).click();
+    }
+
+    @And("I save the code")
+    public void iSaveACode() {
+        List<WebElement> elems = SeleniumUtils.waitLoadElementsBy(driver, "id", "lobbyCode", 5);
+        Assertions.assertEquals(1, elems.size());
+        code = elems.get(0).getText();
+    }
+
+    @And("I fill in the saved code")
+    public void iFillInTheSavedCode() {
+        List<WebElement> elems = SeleniumUtils.waitLoadElements(driver, By.xpath("//input[contains(@id,'code')]"), 5);
+        elems.get(0).sendKeys(code);
+        elems = SeleniumUtils.waitLoadElementsBy(driver, "id", "joinBtn", 5);
+        elems.get(0).click();
+    }
+
+    @And("I see the multiplayer results")
+    public void iSeeTheMultiplayerResults() {
+        List<WebElement> elems = SeleniumUtils.waitLoadElementsBy(driver, "id", "createBtn", 5);
+        Assertions.assertEquals(1, elems.size());
         elems.get(0).click();
     }
 }

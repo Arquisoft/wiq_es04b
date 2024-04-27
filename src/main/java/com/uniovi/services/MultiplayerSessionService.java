@@ -19,4 +19,6 @@ public interface MultiplayerSessionService {
     void addToLobby(String code, Long id);
 
     void changeScore(String code,Long id,int score);
+
+    boolean existsCode(String code);
 }

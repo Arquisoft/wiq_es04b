@@ -7,6 +7,7 @@
 <nav th:replace="~{fragments/nav}"></nav>
 
 <div class="container" style="text-align: center">
+    <span class="alert alert-danger" th:if="${errorKey}" th:text="#{${errorKey}}"></span>
     <label id="label-code" class="form-label col-sm-10 text-center mb-3" for="code" th:text="#{multi.label}"></label>
     <div class="form-group col-sm-8 mx-auto">
         <input type="text" class="form-control w-80 mx-auto" id="code" name="code"

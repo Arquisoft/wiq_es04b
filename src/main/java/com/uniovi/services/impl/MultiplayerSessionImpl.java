@@ -34,7 +34,7 @@ public class MultiplayerSessionImpl implements MultiplayerSessionService {
         List<Player> sortedPlayers = playerScores.entrySet().stream()
                 .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
                 .map(Map.Entry::getKey)
-                .collect(Collectors.toList());
+                .toList();
 
         Map<Player, Integer> playersSorted = new HashMap<>();
         for (Player player : sortedPlayers) {
@@ -45,25 +45,38 @@ public class MultiplayerSessionImpl implements MultiplayerSessionService {
 
     @Override
     public void multiCreate(String code, Long id) {
-        Player p = playerRepository.findById(id).get();
-        multiplayerSessionRepository.save(new MultiplayerSession(code,p));
+        Player p = playerRepository.findById(id).orElse(null);
+
+        if (p != null)
+            multiplayerSessionRepository.save(new MultiplayerSession(code,p));
     }
 
     @Override
     @Transactional
     public void addToLobby(String code, Long id) {
-        Player p = playerRepository.findById(id).get();
-        MultiplayerSession ms=multiplayerSessionRepository.findByMultiplayerCode(code);
-        ms.addPlayer(p);
-        multiplayerSessionRepository.save(ms);
+        Player p = playerRepository.findById(id).orElse(null);
+
+        if (p != null) {
+            MultiplayerSession ms = multiplayerSessionRepository.findByMultiplayerCode(code);
+            ms.addPlayer(p);
+            multiplayerSessionRepository.save(ms);
+        }
     }
 
     @Override
     @Transactional
     public void changeScore(String code, Long id, int score) {
-        Player p = playerRepository.findById(id).get();
-        MultiplayerSession ms=multiplayerSessionRepository.findByMultiplayerCode(code);
-        ms.getPlayerScores().put(p,score);
-        multiplayerSessionRepository.save(ms);
+        Player p = playerRepository.findById(id).orElse(null);
+
+        if (p != null) {
+            MultiplayerSession ms = multiplayerSessionRepository.findByMultiplayerCode(code);
+            ms.getPlayerScores().put(p, score);
+            multiplayerSessionRepository.save(ms);
+        }
+    }
+
+    @Override
+    public boolean existsCode(String code) {
+        return multiplayerSessionRepository.findByMultiplayerCode(code) != null;
     }
 }

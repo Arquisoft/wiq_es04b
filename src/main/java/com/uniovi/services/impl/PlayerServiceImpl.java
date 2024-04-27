@@ -15,17 +15,19 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.uniovi.entities.Role;
 
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 @Service
 public class PlayerServiceImpl implements PlayerService {
     private final PlayerRepository playerRepository;
     private final RoleService roleService;
     private final PasswordEncoder passwordEncoder;
-
-    private MultiplayerSessionService multiplayerSessionService;
+    private final MultiplayerSessionService multiplayerSessionService;
+    private final Random random = new SecureRandom();
 
     public PlayerServiceImpl(PlayerRepository playerRepository, RoleService roleService, MultiplayerSessionService multiplayerSessionService,PasswordEncoder passwordEncoder) {
         this.playerRepository = playerRepository;
@@ -190,7 +192,7 @@ public class PlayerServiceImpl implements PlayerService {
             return -1;
 
         Player p = player.get();
-        int code = (int)Math.floor(Math.random()*10000);
+        int code = random.nextInt(10000);
         p.setMultiplayerCode(code);
         playerRepository.save(p);
         return code;
