@@ -181,7 +181,6 @@ public class PlayerServiceImpl implements PlayerService {
      * with same multiplayerCode at the moment of the join
     * */
     private boolean existsMultiplayerCode(String code){
-        //return ! getUsersByMultiplayerCode(Integer.parseInt(code)).isEmpty();
         return ! multiplayerSessionService.getPlayersWithScores(Integer.parseInt(code)).isEmpty();
     }
 

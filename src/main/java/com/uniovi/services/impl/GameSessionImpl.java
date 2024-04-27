@@ -52,7 +52,9 @@ public class GameSessionImpl implements GameSessionService {
 
     @Override
     public GameSession startNewMultiplayerGame(Player player, int code) {
-        return new GameSession(player, questionService.getRandomMultiplayerQuestions(NORMAL_GAME_QUESTION_NUM,code));
+        GameSession sess = new GameSession(player, questionService.getRandomMultiplayerQuestions(NORMAL_GAME_QUESTION_NUM,code));
+        sess.setMultiplayer(true);
+        return sess;
     }
 
     @Override
