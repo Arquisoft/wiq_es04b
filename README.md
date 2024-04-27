@@ -11,3 +11,10 @@
 - **Ricardo Díaz Núñez**
 - **Roberto Peña Goy**
 - **Iker Álvarez Fernández**
+
+### Local deployment instructions
+
+1. Fist you have to execute in the CMD the following command to clone the repository: `git clone https://github.com/Arquisoft/wiq_es04b.git` 
+
+2. First you have to execute the [runServer.bat](https://github.com/Arquisoft/wiq_es04b/blob/master/database/hsqldb/bin/runServer.bat).
+3. With the database initialized you have to ope
