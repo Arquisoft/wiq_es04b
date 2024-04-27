@@ -63,7 +63,7 @@ image:ShowProfile/GraphicProfile.png[GraphicProfile]
 
 ==== Play a game
 1 User:
-image:PlayGame/[Game1User]
+image:PlayGame/1UserGame.png[Game1User]
 250 Users:
 image:PlayGame/250UsersGame.png[Game250Users]
 1000 Users:
@@ -108,48 +108,48 @@ image:GlobalRanking/GraphicGR.png[GraphicGR]
 
 ==== Change language
 1 User:
-image:Login/Login1User.png[Login1User]
+image:ChangeLanguage/1UserLanguage.png[Language1User]
 250 Users:
-image:Login/Login1User.png[Login1User]
+image:ChangeLanguage/250UsersLanguage.png[Language250Users]
 1000 Users:
-image:Login/Login1User.png[Login1User]
+image:ChangeLanguage/1000UsersLanguage.png[Language1000Users]
 2000 Users:
-image:Login/Login1User.png[Login1User]
+image:ChangeLanguage/2000UsersLanguage.png[Language2000Users]
 5000 Users:
-image:Login/Login1User.png[Login1User]
+image:ChangeLanguage/5000UsersLanguage.png[Language5000Users]
+General information: The execution of these tests consisted of changing the language from the current one to English, then to French and finally to Spanish. Since it is an update of all the dialogues on the page, we assumed that it was going to cause more problems than the current ones. The tests showed considerably good response times even for the maximum number of users tested, in the latter case potentially generating some errors.
+image:ChangeLanguage/GeneralLanguage.png[GeneralLanguage]
+image:ChangeLanguage/GraphicLanguage.png[GraphicLanguage]
 
 ==== Return to the index
 1 User:
-image:Login/Login1User.png[Login1User]
+image:Index/1UserIndex.png[Index1User]
 250 Users:
-image:Login/Login1User.png[Login1User]
+image:Index/250UsersIndex.png[Index250Users]
 1000 Users:
-image:Login/Login1User.png[Login1User]
+image:Index/1000UsersIndex.png[Index1000Users]
 2000 Users:
-image:Login/Login1User.png[Login1User]
+image:Index/2000UsersIndex.png[Index2000Users]
 5000 Users:
-image:Login/Login1User.png[Login1User]
+image:Index/5000UsersIndex.png[Index5000Users]
+General information: These results surprised us quite a bit, since we thought it was going to be the lightest action since it was only about loading the root directory of the website. However, the response times generated are much higher than expected, with half of the requests being longer than 1200ms for 1000 users, and for the maximum number of users, 9% of the requests failing.
+image:Index/GeneralIndex.png[GeneralIndex]
+image:Index/GraphicIndex.png[GraphicIndex]
 
 ==== Log out
 1 User:
-image:Login/Login1User.png[Login1User]
+image:LogOut/1UserLogout.png[Logout1User]
 250 Users:
-image:Login/Login1User.png[Login1User]
+image:LogOut/250UsersLogout.png[Logout250Users]
 1000 Users:
-image:Login/Login1User.png[Login1User]
+image:LogOut/1000UsersLogout.png[Logout1000Users]
 2000 Users:
-image:Login/Login1User.png[Login1User]
+image:LogOut/2000UsersLogout.png[Logout2000Users]
 5000 Users:
-image:Login/Login1User.png[Login1User]
+image:LogOut/5000UsersLogout.png[Logout5000Users]
+General information: Finally, tests were carried out to log out your user. These tests gave very positive results since, despite the fact that for many users there are high waiting times, no errors were caused due to a timeout. The only errors that you will see, now with the 5000 active users, have to do with the 'ClosedChannelException' exception, which is a verified exception in Java that occurs when trying to perform input/output operations on a channel that has been closed.
+image:LogOut/GeneralLogout.png[GeneralLogout]
+image:LogOut/GraphicLogout.png[GraphicLogout]
 
-==== Login
-1 User:
-image:Login/Login1User.png[Login1User]
-250 Users:
-image:Login/Login1User.png[Login1User]
-1000 Users:
-image:Login/Login1User.png[Login1User]
-2000 Users:
-image:Login/Login1User.png[Login1User]
-5000 Users:
-image:Login/Login1User.png[Login1User]
+==== Conclusion
+In conclusion, the tests generally show very positive results. In no test, except for the game, are there errors with up to 2000 users simultaneously, and errors begin to appear after 5000 users. Looking at the results, the lightest cases are showing the profile, showing the personal ranking and logging out. On the other hand, the hardest cases are playing the game (by far) and showing the global ranking. The tests of the 'multiplayer' game mode could not be carried out, because it was not yet fully implemented at the time of carrying out the load tests.
