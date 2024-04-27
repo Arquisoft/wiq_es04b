@@ -20,7 +20,6 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -94,7 +93,6 @@ public class PlayersController {
                                 HttpSession session) {
         if (error != null) {
             model.addAttribute("error", session.getAttribute("loginErrorMessage"));
-            System.out.println(session.getAttribute("loginErrorMessage"));
         }
 
         if (SecurityConfig.isAuthenticated())
@@ -247,7 +245,7 @@ public class PlayersController {
 
     @GetMapping("/player/admin/questionManagement")
     public String showQuestionManagementFragment(Model model) throws IOException {
-        File jsonFile = new File(QuestionGeneratorService.jsonFilePath);
+        File jsonFile = new File(QuestionGeneratorService.JSON_FILE_PATH);
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode json = objectMapper.readTree(jsonFile);
         model.addAttribute("jsonContent", json.toString());
@@ -257,7 +255,7 @@ public class PlayersController {
 
     @GetMapping("/player/admin/deleteAllQuestions")
     @ResponseBody
-    public String deleteAllQuestions() {
+    public String deleteAllQuestions() throws IOException {
         questionService.deleteAllQuestions();
         return "Questions deleted";
     }
@@ -273,7 +271,7 @@ public class PlayersController {
             printer.indentArraysWith(indenter);  // Indent JSON arrays
 
             ObjectMapper mapper = new ObjectMapper();
-            mapper.writer(printer).writeValue(new FileOutputStream(QuestionGeneratorService.jsonFilePath), node);
+            mapper.writer(printer).writeValue(new FileOutputStream(QuestionGeneratorService.JSON_FILE_PATH), node);
             return "Questions saved";
         }
         catch (Exception e) {

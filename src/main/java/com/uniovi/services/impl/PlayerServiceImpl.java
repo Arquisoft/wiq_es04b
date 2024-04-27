@@ -9,7 +9,6 @@ import com.uniovi.repositories.PlayerRepository;
 import com.uniovi.services.MultiplayerSessionService;
 import com.uniovi.services.PlayerService;
 import com.uniovi.services.RoleService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -22,9 +21,9 @@ import java.util.Optional;
 
 @Service
 public class PlayerServiceImpl implements PlayerService {
-    private PlayerRepository playerRepository;
-    private RoleService roleService;
-    private PasswordEncoder passwordEncoder;
+    private final PlayerRepository playerRepository;
+    private final RoleService roleService;
+    private final PasswordEncoder passwordEncoder;
 
     private MultiplayerSessionService multiplayerSessionService;
 
@@ -110,7 +109,6 @@ public class PlayerServiceImpl implements PlayerService {
     public void generateApiKey(Player player) {
         ApiKey apiKey = new ApiKey();
         Associations.PlayerApiKey.addApiKey(player, apiKey);
-        System.out.println("Generated API key for " + player.getUsername() + ": " + apiKey.getKeyToken());
         playerRepository.save(player);
     }
 

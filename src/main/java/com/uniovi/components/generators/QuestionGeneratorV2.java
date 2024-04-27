@@ -2,12 +2,11 @@ package com.uniovi.components.generators;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.uniovi.dto.AnswerDto;
-import com.uniovi.dto.CategoryDto;
-import com.uniovi.dto.QuestionDto;
 import com.uniovi.entities.Answer;
 import com.uniovi.entities.Category;
 import com.uniovi.entities.Question;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.URI;
@@ -22,20 +21,20 @@ import java.util.List;
 import java.util.Random;
 
 public class QuestionGeneratorV2 implements QuestionGenerator{
-
-    private JsonNode jsonNode;
-    private String language_placeholder;
-    private String question_placeholder;
-    private String answer_placeholder;
+    private final JsonNode jsonNode;
+    private final String languagePlaceholder;
+    private final String questionPlaceholder;
+    private final String answerPlaceholder;
     private String language;
 
-    private Random random = new SecureRandom();
+    private final Random random = new SecureRandom();
+    private Logger logger = LoggerFactory.getLogger(QuestionGeneratorV2.class);
 
     public QuestionGeneratorV2(JsonNode jsonNode) {
         this.jsonNode = jsonNode;
-        this.language_placeholder = jsonNode.get("language_placeholder").textValue();
-        this.question_placeholder = jsonNode.get("question_placeholder").textValue();
-        this.answer_placeholder = jsonNode.get("answer_placeholder").textValue();
+        this.languagePlaceholder = jsonNode.get("language_placeholder").textValue();
+        this.questionPlaceholder = jsonNode.get("question_placeholder").textValue();
+        this.answerPlaceholder = jsonNode.get("answer_placeholder").textValue();
     }
 
     @Override
@@ -69,9 +68,9 @@ public class QuestionGeneratorV2 implements QuestionGenerator{
         String answerLabel= question.get("answer").textValue();
 
         // Replace the placeholders in the query with the actual values
-        query = query.replace(language_placeholder, language).
-                replace(question_placeholder, questionLabel).
-                replace(answer_placeholder, answerLabel);
+        query = query.replace(languagePlaceholder, language).
+                replace(questionPlaceholder, questionLabel).
+                replace(answerPlaceholder, answerLabel);
 
         // Execute the query and get the results
         JsonNode results = getQueryResult(query);
@@ -91,7 +90,7 @@ public class QuestionGeneratorV2 implements QuestionGenerator{
 
             if (statement != null) {
                 // Generate the question statement
-                String questionStatement = statement.replace(question_placeholder, result.path(questionLabel).path("value").asText());
+                String questionStatement = statement.replace(questionPlaceholder, result.path(questionLabel).path("value").asText());
 
                 // Generate the question
                 Question q = new Question(questionStatement, options, correct, cat, language);
@@ -110,8 +109,8 @@ public class QuestionGeneratorV2 implements QuestionGenerator{
         int tries = 0;
 
        while (options.size() < 3 && tries < 10) {
-            int random = (int) (this.random.nextFloat() * size);
-            String option = results.get(random).path(answerLabel).path("value").asText();
+            int randomIdx = random.nextInt(size);
+            String option = results.get(randomIdx).path(answerLabel).path("value").asText();
             if (!option.equals(correctAnswer) && !usedOptions.contains(option) ) {
                 usedOptions.add(option);
                 options.add(new Answer(option, false));
@@ -138,7 +137,7 @@ public class QuestionGeneratorV2 implements QuestionGenerator{
 
     private JsonNode getQueryResult(String query) throws IOException, InterruptedException {
 
-        System.out.println("Query: " + query);
+        logger.info("Query: {}", query);
         HttpClient client = HttpClient.newHttpClient();
         JsonNode resultsNode;
         String endpointUrl = "https://query.wikidata.org/sparql?query=" +

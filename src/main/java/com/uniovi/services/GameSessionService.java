@@ -2,12 +2,9 @@ package com.uniovi.services;
 
 import com.uniovi.entities.GameSession;
 import com.uniovi.entities.Player;
-import com.uniovi.services.impl.GameSessionImpl;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.List;
 
 public interface GameSessionService {

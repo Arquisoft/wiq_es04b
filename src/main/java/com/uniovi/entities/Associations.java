@@ -3,7 +3,11 @@ package com.uniovi.entities;
 import java.util.*;
 
 public class Associations {
+    private static final String UTILITY_CLASS = "Utility class";
+    private Associations() { throw new IllegalStateException(UTILITY_CLASS); }
+
     public static class PlayerRole {
+        private PlayerRole() { throw new IllegalStateException(UTILITY_CLASS); }
         /**
          * Add a new association between a player and a role
          *
@@ -28,6 +32,7 @@ public class Associations {
     }
 
     public static class PlayerApiKey {
+        private PlayerApiKey() { throw new IllegalStateException(UTILITY_CLASS); }
         /**
          * Add a new association between a player and an API key
          *
@@ -52,6 +57,7 @@ public class Associations {
     }
 
     public static class ApiKeyAccessLog {
+        private ApiKeyAccessLog() { throw new IllegalStateException(UTILITY_CLASS); }
         /**
          * Add a new association between an API key and an access log
          *
@@ -76,6 +82,7 @@ public class Associations {
     }
 
     public static class PlayerGameSession {
+        private PlayerGameSession() { throw new IllegalStateException(UTILITY_CLASS); }
         /**
          * Add a new association between a player and a game session
          *
@@ -101,6 +108,7 @@ public class Associations {
     }
 
     public static class QuestionAnswers {
+        private QuestionAnswers() { throw new IllegalStateException(UTILITY_CLASS); }
         /**
          * Add a new association between a question and an answer
          *
@@ -130,15 +138,10 @@ public class Associations {
             }
             question.setCorrectAnswer(null);
         }
-        //public static void removeAnswer(Question question, List<Answer> answer) {
-          //  question.getOptions().remove(answer);
-            //for (Answer a : answer) {
-              //  a.setQuestion(null);
-            //}
-        //}
     }
 
     public static class QuestionsCategory {
+        private QuestionsCategory() { throw new IllegalStateException(UTILITY_CLASS); }
         /**
          * Add a new association between a question and a category
          *

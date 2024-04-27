@@ -7,7 +7,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
-import java.util.Optional;
 import java.util.List;
 public interface QuestionRepository extends CrudRepository<Question, Long> {
     Question findByStatement(String statement);

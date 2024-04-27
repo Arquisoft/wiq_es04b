@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -102,5 +103,5 @@ public interface QuestionService {
     /**
      * Delete all the questions
      */
-    void deleteAllQuestions();
+    void deleteAllQuestions() throws IOException;
 }

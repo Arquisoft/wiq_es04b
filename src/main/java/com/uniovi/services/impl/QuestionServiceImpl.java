@@ -14,12 +14,12 @@ import com.uniovi.services.QuestionService;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import lombok.Setter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.security.SecureRandom;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -85,8 +85,7 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Override
     public List<Question> getAllQuestions() {
-        List<Question> l = new ArrayList<>(questionRepository.findAll());
-        return l;
+        return new ArrayList<>(questionRepository.findAll());
     }
 
     @Override
@@ -208,7 +207,7 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
-    public void deleteAllQuestions() {
+    public void deleteAllQuestions() throws IOException {
         questionGeneratorService.resetGeneration();
         questionRepository.deleteAll();
     }
