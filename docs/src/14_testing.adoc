@@ -11,3 +11,145 @@ In our project, we have implemented unit tests for various components of the app
 === Integration Test (E2E)
 
 === Load Test
+We have implemented load tests to evaluate the performance of our website under extreme situations. For this we use the "Gatling" application, which allows us to evaluate a set of web requests by simulating the number of users who make them simultaneously.
+All tests have been carried out with a load of 1, 250, 1000, 2000 and 5000 users, for the following use cases: login, show profile, show apikey, play a game, show personal ranking, show the global ranking, change the language, return to the index and log out.
+
+==== Test results
+
+==== Login
+1 User:
+image:Login/1UserLogin.png[Login1User]
+250 Users:
+image:Login/250UsersLogin.png[Login250Users]
+1000 Users:
+image:Login/1000UsersLogin.png[Login1000Users]
+2000 Users:
+image:Login/2000UsersLogin.png[Login2000Users]
+5000 Users:
+image:Login/5000UsersLogin.png[Login5000Users]
+General information: All responses to the server have generally worked correctly, except for the third response, which logs in using existing credentials. We don't know exactly why this last request doesn't work. If we analyze how the number of users affects the login, at first it does not generate any errors, but response times increase considerably, until reaching 5000 active users at the same time, then there is some error related to a timeout.
+image:Login/GeneralLogin.png[GeneralLogin]
+image:Login/GraphicLogin.png[GraphicLogin]
+
+==== Show ApiKey
+1 User:
+image:ShowApiKey/1UserApiKey.png[ApiKey1User]
+250 Users:
+image:ShowApiKey/250UsersApiKey.png[ApiKey250Users]
+1000 Users:
+image:ShowApiKey/1000UsersApiKey.png[ApiKey1000Users]
+2000 Users:
+image:ShowApiKey/2000UsersApiKey.png[ApiKey2000Users]
+5000 Users:
+image:ShowApiKey/5000UsersApiKey.png[ApiKey5000Users]
+General information: For this use case, from the beginning all requests worked correctly. As the active users increased, the response time increased, but it was not until reaching 5,000 active users that the request failed, logically related to a timeout. In any case, the graph of the number of responses per second shows quite balanced, with only a large gap of erroneous requests.
+image:ShowApiKey/GeneralApiKey.png[GeneralApiKey]
+image:ShowApiKey/GraphicApiKey.png[GraphicGraphic]
+
+==== Show profile
+1 User:
+image:ShowProfile/1UserProfile.png[Profile1User]
+250 Users:
+image:ShowProfile/250UsersProfile.png[Profile250Users]
+1000 Users:
+image:ShowProfile/1000UsersProfile.png[Profile1000Users]
+2000 Users:
+image:ShowProfile/2000UsersProfile.png[Profile2000Users]
+5000 Users:
+image:ShowProfile/5000UsersProfile.png[Profile5000Users]
+General information: The results of the load tests carried out to show the player's profile almost completely coincide with the results of showing the ApiKey, since in both tests two requests are made, which are supported very well by active users, up to 5000 users, where there are already some failed requests but in rare moments.
+image:ShowProfile/GeneralProfile.png[GeneralProfile]
+image:ShowProfile/GraphicProfile.png[GraphicProfile]
+
+==== Play a game
+1 User:
+image:PlayGame/1UserGame.png[Game1User]
+250 Users:
+image:PlayGame/250UsersGame.png[Game250Users]
+1000 Users:
+image:PlayGame/1000UsersGame.png[Game1000Users]
+2000 Users:
+image:PlayGame/2000UsersGame.png[Game2000Users]
+5000 Users:
+image:PlayGame/5000UsersGame.png[Game5000Users]
+General information: The tests of playing the game were the most expensive loading test by far, since each of the users makes a total of 94 requests to the website, in which the vast majority of them are to update visual features of the game such as points, counter or time bar. These tests were so heavy that we had to modify the usability of the application on the host computer, because it ran out of resources when testing 1000 users. Surprisingly, the website supports up to 1000 active users simultaneously without causing any problems other than slightly high waiting times. But after 2,000 active users, failures increase exponentially. The graph of the 5000 users is shown below, where there is a peak in which there are 4193 active users and more than 5000 requests are being made, of which 3000 of them fail. In total, 280,000 requests are made, really heavy.
+image:PlayGame/GeneralGame.png[GeneralProfile]
+image:PlayGame/GraphicGame.png[GraphicProfile]
+
+==== Show personal ranking
+1 User:
+image:PersonalRanking/1UserPR.png[PR1User]
+250 Users:
+image:PersonalRanking/250UsersPR.png[PR250Users]
+1000 Users:
+image:PersonalRanking/1000UsersPR.png[PR1000Users]
+2000 Users:
+image:PersonalRanking/2000UsersPR.png[PR2000Users]
+5000 Users:
+image:PersonalRanking/5000UsersPR.png[PR5000Users]
+General information: For these tests we return a little to normal, compared to the previous tests that were excessively heavy. For these tests, access to the personal ranking and its successive pages was attempted. The results were very positive, with very low response times for up to 5000 users, in the latter case generating some failures that are not proportionally relevant.
+image:PersonalRanking/GeneralPR.png[GeneralPR]
+image:PersonalRanking/GraphicPR.png[GraphicPR]
+
+==== Show global ranking
+1 User:
+image:GlobalRanking/1UserGR.png[GR1User]
+250 Users:
+image:GlobalRanking/250UsersGR.png[GR250Users]
+1000 Users:
+image:GlobalRanking/1000UsersGR.png[GR1000Users]
+2000 Users:
+image:GlobalRanking/2000UsersGR.png[GR2000Users]
+5000 Users:
+image:GlobalRanking/5000UsersGR.png[GR5000Users]
+General information: These tests are very similar to the previous ones, but instead of being the personal ranking it is the global one. However, the response times are very different, being much longer in the case of the global ranking. This is because not only do you have to calculate all the players who have a score, but also add their internal scores to know their position in the ranking, which entails a much greater burden, leading to errors related to timeout when there are 5000 users. Furthermore, the graph shows a rather curious peak of errors, in which 2000 simultaneous requests are made and 1900 are failed.
+image:GlobalRanking/GeneralGR.png[GeneralGR]
+image:GlobalRanking/GraphicGR.png[GraphicGR]
+
+==== Change language
+1 User:
+image:ChangeLanguage/1UserLanguage.png[Language1User]
+250 Users:
+image:ChangeLanguage/250UsersLanguage.png[Language250Users]
+1000 Users:
+image:ChangeLanguage/1000UsersLanguage.png[Language1000Users]
+2000 Users:
+image:ChangeLanguage/2000UsersLanguage.png[Language2000Users]
+5000 Users:
+image:ChangeLanguage/5000UsersLanguage.png[Language5000Users]
+General information: The execution of these tests consisted of changing the language from the current one to English, then to French and finally to Spanish. Since it is an update of all the dialogues on the page, we assumed that it was going to cause more problems than the current ones. The tests showed considerably good response times even for the maximum number of users tested, in the latter case potentially generating some errors.
+image:ChangeLanguage/GeneralLanguage.png[GeneralLanguage]
+image:ChangeLanguage/GraphicLanguage.png[GraphicLanguage]
+
+==== Return to the index
+1 User:
+image:Index/1UserIndex.png[Index1User]
+250 Users:
+image:Index/250UsersIndex.png[Index250Users]
+1000 Users:
+image:Index/1000UsersIndex.png[Index1000Users]
+2000 Users:
+image:Index/2000UsersIndex.png[Index2000Users]
+5000 Users:
+image:Index/5000UsersIndex.png[Index5000Users]
+General information: These results surprised us quite a bit, since we thought it was going to be the lightest action since it was only about loading the root directory of the website. However, the response times generated are much higher than expected, with half of the requests being longer than 1200ms for 1000 users, and for the maximum number of users, 9% of the requests failing.
+image:Index/GeneralIndex.png[GeneralIndex]
+image:Index/GraphicIndex.png[GraphicIndex]
+
+==== Log out
+1 User:
+image:LogOut/1UserLogout.png[Logout1User]
+250 Users:
+image:LogOut/250UsersLogout.png[Logout250Users]
+1000 Users:
+image:LogOut/1000UsersLogout.png[Logout1000Users]
+2000 Users:
+image:LogOut/2000UsersLogout.png[Logout2000Users]
+5000 Users:
+image:LogOut/5000UsersLogout.png[Logout5000Users]
+General information: Finally, tests were carried out to log out your user. These tests gave very positive results since, despite the fact that for many users there are high waiting times, no errors were caused due to a timeout. The only errors that you will see, now with the 5000 active users, have to do with the 'ClosedChannelException' exception, which is a verified exception in Java that occurs when trying to perform input/output operations on a channel that has been closed.
+image:LogOut/GeneralLogout.png[GeneralLogout]
+image:LogOut/GraphicLogout.png[GraphicLogout]
+
+==== Conclusion
+In conclusion, the tests generally show very positive results. In no test, except for the game, are there errors with up to 2000 users simultaneously, and errors begin to appear after 5000 users. Looking at the results, the lightest cases are showing the profile, showing the personal ranking and logging out. On the other hand, the hardest cases are playing the game (by far) and showing the global ranking. The tests of the 'multiplayer' game mode could not be carried out, because it was not yet fully implemented at the time of carrying out the load tests.
