@@ -73,6 +73,7 @@ public class GameStep extends Wiq_IntegrationTests {
     public void iCreateACode() {
         List<WebElement> elems = SeleniumUtils.waitLoadElementsBy(driver, "id", "createBtn", 5);
         elems.get(0).click();
+        SeleniumUtils.waitSeconds(driver, 5);
     }
 
     @And("I press start")
@@ -94,6 +95,7 @@ public class GameStep extends Wiq_IntegrationTests {
         elems.get(0).sendKeys(code);
         elems = SeleniumUtils.waitLoadElementsBy(driver, "id", "joinBtn", 5);
         elems.get(0).click();
+        SeleniumUtils.waitSeconds(driver, 5);
     }
 
     @And("I see the multiplayer results")
@@ -101,5 +103,11 @@ public class GameStep extends Wiq_IntegrationTests {
         List<WebElement> elems = SeleniumUtils.waitLoadElementsBy(driver, "id", "createBtn", 5);
         Assertions.assertEquals(1, elems.size());
         elems.get(0).click();
+        SeleniumUtils.waitSeconds(driver, 5);
+    }
+
+    @And("I reload the page")
+    public void iReloadThePage() {
+        driver.navigate().refresh();
     }
 }

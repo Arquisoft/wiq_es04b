@@ -9,6 +9,7 @@ Feature: I play a multiplayer game
       And I create a code
       And I press start
       Then I should start playing until I see message "multi.finished"
+      And I see the multiplayer results
 
   Scenario: I start a multiplayer game
     Given I am not registered or logged in
@@ -28,5 +29,6 @@ Feature: I play a multiplayer game
     And I press Play With Friends
     And I fill in the saved code
     And I press start
+    And I reload the page
     Then I should start playing until I see message "multi.finished"
     And I see the multiplayer results

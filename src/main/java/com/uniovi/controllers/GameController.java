@@ -253,17 +253,6 @@ public class GameController {
         return "game/fragments/gameFrame";
     }
 
-    @GetMapping("/game/finished/{points}")
-    public String finishGame(@PathVariable int points, Model model, HttpSession session) {
-        GameSession gameSession = (GameSession) session.getAttribute(GAMESESSION_STR);
-        if (gameSession != null) {
-            gameSessionService.endGame(gameSession);
-            session.removeAttribute(GAMESESSION_STR);
-        }
-        model.addAttribute("score", points);
-        return "game/gameFinished";
-    }
-
     @GetMapping("/game/points")
     @ResponseBody
     public String getPoints(HttpSession session) {
