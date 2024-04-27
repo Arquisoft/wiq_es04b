@@ -100,9 +100,7 @@ public class GameStep extends Wiq_IntegrationTests {
 
     @And("I see the multiplayer results")
     public void iSeeTheMultiplayerResults() {
-        List<WebElement> elems = SeleniumUtils.waitLoadElementsBy(driver, "id", "createBtn", 5);
-        Assertions.assertEquals(1, elems.size());
-        elems.get(0).click();
+        SeleniumUtils.waitLoadElementsBy(driver, "text", p.getString("multi.info", PropertiesExtractor.getSPANISH()), 5);
         SeleniumUtils.waitSeconds(driver, 5);
     }
 

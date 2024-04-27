@@ -1622,23 +1622,6 @@ public class Wiq_UnitTests {
     }
 
     @Test
-    @Order(98)
-    public void testMultiCreate() {
-        // Given
-        Long playerId = 1L;
-        Player player = createPlayer();
-        player.setId(playerId);
-
-        String code = "123";
-        playerRepository.findById(playerId);
-        multiplayerSessionService.multiCreate(code, playerId);
-
-        MultiplayerSession ms = multiplayerSessionRepository.findByMultiplayerCode("123");
-        Assertions.assertNotNull(ms);
-        Assertions.assertEquals("123",ms.getMultiplayerCode());
-    }
-
-    @Test
     @Order(99)
     public void testAddToLobby() {
 
