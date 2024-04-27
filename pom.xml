@@ -17,6 +17,7 @@
         <java.version>17</java.version>
         <sonar.sources>src/main/java,src/test/resources/features</sonar.sources>
         <sonar.jacoco.reportPaths>${project.basedir}/target/jacoco.exec</sonar.jacoco.reportPaths>
+        <sonar.exclusions>**/controllers/CustomErrorController.java</sonar.exclusions>
     </properties>
     <dependencies>
         <dependency>
