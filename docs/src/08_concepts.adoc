@@ -19,15 +19,18 @@ class Question {
   - options: List<Answer>
   - correctAnswer: Answer
   - category: Category
+  - language: String
   + addOption(option: Answer): void
   + removeOption(option: Answer): void
   + getOption(index: int): Answer
+  + getOptions(answer: String): Answer
   + isCorrectAnswer(answer: Answer): boolean
   + scrambleOptions(): void
   + equals(o: Object): boolean
   + hashCode(): int
   + toString(): String
   + toJson(): JsonNode
+  + hasEmptyOptions(): boolean
 }
 
 class Category {
@@ -45,6 +48,8 @@ class Player {
   - email: String
   - password: String
   - passwordConfirm : String
+  - multiplayerCode : Integer
+  - scoreMultiplayerCode : String
   - roles: Set<Role>
   - gameSessions: Set<GameSession>
   - apiKey: ApiKey
@@ -71,9 +76,17 @@ class GameSession {
   + getDuration(): String
 }
 
+class MultiplayerSession {
+    - id: Long
+    - multiplayerCode: String
+    - playerScores: Map<Player, Integer>
+    + addPlayer(player: Player): void
+}
+
 class Role {
     - name: String
     - players: Set<Player>
+    + toString(): String
 }
 
 class Answer {
@@ -106,6 +119,7 @@ ApiKey "1" --* "1" Player
 ApiKey "1" *-- "*" RestApiAccessLog
 Category "1" -- "*" Question
 Player "1" *-- "*" GameSession
+Player "1" *-- "*" MultiplayerSession
 GameSession "1" -- "*" Question : Answered Questions
 GameSession "1" -- "*" Question : Questions To Answer
 
