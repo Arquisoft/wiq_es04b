@@ -1607,7 +1607,7 @@ public class Wiq_UnitTests {
         Player player2 = playerRepository.save(createDiferentPlayer("bb"));
         Player player3 = playerRepository.save(createDiferentPlayer("cc"));
 
-        MultiplayerSession session = new MultiplayerSession("123",player3, new ArrayList<>());
+        MultiplayerSession session = new MultiplayerSession("123",player3);
         Map<Player, Integer> playerScores = new HashMap<>();
         playerScores.put(player1, 10);
         playerScores.put(player2, 5);
@@ -1623,7 +1623,8 @@ public class Wiq_UnitTests {
 
     @Test
     @Order(98)
-    public void testMultiCreate() {
+    public void testMultiCreate() throws IOException, InterruptedException {
+        insertSomeQuestions();
         // Given
         Long playerId = 1L;
         Player player = createPlayer();

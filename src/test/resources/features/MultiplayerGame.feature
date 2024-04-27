@@ -8,7 +8,7 @@ Feature: I play a multiplayer game
       When I press Play With Friends
       And I create a code
       And I press start
-      Then I should start playing until I see message "multi.finished"
+      Then I should start playing until I see message "multi.info"
       And I see the multiplayer results
 
   Scenario: I start a multiplayer game
@@ -30,5 +30,5 @@ Feature: I play a multiplayer game
     And I fill in the saved code
     And I press start
     And I reload the page
-    Then I should start playing until I see message "multi.finished"
+    Then I should start playing until I see message "multi.info"
     And I see the multiplayer results
