@@ -7,8 +7,9 @@ The following concepts provide a foundation for the design and implementation of
 
 === Domain Model
 
-The domain model for our game includes entities such as `Question`, `Category`, `Player`, `Role`, and `GameSession`. These are crucial for representing the game's data and logic. The model serves as the basis for interactions within the application and between the application and the database.
+The domain model for our game includes entities such as https://github.com/Arquisoft/wiq_es04b/blob/master/src/main/java/com/uniovi/entities/Question.java[Question], https://github.com/Arquisoft/wiq_es04b/blob/master/src/main/java/com/uniovi/entities/Category.java[Category], https://github.com/Arquisoft/wiq_es04b/blob/master/src/main/java/com/uniovi/entities/Player.java[Player], https://github.com/Arquisoft/wiq_es04b/blob/master/src/main/java/com/uniovi/entities/Role.java[Role], or https://github.com/Arquisoft/wiq_es04b/blob/master/src/main/java/com/uniovi/entities/GameSession.java[GameSession]. These are crucial for representing the game's data and logic. The model serves as the basis for interactions within the application and between the application and the database.
 
+https://github.com/Arquisoft/wiq_es04b/tree/master/src/main/java/com/uniovi/entities[Source code]
 
 [plantuml, domain-model, svg, subs="attributes", subs="methods"]
 ----

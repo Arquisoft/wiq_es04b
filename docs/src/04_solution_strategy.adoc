@@ -14,7 +14,7 @@ The Model-View-Controler architecture pattern will be followed for structuring t
 === Organizational Decisions
 Development Methodology: GitFlow will be adopted for project management, facilitating collaboration and iterative delivery.
 
-* The default branch: master. This branch will only be used to create new releases and will contain the most stable version of the system.
-* The development branch: develop. This branch will be used to integrate the features developed by the team and will be the basis for creating new releases. This will have the largest commit amount, and will also have a stable version that could be deployed at any time.
+* The default branch: https://github.com/Arquisoft/wiq_es04b/tree/master[master]. This branch will only be used to create new releases and will contain the most stable version of the system.
+* The development branch: https://github.com/Arquisoft/wiq_es04b/tree/develop[develop]. This branch will be used to integrate the features developed by the team and will be the basis for creating new releases. This will have the largest commit amount, and will also have a stable version that could be deployed at any time.
 * Feature branches: These branches will be used to develop new features, and will be created from the develop branch. After the feature is developed, it will be merged into the develop branch and branch can be deleted, although we will not usually delete branches.
 * Fix branches: These branches will be used to fix bugs, and will be created from the develop branch. After the bug is fixed, it will be merged into the develop branch and branch can be deleted, although we will not usually delete branches.
