@@ -510,20 +510,6 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </li>
 <li><a href="#section-technical-risks">11. Risks and Technical Debts</a></li>
 <li><a href="#section-glossary">12. Glossary</a></li>
-<li><a href="#section-question-generation-strategy">13. Question Generation Strategy</a>
-<ul class="sectlevel2">
-<li><a href="#_question_templates">13.1. Question templates</a></li>
-<li><a href="#_example_of_a_query">13.2. Example of a query</a></li>
-<li><a href="#_question_generation_process">13.3. Question Generation Process</a></li>
-</ul>
-</li>
-<li><a href="#section-testing">14. Testing</a>
-<ul class="sectlevel2">
-<li><a href="#_unit_test">14.1. Unit Test</a></li>
-<li><a href="#_integration_test_e2e">14.2. Integration Test (E2E)</a></li>
-<li><a href="#_load_test">14.3. Load Test</a></li>
-</ul>
-</li>
 </ul>
 </div>
 </div>
@@ -900,7 +886,7 @@ System will allow accessing user information and the information of the generate
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="./images/Whitebox-overall.png" alt="Whitebox overall" width="808" height="416">
+<img src="./images/Whitebox-overall.png" alt="Whitebox overall" width="830" height="433">
 </div>
 </div>
 <div class="sect3">
@@ -955,22 +941,22 @@ System will allow accessing user information and the information of the generate
 <div class="ulist">
 <ul>
 <li>
-<p><strong>GameService:</strong> This component acts as the core of the QuestionGame, orchestrating the flow of games, managing question selection, enforcing game rules, and tracking scores. It ensures that gameplay proceeds smoothly and according to the predefined logic, offering a seamless experience for the user.</p>
+<p><strong>Game Logic:</strong> This component acts as the core of the QuestionGame, orchestrating the flow of games, managing question selection, enforcing game rules, and tracking scores. It ensures that gameplay proceeds smoothly and according to the predefined logic, offering a seamless experience for the user.</p>
 </li>
 <li>
-<p><strong>PlayerService:</strong> Responsible for handling user accounts, this component manages registration, authentication, and profile management. It safeguards user data while providing a personalized experience through game history tracking and preference settings.</p>
+<p><strong>User Account Management:</strong> Responsible for handling user accounts, this component manages registration, authentication, and profile management. It safeguards user data while providing a personalized experience through game history tracking and preference settings.</p>
 </li>
 <li>
-<p><strong>QuestionService:</strong> This component interacts directly with the Wikidata service to fetch data for question generation. It processes and curates content to produce relevant, challenging questions for the game, thereby ensuring a varied and educational experience.</p>
+<p><strong>Question Management:</strong> This component interacts directly with the Wikidata service to fetch data for question generation. It processes and curates content to produce relevant, challenging questions for the game, thereby ensuring a varied and educational experience.</p>
 </li>
 <li>
-<p><strong>RestApiService:</strong> Serving as the gateway for external developers, this component exposes a set of RESTful APIs that allow access to player information and question data. It handles request processing, authentication, and data delivery, facilitating third-party integrations and extensions of the WIQ platform.</p>
+<p><strong>API Management:</strong> Serving as the gateway for external developers, this component exposes a set of RESTful APIs that allow access to player information and question data. It handles request processing, authentication, and data delivery, facilitating third-party integrations and extensions of the WIQ platform.</p>
 </li>
 </ul>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="./images/level2.png" alt="level2" width="432" height="517">
+<img src="./images/level2.png" alt="level2" width="432" height="534">
 </div>
 </div>
 </div>
@@ -1492,220 +1478,13 @@ Scalable solutions such as Docker containers allow the application to be deploye
 </tr>
 </tbody>
 </table>
-<div style="page-break-after: always;"></div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="section-question-generation-strategy">13. Question Generation Strategy</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>The generation of questions in our application is handled through a combination of classes and interfaces, primarily QuestionGeneratorV2 and QuestionGeneratorService.</p>
-</div>
-<div class="sect2">
-<h3 id="_question_templates">13.1. Question templates</h3>
-<div class="paragraph">
-<p>The two classes mentioned before use a JSON file that stores the question templates. These templates are used to generalize the question generation process. The JSON file is structured as follows:</p>
-</div>
-<div class="sect3">
-<h4 id="_json_structure">13.1.1. JSON Structure</h4>
-<div class="paragraph">
-<p>The JSON has the following structure:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><code>language_placeholder</code>, <code>question_placeholder</code>, and <code>answer_placeholder</code> are strings used as placeholders for the language, question, and answer, respectively.</p>
-</li>
-<li>
-<p><code>categories</code> is an array containing objects representing different categories of questions.</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>Each category object has two properties:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><code>name</code>: The name of the category.</p>
-</li>
-<li>
-<p><code>questions</code>: An array of objects representing questions within that category.</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>Each question object has the following properties:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><code>type</code>: The type of question.</p>
-</li>
-<li>
-<p><code>statements</code>: An array of objects representing statements in different languages for the question. Each object has two properties: <code>language</code> and <code>statement</code>.</p>
-</li>
-<li>
-<p><code>question</code>: The property queried to generate the question.</p>
-</li>
-<li>
-<p><code>answer</code>: The property queried to obtain the answer.</p>
-</li>
-<li>
-<p><code>sparqlQuery</code>: The SPARQL query used to retrieve data for generating the question and answer.</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_compact_example_of_json_hierarchy">13.1.2. Compact Example of JSON Hierarchy</h4>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-json" data-lang="json">{
-  "language_placeholder": "[LANGUAGE]",
-  "question_placeholder": "[QUESTION]",
-  "answer_placeholder": "[ANSWER]",
-  "categories": [
-    {
-      "name": "Geography",
-      "questions": [
-        {
-          "type": "capital",
-          "statements": [
-            {
-              "language": "es",
-              "statement": "¿Cuál es la capital de [QUESTION]?"
-            },
-            {
-              "language": "en",
-              "statement": "What is the capital of [QUESTION]?"
-            },
-            {
-              "language": "fr",
-              "statement": "Quelle est la capitale de [QUESTION]?"
-            }
-          ],
-          "question": "countryLabel",
-          "answer": "capitalLabel",
-          "sparqlQuery": "..."
-        },
-        {
-          "type": "currency",
-          "statements": [
-            {
-              "language": "es",
-              "statement": "¿Cuál es la moneda de [QUESTION]?"
-            },
-            {
-              "language": "en",
-              "statement": "What is the currency of [QUESTION]?"
-            },
-            {
-              "language": "fr",
-              "statement": "Quelle est la monnaie de [QUESTION]?"
-            }
-          ],
-          "question": "countryLabel",
-          "answer": "currencyLabel",
-          "sparqlQuery": "..."
-        }
-      ]
-    },
-    {
-      "name": "Science",
-      "questions": [
-        {
-          "type": "element",
-          "statements": [
-            {
-              "language": "es",
-              "statement": "¿Cuál es el símbolo químico del [QUESTION]?"
-            },
-            {
-              "language": "en",
-              "statement": "What is the chemical symbol of [QUESTION]?"
-            },
-            {
-              "language": "fr",
-              "statement": "Quel est le symbole chimique du [QUESTION]?"
-            }
-          ],
-          "question": "elementLabel",
-          "answer": "symbol",
-          "sparqlQuery": "..."
-        }
-      ]
-    }
-  ]
-}</code></pre>
-</div>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_example_of_a_query">13.2. Example of a query</h3>
-<div class="paragraph">
-<p>Here&#8217;s an example of how you could use this JSON structure to query information:</p>
-</div>
-<div class="paragraph">
-<p>To execute a query you just need to build a SPARQL query that retrieves the data you need. For example, to get the capital of a country, you could use the following query:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-SPARQL" data-lang="SPARQL">select distinct ?country ?countryLabel ?capital ?capitalLabel where {
-  ?country wdt:P31 wd:Q6256 .
-  ?capital wdt:P31 wd:Q5119 .
-  ?country wdt:P36 ?capital .
-  ?country rdfs:label ?countryLabel .
-  ?capital rdfs:label ?capitalLabel .
-  FILTER NOT EXISTS {?country wdt:P31 wd:Q3024240} .
-  FILTER(LANG(?countryLabel)="es" &amp;&amp; LANG(?capitalLabel)="es")
-  }</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Once you have a query the next step is to add it to thr JSON file. Following the previous example, you should start declaring a new object inside the <code>questions</code> array of the <code>Geography</code> category. You should fill the <code>type</code>, <code>statements</code>, <code>question</code>, <code>answer</code>, and <code>sparqlQuery</code> properties with the appropriate values. For the <code>type</code> field you could add the value <code>"capital"</code>, for the <code>statements</code> array you could add the statements in different languages also adding to them the placeholder that you used in the <code>question_placeholder</code> field. For the <code>question</code> field you should add the value <code>"countryLabel"</code>, for the <code>answer</code> you should add the value <code>"capitalLabel"</code>. For the <code>sparqlQuery</code> field you should replace in your original query every instance of <code>"countryLabel"</code> with the value of <code>question_placeholder</code> and <code>"capitalLabel"</code> with the value of <code>answer_placeholder</code>. The final object should look like the one showed in the JSON hierarchy example.</p>
-</div>
-<div class="paragraph">
-<p>By following this approach, you can dynamically generate a wide variety of questions based on the structured data stored in your JSON file. This allows for flexibility and scalability in your question generation process.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_question_generation_process">13.3. Question Generation Process</h3>
-<div class="paragraph">
-<p>Once we have the JSON file with the question templates, we can start generating questions. Each time the application starts the QuestionGeneratorService class reads the JSON file and stores the question templates in memory. This way, the application can generate questions without needing to read the file each time. These templates are stored in a synchronized stack, which allows for thread-safe access to the templates. When the application starts after reading the JSON file and storing  the templates the QuestionGeneratorService class deletes all the questions that are stored in the database. After deleting the questions, the QuestionGeneratorService starts a cycle that generates all the questions in all the 3 main languages of the app for a specific type of question each two and a half minutes. This cycle is repeated until all the question types are generated. After this every 24 hours the cycle will start again with the parsing of the JSON, filling the Stack, emptying the database and generating the questions. All this process can be forced by an Admin user through the Admin panel in the app where an Admin can change the JSON (which will lead to the restart of the question generation process) or delete all questions.</p>
-</div>
-<div style="page-break-after: always;"></div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="section-testing">14. Testing</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>To be able to achieve continuous delivery, we need to have a good test coverage. We need to have a good test coverage to be able to refactor the code without breaking it, to be able to deliver the software with confidence and to be able to deliver the software with quality.</p>
-</div>
-<div class="sect2">
-<h3 id="_unit_test">14.1. Unit Test</h3>
-<div class="paragraph">
-<p>In our project, we have implemented unit tests for various components of the application. The tests are written in Java and use the JUnit 5 framework for testing. We also use the Spring Boot Test framework for testing Spring Boot applications, which provides utilities and annotations to test the application in a way that is very close to its actual runtime behavior.  The tests are located in the src/test/java/com/uniovi directory. The main test class is Wiq_UnitTests.java, which contains tests for various services and repositories in our application.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_integration_test_e2e">14.2. Integration Test (E2E)</h3>
-
-</div>
-<div class="sect2">
-<h3 id="_load_test">14.3. Load Test</h3>
-
-</div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
 Version 2<br>
-Last updated 2024-04-27 00:07:59 UTC
+Last updated 2024-04-27 00:11:53 UTC
 </div>
 </div>
 </body>
