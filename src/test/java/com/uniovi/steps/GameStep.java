@@ -5,6 +5,7 @@ import com.uniovi.services.InsertSampleDataService;
 import com.uniovi.services.QuestionGeneratorService;
 import com.uniovi.util.PropertiesExtractor;
 import com.uniovi.util.SeleniumUtils;
+import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import org.openqa.selenium.By;
@@ -32,13 +33,13 @@ public class GameStep extends Wiq_IntegrationTests {
         elems.get(0).click();
     }
 
-    @Then("I should start playing")
-    public void iShouldStartPlaying() {
+    @Then("I should start playing until I see message {string}")
+    public void iShouldStartPlaying(String messageKey) {
         boolean playing = true;
-        String xpath = "//*[contains(text(),'" + p.getString("game.finish", PropertiesExtractor.getSPANISH()) + "')]";
+        String xpath = "//*[contains(text(),'" + p.getString(messageKey, PropertiesExtractor.getSPANISH()) + "')]";
         int i= 0;
         List<WebElement> finalMessage;
-        while(playing){
+        while(playing) {
             //I obtain the buttons for the answers
             List<WebElement> elems = By.cssSelector(".container .row button").findElements(driver);
             log.info("Found " + elems.size() + " buttons");
@@ -46,15 +47,35 @@ public class GameStep extends Wiq_IntegrationTests {
             //I click on the first button
             elems.get(0).click();
 
-            try{
-                finalMessage=  SeleniumUtils.waitLoadElementsByXpath(driver, xpath, 10);
-            }catch(Exception e){
+            try {
+                finalMessage = SeleniumUtils.waitLoadElementsByXpath(driver, xpath, 10);
+            } catch(Exception e) {
                 continue;
             }
-            if(finalMessage.size()>0){
+
+            if(!finalMessage.isEmpty()) {
                 playing = false;
             }
             i++;
         }
+    }
+
+    @When("I press Play With Friends")
+    public void iPressPlayWithFriends() throws IOException, InterruptedException {
+        questionGeneratorService.generateTestQuestions();
+        List<WebElement> elems = SeleniumUtils.waitLoadElementsBy(driver, "id", "multiplayerBtn", 5);
+        elems.get(0).click();
+    }
+
+    @And("I create a code")
+    public void iCreateACode() {
+        List<WebElement> elems = SeleniumUtils.waitLoadElementsBy(driver, "id", "createBtn", 5);
+        elems.get(0).click();
+    }
+
+    @And("I press start")
+    public void iPressStart() {
+        List<WebElement> elems = SeleniumUtils.waitLoadElementsBy(driver, "id", "startBtn", 5);
+        elems.get(0).click();
     }
 }

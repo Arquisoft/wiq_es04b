@@ -6,4 +6,4 @@ Feature: I try to play a normal game
     And I press the register button
     And I go to the home page
     When I press Play
-    Then I should start playing
+    Then I should start playing until I see message "game.finish"
