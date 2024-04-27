@@ -805,6 +805,22 @@ public class Wiq_UnitTests {
     }
 
     @Test
+    @Order(50)
+    public void testGetQuestionsInvalidId() throws IOException, InterruptedException, JSONException {
+        insertSomeQuestions();;
+        Player player = playerService.getUsersByRole("ROLE_USER").get(0);
+        ApiKey apiKey = player.getApiKey();
+
+        HttpResponse<String> response = sendRequest("GET", "/api/questions", Map.of("id", "notnumeric"),
+                Map.of("apiKey", apiKey.getKeyToken()));
+
+        Assertions.assertEquals(200, response.statusCode());
+        JSONObject json = parseJsonResponse(response);
+        Assertions.assertTrue(json.has("questions"));
+        Assertions.assertTrue(json.getJSONArray("questions").length() > 0);
+    }
+
+    @Test
     @Order(51)
     public void testGetQuestionsByCategoryName() throws IOException, InterruptedException, JSONException {
         String cat = "Science";
@@ -1364,9 +1380,8 @@ public class Wiq_UnitTests {
 
     @Test
     @Order(91)
-    @Tag("flaky")
     public void testModifyQuestion() throws IOException, InterruptedException, JSONException {
-        insertSomeQuestions();;
+        insertSomeQuestions();
         Question question = questionService.getAllQuestions().get(0);
         Player player = playerService.getUsersByRole("ROLE_USER").get(0);
         ApiKey apiKey = player.getApiKey();
@@ -1383,6 +1398,40 @@ public class Wiq_UnitTests {
 
         data.put("options", opts);
         data.put("category", Map.of("name", category.getName()));
+        data.put("language", "en");
+
+        HttpResponse<String> response = sendRequest("PATCH", "/api/questions/" + question.getId(), Map.of("API-KEY", apiKey.getKeyToken()),
+                data);
+
+        Assertions.assertEquals(200, response.statusCode());
+        JSONObject json = parseJsonResponse(response);
+        Assertions.assertTrue(json.getBoolean("success"));
+
+        Optional<Question> updatedQuestion = questionService.getQuestion(question.getId());
+        Assertions.assertTrue(updatedQuestion.isPresent());
+        Assertions.assertEquals("Modified question", updatedQuestion.get().getStatement());
+    }
+
+    @Test
+    @Order(91)
+    public void testModifyQuestionNewCategory() throws IOException, InterruptedException, JSONException {
+        insertSomeQuestions();;
+        Question question = questionService.getAllQuestions().get(0);
+        Player player = playerService.getUsersByRole("ROLE_USER").get(0);
+        ApiKey apiKey = player.getApiKey();
+        Category category = categoryService.getCategoryByName("Geography");
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("statement", "Modified question");
+
+        List<Map<String, Object>> opts = new ArrayList<>();
+        opts.add(Map.of("text", "Option A", "correct", true));
+        opts.add(Map.of("text", "Option B", "correct", false));
+        opts.add(Map.of("text", "Option C", "correct", false));
+        opts.add(Map.of("text", "Option D", "correct", false));
+
+        data.put("options", opts);
+        data.put("category", Map.of("name", "NewCreatedCategory"));
         data.put("language", "en");
 
         HttpResponse<String> response = sendRequest("PATCH", "/api/questions/" + question.getId(), Map.of("API-KEY", apiKey.getKeyToken()),
