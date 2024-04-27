@@ -1,26 +1,26 @@
-<!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://thymeleaf.org">
-<head th:replace="~{fragments/head}"/>
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head}"></head>
 <body class="d-flex flex-column min-vh-100">
-<nav th:replace="~{fragments/nav}"/>
-
+<link th:href="@{/css/multiplayer.css}" rel="stylesheet" type="text/css"/>
 <canvas th:replace="~{fragments/background}"></canvas>
+<nav th:replace="~{fragments/nav}"></nav>
 
-<div class="container">
+<div class="container" style="text-align: center">
+    <h2 th:text ="#{multi.info}"></h2>
+    <code id="lobbyCode" th:text="${code}"></code>
+
     <div class="table-responsive">
-        <h2 th:text ="#{multi.info}"></h2>
-        <h3 th:text="${code}"></h3>
-        <ul id="playerList">
-        </ul>
+        <ul id="playerList"></ul>
     </div>
-</div>
-<div class="text-center">
+
     <a th:href="@{'/'}">
-        <button id="createBtn" type="button" class="btn btn-custom" th:text="#{multi.menu}"></button>
+        <button id="createBtn" type="button" class="btn btn-custom btn-block mb-2" th:text="#{multi.menu}"></button>
     </a>
 </div>
 
 <footer th:replace="~{fragments/footer}"/>
+
 </body>
 </html>
 
