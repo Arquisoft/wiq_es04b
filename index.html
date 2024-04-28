@@ -438,8 +438,8 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="header">
 <h1><span class="image"><img src="./images/wiq-logo.png" alt="wiq-image"></span> WIQ es04b</h1>
 <div class="details">
-<span id="revnumber">version 2,</span>
-<span id="revdate">March 2024</span>
+<span id="revnumber">version 3,</span>
+<span id="revdate">April 2024</span>
 <br><span id="revremark">ASW - wiq_es04b</span>
 </div>
 <div id="toc" class="toc">
@@ -737,7 +737,7 @@ System will allow accessing user information and the information of the generate
 <h3 id="_business_context">3.1. Business Context</h3>
 <div class="imageblock">
 <div class="content">
-<img src="./images/Deployment%20diagram.png" alt="Deployment diagram" width="509" height="594">
+<img src="./images/Deployment%20diagram.png" alt="Deployment diagram" width="839" height="610">
 </div>
 </div>
 <div class="ulist">
@@ -746,16 +746,16 @@ System will allow accessing user information and the information of the generate
 <p><strong>Player:</strong> Represents users who interact with the application to play games or view their history.</p>
 </li>
 <li>
-<p><strong>System (QuestionGame):</strong> The main system that hosts the game logic and manages user interactions.</p>
+<p><strong>Question management:</strong> The sytem that retrieves the questions generated from Wikidata.</p>
+</li>
+<li>
+<p><strong>Player management:</strong> The system that manages player data, such as registration, login, and game history.</p>
 </li>
 <li>
 <p><strong>WikiData:</strong> Component used to retrieve data from Wikidata and automatically generate questions.</p>
 </li>
 <li>
-<p><strong>Database:</strong> Stores system information, such as user data, generated questions, game history, etc.</p>
-</li>
-<li>
-<p><strong>External Developers:</strong> Represents developers who access the system&#8217;s REST API to retrieve player and question data.</p>
+<p><strong>External Developers:</strong> Represents developers who access the system to retrieve player and question data.</p>
 </li>
 </ul>
 </div>
@@ -764,25 +764,34 @@ System will allow accessing user information and the information of the generate
 <h3 id="_technical_context">3.2. Technical Context</h3>
 <div class="imageblock">
 <div class="content">
-<img src="./images/Technical%20Context%20Diagram.png" alt="Technical Context Diagram" width="263" height="464">
+<img src="./images/Technical%20Context%20Diagram.png" alt="Technical Context Diagram" width="706" height="1014">
 </div>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><strong>User Agent:</strong> Represents the web or mobile interface used by users.</p>
+<p><strong>Player:</strong> Represents users who interact with the application to play games or view their history.</p>
 </li>
 <li>
-<p><strong>QuestionGame server:</strong> The server-side components, including the Frontend, QuestionGame logic, User&#8217;s API, and Question&#8217;s API.</p>
+<p><strong>Question service:</strong> The system that retrieves the questions generated from Wikidata.</p>
 </li>
 <li>
-<p><strong>HTTPS:</strong> Represents the communication channels, with HTTPS being the protocol used for secure communication.</p>
+<p><strong>Player service:</strong> The system that manages player data, such as registration, login, and game history.</p>
 </li>
 <li>
-<p><strong>Question Generation:</strong> Represents the means used for question and answers generation.</p>
+<p><strong>WikiData:</strong> Component used to retrieve data from Wikidata</p>
 </li>
 <li>
-<p><strong>Database:</strong> Represents whichever system used for data persistence.</p>
+<p><strong>Question generator:</strong> The system that generates questions based on the data retrieved from Wikidata.</p>
+</li>
+<li>
+<p><strong>External Developers:</strong> Represents developers who access the system to retrieve player and question data.</p>
+</li>
+<li>
+<p><strong>Database:</strong> The database that stores player data, game history, and questions.</p>
+</li>
+<li>
+<p><strong>Rest API Service:</strong> The service that provides an API for external developers to access player and question data.</p>
 </li>
 </ul>
 </div>
@@ -803,13 +812,8 @@ System will allow accessing user information and the information of the generate
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">User&#8217;s API</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">User registration, game history</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">HTTPS</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Question&#8217;s API</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Question data retrieval</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">RestApiService</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">External developer interactions</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">HTTPS</p></td>
 </tr>
 <tr>
@@ -826,6 +830,21 @@ System will allow accessing user information and the information of the generate
 <td class="tableblock halign-left valign-top"><p class="tableblock">WikiData</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Data for question generation</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">HTTP</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Question Generator</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Generated questions</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">In-memory</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Question Service</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Questions for game</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">In-memory</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Player Service</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Player data</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">In-memory</p></td>
 </tr>
 </tbody>
 </table>
@@ -893,11 +912,11 @@ System will allow accessing user information and the information of the generate
 <div class="sect2">
 <h3 id="_whitebox_overall_system">5.1. Whitebox Overall System</h3>
 <div class="paragraph">
-<p>This section provides an overview of the main components of the system and their interactions. The core of the system is the WIQ (QuestionGame) component, which interfaces with Users, Wikidata for question generation, a Database for persistence, and offers a REST API for External Developers.</p>
+<p>This section provides an overview of the main components of the system and their interactions. The core of the system is the WIQ (WiqEs04bApplication) component, which interfaces with Users, Wikidata for question generation, a Database for persistence, and offers a REST API for External Developers.</p>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="./images/Whitebox-overall.png" alt="Whitebox overall" width="808" height="416">
+<img src="./images/Whitebox-overall.png" alt="Whitebox overall" width="285" height="348">
 </div>
 </div>
 <div class="sect3">
@@ -925,7 +944,7 @@ System will allow accessing user information and the information of the generate
 <td class="tableblock halign-left valign-top"><p class="tableblock">Represents the end users of the WIQ application, interacting with the system to play games and view their history.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">WIQ (QuestionGame)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">WIQ (WiqEs04bApplication)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The central component that manages gameplay logic, user interactions, and integrates external data for question generation.</p></td>
 </tr>
 <tr>
@@ -967,7 +986,7 @@ System will allow accessing user information and the information of the generate
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="./images/level2.png" alt="level2" width="432" height="517">
+<img src="./images/level2.png" alt="level2" width="674" height="777">
 </div>
 </div>
 </div>
@@ -1094,6 +1113,12 @@ The infrastructure features a single Docker container that hosts the Java Spring
 <li>
 <p><strong>External APIs (e.g., Wikidata API):</strong> Accessed over the network, these APIs provide dynamic content for the game.</p>
 </li>
+<li>
+<p><strong>Grafana</strong>: Monitoring tool that can be used to visualize and analyze metrics from the application and infrastructure.</p>
+</li>
+<li>
+<p><strong>Prometheus</strong>: Monitoring tool that collects metrics from the application and infrastructure for Grafana to visualize.</p>
+</li>
 </ul>
 </div>
 </div>
@@ -1111,17 +1136,22 @@ The infrastructure features a single Docker container that hosts the Java Spring
 <p>In addition to the Spring boot standalone file, we also use the official <code>MySQL</code> server docker container image brought by DockerHub. This is our database server and it is used to store the game data, such as user scores, questions, etc. and all the other persistent data.</p>
 </div>
 <div class="paragraph">
+<p>Moreover, there are two more containers. These are the monitoring tools, <code>Prometheus</code> and <code>Grafana</code>. These tools are used to monitor the application and infrastructure. Prometheus collects metrics from the application and infrastructure, while Grafana visualizes these metrics.</p>
+</div>
+<div class="paragraph">
 <p>This setup encapsulates the entire runtime environment required for our application, and does not require extensive configuration.</p>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="./images/Docker%20Container%20Setup.png" alt="Docker Container Setup" width="675" height="319">
+<img src="./images/Docker%20Container%20Setup.png" alt="Docker Container Setup" width="750" height="610">
 </div>
 <div class="title">Figure 1. Diagram: Docker Container Setup</div>
 </div>
 <div class="paragraph">
 <div class="title">Explanation:</div>
-<p>This diagram illustrates the internal structure of our Docker containers structure. It shows the Java Spring Boot application, including the embedded web server, packaged as a <code>.jar</code> file and the MySQL server. The application interacts with external APIs, like the Wikidata API, to retrieve data necessary for generating game questions. The containerized approach ensures that the application can be deployed consistently across any environment that supports Docker.</p>
+<p>This diagram illustrates the internal structure of our Docker containers structure. It shows the Java Spring Boot application, including the embedded web server, packaged as a <code>.jar</code> file and the MySQL server. The application interacts with external APIs, like the Wikidata API, to retrieve data necessary for generating game questions.
+To ensure the application&#8217;s health and performance, we use Prometheus to collect metrics and Grafana to visualize these metrics.
+The containerized approach ensures that the application can be deployed consistently across any environment that supports Docker.</p>
 </div>
 <div style="page-break-after: always;"></div>
 </div>
@@ -1211,9 +1241,12 @@ The infrastructure features a single Docker container that hosts the Java Spring
 <div class="sect2">
 <h3 id="_scalability">8.8. Scalability</h3>
 <div class="paragraph">
-<p>Designing for scalability, the application can accommodate an increasing number of users and interactions without performance degradation.
-.Explanation:
-Scalable solutions such as Docker containers allow the application to be deployed in a distributed environment, where resources can be adjusted based on demand.</p>
+<p>Designing for scalability, the application can accommodate an increasing number of users and interactions without performance degradation.</p>
+</div>
+<div class="paragraph">
+<div class="title">Explanation:</div>
+<p>Scalable solutions such as Docker containers allow the application to be deployed in a distributed environment, where resources can be adjusted based on demand.
+Given that we use a monolithic approach, the application can be easily scaled horizontally by deploying multiple instances of the same service and connect them to a load balancer in order to distribute the load.</p>
 </div>
 <div style="page-break-after: always;"></div>
 </div>
@@ -1361,7 +1394,7 @@ Scalable solutions such as Docker containers allow the application to be deploye
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">SC7</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">As user demand grows, the application scales its resources dynamically to accommodate increased traffic and maintain optimal performance levels, ensuring a consistent user experience.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">As user demand grows, the deployment does not grow dynamically. However a system can be put in place to deploy more instances of the application to handle the increased workload, trough a load balancer, for example.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">SC8</p></td>
@@ -1392,9 +1425,16 @@ Scalable solutions such as Docker containers allow the application to be deploye
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">High</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Migration to Java</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Architecture in Spring Boot</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Migration from the current project language, JavaScript (JS), to Java</p>
+<p>The architecture of the project will be based on Spring Boot, which is a framework that we are not that familiar with, or not at all for some members. This could lead to a delay in the development of the project.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Medium</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Wikidata</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The project will use Wikidata as a source of data. We have never used Wikidata before, so we will have to learn how to use it.</p>
 </div></div></td>
 </tr>
 <tr>
@@ -1406,16 +1446,16 @@ Scalable solutions such as Docker containers allow the application to be deploye
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Medium</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Database</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Docker</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Discuss which database is best for the project</p>
+<p>Know how docker works, what it is for, how it is used and what its alternatives could be.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Low</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Docker</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Database</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Know how docker works, what it is for, how it is used and what its alternatives could be.</p>
+<p>The database decision will not be taken based on what technology we know better, but on what is best for the project. Usage of JPA, Hibernate allows us to focus on the business logic and not on the database.</p>
 </div></div></td>
 </tr>
 </tbody>
@@ -1433,6 +1473,36 @@ Scalable solutions such as Docker containers allow the application to be deploye
 <th class="tableblock halign-left valign-top">Description</th>
 </tr>
 </thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Medium</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Documentation</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The documentation of the project will be done in parallel with the development of the project. This could lead to a delay in the development of the project.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Medium</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Testing</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The project will have unit and integration tests, we ensure tests cover the majority of the code. However due to time constraints and how the project is structured, we may not be able to cover all the code with all the possible cases. The aim is to cover at least 80% of the code.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Low</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Code Quality</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The code quality will be ensured by the use of SonarCloud, but due to time constraints, we may not be able to fix all the issues that SonarCloud will find.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Low</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Security</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The project will have security measures in place. Standard practices are put in place. Tougher security measures will not be implemented due to performance constraints.</p>
+</div></div></td>
+</tr>
+</tbody>
 </table>
 <div style="page-break-after: always;"></div>
 </div>
@@ -1487,6 +1557,10 @@ Scalable solutions such as Docker containers allow the application to be deploye
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Associations</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Represents the associations between entities. It has internal classes for each association.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">MultiplayerSession</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Represents a multiplayer session, which is a game session with more than one player.</p></td>
 </tr>
 </tbody>
 </table>
@@ -1879,8 +1953,8 @@ General information: Finally, tests were carried out to log out your user. These
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 2<br>
-Last updated 2024-04-28 01:17:33 UTC
+Version 3<br>
+Last updated 2024-04-28 15:53:53 UTC
 </div>
 </div>
 </body>
