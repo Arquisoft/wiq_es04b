@@ -114,7 +114,7 @@ RestApiService ---> PlayerService: Retrieve/Modify player data
 [options="header",cols="1,2,2"]
 |===
 |Component|Input/Output|Channel/Protocol
-| RestApiService| External developer interactions| HTTP
+| RestApiService| External developer interactions| HTTPS
 | Frontend| User interactions, game display| HTTPS
 | Database| User data, game history, questions| Specific database driver
 | WikiData| Data for question generation| HTTP
