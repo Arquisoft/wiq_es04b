@@ -110,6 +110,9 @@ public class Associations {
         public static void addAnswer(Question question, List<Answer> answer) {
             for (Answer a : answer) {
                 a.setQuestion(question);
+                if (a.isCorrect()) {
+                    question.setCorrectAnswer(a);
+                }
             }
             question.getOptions().addAll(answer);
         }
@@ -125,13 +128,8 @@ public class Associations {
             for (Answer a : answer) {
                 a.setQuestion(null);
             }
+            question.setCorrectAnswer(null);
         }
-        //public static void removeAnswer(Question question, List<Answer> answer) {
-          //  question.getOptions().remove(answer);
-            //for (Answer a : answer) {
-              //  a.setQuestion(null);
-            //}
-        //}
     }
 
     public static class QuestionsCategory {

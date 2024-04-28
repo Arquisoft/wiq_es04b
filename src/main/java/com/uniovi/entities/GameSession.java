@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.uniovi.interfaces.JsonEntity;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -46,6 +45,12 @@ public class GameSession implements JsonEntity, Serializable {
     @Transient
     private Question currentQuestion;
 
+    @Transient
+    private boolean isMultiplayer = false;
+
+    @Transient
+    private boolean isFinished = false;
+
     public GameSession(Player player, List<Question> questions) {
         this.player = player;
         this.questionsToAnswer = questions;
@@ -76,7 +81,7 @@ public class GameSession implements JsonEntity, Serializable {
     }
 
     public Question getNextQuestion() {
-        if(questionsToAnswer.isEmpty()) {
+        if (questionsToAnswer.isEmpty()) {
             currentQuestion = null;
             return null;
         }

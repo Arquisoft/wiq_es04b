@@ -7,3 +7,11 @@
 #apiKeyDiv form {
     margin: 5% 20% 0 20%;
 }
+
+html {
+    position: relative;
+    min-height: 100%;
+}
+body {
+    margin-bottom: 60px; /* Margin bottom by footer height */
+}

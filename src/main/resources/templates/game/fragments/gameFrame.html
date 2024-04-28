@@ -4,10 +4,11 @@
     <div class="container">
             <div class="row">
                 <!-- Thymeleaf loop to generate buttons -->
-                <div th:each="answer, iterStat : ${question.options}" class="col-6 col-md-6 col-12">
+                <div th:each="answer : ${question.returnScrambledOptions()}" class="col-6 col-md-6 col-12">
                     <button th:id="${'btn' + answer.id}" class="btn btn-primary btn-block m-2 rounded" th:text="${answer.text}" th:value="${answer}"></button>
                 </div>
         </div>
+        <button id="continueBtn" class="prueba btn btn-primary btn-block m-2 rounded" th:text="#{game.continue}"></button>
     </div>
     <div id="bottomGamePart">
         <div th:replace="~{game/fragments/stopwatch}"></div>
@@ -16,28 +17,51 @@
             function initiateGameCounters() {
                 let timeoutId = -1;
                 let interval = -1;
+                let questionId = [[${question.id}]];
+                let corrAnswerId = [[${question.correctAnswer.id}]];
+                let answers = /*[[${question.options}]]*/ [];
+
+                $("#continueBtn").hide();
 
                 function setupAnswers() {
-                    let questionId = [[${question.id}]];
-                    let answers = /*[[${question.options}]]*/ [];
-
                     answers.forEach(answer => {
                         $("#btn" + answer.id).click(function () {
                             clearTimeout(timeoutId);
                             clearInterval(interval);
-                            $("#gameFrame").load("/game/" + questionId + "/" + answer.id);
+
+                            if (corrAnswerId !== answer.id) {
+                                $("#btn" + answer.id).css("background-color", "red");
+                            }
+                            respuesta(questionId, answer.id);
                         });
                     });
                 }
 
                 setupAnswers();
 
+                function respuesta(qId, aId) {
+                    $.ajax(
+                        {
+                            type: "GET",
+                            url: "/game/" + qId + "/" + aId
+
+                    });
+                    answers.forEach(answer => {
+                        if (corrAnswerId === answer.id) {
+                            $("#btn" + answer.id).css("background-color", "green");
+                        }
+                        $("#btn" + answer.id).off("click");
+                    });
+
+                    initiateTimeout(qId, aId);
+                }
+
                 let timeoutPeriod = [[${questionDuration}]] * 1000; // Timeout period in milliseconds (e.g., 8000ms for 8 seconds)
                 let updateInterval = 100; // How often to update the progress bar (in milliseconds)
 
                 timeoutId = setTimeout(() => {
-                    $("#gameFrame").load('/game/[[${question.id}]]/-1');
-                    clearTimeout(timeoutId);
+                    //$("#gameFrame").load('/game/[[${question.id}]]/-1');
+                    respuesta(questionId, -1);
                 }, timeoutPeriod);
 
                 initStopwatch(timeoutPeriod / 1000);
@@ -48,7 +72,7 @@
                     let progressBar = $('#progressBar');
                     let currentTime = parseFloat(progressBar.attr('aria-valuenow'));
                     let decrement = 100 * updateInterval / timeoutPeriod;
-                    let newTime = Math.max(0, currentTime - decrement);;
+                    let newTime = Math.max(0, currentTime - decrement);
                     // Calculate the color based on the percentage
                     let greenValue = Math.round((newTime * 255) / 100);
                     let redValue = 255 - greenValue;
@@ -61,6 +85,38 @@
                     if(newTime <= 0) {
                         clearInterval(interval);
                     }
+                }
+
+                function initiateTimeout(qId, aId) {
+                    if (timeoutId) {
+                        clearTimeout(timeoutId);
+                        clearInterval(interval);
+                    }
+                    timeoutPeriod = 12000; // Timeout period in milliseconds (e.g., 8000ms for 8 seconds)
+                    updateInterval = 100; // How often to update the progress bar (in milliseconds)
+                    let progressBar = $('#progressBar');
+                    progressBar.attr('aria-valuenow', 100);
+
+                    timeoutId = setTimeout(function () {
+                        if (timeoutId) {
+                            clearTimeout(timeoutId);
+                            clearInterval(interval);
+                        }
+                        $("#gameFrame").load("/game/update");
+                    }, timeoutPeriod);
+
+                    initStopwatch(timeoutPeriod / 1000);
+                    timeoutPeriod = timeoutPeriod - updateInterval * 2; // Adjust the timeout period to account for the update interval
+                    interval = setInterval(updateProgressBar, updateInterval);
+
+                    $("#continueBtn").show();
+                    $("#continueBtn").off('click').on('click', function () {
+                        if (timeoutId) {
+                            clearTimeout(timeoutId);
+                            clearInterval(interval);
+                        }
+                        $("#gameFrame").load("/game/update");
+                    });
                 }
             }
 

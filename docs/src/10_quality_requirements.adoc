@@ -3,51 +3,44 @@ ifndef::imagesdir[:imagesdir: ../images]
 [[section-quality-scenarios]]
 == Quality Requirements
 === Quality Tree
-_Note: Items (1), (2), (3) in the table below repeat the higher-level quality requirements of Chapter 1.2._
 
-[cols="4", options="header"]
+[cols="3", options="header"]
 |===
-|Quality category |Quality |Description |Scenario
+|Quality requirement |Description |Scenario
 
-|Usability
-|Ease of use
-|The application shall be easy to use by the user, with intuitive functionality.
+|Efficiency
+|Access, creation of questions, and navigation between them should be fast to ensure user satisfaction.
 |SC1
 
-|
-|Familiarity of the environment (2)
-|The application should appeal to all fans of the original programme and provide a wide variety of questions.
-|
-
-|Performance
-|Accuracy
-|The questions in the application must be accurate, both the question and the correct answer.
-|
-
-|
-|Efficiency (1)
-|Accessing, creating questions and moving between questions should be fast to ensure user satisfaction.
-|
-
-|
-|Robustness
-|The system shall function reliably in all specified environments and operating conditions.
+|Usability
+|The application should be appealing to all fans of the original program while also offering a wide variety of questions.
 |SC2
 
-|Safety
-|Integrity
-|The application shall be user-friendly, with intuitive functionality.
-|
-
-|Maintainability and support
-|Maintenance (2)
-|The application shall ensure that it can be easily extended and modified to provide new features to users.
-|
-
-|Cultural and Regional
-|Multilingual
-|The user interface texts must be able to be converted by a translation file into different languages with an ASCII character set.
+|Manteinance
+|The application should ensure easy expansion and modification to provide users with new features.
 |SC3
+
+|Availability
+|Our goal is to achieve at least 95% availability, ensuring that the system is always available for users to play.
+|SC4
+
+|Responsiveness
+|The system must be responsive, providing a good user experience for those in desktop and mobile environments.
+|SC5
+
+|Testability
+|The system must facilitate the testing process(creating test cases, executing tests, analyzing results...)
+|SC6
+
+|Scalability
+|The ability of a system to handle increasing workload or growing demands by adapting or expanding its capacity without compromising performance.
+|SC7
+
+|Interoperability
+|The system must have the ability of  seamlessly communicate, exchange data, and work together effectively with different systems, applications, or components, even if they use different technologies.
+|SC8
+
+
 |===
 
 === Quality Scenarios
@@ -55,12 +48,28 @@ _Note: Items (1), (2), (3) in the table below repeat the higher-level quality re
 |===
 |Identification |Scenario
 
-|SC1
-|A user who is not familiar with the application will know how to use it after a few minutes of instruction.
+| SC1
+| Users expect the application to load quickly and respond promptly to their interactions, ensuring a smooth and efficient user experience.
 
-|SC2
-|The application should be able to be run from any device, from a computer to a mobile phone, without losing formatting.
+| SC2
+| The application's user interface is designed intuitively, allowing users to navigate effortlessly and find what they need without confusion or frustration.
 
-|CS3
-|With the appropriate translation files replacing the default language (English), all displayed and printed texts now appear in this language.
+| SC3
+| Developers can easily add new features or modify existing ones without disrupting the overall functionality of the application, ensuring its long-term maintainability.
+
+| SC4
+| Users rely on the application to be available whenever they want to play, and the system ensures a high level of uptime, minimizing downtime for maintenance or updates.
+
+| SC5
+| Whether accessed from a desktop computer or a mobile device, users expect the application to adapt seamlessly to their screen size and input method, providing a consistent experience across platforms.
+
+| SC6
+| The testing process is streamlined, allowing QA teams to efficiently create, execute, and analyze test cases, ensuring the reliability and stability of the application.
+
+| SC7
+| As user demand grows, the deployment does not grow dynamically. However a system can be put in place to deploy more instances of the application to handle the increased workload, trough a load balancer, for example.
+
+| SC8
+| The application seamlessly integrates with other systems, allowing for the exchange of data and functionality without compatibility issues, enhancing its overall interoperability.
+
 |===

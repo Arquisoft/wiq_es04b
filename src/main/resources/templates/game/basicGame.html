@@ -1,7 +1,7 @@
 <!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{fragments/head}"></head>
-<body>
+<body class="d-flex flex-column min-vh-100">
 <link th:href="@{/css/game.css}" rel="stylesheet" type="text/css"/>
 <canvas th:replace="~{fragments/background}"></canvas>
 <nav th:replace="~{fragments/nav}"></nav>
@@ -14,7 +14,7 @@
     <b id="questionNumber" th:inline="text">
         <span id="currentQuestion" th:text="${session.gameSession.answeredQuestions.size()+1}"></span>
         /
-        <span id="totalQuestions" th:text="${session.gameSession.questionsToAnswer.size()}"></span>
+        <span id="totalQuestions" th:text="${session.gameSession.questionsToAnswer.size() + session.gameSession.answeredQuestions.size()}"></span>
     </b>
 </p>
 <div id="gameFrame" th:replace="~{game/fragments/gameFrame}"></div>
@@ -32,7 +32,19 @@
         });
     }
 
+    function updateQuestionCounter() {
+        $.ajax({
+            type: "GET",
+            url: "/game/currentQuestion",
+            success: function (response) {
+                if (!isNaN(response))
+                    $("#currentQuestion").text(response);
+            }
+        });
+    }
+
     setInterval(updatePoints, 1000);
+    setInterval(updateQuestionCounter, 1000);
 </script>
 </body>
 </html>

@@ -1,7 +1,6 @@
 package com.uniovi.services;
 
 import com.uniovi.entities.Answer;
-import com.uniovi.entities.Category;
 import com.uniovi.entities.Question;
 import org.springframework.stereotype.Service;
 

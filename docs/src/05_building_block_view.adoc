@@ -8,7 +8,7 @@ The Building Block View elaborates on the static structure of the system. It dec
 
 === Whitebox Overall System
 
-This section provides an overview of the main components of the system and their interactions. The core of the system is the WIQ (QuestionGame) component, which interfaces with Users, Wikidata for question generation, a Database for persistence, and offers a REST API for External Developers.
+This section provides an overview of the main components of the system and their interactions. The core of the system is the WIQ (WiqEs04bApplication) component, which interfaces with Users, Wikidata for question generation, a Database for persistence, and offers a REST API for External Developers.
 
 [plantuml,"Whitebox-overall",png]
 ----
@@ -17,11 +17,8 @@ This section provides an overview of the main components of the system and their
 
 actor User
 actor "External Developers" as Dev
-component "[WIQ QuestionGame]" as WIQ {
-  component "[Game Logic]" as Logic
-  component "[User Account\nManagement]" as UserMgmt
-  component "[Question\nManagement]" as QuestMgmt
-  component "[API\nManagement]" as APIMgmt
+component "com.uniovi.WiqEs04bApplication" as WIQ {
+
 }
 database "Database" as DB
 [WikiData] as WikiData
@@ -29,7 +26,7 @@ database "Database" as DB
 User --> WIQ : Interacts
 WIQ --> WikiData : Fetches data
 WIQ --> DB : Reads/Writes Data
-Dev --> APIMgmt : Uses APIs
+Dev --> WIQ : Uses APIs
 
 @enduml
 ----
@@ -47,7 +44,7 @@ The decomposition provides a clear, high-level overview of how the WIQ system in
 | User
 | Represents the end users of the WIQ application, interacting with the system to play games and view their history.
 
-| WIQ (QuestionGame)
+| WIQ (WiqEs04bApplication)
 | The central component that manages gameplay logic, user interactions, and integrates external data for question generation.
 
 | Wikidata
@@ -64,13 +61,13 @@ The decomposition provides a clear, high-level overview of how the WIQ system in
 
 For Level 2 of the Building Block View, the WIQ (QuestionGame) system is further decomposed into four primary components that define its operational structure. Each component is designed to fulfill specific roles within the architecture, ensuring the system's functionality and responsiveness to user interactions.
 
-* *Game Logic:* This component acts as the core of the QuestionGame, orchestrating the flow of games, managing question selection, enforcing game rules, and tracking scores. It ensures that gameplay proceeds smoothly and according to the predefined logic, offering a seamless experience for the user.
+* *GameService:* This component acts as the core of the QuestionGame, orchestrating the flow of games, managing question selection, enforcing game rules, and tracking scores. It ensures that gameplay proceeds smoothly and according to the predefined logic, offering a seamless experience for the user.
 
-* *User Account Management:* Responsible for handling user accounts, this component manages registration, authentication, and profile management. It safeguards user data while providing a personalized experience through game history tracking and preference settings.
+* *PlayerService:* Responsible for handling user accounts, this component manages registration, authentication, and profile management. It safeguards user data while providing a personalized experience through game history tracking and preference settings.
 
-* *Question Management:* This component interacts directly with the Wikidata service to fetch data for question generation. It processes and curates content to produce relevant, challenging questions for the game, thereby ensuring a varied and educational experience.
+* *QuestionService:* This component interacts directly with the Wikidata service to fetch data for question generation. It processes and curates content to produce relevant, challenging questions for the game, thereby ensuring a varied and educational experience.
 
-* *API Management:* Serving as the gateway for external developers, this component exposes a set of RESTful APIs that allow access to player information and question data. It handles request processing, authentication, and data delivery, facilitating third-party integrations and extensions of the WIQ platform.
+* *RestApiService:* Serving as the gateway for external developers, this component exposes a set of RESTful APIs that allow access to player information and question data. It handles request processing, authentication, and data delivery, facilitating third-party integrations and extensions of the WIQ platform.
 
 
 [plantuml,"level2",png]
@@ -78,23 +75,29 @@ For Level 2 of the Building Block View, the WIQ (QuestionGame) system is further
 @startuml
 !theme plain
 
-package "WIQ QuestionGame" {
-  component "[Game Logic]" as Logic
-  component "[User Account\nManagement]" as UserMgmt
-  component "[Question\nManagement]" as QuestMgmt
-  component "[API\nManagement]" as APIMgmt
+actor User
+actor "External Developers" as Dev
+component "com.uniovi.WiqEs04bApplication" {
+    package "com.uniovi.services" {
+      component "[GameSession\nService]" as Logic
+      component "[PlayerService]" as UserMgmt
+      component "[QuestionService]" as QuestMgmt
+      component "[RestApi\nService]" as APIMgmt
 
-  UserMgmt -[hidden]-> Logic : <<uses>>
-  QuestMgmt -[hidden]-> Logic : <<uses>>
-  APIMgmt -[hidden]-> UserMgmt : <<interfaces>>
-  APIMgmt -[hidden]-> QuestMgmt : <<interfaces>>
+      UserMgmt -[hidden]-> Logic : <<uses>>
+      QuestMgmt -[hidden]-> Logic : <<uses>>
+      APIMgmt -[hidden]-> UserMgmt : <<interfaces>>
+      APIMgmt -[hidden]-> QuestMgmt : <<interfaces>>
 
-  Logic ..> UserMgmt : Uses
-  Logic ..> QuestMgmt : Uses
-  UserMgmt ..> APIMgmt : Interfaces
-  QuestMgmt ..> APIMgmt : Interfaces
+      Logic ..> UserMgmt : Uses
+      Logic ..> QuestMgmt : Uses
+      UserMgmt ..> APIMgmt : Interfaces
+      QuestMgmt ..> APIMgmt : Interfaces
+    }
 }
 
+User --> [com.uniovi.WiqEs04bApplication] : Interacts
+Dev --> APIMgmt : Uses APIs
 @enduml
 ----
 
@@ -113,7 +116,7 @@ This level of documentation provides a structured and clear view of the system's
 @startuml
 !theme plain
 
-package "API Management" {
+package "com.uniovi.services.RestApiService" {
   interface "Player Information API" as PlayerAPI
   interface "Question Information API" as QuestAPI
 

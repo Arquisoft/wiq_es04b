@@ -25,7 +25,6 @@ public class Question implements JsonEntity {
     public static final String SPANISH = "es";
     public static final String FRENCH = "fr";
 
-
     @Id
     @GeneratedValue
     private Long id;
@@ -78,8 +77,9 @@ public class Question implements JsonEntity {
         return answer.isCorrect();
     }
 
-    public void scrambleOptions(){
+    public List<Answer> returnScrambledOptions(){
         Collections.shuffle(options);
+        return options;
     }
 
     @Override

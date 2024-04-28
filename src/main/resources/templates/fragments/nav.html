@@ -1,9 +1,8 @@
 <!-- nav.html -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extrasspringsecurity5"
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
      xmlns:th="http://www.thymeleaf.org">
     <a class="navbar-brand" href="#"></a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor02"
-            aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarColor02">
@@ -21,7 +20,7 @@
             </li>
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown2" role="button" data-toggle="dropdown"
-                   aria-haspopup="true" aria-expanded="false">
+                   aria-haspopup="true" aria-expanded="false" data-bs-toggle="dropdown">
                     <span th:text="#{navbar.ranking}"></span>
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown2">
@@ -29,25 +28,29 @@
                     <a sec:authorize="isAuthenticated()" class="dropdown-item" href="/ranking/playerRanking" th:text="#{navbar.ranking.player}"></a>
                 </div>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/instructions" th:text="#{instructions.nav}"></a>
+            </li>
         </ul>
         <ul class="navbar-nav justify-content-end">
             <!-- Botones para cambiar de idioma -->
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="btnLanguage" role="button" data-toggle="dropdown"
-                   aria-haspopup="true" aria-expanded="false">
+                   aria-haspopup="true" aria-expanded="false" data-bs-toggle="dropdown">
+                    <i class="fa fa-language"></i>
                     <span th:text="#{navbar.currentLanguage}"></span>
                 </a>
                 <div id="languageDropdownMenuButton" class="dropdown-menu" aria-labelledby="navbarDropdown">
                     <!-- Botón para cambiar a inglés -->
-                    <a class="dropdown-item" id="btnEnglish" value="EN">
+                    <a class="dropdown-item" id="btnEnglish" value="EN" style="cursor:pointer;">
                         <span th:text="#{navbar.toEnglish}"></span>
                     </a>
                     <!-- Botón para cambiar a español -->
-                    <a class="dropdown-item" id="btnSpanish" value="ES">
+                    <a class="dropdown-item" id="btnSpanish" value="ES" style="cursor:pointer;">
                         <span th:text="#{navbar.toSpanish}"></span>
                     </a>
                     <!-- Botón para cambiar a francés -->
-                    <a class="dropdown-item" id="btnFrench" value="FR">
+                    <a class="dropdown-item" id="btnFrench" value="FR" style="cursor:pointer;">
                         <span th:text="#{navbar.toFrench}"></span>
                     </a>
                 </div>
@@ -72,7 +75,7 @@
             <li class="nav-item dropdown" sec:authorize="isAuthenticated()">
                 <a class="nav-link dropdown-toggle" href="#" sec:authentication="principal.username"
                    id="btnUser" role="button" data-toggle="dropdown"
-                   aria-haspopup="true" aria-expanded="false">
+                   aria-haspopup="true" aria-expanded="false" data-bs-toggle="dropdown">
                 </a>
                 <div id="userZoneDropdownMenuButton" class="dropdown-menu" aria-labelledby="navbarDropdown">
                     <a class="dropdown-item" id="btnUserProfile" href="/home">
@@ -80,6 +83,9 @@
                     </a>
                     <a class="dropdown-item" id="btnUserApiKey" href="/home/apikey">
                         <span th:text="#{navbar.profile.apikey}"></span>
+                    </a>
+                    <a class="dropdown-item" id="btnAdminZone" href="/player/admin" sec:authorize="hasRole('ROLE_ADMIN')">
+                        <span th:text="#{navbar.admin.zone}"></span>
                     </a>
                 </div>
             </li>

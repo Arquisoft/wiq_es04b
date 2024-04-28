@@ -1,0 +1,137 @@
+ifndef::imagesdir[:imagesdir: ../images]
+
+[[section-question-generation-strategy]]
+== Question Generation Strategy
+
+The generation of questions in our application is handled through a combination of classes and interfaces, primarily QuestionGeneratorV2 and QuestionGeneratorService.
+
+=== Question templates
+
+The two classes mentioned before use a JSON file that stores the question templates. These templates are used to generalize the question generation process. The JSON file is structured as follows:
+
+==== JSON Structure
+
+The JSON has the following structure:
+
+- `language_placeholder`, `question_placeholder`, and `answer_placeholder` are strings used as placeholders for the language, question, and answer, respectively.
+
+- `categories` is an array containing objects representing different categories of questions.
+
+Each category object has two properties:
+
+- `name`: The name of the category.
+- `questions`: An array of objects representing questions within that category.
+
+Each question object has the following properties:
+
+- `type`: The type of question.
+- `statements`: An array of objects representing statements in different languages for the question. Each object has two properties: `language` and `statement`.
+- `question`: The property queried to generate the question.
+- `answer`: The property queried to obtain the answer.
+- `sparqlQuery`: The SPARQL query used to retrieve data for generating the question and answer.
+
+==== Compact Example of JSON Hierarchy
+
+[source,json]
+----
+{
+  "language_placeholder": "[LANGUAGE]",
+  "question_placeholder": "[QUESTION]",
+  "answer_placeholder": "[ANSWER]",
+  "categories": [
+    {
+      "name": "Geography",
+      "questions": [
+        {
+          "type": "capital",
+          "statements": [
+            {
+              "language": "es",
+              "statement": "¿Cuál es la capital de [QUESTION]?"
+            },
+            {
+              "language": "en",
+              "statement": "What is the capital of [QUESTION]?"
+            },
+            {
+              "language": "fr",
+              "statement": "Quelle est la capitale de [QUESTION]?"
+            }
+          ],
+          "question": "countryLabel",
+          "answer": "capitalLabel",
+          "sparqlQuery": "..."
+        },
+        {
+          "type": "currency",
+          "statements": [
+            {
+              "language": "es",
+              "statement": "¿Cuál es la moneda de [QUESTION]?"
+            },
+            {
+              "language": "en",
+              "statement": "What is the currency of [QUESTION]?"
+            },
+            {
+              "language": "fr",
+              "statement": "Quelle est la monnaie de [QUESTION]?"
+            }
+          ],
+          "question": "countryLabel",
+          "answer": "currencyLabel",
+          "sparqlQuery": "..."
+        }
+      ]
+    },
+    {
+      "name": "Science",
+      "questions": [
+        {
+          "type": "element",
+          "statements": [
+            {
+              "language": "es",
+              "statement": "¿Cuál es el símbolo químico del [QUESTION]?"
+            },
+            {
+              "language": "en",
+              "statement": "What is the chemical symbol of [QUESTION]?"
+            },
+            {
+              "language": "fr",
+              "statement": "Quel est le symbole chimique du [QUESTION]?"
+            }
+          ],
+          "question": "elementLabel",
+          "answer": "symbol",
+          "sparqlQuery": "..."
+        }
+      ]
+    }
+  ]
+}
+----
+
+=== Example of a query
+Here's an example of how you could use this JSON structure to query information:
+
+To execute a query you just need to build a SPARQL query that retrieves the data you need. For example, to get the capital of a country, you could use the following query:
+[source, SPARQL]
+----
+select distinct ?country ?countryLabel ?capital ?capitalLabel where {
+  ?country wdt:P31 wd:Q6256 .
+  ?capital wdt:P31 wd:Q5119 .
+  ?country wdt:P36 ?capital .
+  ?country rdfs:label ?countryLabel .
+  ?capital rdfs:label ?capitalLabel .
+  FILTER NOT EXISTS {?country wdt:P31 wd:Q3024240} .
+  FILTER(LANG(?countryLabel)="es" && LANG(?capitalLabel)="es")
+  }
+----
+Once you have a query the next step is to add it to thr JSON file. Following the previous example, you should start declaring a new object inside the `questions` array of the `Geography` category. You should fill the `type`, `statements`, `question`, `answer`, and `sparqlQuery` properties with the appropriate values. For the `type` field you could add the value `"capital"`, for the `statements` array you could add the statements in different languages also adding to them the placeholder that you used in the `question_placeholder` field. For the `question` field you should add the value `"countryLabel"`, for the `answer` you should add the value `"capitalLabel"`. For the `sparqlQuery` field you should replace in your original query every instance of `"countryLabel"` with the value of `question_placeholder` and `"capitalLabel"` with the value of `answer_placeholder`. The final object should look like the one showed in the JSON hierarchy example.
+
+By following this approach, you can dynamically generate a wide variety of questions based on the structured data stored in your JSON file. This allows for flexibility and scalability in your question generation process.
+
+=== Question Generation Process
+Once we have the JSON file with the question templates, we can start generating questions. Each time the application starts the QuestionGeneratorService class reads the JSON file and stores the question templates in memory. This way, the application can generate questions without needing to read the file each time. These templates are stored in a synchronized stack, which allows for thread-safe access to the templates. When the application starts after reading the JSON file and storing  the templates the QuestionGeneratorService class deletes all the questions that are stored in the database. After deleting the questions, the QuestionGeneratorService starts a cycle that generates all the questions in all the 3 main languages of the app for a specific type of question each two and a half minutes. This cycle is repeated until all the question types are generated. After this every 24 hours the cycle will start again with the parsing of the JSON, filling the Stack, emptying the database and generating the questions. All this process can be forced by an Admin user through the Admin panel in the app where an Admin can change the JSON (which will lead to the restart of the question generation process) or delete all questions.

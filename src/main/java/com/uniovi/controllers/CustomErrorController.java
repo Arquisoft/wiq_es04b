@@ -15,6 +15,7 @@ import java.util.Map;
 
 @Controller
 public class CustomErrorController extends BasicErrorController {
+    private static final String PATH = "error";
     @Autowired
     public CustomErrorController(ErrorAttributes errorAttributes, ServerProperties serverProperties, List<ErrorViewResolver> errorViewResolvers) {
         super(errorAttributes, serverProperties.getError(), errorViewResolvers);
@@ -23,10 +24,10 @@ public class CustomErrorController extends BasicErrorController {
     @RequestMapping(value = "/error")
     public String error(Model model, HttpServletRequest webRequest) {
         Map<String, Object> errorAttributes = this.getErrorAttributes(webRequest, ErrorAttributeOptions.defaults());
-        model.addAttribute("error", errorAttributes.get("error"));
+        model.addAttribute(PATH, errorAttributes.get(PATH));
         model.addAttribute("message", errorAttributes.get("message"));
         model.addAttribute("status", errorAttributes.get("status"));
         model.addAttribute("trace", errorAttributes.get("trace")); // Add the stack trace
-        return "error";
+        return PATH;
     }
 }
