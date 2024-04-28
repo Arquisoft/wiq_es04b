@@ -1777,10 +1777,8 @@ All tests have been carried out with a load of 1, 250, 1000, 2000 and 5000 users
 </div>
 <div class="sect3">
 <h4 id="_test_results">14.3.1. Test results</h4>
-
-</div>
-<div class="sect3">
-<h4 id="_login">14.3.2. Login</h4>
+<div class="sect4">
+<h5 id="_login">Login</h5>
 <div class="paragraph">
 <p>1 User:
 <span class="image"><img src="./images/Login/1UserLogin.png" alt="Login1User"></span>
@@ -1797,8 +1795,8 @@ General information: All responses to the server have generally worked correctly
 <span class="image"><img src="./images/Login/GraphicLogin.png" alt="GraphicLogin"></span></p>
 </div>
 </div>
-<div class="sect3">
-<h4 id="_show_apikey">14.3.3. Show ApiKey</h4>
+<div class="sect4">
+<h5 id="_show_apikey">Show ApiKey</h5>
 <div class="paragraph">
 <p>1 User:
 <span class="image"><img src="./images/ShowApiKey/1UserApiKey.png" alt="ApiKey1User"></span>
@@ -1815,8 +1813,8 @@ General information: For this use case, from the beginning all requests worked c
 <span class="image"><img src="./images/ShowApiKey/GraphicApiKey.png" alt="GraphicGraphic"></span></p>
 </div>
 </div>
-<div class="sect3">
-<h4 id="_show_profile">14.3.4. Show profile</h4>
+<div class="sect4">
+<h5 id="_show_profile">Show profile</h5>
 <div class="paragraph">
 <p>1 User:
 <span class="image"><img src="./images/ShowProfile/1UserProfile.png" alt="Profile1User"></span>
@@ -1833,8 +1831,8 @@ General information: The results of the load tests carried out to show the playe
 <span class="image"><img src="./images/ShowProfile/GraphicProfile.png" alt="GraphicProfile"></span></p>
 </div>
 </div>
-<div class="sect3">
-<h4 id="_play_a_game">14.3.5. Play a game</h4>
+<div class="sect4">
+<h5 id="_play_a_game">Play a game</h5>
 <div class="paragraph">
 <p>1 User:
 <span class="image"><img src="./images/PlayGame/1UserGame.png" alt="Game1User"></span>
@@ -1851,8 +1849,8 @@ General information: The tests of playing the game were the most expensive loadi
 <span class="image"><img src="./images/PlayGame/GraphicGame.png" alt="GraphicProfile"></span></p>
 </div>
 </div>
-<div class="sect3">
-<h4 id="_show_personal_ranking">14.3.6. Show personal ranking</h4>
+<div class="sect4">
+<h5 id="_show_personal_ranking">Show personal ranking</h5>
 <div class="paragraph">
 <p>1 User:
 <span class="image"><img src="./images/PersonalRanking/1UserPR.png" alt="PR1User"></span>
@@ -1869,8 +1867,8 @@ General information: For these tests we return a little to normal, compared to t
 <span class="image"><img src="./images/PersonalRanking/GraphicPR.png" alt="GraphicPR"></span></p>
 </div>
 </div>
-<div class="sect3">
-<h4 id="_show_global_ranking">14.3.7. Show global ranking</h4>
+<div class="sect4">
+<h5 id="_show_global_ranking">Show global ranking</h5>
 <div class="paragraph">
 <p>1 User:
 <span class="image"><img src="./images/GlobalRanking/1UserGR.png" alt="GR1User"></span>
@@ -1887,8 +1885,8 @@ General information: These tests are very similar to the previous ones, but inst
 <span class="image"><img src="./images/GlobalRanking/GraphicGR.png" alt="GraphicGR"></span></p>
 </div>
 </div>
-<div class="sect3">
-<h4 id="_change_language">14.3.8. Change language</h4>
+<div class="sect4">
+<h5 id="_change_language">Change language</h5>
 <div class="paragraph">
 <p>1 User:
 <span class="image"><img src="./images/ChangeLanguage/1UserLanguage.png" alt="Language1User"></span>
@@ -1905,8 +1903,8 @@ General information: The execution of these tests consisted of changing the lang
 <span class="image"><img src="./images/ChangeLanguage/GraphicLanguage.png" alt="GraphicLanguage"></span></p>
 </div>
 </div>
-<div class="sect3">
-<h4 id="_return_to_the_index">14.3.9. Return to the index</h4>
+<div class="sect4">
+<h5 id="_return_to_the_index">Return to the index</h5>
 <div class="paragraph">
 <p>1 User:
 <span class="image"><img src="./images/Index/1UserIndex.png" alt="Index1User"></span>
@@ -1923,8 +1921,8 @@ General information: These results surprised us quite a bit, since we thought it
 <span class="image"><img src="./images/Index/GraphicIndex.png" alt="GraphicIndex"></span></p>
 </div>
 </div>
-<div class="sect3">
-<h4 id="_log_out">14.3.10. Log out</h4>
+<div class="sect4">
+<h5 id="_log_out">Log out</h5>
 <div class="paragraph">
 <p>1 User:
 <span class="image"><img src="./images/LogOut/1UserLogout.png" alt="Logout1User"></span>
@@ -1941,10 +1939,11 @@ General information: Finally, tests were carried out to log out your user. These
 <span class="image"><img src="./images/LogOut/GraphicLogout.png" alt="GraphicLogout"></span></p>
 </div>
 </div>
+</div>
 <div class="sect3">
-<h4 id="_conclusion">14.3.11. Conclusion</h4>
+<h4 id="_conclusion">14.3.2. Conclusion</h4>
 <div class="paragraph">
-<p>In conclusion, the tests generally show very positive results. In no test, except for the game, are there errors with up to 2000 users simultaneously, and errors begin to appear after 5000 users. Looking at the results, the lightest cases are showing the profile, showing the personal ranking and logging out. On the other hand, the hardest cases are playing the game (by far) and showing the global ranking. The tests of the 'multiplayer' game mode could not be carried out, because it was not yet fully implemented at the time of carrying out the load tests.</p>
+<p>In conclusion, the tests generally show very positive results. In no test, except for the game, are there errors with up to 2000 users simultaneously, and errors begin to appear after 5000 users. Looking at the results, the lightest cases are showing the profile, showing the personal ranking and logging out. On the other hand, the hardest cases are playing the game (by far) and showing the global ranking.</p>
 </div>
 </div>
 </div>
@@ -1954,7 +1953,7 @@ General information: Finally, tests were carried out to log out your user. These
 <div id="footer">
 <div id="footer-text">
 Version 3<br>
-Last updated 2024-04-28 15:53:53 UTC
+Last updated 2024-04-28 16:10:28 UTC
 </div>
 </div>
 </body>
