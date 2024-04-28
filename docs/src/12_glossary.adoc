@@ -24,4 +24,6 @@ ifndef::imagesdir[:imagesdir: ../images]
 
 |Associations  | Represents the associations between entities. It has internal classes for each association.
 
+|MultiplayerSession | Represents a multiplayer session, which is a game session with more than one player.
+
 |===

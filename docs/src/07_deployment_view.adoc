@@ -22,6 +22,8 @@ The primary motivation behind using Docker for deployment is to streamline the d
 .Mapping of Building Blocks to Infrastructure
 - **Web Server/Application (.jar file):** Packaged within a Docker container, it includes all necessary dependencies to run independently across any Docker-supported platform.
 - **External APIs (e.g., Wikidata API):** Accessed over the network, these APIs provide dynamic content for the game.
+- **Grafana**: Monitoring tool that can be used to visualize and analyze metrics from the application and infrastructure.
+- **Prometheus**: Monitoring tool that collects metrics from the application and infrastructure for Grafana to visualize.
 
 === Infrastructure Level 2
 
@@ -32,6 +34,8 @@ At this level, we describe the Docker container configuration that encapsulates 
 Our app's Docker container is built from a Java base image, which is then layered with our application’s `.jar` file.
 
 In addition to the Spring boot standalone file, we also use the official `MySQL` server docker container image brought by DockerHub. This is our database server and it is used to store the game data, such as user scores, questions, etc. and all the other persistent data.
+
+Moreover, there are two more containers. These are the monitoring tools, `Prometheus` and `Grafana`. These tools are used to monitor the application and infrastructure. Prometheus collects metrics from the application and infrastructure, while Grafana visualizes these metrics.
 
 This setup encapsulates the entire runtime environment required for our application, and does not require extensive configuration.
 
@@ -48,16 +52,28 @@ rectangle "Docker compose" {
     rectangle "MySQL Server Container" {
         database "MySQL Server" as MySQL
     }
+
+    rectangle "Prometheus Container" {
+        database "Prometheus" as Prometheus
+    }
+
+    rectangle "Grafana Container" {
+        node "Grafana" as Grafana
+    }
 }
 
 cloud "Wikidata API" as API
 
 App --> MySQL : Store game data
 MySQL --> App : Fetch game data
-App --> API : Fetch questions
+App -left-> API : Fetch questions
 App ..> WebServer : Server application
+Prometheus --> App : Collect metrics
+Grafana --> Prometheus : Visualize metrics
 @enduml
 ----
 
 .Explanation:
-This diagram illustrates the internal structure of our Docker containers structure. It shows the Java Spring Boot application, including the embedded web server, packaged as a `.jar` file and the MySQL server. The application interacts with external APIs, like the Wikidata API, to retrieve data necessary for generating game questions. The containerized approach ensures that the application can be deployed consistently across any environment that supports Docker.
+This diagram illustrates the internal structure of our Docker containers structure. It shows the Java Spring Boot application, including the embedded web server, packaged as a `.jar` file and the MySQL server. The application interacts with external APIs, like the Wikidata API, to retrieve data necessary for generating game questions.
+To ensure the application's health and performance, we use Prometheus to collect metrics and Grafana to visualize these metrics.
+The containerized approach ensures that the application can be deployed consistently across any environment that supports Docker.

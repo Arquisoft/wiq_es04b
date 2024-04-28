@@ -67,7 +67,7 @@ ifndef::imagesdir[:imagesdir: ../images]
 | The testing process is streamlined, allowing QA teams to efficiently create, execute, and analyze test cases, ensuring the reliability and stability of the application.
 
 | SC7
-| As user demand grows, the application scales its resources dynamically to accommodate increased traffic and maintain optimal performance levels, ensuring a consistent user experience.
+| As user demand grows, the deployment does not grow dynamically. However a system can be put in place to deploy more instances of the application to handle the increased workload, trough a load balancer, for example.
 
 | SC8
 | The application seamlessly integrates with other systems, allowing for the exchange of data and functionality without compatibility issues, enhancing its overall interoperability.

@@ -7,8 +7,8 @@
 include::src/config.adoc[]
 
 = image:wiq-logo.png[wiq-image] WIQ es04b
-:revnumber: 2
-:revdate: March 2024
+:revnumber: 3
+:revdate: April 2024
 :revremark: ASW - wiq_es04b
 // toc-title definition MUST follow document title without blank line!
 :toc-title: Table of Contents
