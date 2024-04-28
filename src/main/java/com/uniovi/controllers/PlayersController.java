@@ -18,6 +18,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
@@ -271,7 +272,7 @@ public class PlayersController {
             printer.indentArraysWith(indenter);  // Indent JSON arrays
 
             ObjectMapper mapper = new ObjectMapper();
-            mapper.writer(printer).writeValue(new FileOutputStream(QuestionGeneratorService.JSON_FILE_PATH), node);
+            mapper.writer(printer).writeValue(new ClassPathResource(QuestionGeneratorService.JSON_FILE_PATH).getFile(), node);
             return "Questions saved";
         }
         catch (Exception e) {
