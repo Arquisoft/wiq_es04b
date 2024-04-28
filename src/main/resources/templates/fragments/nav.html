@@ -28,6 +28,9 @@
                     <a sec:authorize="isAuthenticated()" class="dropdown-item" href="/ranking/playerRanking" th:text="#{navbar.ranking.player}"></a>
                 </div>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/instructions" th:text="#{instructions.nav}"></a>
+            </li>
         </ul>
         <ul class="navbar-nav justify-content-end">
             <!-- Botones para cambiar de idioma -->
@@ -39,15 +42,15 @@
                 </a>
                 <div id="languageDropdownMenuButton" class="dropdown-menu" aria-labelledby="navbarDropdown">
                     <!-- Botón para cambiar a inglés -->
-                    <a class="dropdown-item" id="btnEnglish" value="EN">
+                    <a class="dropdown-item" id="btnEnglish" value="EN" style="cursor:pointer;">
                         <span th:text="#{navbar.toEnglish}"></span>
                     </a>
                     <!-- Botón para cambiar a español -->
-                    <a class="dropdown-item" id="btnSpanish" value="ES">
+                    <a class="dropdown-item" id="btnSpanish" value="ES" style="cursor:pointer;">
                         <span th:text="#{navbar.toSpanish}"></span>
                     </a>
                     <!-- Botón para cambiar a francés -->
-                    <a class="dropdown-item" id="btnFrench" value="FR">
+                    <a class="dropdown-item" id="btnFrench" value="FR" style="cursor:pointer;">
                         <span th:text="#{navbar.toFrench}"></span>
                     </a>
                 </div>

@@ -47,4 +47,9 @@ public class HomeController{
         }
         return "redirect:/home/apikey";
     }
+
+    @GetMapping("/instructions")
+    public String instructions(){
+        return "instructions";
+    }
 }
