@@ -9,6 +9,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import java.util.Optional;
+
 @Controller
 public class HomeController{
     private final PlayerService playerService;
@@ -27,16 +29,21 @@ public class HomeController{
 
     @GetMapping("/home/apikey")
     public String apiKeyHome(Authentication auth, Model model) {
-        Player player = playerService.getUserByUsername(auth.getName()).get();
-        model.addAttribute("apiKey", player.getApiKey());
+        Optional<Player> playerOpt = playerService.getUserByUsername(auth.getName());
+        if (playerOpt.isPresent()) {
+            Player player = playerOpt.get();
+            model.addAttribute("apiKey", player.getApiKey());
+        }
         return "player/apiKeyHome";
     }
 
     @GetMapping("/home/apikey/create")
     public String createApiKey(Authentication auth) {
-        Player player = playerService.getUserByUsername(auth.getName()).get();
-        if (player.getApiKey() == null) {
-            apiKeyService.createApiKey(player);
+        if (playerService.getUserByUsername(auth.getName()).isPresent()) {
+            Player player = playerService.getUserByUsername(auth.getName()).get();
+            if (player.getApiKey() == null) {
+                apiKeyService.createApiKey(player);
+            }
         }
         return "redirect:/home/apikey";
     }

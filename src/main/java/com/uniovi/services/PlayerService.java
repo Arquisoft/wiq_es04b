@@ -2,12 +2,11 @@ package com.uniovi.services;
 
 import com.uniovi.dto.PlayerDto;
 import com.uniovi.entities.Player;
-import com.uniovi.repositories.PlayerRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.ArrayList;
 import java.util.Optional;
 
 @Service
@@ -25,6 +24,13 @@ public interface PlayerService {
      * @return A list with all the players
      */
     List<Player> getUsers();
+
+
+    /**
+     * Get all the players in the database with same multiplayerCode
+     * @return A list with  the players
+     */
+    List<Player> getUsersByMultiplayerCode(int multiplayerCode);
 
     /**
      * Get a player by its id
@@ -68,8 +74,43 @@ public interface PlayerService {
     void updatePlayer(Long id, PlayerDto playerDto);
 
     /**
+     * Update the multiplayerCode of a player
+     * @param id The id of the player to update
+     * @param code The new multiplayerCode of the player
+     */
+    boolean changeMultiplayerCode(Long id, String code);
+
+    String getScoreMultiplayerCode(Long id);
+
+    void setScoreMultiplayerCode(Long id, String score);
+
+    int createMultiplayerGame(Long id);
+
+    void deleteMultiplayerCode(Long id);
+
+    /**
      * Delete a player from the database
      * @param id The id of the player to delete
      */
     void deletePlayer(Long id);
+
+    /**
+     * Get a page with all the players in the database
+     * @param pageable The page information
+     * @return A page with all the players
+     */
+    Page<Player> getPlayersPage(Pageable pageable);
+
+    /**
+     * Update the password of a player
+     * @param player The player to update the password
+     * @param password The new password
+     */
+    void updatePassword(Player player, String password);
+
+    /**
+     * Save a player in the database
+     * @param player The player to save
+     */
+    void savePlayer(Player player);
 }

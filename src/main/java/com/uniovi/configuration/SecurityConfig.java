@@ -40,14 +40,18 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf
                         .ignoringRequestMatchers("/api/**")
                 )
-                .authorizeHttpRequests((authorize) ->
+                .authorizeHttpRequests(authorize ->
                         authorize
                                 .requestMatchers("/css/**", "/img/**", "/script/**").permitAll()
                                 .requestMatchers("/home/**").authenticated()
                                 .requestMatchers("/signup/**").permitAll()
                                 .requestMatchers("/api/**").permitAll()
                                 .requestMatchers("/game/**").authenticated()
+                                .requestMatchers("/multiplayerGame/**").authenticated()
+                                .requestMatchers("/startMultiplayerGame/**", "/endGameList/**").authenticated()
+                                .requestMatchers("/lobby/**").authenticated()
                                 .requestMatchers("/ranking/playerRanking").authenticated()
+                                .requestMatchers("/player/admin/**").hasAuthority("ROLE_ADMIN")
                                 .requestMatchers("/**").permitAll()
                 ).formLogin(
                         form -> form

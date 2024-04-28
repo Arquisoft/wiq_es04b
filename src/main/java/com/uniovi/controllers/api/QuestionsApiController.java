@@ -160,7 +160,7 @@ public class QuestionsApiController {
             return objectMapper.writeValueAsString(error);
         }
 
-        if (questionDto.getOptions().stream().anyMatch(option -> option.isCorrect())) {
+        if (questionDto.getOptions().stream().anyMatch(AnswerDto::isCorrect)) {
             questionDto.setCorrectAnswer(questionDto.getOptions().stream().filter(option -> option.isCorrect()).findFirst().get());
         }
 

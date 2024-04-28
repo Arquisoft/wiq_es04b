@@ -22,6 +22,9 @@ public class PlayerDto {
     @Schema(hidden = true)
     private String passwordConfirm;
 
+    //@Schema(description = "code of group of the player", example = "5565")
+    //private Integer multiplayerCode;
+
     @Schema(description = "Roles of the player", example = "[\"ROLE_USER\"]")
     private String[] roles;
 }

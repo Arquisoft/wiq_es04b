@@ -2,12 +2,11 @@ package com.uniovi.components.generators;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.uniovi.dto.AnswerDto;
-import com.uniovi.dto.CategoryDto;
-import com.uniovi.dto.QuestionDto;
 import com.uniovi.entities.Answer;
 import com.uniovi.entities.Category;
 import com.uniovi.entities.Question;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.URI;
@@ -16,26 +15,30 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class QuestionGeneratorV2 implements QuestionGenerator{
-
-    private JsonNode jsonNode;
-    private String language_placeholder;
-    private String question_placeholder;
-    private String answer_placeholder;
+    private final JsonNode jsonNode;
+    private final String languagePlaceholder;
+    private final String questionPlaceholder;
+    private final String answerPlaceholder;
     private String language;
+
+    private final Random random = new SecureRandom();
+    private Logger logger = LoggerFactory.getLogger(QuestionGeneratorV2.class);
 
     public QuestionGeneratorV2(JsonNode jsonNode) {
         this.jsonNode = jsonNode;
-        this.language_placeholder = jsonNode.get("language_placeholder").textValue();
-        this.question_placeholder = jsonNode.get("question_placeholder").textValue();
-        this.answer_placeholder = jsonNode.get("answer_placeholder").textValue();
+        this.languagePlaceholder = jsonNode.get("language_placeholder").textValue();
+        this.questionPlaceholder = jsonNode.get("question_placeholder").textValue();
+        this.answerPlaceholder = jsonNode.get("answer_placeholder").textValue();
     }
 
     @Override
-    public List<Question> getQuestions(String language) throws IOException {
+    public List<Question> getQuestions(String language) throws IOException, InterruptedException {
         this.language = language;
         List<Question> questions = new ArrayList<>();
         JsonNode categories = jsonNode.findValue("categories");
@@ -51,12 +54,12 @@ public class QuestionGeneratorV2 implements QuestionGenerator{
     }
 
     @Override
-    public List<Question> getQuestions(String language, JsonNode question, Category cat) throws IOException {
+    public List<Question> getQuestions(String language, JsonNode question, Category cat) throws IOException, InterruptedException {
         this.language = language;
         return this.generateQuestion(question, cat);
     }
 
-    private List<Question> generateQuestion(JsonNode question, Category cat) throws IOException {
+    private List<Question> generateQuestion(JsonNode question, Category cat) throws IOException, InterruptedException {
         // Get the SPARQL query from the JSON
         String query = question.get("sparqlQuery").textValue();
 
@@ -65,9 +68,9 @@ public class QuestionGeneratorV2 implements QuestionGenerator{
         String answerLabel= question.get("answer").textValue();
 
         // Replace the placeholders in the query with the actual values
-        query = query.replace(language_placeholder, language).
-                replace(question_placeholder, questionLabel).
-                replace(answer_placeholder, answerLabel);
+        query = query.replace(languagePlaceholder, language).
+                replace(questionPlaceholder, questionLabel).
+                replace(answerPlaceholder, answerLabel);
 
         // Execute the query and get the results
         JsonNode results = getQueryResult(query);
@@ -85,14 +88,16 @@ public class QuestionGeneratorV2 implements QuestionGenerator{
             List<Answer> options = this.generateOptions(results, correctAnswer, answerLabel);
             options.add(correct);
 
-            // Generate the question statement
-            String questionStatement = statement.replace(question_placeholder, result.path(questionLabel).path("value").asText());
+            if (statement != null) {
+                // Generate the question statement
+                String questionStatement = statement.replace(questionPlaceholder, result.path(questionLabel).path("value").asText());
 
-            // Generate the question
-            Question q = new Question(questionStatement, options, correct, cat, language);
+                // Generate the question
+                Question q = new Question(questionStatement, options, correct, cat, language);
 
-            // Add the question to the list
-            questions.add(q);
+                // Add the question to the list
+                questions.add(q);
+            }
         }
         return questions;
     }
@@ -103,9 +108,9 @@ public class QuestionGeneratorV2 implements QuestionGenerator{
         int size = results.size();
         int tries = 0;
 
-       while (options.size() < 3 && tries < 10){
-            int random = (int) (Math.random() * size);
-            String option = results.get(random).path(answerLabel).path("value").asText();
+       while (options.size() < 3 && tries < 10) {
+            int randomIdx = random.nextInt(size);
+            String option = results.get(randomIdx).path(answerLabel).path("value").asText();
             if (!option.equals(correctAnswer) && !usedOptions.contains(option) ) {
                 usedOptions.add(option);
                 options.add(new Answer(option, false));
@@ -130,41 +135,28 @@ public class QuestionGeneratorV2 implements QuestionGenerator{
         return null;
     }
 
-    private JsonNode getQueryResult(String query) throws IOException {
+    private JsonNode getQueryResult(String query) throws IOException, InterruptedException {
 
-        System.out.println("Query: " + query);
+        logger.info("Query: {}", query);
         HttpClient client = HttpClient.newHttpClient();
         JsonNode resultsNode;
-        try {
+        String endpointUrl = "https://query.wikidata.org/sparql?query=" +
+                URLEncoder.encode(query, StandardCharsets.UTF_8) +
+                "&format=json";
 
-            String endpointUrl = "https://query.wikidata.org/sparql?query=" +
-                    URLEncoder.encode(query, StandardCharsets.UTF_8) +
-                    "&format=json";
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(endpointUrl))
+                .header("Accept", "application/json")
+                .build();
 
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(endpointUrl))
-                    .header("Accept", "application/json")
-                    .build();
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        // Process the JSON response using Jackson ObjectMapper
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode jsonResponse = objectMapper.readTree(response.body());
 
-            // Process the JSON response using Jackson ObjectMapper
-            ObjectMapper objectMapper = new ObjectMapper();
-            JsonNode jsonResponse = objectMapper.readTree(response.body());
-
-            // Access the data from the JSON response
-            resultsNode = jsonResponse.path("results").path("bindings");
-
-        } catch (InterruptedException e) {
-            throw new QuestionGeneratorException("Generation of questions was interrupted");
-        }
+        // Access the data from the JSON response
+        resultsNode = jsonResponse.path("results").path("bindings");
         return resultsNode;
-
-    }
-
-    private static class QuestionGeneratorException extends RuntimeException {
-        public QuestionGeneratorException(String message) {
-            super(message);
-        }
     }
 }
