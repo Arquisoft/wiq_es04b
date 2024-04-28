@@ -19,6 +19,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
@@ -246,9 +247,9 @@ public class PlayersController {
 
     @GetMapping("/player/admin/questionManagement")
     public String showQuestionManagementFragment(Model model) throws IOException {
-        File jsonFile = new File(QuestionGeneratorService.JSON_FILE_PATH);
+        Resource jsonFile = new ClassPathResource(QuestionGeneratorService.JSON_FILE_PATH);
         ObjectMapper objectMapper = new ObjectMapper();
-        JsonNode json = objectMapper.readTree(jsonFile);
+        JsonNode json = objectMapper.readTree(jsonFile.getInputStream());
         model.addAttribute("jsonContent", json.toString());
 
         return "player/admin/questionManagement";
