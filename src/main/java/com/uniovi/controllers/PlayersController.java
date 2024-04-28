@@ -285,7 +285,7 @@ public class PlayersController {
     }
 
     @GetMapping("/player/admin/monitoring")
-    public String showMonitoring(Model model) {
+    public String showMonitoring() {
         return "player/admin/monitoring";
     }
 }
