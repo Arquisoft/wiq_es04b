@@ -172,5 +172,7 @@ Our CI/CD pipeline automates the process of integrating code changes, building t
 === Scalability
 
 Designing for scalability, the application can accommodate an increasing number of users and interactions without performance degradation.
+
 .Explanation:
 Scalable solutions such as Docker containers allow the application to be deployed in a distributed environment, where resources can be adjusted based on demand.
+Given that we use a monolithic approach, the application can be easily scaled horizontally by deploying multiple instances of the same service and connect them to a load balancer in order to distribute the load.
