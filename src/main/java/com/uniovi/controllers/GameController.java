@@ -173,7 +173,7 @@ public class GameController {
         List<Player> players = playerService.getUsersByMultiplayerCode(code);
         model.addAttribute("players",players);
         model.addAttribute("code",session.getAttribute("multiplayerCode"));
-        return "/game/lobby";
+        return "game/lobby";
     }
 
     /**

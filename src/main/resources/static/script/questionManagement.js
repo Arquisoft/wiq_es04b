@@ -13,10 +13,10 @@ function setupQuestionManagement() {
     $("#saveButton").on("click", function () {
         $.ajax({
             url: "/player/admin/saveQuestions",
-            type: "GET",
-            data: {
-                json: JSON.stringify(editor.get())
-            },
+            type: "PUT",
+            data: JSON.stringify(
+                editor.get()
+            ),
             contentType: "application/json"
         });
     });

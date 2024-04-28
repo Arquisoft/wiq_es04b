@@ -12,6 +12,8 @@
 - **Roberto Peña Goy**
 - **Iker Álvarez Fernández**
 
+[Monitorización](https://monitor.pelayori.com:2053)
+
 ### Local deployment instructions:
 
 #### Without docker (slower):

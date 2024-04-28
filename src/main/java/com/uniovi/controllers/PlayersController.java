@@ -32,6 +32,8 @@ import com.uniovi.dto.PlayerDto;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.security.Principal;
 import java.util.Optional;
 import java.util.List;
@@ -262,9 +264,9 @@ public class PlayersController {
         return "Questions deleted";
     }
 
-    @GetMapping("/player/admin/saveQuestions")
+    @PutMapping("/player/admin/saveQuestions")
     @ResponseBody
-    public String saveQuestions(HttpServletResponse response, @RequestParam String json) throws IOException {
+    public String saveQuestions(HttpServletResponse response, @RequestBody String json) throws IOException {
         try {
             JsonNode node = new ObjectMapper().readTree(json);
             DefaultPrettyPrinter printer = new DefaultPrettyPrinter();
