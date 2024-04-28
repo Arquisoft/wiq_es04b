@@ -42,15 +42,16 @@
 
             let tabContent = $('#tab-content');
             activeTab = tabNum;
+            console.log(window.location.origin);
             switch (tabNum) {
                 case 'tab1':
-                    tabContent.load('/player/admin/userManagement');
+                    tabContent.load(window.location.origin + '/player/admin/userManagement');
                     break;
                 case 'tab2':
-                    tabContent.load('/player/admin/questionManagement');
+                    tabContent.load(window.location.origin + '/player/admin/questionManagement');
                     break;
                 case 'tab3':
-                    tabContent.load('/player/admin/monitoring');
+                    tabContent.load(window.location.origin + '/player/admin/monitoring');
                     break;
             }
         });

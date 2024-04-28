@@ -51,7 +51,7 @@ public class SecurityConfig {
                                 .requestMatchers("/startMultiplayerGame/**", "/endGameList/**").authenticated()
                                 .requestMatchers("/lobby/**").authenticated()
                                 .requestMatchers("/ranking/playerRanking").authenticated()
-                                //.requestMatchers("/player/admin/**").hasAuthority("ROLE_ADMIN")
+                                .requestMatchers("/player/admin/**").hasAuthority("ROLE_ADMIN")
                                 .requestMatchers("/**").permitAll()
                 ).formLogin(
                         form -> form
