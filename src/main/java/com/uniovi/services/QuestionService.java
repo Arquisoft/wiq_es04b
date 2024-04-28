@@ -1,5 +1,6 @@
 package com.uniovi.services;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.uniovi.dto.QuestionDto;
 import com.uniovi.entities.Category;
 import com.uniovi.entities.Question;
@@ -102,4 +103,16 @@ public interface QuestionService {
      * Delete all the questions
      */
     void deleteAllQuestions() throws IOException;
+
+    /**
+     * Set the json generator
+     * @param json The json generator
+     */
+    void setJsonGenerator(JsonNode json);
+
+    /**
+     * Get the json generator
+     * @return The json generator
+     */
+    JsonNode getJsonGenerator();
 }

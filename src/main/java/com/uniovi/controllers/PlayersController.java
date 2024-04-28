@@ -54,6 +54,7 @@ public class PlayersController {
         this.signUpValidator =  signUpValidator;
         this.gameSessionService = gameSessionService;
         this.roleService = roleService;
+        this.questionService = questionService;
     }
 
     @GetMapping("/signup")
@@ -269,13 +270,7 @@ public class PlayersController {
     public String saveQuestions(HttpServletResponse response, @RequestBody String json) throws IOException {
         try {
             JsonNode node = new ObjectMapper().readTree(json);
-            DefaultPrettyPrinter printer = new DefaultPrettyPrinter();
-            DefaultPrettyPrinter.Indenter indenter = new DefaultIndenter();
-            printer.indentObjectsWith(indenter); // Indent JSON objects
-            printer.indentArraysWith(indenter);  // Indent JSON arrays
-
-            ObjectMapper mapper = new ObjectMapper();
-            mapper.writer(printer).writeValue(new ClassPathResource(QuestionGeneratorService.JSON_FILE_PATH).getFile(), node);
+            questionService.setJsonGenerator(node);
             return "Questions saved";
         }
         catch (Exception e) {
@@ -284,8 +279,16 @@ public class PlayersController {
         }
     }
 
+    @GetMapping("/questions/getJson")
+    @ResponseBody
+    public String getJson() {
+        return questionService.getJsonGenerator().toString();
+    }
+
     @GetMapping("/player/admin/monitoring")
-    public String showMonitoring() {
+    public String showMonitoring(HttpServletResponse response) {
+        response.setStatus(HttpServletResponse.SC_OK);
+        response.setContentType("application/json");
         return "player/admin/monitoring";
     }
 }

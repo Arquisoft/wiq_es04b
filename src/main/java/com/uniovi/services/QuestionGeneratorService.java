@@ -54,9 +54,11 @@ public class QuestionGeneratorService {
     }
 
     private void parseQuestionTypes() throws IOException {
-        Resource resource = new ClassPathResource(JSON_FILE_PATH);
-        ObjectMapper objectMapper = new ObjectMapper();
-        json = objectMapper.readTree(resource.getInputStream());
+        if (json == null) {
+            Resource resource = new ClassPathResource(JSON_FILE_PATH);
+            ObjectMapper objectMapper = new ObjectMapper();
+            json = objectMapper.readTree(resource.getInputStream());
+        }
         JsonNode categories = json.findValue("categories");
         for (JsonNode category : categories) {
             String categoryName = category.get("name").textValue();
@@ -127,9 +129,17 @@ public class QuestionGeneratorService {
         questionService.addNewQuestion(new QuestionDto(q));
     }
 
+    public void setJsonGeneration(JsonNode json) {
+        this.json = json;
+    }
+
     public void resetGeneration() throws IOException {
         types.clear();
         parseQuestionTypes();
+    }
+
+    public JsonNode getJsonGeneration() {
+        return json;
     }
 
     @Getter

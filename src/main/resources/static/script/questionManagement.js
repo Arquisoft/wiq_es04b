@@ -22,10 +22,10 @@ function setupQuestionManagement() {
     });
 
     $.ajax({
-        url: '/JSON/QuestionTemplates.json',
+        url: '/questions/getJson',
         type: 'GET',
         success: function (data) {
-            let json = data;
+            let json = JSON.parse(data);
             const element = document.getElementById('jsonEditorElement');
             const options = {}
             editor = new JSONEditor(element, options)

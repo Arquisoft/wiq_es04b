@@ -1,5 +1,6 @@
 package com.uniovi.services.impl;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.uniovi.dto.QuestionDto;
 import com.uniovi.entities.Answer;
 import com.uniovi.entities.Associations;
@@ -21,8 +22,6 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.security.SecureRandom;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -177,6 +176,16 @@ public class QuestionServiceImpl implements QuestionService {
     public void deleteAllQuestions() throws IOException {
         questionGeneratorService.resetGeneration();
         questionRepository.deleteAll();
+    }
+
+    @Override
+    public void setJsonGenerator(JsonNode json) {
+        questionGeneratorService.setJsonGeneration(json);
+    }
+
+    @Override
+    public JsonNode getJsonGenerator() {
+        return questionGeneratorService.getJsonGeneration();
     }
 
 }
