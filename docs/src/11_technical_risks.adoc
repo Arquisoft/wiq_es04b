@@ -17,6 +17,4 @@ ifndef::imagesdir[:imagesdir: ../images]
 [cols="1,2,3a", options="header"]
 |===
 | Priority | Debt | Description
-| Low | Microservices | Research about microservices and what they can contribute to the project
-
 |===

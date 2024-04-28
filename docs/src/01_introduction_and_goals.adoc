@@ -28,7 +28,7 @@ The overall goal of the application is to provide a fun and challenging experien
 === Quality Goals
 [options="header",cols="1,2,2"]
 |===
-|Nº|Atributo|Motivacion
+|Nº|Quality Goal|Motivation
 | 1 | Efficiency | Access, creation of questions, and navigation between them should be fast to ensure user satisfaction.
 | 2 | Usability | The application should be appealing to all fans of the original program while also offering a wide variety of questions.
 | 3 | Manteinance | The application should ensure easy expansion and modification to provide users with new features.

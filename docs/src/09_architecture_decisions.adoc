@@ -12,5 +12,5 @@ The purpose of this section is to create an ordered list of architectural decisi
 * https://github.com/Arquisoft/wiq_es04b/wiki/Record-of-architectural-decisions#dto-pattern[ADR 05] - DTO Pattern
 * https://github.com/Arquisoft/wiq_es04b/wiki/Record-of-architectural-decisions#mysql-in-production-and-hsqldb-in-local[ADR 06] - MySQL in production and HSQLDB in local
 * https://github.com/Arquisoft/wiq_es04b/wiki/Record-of-architectural-decisions#monolithic-architecture[ADR 07] - Monolithic architecture
-* https://github.com/Arquisoft/wiq_es04b/wiki/Record-of-architectural-decisions#use-of-tbd[ADR 08] - Use of TBD
+* https://github.com/Arquisoft/wiq_es04b/wiki/Record-of-architectural-decisions#use-of-gitflow[ADR 08] - Use of GitFlow
 * https://github.com/Arquisoft/wiq_es04b/wiki/Record-of-architectural-decisions#questions-refreshing[ADR 09] - Questions refreshing
