@@ -16,7 +16,7 @@ All tests have been carried out with a load of 1, 250, 1000, 2000 and 5000 users
 
 ==== Test results
 
-==== Login
+===== Login
 1 User:
 image:Login/1UserLogin.png[Login1User]
 250 Users:
@@ -31,7 +31,7 @@ General information: All responses to the server have generally worked correctly
 image:Login/GeneralLogin.png[GeneralLogin]
 image:Login/GraphicLogin.png[GraphicLogin]
 
-==== Show ApiKey
+===== Show ApiKey
 1 User:
 image:ShowApiKey/1UserApiKey.png[ApiKey1User]
 250 Users:
@@ -46,7 +46,7 @@ General information: For this use case, from the beginning all requests worked c
 image:ShowApiKey/GeneralApiKey.png[GeneralApiKey]
 image:ShowApiKey/GraphicApiKey.png[GraphicGraphic]
 
-==== Show profile
+===== Show profile
 1 User:
 image:ShowProfile/1UserProfile.png[Profile1User]
 250 Users:
@@ -61,7 +61,7 @@ General information: The results of the load tests carried out to show the playe
 image:ShowProfile/GeneralProfile.png[GeneralProfile]
 image:ShowProfile/GraphicProfile.png[GraphicProfile]
 
-==== Play a game
+===== Play a game
 1 User:
 image:PlayGame/1UserGame.png[Game1User]
 250 Users:
@@ -76,7 +76,7 @@ General information: The tests of playing the game were the most expensive loadi
 image:PlayGame/GeneralGame.png[GeneralProfile]
 image:PlayGame/GraphicGame.png[GraphicProfile]
 
-==== Show personal ranking
+===== Show personal ranking
 1 User:
 image:PersonalRanking/1UserPR.png[PR1User]
 250 Users:
@@ -91,7 +91,7 @@ General information: For these tests we return a little to normal, compared to t
 image:PersonalRanking/GeneralPR.png[GeneralPR]
 image:PersonalRanking/GraphicPR.png[GraphicPR]
 
-==== Show global ranking
+===== Show global ranking
 1 User:
 image:GlobalRanking/1UserGR.png[GR1User]
 250 Users:
@@ -106,7 +106,7 @@ General information: These tests are very similar to the previous ones, but inst
 image:GlobalRanking/GeneralGR.png[GeneralGR]
 image:GlobalRanking/GraphicGR.png[GraphicGR]
 
-==== Change language
+===== Change language
 1 User:
 image:ChangeLanguage/1UserLanguage.png[Language1User]
 250 Users:
@@ -121,7 +121,7 @@ General information: The execution of these tests consisted of changing the lang
 image:ChangeLanguage/GeneralLanguage.png[GeneralLanguage]
 image:ChangeLanguage/GraphicLanguage.png[GraphicLanguage]
 
-==== Return to the index
+===== Return to the index
 1 User:
 image:Index/1UserIndex.png[Index1User]
 250 Users:
@@ -136,7 +136,7 @@ General information: These results surprised us quite a bit, since we thought it
 image:Index/GeneralIndex.png[GeneralIndex]
 image:Index/GraphicIndex.png[GraphicIndex]
 
-==== Log out
+===== Log out
 1 User:
 image:LogOut/1UserLogout.png[Logout1User]
 250 Users:
@@ -152,4 +152,4 @@ image:LogOut/GeneralLogout.png[GeneralLogout]
 image:LogOut/GraphicLogout.png[GraphicLogout]
 
 ==== Conclusion
-In conclusion, the tests generally show very positive results. In no test, except for the game, are there errors with up to 2000 users simultaneously, and errors begin to appear after 5000 users. Looking at the results, the lightest cases are showing the profile, showing the personal ranking and logging out. On the other hand, the hardest cases are playing the game (by far) and showing the global ranking. The tests of the 'multiplayer' game mode could not be carried out, because it was not yet fully implemented at the time of carrying out the load tests.
+In conclusion, the tests generally show very positive results. In no test, except for the game, are there errors with up to 2000 users simultaneously, and errors begin to appear after 5000 users. Looking at the results, the lightest cases are showing the profile, showing the personal ranking and logging out. On the other hand, the hardest cases are playing the game (by far) and showing the global ranking.
