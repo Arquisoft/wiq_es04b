@@ -4,7 +4,7 @@
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=Arquisoft_wiq_es04b&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=Arquisoft_wiq_es04b)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=Arquisoft_wiq_es04b&metric=coverage)](https://sonarcloud.io/summary/new_code?id=Arquisoft_wiq_es04b)
 
-### 🚀 TEAM
+### 🚀 TEAM:
 
 - **Pelayo Rojas Iñigo**
 - **Álvaro Arias Martínez De Vega**
@@ -12,7 +12,9 @@
 - **Roberto Peña Goy**
 - **Iker Álvarez Fernández**
 
-### Local deployment instructions
+### Local deployment instructions:
+
+#### Without docker (slower):
 
 1. Fist you have to clone the repository using a CMD and the following command: `git clone https://github.com/Arquisoft/wiq_es04b.git` or using an IDE with Git integration or any other app of your preference.
 
@@ -25,3 +27,11 @@
 5. If you wish to execute the tests you have to open a CMD in the project root directory (you could use the same you used before), you have to execute `set EXCLUDE_JUNIT=true` if you also want to execute the E2E tests. Then to execute the tests you have to use the following command: `mvnw org.jacoco:jacoco-maven-plugin:prepare-agent verify`.
 
 6. If you want to obtain the report you have to torn off the app and in the same CMD as before execute the following command: `mvnw org.jacoco:jacoco-maven-plugin:report`.
+
+#### With docker (faster):
+
+> #### *Disclaimer: This method is faster but it is not recommended for development because it is harder to debug and to see the logs and it is harder to execute the tests.*
+
+1. First you need to have installed [docker](https://www.docker.com/#build) and docker [compose](https://docs.docker.com/compose/install/).
+2. Then you have to clone the repository using a CMD and the following command: `git clone https://github.com/Arquisoft/wiq_es04b.git` or using an IDE with Git integration or any other app of your preference.
+3. Then you have to open a CMD in the project root directory and execute the following command: `docker-compose up`. This is going to deploy the docker image that is in our repository. This docker will contain the app, a MySql database, Graphana and Prometheus. The app will be available in the port 443 https.

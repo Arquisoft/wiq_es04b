@@ -55,7 +55,6 @@ System -----> developers : Provides\nPlayer &\n Question Data
 * **HTTPS:** Represents the communication channels, with HTTPS being the protocol used for secure communication.
 * **Question Generation:** Represents the means used for question and answers generation.
 * **Database:** Represents whichever system used for data persistence.
-* **To be decided:** Indicates that specific details about the channels and protocols are yet to be determined.
 
 ==== Input/Output Mapping Table
 
