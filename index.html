@@ -627,8 +627,8 @@ to constantly update the questions instead of storing them in a database.</p>
 <thead>
 <tr>
 <th class="tableblock halign-left valign-top">Nº</th>
-<th class="tableblock halign-left valign-top">Atributo</th>
-<th class="tableblock halign-left valign-top">Motivacion</th>
+<th class="tableblock halign-left valign-top">Quality Goal</th>
+<th class="tableblock halign-left valign-top">Motivation</th>
 </tr>
 </thead>
 <tbody>
@@ -783,9 +783,6 @@ System will allow accessing user information and the information of the generate
 </li>
 <li>
 <p><strong>Database:</strong> Represents whichever system used for data persistence.</p>
-</li>
-<li>
-<p><strong>To be decided:</strong> Indicates that specific details about the channels and protocols are yet to be determined.</p>
 </li>
 </ul>
 </div>
@@ -1252,7 +1249,7 @@ Scalable solutions such as Docker containers allow the application to be deploye
 <p><a href="https://github.com/Arquisoft/wiq_es04b/wiki/Record-of-architectural-decisions#monolithic-architecture">ADR 07</a> - Monolithic architecture</p>
 </li>
 <li>
-<p><a href="https://github.com/Arquisoft/wiq_es04b/wiki/Record-of-architectural-decisions#use-of-tbd">ADR 08</a> - Use of TBD</p>
+<p><a href="https://github.com/Arquisoft/wiq_es04b/wiki/Record-of-architectural-decisions#use-of-gitflow">ADR 08</a> - Use of GitFlow</p>
 </li>
 <li>
 <p><a href="https://github.com/Arquisoft/wiq_es04b/wiki/Record-of-architectural-decisions#questions-refreshing">ADR 09</a> - Questions refreshing</p>
@@ -1436,15 +1433,6 @@ Scalable solutions such as Docker containers allow the application to be deploye
 <th class="tableblock halign-left valign-top">Description</th>
 </tr>
 </thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Low</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Microservices</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Research about microservices and what they can contribute to the project</p>
-</div></div></td>
-</tr>
-</tbody>
 </table>
 <div style="page-break-after: always;"></div>
 </div>
@@ -1703,7 +1691,9 @@ Scalable solutions such as Docker containers allow the application to be deploye
 </div>
 <div class="sect2">
 <h3 id="_integration_test_e2e">14.2. Integration Test (E2E)</h3>
-
+<div class="paragraph">
+<p>All the cucumber files are located in the src/test/resources/features directory. We&#8217;ve implemented all the cucumber steps in the src/test/java/com/uniovi/steps directory. The main test class is Wiq_IntegrationTests.java in src/test/java/com/uniovi, which you should run to execute the integration tests.</p>
+</div>
 </div>
 <div class="sect2">
 <h3 id="_load_test">14.3. Load Test</h3>
@@ -1890,7 +1880,7 @@ General information: Finally, tests were carried out to log out your user. These
 <div id="footer">
 <div id="footer-text">
 Version 2<br>
-Last updated 2024-04-28 01:15:18 UTC
+Last updated 2024-04-28 01:17:33 UTC
 </div>
 </div>
 </body>
