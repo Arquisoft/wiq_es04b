@@ -280,7 +280,7 @@ public class PlayersController {
         }
         catch (Exception e) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            return "Invalid JSON";
+            return e.getMessage();
         }
     }
 
