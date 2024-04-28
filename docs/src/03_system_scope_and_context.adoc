@@ -9,61 +9,116 @@ ifndef::imagesdir[:imagesdir: ../images]
 @startuml
 actor Player as user
 actor "External Developers" as developers
-component System [
+component WebApp [
   <<System>>
-  QuestionGame
+  Web game
 ]
-component WikiData as wikidata
 
-user -down-> System : Uses
-System -left-> wikidata : Retrieves\nInformation to\nform questions\nand answers
-developers -down-> System : Asks for Player\n& Question Data
-System -----> developers : Provides\nPlayer &\n Question Data
+component PlayerService [
+  <<System>>
+  Player Management
+]
+
+component QuestionService [
+  <<System>>
+  Question Management
+]
+
+component WikiData [
+    <<extern>>
+    Wikidata
+]
+
+user ...> WebApp: Plays
+WebApp ---> PlayerService : Handles\nlogin and signup
+WebApp -left-> QuestionService : Retrieves generated\nquestions for game
+WebApp <-- WikiData : Retrieves\nInformation to\nform questions\nand answers
+developers .right.> PlayerService : Modify\nplayer data
+developers <.right. PlayerService : Retrieve\nplayer data
+developers .right.> QuestionService : Modify questions
+developers <.right. QuestionService : Retrieve question list
 @enduml
 
 ----
 * **Player:** Represents users who interact with the application to play games or view their history.
-* **System (QuestionGame):** The main system that hosts the game logic and manages user interactions.
+* **Question management:** The sytem that retrieves the questions generated from Wikidata.
+* **Player management:** The system that manages player data, such as registration, login, and game history.
 * **WikiData:** Component used to retrieve data from Wikidata and automatically generate questions.
-* **Database:** Stores system information, such as user data, generated questions, game history, etc.
-* **External Developers:** Represents developers who access the system's REST API to retrieve player and question data.
+* **External Developers:** Represents developers who access the system to retrieve player and question data.
 
 === Technical Context
 
 [plantuml,"Technical Context Diagram",png]
 ----
-  actor user
-  person developer
-  database Database
-  cloud WikiData
+actor Player as user
+actor "External Developers" as developers
+component WebApp [
+  <<System>>
+  Web game
+]
 
+component PlayerService [
+  <<System>>
+  PlayerService
+]
 
-  node "User Agent"
-  
-  node "QuestionGame server"
-  
-  user --> [User Agent]
-  [User Agent] --> [QuestionGame server]: HTTPS
+component QuestionService [
+  <<System>>
+  QuestionService
+]
 
-  [QuestionGame server] --> Database: Specific driver
-  [QuestionGame server] --> WikiData: HTTP
-  developer --> [QuestionGame server] : HTTPS
+component WikiData [
+    <<extern>>
+    Wikidata
+]
+
+component QuestionGenerator [
+    <<system>>
+    QuestionGenerator
+]
+
+component RestApiService [
+    <<system>>
+    RestApiService
+]
+
+database Database [
+    Database
+]
+
+user .left.> WebApp: HTTPS
+WebApp ---> PlayerService : Handles\nlogin, signup\nand game history
+WebApp -left-> QuestionService : Retrieves generated\nquestions for game
+QuestionGenerator <-up- WikiData : Get entity info\nfrom SPARQL HTTP
+QuestionGenerator --> QuestionService : Generate questions\nwith entity data
+QuestionService --> Database: Save\nquestion\nentities
+QuestionService <-- Database: Retrieve\nsaved\nquestions
+developers .up---.> RestApiService : HTTP\nPOST\nPUT\nDELETE
+developers <.up. RestApiService : HTTP GET
+RestApiService -up-> QuestionService: Retrieve/Modify questions
+RestApiService ---> PlayerService: Retrieve/Modify player data
+
 ----
 
-* **User Agent:** Represents the web or mobile interface used by users.
-* **QuestionGame server:** The server-side components, including the Frontend, QuestionGame logic, User's API, and Question's API.
-* **HTTPS:** Represents the communication channels, with HTTPS being the protocol used for secure communication.
-* **Question Generation:** Represents the means used for question and answers generation.
-* **Database:** Represents whichever system used for data persistence.
+* **Player:** Represents users who interact with the application to play games or view their history.
+* **Question service:** The system that retrieves the questions generated from Wikidata.
+* **Player service:** The system that manages player data, such as registration, login, and game history.
+* **WikiData:** Component used to retrieve data from Wikidata
+* **Question generator:** The system that generates questions based on the data retrieved from Wikidata.
+* **External Developers:** Represents developers who access the system to retrieve player and question data.
+* **Database:** The database that stores player data, game history, and questions.
+* **Rest API Service:** The service that provides an API for external developers to access player and question data.
 
 ==== Input/Output Mapping Table
 
 [options="header",cols="1,2,2"]
 |===
 |Component|Input/Output|Channel/Protocol
-| User's API| User registration, game history| HTTPS
-| Question's API| Question data retrieval| HTTPS
+| RestApiService| External developer interactions| HTTP
 | Frontend| User interactions, game display| HTTPS
 | Database| User data, game history, questions| Specific database driver
 | WikiData| Data for question generation| HTTP
+| Question Generator| Generated questions| In-memory
+| Question Service| Questions for game| In-memory
+| Player Service| Player data| In-memory
 |===
