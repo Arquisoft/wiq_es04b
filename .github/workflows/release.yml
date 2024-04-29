@@ -19,9 +19,9 @@ jobs:
         ports:
           - 3306:3306
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
-#    steps:
+    steps:
       - uses: actions/checkout@v2
-#      - name: Cache Maven packages
+      - name: Cache Maven packages
         uses: actions/cache@v2
         with:
           path: |
@@ -29,15 +29,15 @@ jobs:
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
             ${{ runner.os }}-m2
-#      - name: Set up JDK 17
+      - name: Set up JDK 17
         uses: actions/setup-java@v1
         with:
           java-version: '17'
-#      - name: Add exec permission to mvnw
+      - name: Add exec permission to mvnw
         run: chmod +x mvnw
-#      - name: Compile the application
+      - name: Compile the application
         run: ./mvnw -B clean install -DskipTests=true
-#      - name: Start the application
+      - name: Start the application
         run: |
           ./mvnw spring-boot:run > logs.txt 2>&1 &
           echo $! > spring-boot-app.pid
