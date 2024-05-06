@@ -18,6 +18,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
@@ -30,6 +32,8 @@ import com.uniovi.dto.PlayerDto;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.security.Principal;
 import java.util.Optional;
 import java.util.List;
@@ -50,6 +54,7 @@ public class PlayersController {
         this.signUpValidator =  signUpValidator;
         this.gameSessionService = gameSessionService;
         this.roleService = roleService;
+        this.questionService = questionService;
     }
 
     @GetMapping("/signup")
@@ -245,9 +250,9 @@ public class PlayersController {
 
     @GetMapping("/player/admin/questionManagement")
     public String showQuestionManagementFragment(Model model) throws IOException {
-        File jsonFile = new File(QuestionGeneratorService.JSON_FILE_PATH);
+        Resource jsonFile = new ClassPathResource(QuestionGeneratorService.JSON_FILE_PATH);
         ObjectMapper objectMapper = new ObjectMapper();
-        JsonNode json = objectMapper.readTree(jsonFile);
+        JsonNode json = objectMapper.readTree(jsonFile.getInputStream());
         model.addAttribute("jsonContent", json.toString());
 
         return "player/admin/questionManagement";
@@ -260,28 +265,30 @@ public class PlayersController {
         return "Questions deleted";
     }
 
-    @GetMapping("/player/admin/saveQuestions")
+    @PutMapping("/player/admin/saveQuestions")
     @ResponseBody
-    public String saveQuestions(HttpServletResponse response, @RequestParam String json) throws IOException {
+    public String saveQuestions(HttpServletResponse response, @RequestBody String json) throws IOException {
         try {
             JsonNode node = new ObjectMapper().readTree(json);
-            DefaultPrettyPrinter printer = new DefaultPrettyPrinter();
-            DefaultPrettyPrinter.Indenter indenter = new DefaultIndenter();
-            printer.indentObjectsWith(indenter); // Indent JSON objects
-            printer.indentArraysWith(indenter);  // Indent JSON arrays
-
-            ObjectMapper mapper = new ObjectMapper();
-            mapper.writer(printer).writeValue(new FileOutputStream(QuestionGeneratorService.JSON_FILE_PATH), node);
+            questionService.setJsonGenerator(node);
             return "Questions saved";
         }
         catch (Exception e) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            return "Invalid JSON";
+            return e.getMessage();
         }
     }
 
+    @GetMapping("/questions/getJson")
+    @ResponseBody
+    public String getJson() {
+        return questionService.getJsonGenerator().toString();
+    }
+
     @GetMapping("/player/admin/monitoring")
-    public String showMonitoring(Model model) {
+    public String showMonitoring(HttpServletResponse response) {
+        response.setStatus(HttpServletResponse.SC_OK);
+        response.setContentType("application/json");
         return "player/admin/monitoring";
     }
 }

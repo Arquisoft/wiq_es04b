@@ -136,7 +136,6 @@ public class QuestionGeneratorV2 implements QuestionGenerator{
     }
 
     private JsonNode getQueryResult(String query) throws IOException, InterruptedException {
-
         logger.info("Query: {}", query);
         HttpClient client = HttpClient.newHttpClient();
         JsonNode resultsNode;

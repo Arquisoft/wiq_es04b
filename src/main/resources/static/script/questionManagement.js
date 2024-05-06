@@ -13,19 +13,19 @@ function setupQuestionManagement() {
     $("#saveButton").on("click", function () {
         $.ajax({
             url: "/player/admin/saveQuestions",
-            type: "GET",
-            data: {
-                json: JSON.stringify(editor.get())
-            },
+            type: "PUT",
+            data: JSON.stringify(
+                editor.get()
+            ),
             contentType: "application/json"
         });
     });
 
     $.ajax({
-        url: '/JSON/QuestionTemplates.json',
+        url: '/questions/getJson',
         type: 'GET',
         success: function (data) {
-            let json = data;
+            let json = JSON.parse(data);
             const element = document.getElementById('jsonEditorElement');
             const options = {}
             editor = new JSONEditor(element, options)

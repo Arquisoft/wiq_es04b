@@ -16,6 +16,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -31,7 +33,7 @@ public class QuestionGeneratorService {
 
     private final QuestionService questionService;
 
-    public static final String JSON_FILE_PATH = "src/main/resources/static/JSON/QuestionTemplates.json";
+    public static final String JSON_FILE_PATH = "static/JSON/QuestionTemplates.json";
 
     private Deque<QuestionType> types = new ArrayDeque<>();
 
@@ -52,9 +54,11 @@ public class QuestionGeneratorService {
     }
 
     private void parseQuestionTypes() throws IOException {
-        File jsonFile = new File(JSON_FILE_PATH);
-        ObjectMapper objectMapper = new ObjectMapper();
-        json = objectMapper.readTree(jsonFile);
+        if (json == null) {
+            Resource resource = new ClassPathResource(JSON_FILE_PATH);
+            ObjectMapper objectMapper = new ObjectMapper();
+            json = objectMapper.readTree(resource.getInputStream());
+        }
         JsonNode categories = json.findValue("categories");
         for (JsonNode category : categories) {
             String categoryName = category.get("name").textValue();
@@ -125,9 +129,17 @@ public class QuestionGeneratorService {
         questionService.addNewQuestion(new QuestionDto(q));
     }
 
+    public void setJsonGeneration(JsonNode json) {
+        this.json = json;
+    }
+
     public void resetGeneration() throws IOException {
         types.clear();
         parseQuestionTypes();
+    }
+
+    public JsonNode getJsonGeneration() {
+        return json;
     }
 
     @Getter

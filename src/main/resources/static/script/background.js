@@ -1,4 +1,20 @@
 // modified version of random-normal
+function getCookie(cname) {
+    let name = cname + "=";
+    let decodedCookie = decodeURIComponent(document.cookie);
+    let ca = decodedCookie.split(';');
+    for(let i = 0; i <ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+        }
+    }
+    return "";
+}
+
 function normalPool(o){var r=0;do{var a=Math.round(normal({mean:o.mean,dev:o.dev}));if(a<o.pool.length&&a>=0)return o.pool[a];r++}while(r<100)}function randomNormal(o){if(o=Object.assign({mean:0,dev:1,pool:[]},o),Array.isArray(o.pool)&&o.pool.length>0)return normalPool(o);var r,a,n,e,l=o.mean,t=o.dev;do{r=(a=2*Math.random()-1)*a+(n=2*Math.random()-1)*n}while(r>=1);return e=a*Math.sqrt(-2*Math.log(r)/r),t*e+l}
 
 const NUM_PARTICLES = 350;
@@ -51,8 +67,13 @@ function drawParticle(particle, canvas, ctx) {
     ctx.fillText("?", particle.x * canvas.width, particle.y * vh + (canvas.height / 2));
 }
 
-
+let init = false;
 function draw(time, canvas, ctx) {
+    if (init && getCookie("backgroundAnimation") === "false") {
+        requestAnimationFrame((time) => draw(time, canvas, ctx));
+        return;
+    }
+
     // Move particles
     particles.forEach((particle, index) => {
         particles[index] = moveParticle(particle, canvas, time);
@@ -66,6 +87,7 @@ function draw(time, canvas, ctx) {
         drawParticle(particle, canvas, ctx);
     })
 
+    init = true;
     // Schedule next frame
     requestAnimationFrame((time) => draw(time, canvas, ctx));
 }
