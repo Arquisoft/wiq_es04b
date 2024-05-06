@@ -36,10 +36,6 @@ ifndef::imagesdir[:imagesdir: ../images]
 |The ability of a system to handle increasing workload or growing demands by adapting or expanding its capacity without compromising performance.
 |SC7
 
-|Interoperability
-|The system must have the ability of  seamlessly communicate, exchange data, and work together effectively with different systems, applications, or components, even if they use different technologies.
-|SC8
-
 
 |===
 
@@ -68,8 +64,5 @@ ifndef::imagesdir[:imagesdir: ../images]
 
 | SC7
 | As user demand grows, the deployment does not grow dynamically. However a system can be put in place to deploy more instances of the application to handle the increased workload, trough a load balancer, for example.
-
-| SC8
-| The application seamlessly integrates with other systems, allowing for the exchange of data and functionality without compatibility issues, enhancing its overall interoperability.
 
 |===
